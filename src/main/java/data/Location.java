@@ -3,36 +3,32 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Location extends NamedObject {
-	
+
 	public Location() {
-		// FIXME is this ok?
-		waysIn = new ArrayList<Way>();
 		waysOut = new ArrayList<Way>();
 		items = new ArrayList<Item>();
 	}
-	
-	@OneToMany(mappedBy = "destiny")
-	private List<Way> waysIn;
 
-	@OneToMany(mappedBy = "origin")
+	@OneToMany(mappedBy = "origin", cascade = CascadeType.ALL)
 	private List<Way> waysOut;
 
-	@OneToMany(mappedBy = "location")
+	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	private List<Item> items;
-
-	public void addWayIn(Way wayIn) {
-		this.waysIn.add(wayIn);
-		wayIn.destiny = this;
-	}
 
 	public void addWayOut(Way wayOut) {
 		this.waysOut.add(wayOut);
 		wayOut.origin = this;
+	}
+
+	public void removeWayOut(Way wayOut) {
+		this.waysOut.remove(wayOut);
+		wayOut.origin = null;
 	}
 
 	public void addItem(Item item) {
@@ -40,12 +36,33 @@ public class Location extends NamedObject {
 		item.location = this;
 	}
 
-	/* (non-Javadoc)
+	public void removeItem(Item item) {
+		this.items.remove(item);
+		item.location = null;
+	}
+
+	/**
+	 * @return the waysOut
+	 */
+	public List<Way> getWaysOut() {
+		return waysOut;
+	}
+
+	/**
+	 * @return the items
+	 */
+	public List<Item> getItems() {
+		return items;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Location [waysIn=" + waysIn + ", waysOut=" + waysOut
+		return "Location [waysOut=" + waysOut
 				+ ", items=" + items + ", toString()=" + super.toString() + "]";
 	}
 }

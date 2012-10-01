@@ -6,11 +6,17 @@
 		transaction-type="RESOURCE_LOCAL">
 		
 		<!-- All data classes. -->
-		<class>data.NamedObject</class>
-		<class>data.Location</class>
+		<class>data.action.AbstractAction</class>
+		<class>data.action.MoveAction</class>
+		<class>data.action.TakeAction</class>
+		<class>data.Game</class>
+		<class>data.HasActions</class>
+		<class>data.InventoryItem</class>
 		<class>data.Item</class>
-		<class>data.Way</class>
+		<class>data.Location</class>
+		<class>data.NamedObject</class>
 		<class>data.Player</class>
+		<class>data.Way</class>
 		
 		<properties>
 			<!-- Default database login using Oracle for EclipseLink's internal connection 

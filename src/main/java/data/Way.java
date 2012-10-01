@@ -1,18 +1,45 @@
 package data;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
-public class Way extends NamedObject {
+import data.action.MoveAction;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+@Entity
+public class Way extends HasActions<MoveAction> {
+
+	public Way() {
+		primaryAction = new MoveAction(this);
+	}
+
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	Location origin;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
-	Location destiny;
+	private Location destination;
+
+	/**
+	 * @return the origin
+	 */
+	public Location getOrigin() {
+		return origin;
+	}
+
+	/**
+	 * @return the destination
+	 */
+	public Location getDestination() {
+		return destination;
+	}
+
+	/**
+	 * @param destination the destination to set
+	 */
+	public void setDestination(Location destination) {
+		this.destination = destination;
+	}
 }

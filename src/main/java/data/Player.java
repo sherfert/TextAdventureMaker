@@ -1,21 +1,34 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
 public class Player {
+
+	public Player() {
+		inventory = new ArrayList<InventoryItem>();
+	}
+
 	@Id
 	@GeneratedValue
 	private int id;
-	
-	@OneToOne(fetch = FetchType.LAZY)
+
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	private Location location;
+
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinColumn
+	private List<InventoryItem> inventory;
 
 	/**
 	 * @return the location
@@ -25,7 +38,8 @@ public class Player {
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param location
+	 *            the location to set
 	 */
 	public void setLocation(Location location) {
 		this.location = location;
@@ -39,17 +53,28 @@ public class Player {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public void addInventoryItem(InventoryItem item) {
+		this.inventory.add(item);
+	}
+	
+	public void removeInventoryItem(InventoryItem item) {
+		this.inventory.remove(item);
+	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Player [location=" + location +"]";
+		return "Player [location=" + location + "]";
 	}
 }

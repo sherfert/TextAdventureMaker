@@ -9,6 +9,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import data.Game;
+import data.InventoryItem;
 import data.Item;
 import data.Location;
 import data.Player;
@@ -17,6 +19,36 @@ import data.Way;
 public class Main {
 
 	public static final String PERSISTENCE_UNIT_NAME = "textAdventureMaker";
+
+	private static EntityManagerFactory entityManagerFactory;
+
+	private static EntityManager entityManager;
+
+	private static CriteriaBuilder criteriaBuilder;
+
+	public static void connect() {
+		// Create objects for database access
+		entityManagerFactory = Persistence
+				.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+
+		entityManager = entityManagerFactory.createEntityManager();
+		criteriaBuilder = entityManager.getCriteriaBuilder();
+
+		// Begin a transaction
+		entityManager.getTransaction().begin();
+	}
+
+	public static void updateChanges() {
+		entityManager.getTransaction().commit();
+		entityManager.getTransaction().begin();
+	}
+
+	public static void disconnect() {
+		entityManager.getTransaction().commit();
+		// Close everything
+		entityManager.close();
+		entityManagerFactory.close();
+	}
 
 	public static void main(String[] args) throws Exception {
 		// Create everything
@@ -27,11 +59,20 @@ public class Main {
 		balcony.setName("Balcony");
 		balcony.setDescription("Nice wooden floor and some chairs.");
 
-		Way way = new Way();
-		way.setName("Balcony door");
-		way.setDescription("This door connects your flat with your balcony.");
-		flat.addWayOut(way);
-		balcony.addWayIn(way);
+		Way wayToBalcony = new Way();
+		wayToBalcony.setName("Balcony door");
+		wayToBalcony.setDescription("This door leads to your balcony.");
+		wayToBalcony.setDestination(balcony);
+		flat.addWayOut(wayToBalcony);
+		Way wayToFlat = new Way();
+		wayToFlat.setName("Balcony door");
+		wayToFlat.setDescription("This door leads inside your flat.");
+		wayToFlat.setDestination(flat);
+		balcony.addWayOut(wayToFlat);
+
+		InventoryItem bananaInv = new InventoryItem();
+		bananaInv.setName("Banana");
+		bananaInv.setDescription("Rich in cholesterol.");
 
 		Item tv = new Item();
 		tv.setName("Television");
@@ -40,6 +81,9 @@ public class Main {
 		Item banana = new Item();
 		banana.setName("Banana");
 		banana.setDescription("Rich in cholesterol.");
+		banana.addTakeAction();
+		banana.getPrimaryAction().addPickUpItem(bananaInv);
+
 		flat.addItem(banana);
 		Item chair = new Item();
 		chair.setName("Chair");
@@ -48,25 +92,24 @@ public class Main {
 
 		Player player = new Player();
 		player.setLocation(flat);
+		
+		Game game = new Game();
+		game.setStartLocation(flat);
 
-		// Create objects for database access
-		EntityManagerFactory entityManagerFactory = Persistence
-				.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-
-		EntityManager entityManager = entityManagerFactory
-				.createEntityManager();
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		// Connect to database
+		connect();
 
 		// Persist everything
-		entityManager.getTransaction().begin();
 		entityManager.persist(flat);
 		entityManager.persist(balcony);
-		entityManager.persist(way);
 		entityManager.persist(tv);
 		entityManager.persist(banana);
 		entityManager.persist(chair);
 		entityManager.persist(player);
-		entityManager.getTransaction().commit();
+		entityManager.persist(game);
+
+		// Updates changes
+		updateChanges();
 
 		// Find location by id
 		Location lo = entityManager.find(Location.class, 1);
@@ -95,26 +138,46 @@ public class Main {
 		// Find all items
 		CriteriaQuery<Item> criteriaQueryItem = criteriaBuilder
 				.createQuery(Item.class);
-		Root<Item> itemRoot = criteriaQueryWay.from(Item.class);
+		Root<Item> itemRoot = criteriaQueryItem.from(Item.class);
 		criteriaQueryItem.select(itemRoot);
 		List<Item> resultListItem = entityManager
 				.createQuery(criteriaQueryItem).getResultList();
 		for (Item i : resultListItem) {
 			System.out.println(i);
 		}
-		// Find all players (hopefully only one)
-		CriteriaQuery<Player> criteriaQueryPlayer = criteriaBuilder
-				.createQuery(Player.class);
-		Root<Player> playerRoot = criteriaQueryWay.from(Player.class);
-		criteriaQueryPlayer.select(playerRoot);
-		List<Player> resultListPlayer = entityManager.createQuery(
-				criteriaQueryPlayer).getResultList();
-		for (Player p : resultListPlayer) {
-			System.out.println(p);
-		}
+		// Find player
+		Player p = PlayerManager.getPlayer();
+		System.out.println(p);
 
-		// Close everything
-		entityManager.close();
-		entityManagerFactory.close();
+		// Test: take banana and go to balcony
+		banana.getPrimaryAction().triggerAction();
+		wayToBalcony.getPrimaryAction().triggerAction();
+
+		// Find player again
+		p = PlayerManager.getPlayer();
+		System.out.println(p);
+
+		disconnect();
+	}
+
+	/**
+	 * @return the entityManagerFactory
+	 */
+	public static EntityManagerFactory getEntityManagerFactory() {
+		return entityManagerFactory;
+	}
+
+	/**
+	 * @return the entityManager
+	 */
+	public static EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	/**
+	 * @return the criteriaBuilder
+	 */
+	public static CriteriaBuilder getCriteriaBuilder() {
+		return criteriaBuilder;
 	}
 }
