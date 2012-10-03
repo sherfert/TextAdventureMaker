@@ -13,21 +13,34 @@ import persistence.PlayerManager;
 import data.Way;
 
 /**
- * @author Satia
+ * An action changing the location of the player.
  * 
+ * @author Satia
  */
 @Entity
 public class MoveAction extends AbstractAction {
 
+	/**
+	 * The way where the player should move.
+	 */
+	@OneToOne(mappedBy = "primaryAction", cascade = CascadeType.ALL)
+	private Way way;
+
+	/**
+	 * No-arg constructor for the database. Use
+	 * {@link MoveAction#MoveAction(Way)} instead.
+	 */
+	@Deprecated
 	public MoveAction() {
 	}
 
+	/**
+	 * @param way
+	 *            the way where the player should move
+	 */
 	public MoveAction(Way way) {
 		this.way = way;
 	}
-
-	@OneToOne(mappedBy = "primaryAction", cascade = CascadeType.ALL)
-	private Way way;
 
 	/**
 	 * @return the way
@@ -41,8 +54,6 @@ public class MoveAction extends AbstractAction {
 		if (enabled) {
 			PlayerManager.getPlayer().setLocation(way.getDestination());
 			Main.updateChanges();
-		} else {
-			// TODO
 		}
 	}
 }

@@ -79,35 +79,44 @@ public class Main {
 		Item tv = new Item();
 		tv.setName("Television");
 		tv.setDescription("32\" television.");
+		tv.setPrimaryActionEnabled(false);
+		tv.setForbiddenText("This is a little heavy.");
 		flat.addItem(tv);
 		Item banana = new Item();
 		banana.setName("Banana");
 		banana.setDescription("Rich in cholesterol.");
-		banana.addTakeAction();
 		banana.getPrimaryAction().addPickUpItem(bananaInv);
 
 		flat.addItem(banana);
 		Item chair = new Item();
 		chair.setName("Chair");
 		chair.setDescription("A wooden chair.");
+		chair.setPrimaryActionEnabled(false);
 		balcony.addItem(chair);
 
 		Player player = new Player();
 		player.setLocation(flat);
-		
+
 		// Game options
 		Game game = new Game();
 		game.setStartLocation(flat);
+
+		game.setInventoryEmptyText("Your inventory is empty.");
+		game.setNoCommandText("I do not understand you.");
+		game.setNoSuchItemText("There is no <item> here.");
+		game.setNotTakeableText("You cannot take the <item>.");
 		game.setStartText("This is a little text adventure.");
+		game.setTakenText("You picked up the <item>.");
+
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
+		
 		game.addInventoryCommand("inventory");
-		// FIXME
 		game.addMoveCommand("go (.+)");
 		game.addMoveCommand("move to (.+)");
-		game.addMoveCommand("ship (.+) ya");
-		
-		game.addTakeCommand("take");
+		game.addTakeCommand("take (.+)");
+		game.addTakeCommand("pick up (.+)");
+		game.addTakeCommand("pick (.+) up");
 
 		// Connect to database
 		connect();
@@ -162,14 +171,14 @@ public class Main {
 		Player p = PlayerManager.getPlayer();
 		System.out.println(p);
 
-//		// Test: take banana and go to balcony
-//		banana.getPrimaryAction().triggerAction();
-//		wayToBalcony.getPrimaryAction().triggerAction();
-//
-//		// Find player again
-//		p = PlayerManager.getPlayer();
-//		System.out.println(p);
-		
+		// // Test: take banana and go to balcony
+		// banana.getPrimaryAction().triggerAction();
+		// wayToBalcony.getPrimaryAction().triggerAction();
+		//
+		// // Find player again
+		// p = PlayerManager.getPlayer();
+		// System.out.println(p);
+
 		// Start a game
 		GamePlayer.start();
 

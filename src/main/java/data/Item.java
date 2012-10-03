@@ -9,6 +9,11 @@ import data.action.TakeAction;
 
 @Entity
 public class Item extends HasActions<TakeAction> {
+	
+	public Item() {
+		this.primaryAction = new TakeAction(this);
+	}
+	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	Location location;
@@ -18,19 +23,5 @@ public class Item extends HasActions<TakeAction> {
 	 */
 	public Location getLocation() {
 		return location;
-	}
-	
-	public void addTakeAction() {
-		this.primaryAction = new TakeAction(this);
-	}
-	
-	public void removeTakeAction() {
-		// TODO del from db
-		this.primaryAction = null;
-	}
-	
-	public boolean isTakable() {
-		// TODO
-		return false;
 	}
 }

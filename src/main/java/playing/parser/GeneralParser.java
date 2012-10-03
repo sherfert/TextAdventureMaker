@@ -12,43 +12,53 @@ import playing.GamePlayer;
 
 public class GeneralParser {
 
+	public static enum Command {
+		MOVE(GameManager.getGame().getMoveCommands(), "move", String.class),
+		TAKE(GameManager.getGame().getTakeCommands(), "take", String.class),
+		INVENTORY(GameManager.getGame().getInventoryCommands(), "inventory");
+
+		public final String methodName;
+
+		public final Class<?>[] parameterTypes;
+
+		public final Pattern pattern;
+
+		private Command(List<String> commands, String methodName,
+				Class<?>... parameterTypes) {
+			this.methodName = methodName;
+			this.parameterTypes = parameterTypes;
+			this.pattern = PatternGenerator.getPattern(commands);
+		}
+	}
+
 	public static void parse(String input) {
-		// TODO
-		System.out.print("You wrote: " + input);
+		// Trimmed, lower case, no multiple spaces
+		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ");
+		
+		for (Command command : Command.values()) {
+			Matcher matcher = command.pattern.matcher(input);
 
-		Pattern movePattern = PatternGenerator.getPattern(GameManager.getGame()
-				.getMoveCommands());
-		Matcher matcher = movePattern.matcher(input);
+			if (matcher.matches()) {
+				String[] params = getParameters(matcher);
 
-		if (matcher.matches()) {
-			String[] params = getParameters(matcher);
-
-			Method moveMethod;
-			try {
-				moveMethod = GamePlayer.class.getDeclaredMethod("move",
-						String.class);
-				if (moveMethod.getParameterTypes().length == params.length) {
-					moveMethod.invoke(null, (Object[]) params);
-				} else {
-					// TODO
+				try {
+					Method method = GamePlayer.class.getDeclaredMethod(
+							command.methodName, command.parameterTypes);
+					if (method.getParameterTypes().length == params.length) {
+						method.invoke(null, (Object[]) params);
+					} else {
+						// TODO
+					}
+				} catch (NoSuchMethodException | IllegalAccessException
+						| IllegalArgumentException | InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return;
 			}
 		}
+		// No command matched
+		GamePlayer.noCommand();
 	}
 
 	public static String[] getParameters(Matcher matcher) {

@@ -68,6 +68,13 @@ public class Player {
 		this.inventory.remove(item);
 	}
 
+	/**
+	 * @return the inventory
+	 */
+	public List<InventoryItem> getInventory() {
+		return inventory;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -11,6 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+/**
+ * A game that can be played. 
+ * 
+ * @author Satia
+ */
 @Entity
 public class Game {
 	
@@ -30,6 +35,16 @@ public class Game {
 	private Location startLocation;
 	
 	private String startText;
+	
+	private String noCommandText;
+	
+	private String inventoryEmptyText;
+	
+	private String noSuchItemText;
+	
+	private String takenText;
+	
+	private String notTakeableText;
 	
 	@ElementCollection
 	private List<String> exitCommands;
@@ -140,5 +155,75 @@ public class Game {
 	 */
 	public List<String> getTakeCommands() {
 		return takeCommands;
+	}
+
+	/**
+	 * @return the inventoryEmptyText
+	 */
+	public String getInventoryEmptyText() {
+		return inventoryEmptyText;
+	}
+
+	/**
+	 * @param inventoryEmptyText the inventoryEmptyText to set
+	 */
+	public void setInventoryEmptyText(String inventoryEmptyText) {
+		this.inventoryEmptyText = inventoryEmptyText;
+	}
+
+	/**
+	 * @return the noSuchItemText
+	 */
+	public String getNoSuchItemText() {
+		return noSuchItemText;
+	}
+
+	/**
+	 * @param noSuchItemText the noSuchItemText to set
+	 */
+	public void setNoSuchItemText(String noSuchItemText) {
+		this.noSuchItemText = noSuchItemText;
+	}
+
+	/**
+	 * @return the takenText
+	 */
+	public String getTakenText() {
+		return takenText;
+	}
+
+	/**
+	 * @param takenText the takenText to set
+	 */
+	public void setTakenText(String takenText) {
+		this.takenText = takenText;
+	}
+
+	/**
+	 * @return the notTakeableText
+	 */
+	public String getNotTakeableText() {
+		return notTakeableText;
+	}
+
+	/**
+	 * @param notTakeableText the notTakeableText to set
+	 */
+	public void setNotTakeableText(String notTakeableText) {
+		this.notTakeableText = notTakeableText;
+	}
+
+	/**
+	 * @return the noCommandText
+	 */
+	public String getNoCommandText() {
+		return noCommandText;
+	}
+
+	/**
+	 * @param noCommandText the noCommandText to set
+	 */
+	public void setNoCommandText(String noCommandText) {
+		this.noCommandText = noCommandText;
 	}
 }

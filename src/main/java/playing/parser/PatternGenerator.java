@@ -7,16 +7,19 @@ import persistence.GameManager;
 
 public class PatternGenerator {
 
-	// TODO method necessary?
 	public static Pattern getExitPattern() {
 		return getPattern(GameManager.getGame().getExitCommands());
 	}
 
 	public static Pattern getPattern(List<String> cmds) {
-		// TODO 0 commands?
+		if(cmds.isEmpty()) {
+			// Pattern matching nothing
+			return Pattern.compile("a^");
+		}
+		// Combine regular expressions with '|' (logical OR)
 		StringBuilder sb = new StringBuilder();
 		for (String cmd : cmds) {
-			sb.append(cmd.toLowerCase()).append('|');
+			sb.append(cmd).append('|');
 		}
 		// Delete last '|'
 		sb.deleteCharAt(sb.length() - 1);
