@@ -9,6 +9,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import playing.GamePlayer;
+
 import data.Game;
 import data.InventoryItem;
 import data.Item;
@@ -93,8 +95,19 @@ public class Main {
 		Player player = new Player();
 		player.setLocation(flat);
 		
+		// Game options
 		Game game = new Game();
 		game.setStartLocation(flat);
+		game.setStartText("This is a little text adventure.");
+		game.addExitCommand("exit");
+		game.addExitCommand("quit");
+		game.addInventoryCommand("inventory");
+		// FIXME
+		game.addMoveCommand("go (.+)");
+		game.addMoveCommand("move to (.+)");
+		game.addMoveCommand("ship (.+) ya");
+		
+		game.addTakeCommand("take");
 
 		// Connect to database
 		connect();
@@ -149,13 +162,16 @@ public class Main {
 		Player p = PlayerManager.getPlayer();
 		System.out.println(p);
 
-		// Test: take banana and go to balcony
-		banana.getPrimaryAction().triggerAction();
-		wayToBalcony.getPrimaryAction().triggerAction();
-
-		// Find player again
-		p = PlayerManager.getPlayer();
-		System.out.println(p);
+//		// Test: take banana and go to balcony
+//		banana.getPrimaryAction().triggerAction();
+//		wayToBalcony.getPrimaryAction().triggerAction();
+//
+//		// Find player again
+//		p = PlayerManager.getPlayer();
+//		System.out.println(p);
+		
+		// Start a game
+		GamePlayer.start();
 
 		disconnect();
 	}
