@@ -7,26 +7,54 @@ import javax.persistence.ManyToOne;
 
 import data.action.MoveAction;
 
+/**
+ * A one-way connection between two locations.
+ * 
+ * @author Satia
+ */
 @Entity
 public class Way extends HasActions<MoveAction> {
 
-	public Way() {
-		primaryAction = new MoveAction(this);
-	}
+	/**
+	 * The destination.
+	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
+	Location destination;
 
+	/**
+	 * The origin.
+	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	Location origin;
 
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
-	private Location destination;
+	/**
+	 * No-arg constructor for the database. Use
+	 * {@link Way#Way(Location, Location)} instead.
+	 */
+	@Deprecated
+	public Way() {
+		primaryAction = new MoveAction(this);
+	}
 
 	/**
-	 * @return the origin
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
+	 * @param origin
+	 *            the origin
+	 * @param destination
+	 *            the destination
 	 */
-	public Location getOrigin() {
-		return origin;
+	public Way(String name, String description, Location origin,
+			Location destination) {
+		super(name, description);
+		primaryAction = new MoveAction(this);
+		// Add way to the locations. The fields are being set by this.
+		origin.addWayOut(this);
+		destination.addWayIn(this);
 	}
 
 	/**
@@ -37,9 +65,9 @@ public class Way extends HasActions<MoveAction> {
 	}
 
 	/**
-	 * @param destination the destination to set
+	 * @return the origin
 	 */
-	public void setDestination(Location destination) {
-		this.destination = destination;
+	public Location getOrigin() {
+		return origin;
 	}
 }

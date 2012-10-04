@@ -48,13 +48,14 @@ public class TakeAction extends AbstractAction {
 	private List<InventoryItem> pickUpItems;
 
 	/**
-	 * No-arg constructor for the database. Use
-	 * {@link TakeAction#TakeAction(Item)} instead.
+	 * No-arg constructor for the database.
+	 * 
+	 * @deprecated Use {@link TakeAction#TakeAction(Item)} instead.
 	 */
 	@Deprecated
 	public TakeAction() {
-		pickUpItems = new ArrayList<InventoryItem>();
-		deleteItem = true;
+		this.pickUpItems = new ArrayList<InventoryItem>();
+		this.deleteItem = true;
 	}
 
 	/**
@@ -64,6 +65,52 @@ public class TakeAction extends AbstractAction {
 	public TakeAction(Item item) {
 		this();
 		this.item = item;
+	}
+
+	/**
+	 * @param item
+	 *            the item to be taked
+	 * @param enabled
+	 *            if the action should be enabled
+	 */
+	public TakeAction(Item item, boolean enabled) {
+		super(enabled);
+		this.item = item;
+		this.pickUpItems = new ArrayList<InventoryItem>();
+		this.deleteItem = true;
+	}
+
+	/**
+	 * @param item
+	 *            the item to be taked
+	 * @param enabled
+	 *            if the action should be enabled
+	 * @param forbiddenText
+	 *            the forbiddenText
+	 * @param successfulText
+	 *            the successfulText
+	 */
+	public TakeAction(Item item, boolean enabled, String forbiddenText,
+			String successfulText) {
+		super(enabled, forbiddenText, successfulText);
+		this.item = item;
+		this.pickUpItems = new ArrayList<InventoryItem>();
+		this.deleteItem = true;
+	}
+
+	/**
+	 * @param item
+	 *            the item to be taked
+	 * @param forbiddenText
+	 *            the forbiddenText
+	 * @param successfulText
+	 *            the successfulText
+	 */
+	public TakeAction(Item item, String forbiddenText, String successfulText) {
+		super(forbiddenText, successfulText);
+		this.item = item;
+		this.pickUpItems = new ArrayList<InventoryItem>();
+		this.deleteItem = true;
 	}
 
 	/**

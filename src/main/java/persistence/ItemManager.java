@@ -3,7 +3,18 @@ package persistence;
 import data.Item;
 import data.Location;
 
+/**
+ * Managing access to the items in the database
+ * 
+ * @author Satia
+ */
 public class ItemManager {
+	/**
+	 * Removes an item from the database.
+	 * 
+	 * @param item
+	 *            the item
+	 */
 	public static void removeItem(Item item) {
 		Main.getEntityManager().remove(item);
 	}

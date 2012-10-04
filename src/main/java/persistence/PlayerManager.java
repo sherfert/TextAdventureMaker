@@ -7,8 +7,15 @@ import javax.persistence.criteria.Root;
 
 import data.Player;
 
+/**
+ * Managing access to the player in a database.
+ * 
+ * @author Satia
+ */
 public class PlayerManager {
 	/**
+	 * TODO no RuntimeExp
+	 * 
 	 * @return the player
 	 */
 	public static Player getPlayer() {

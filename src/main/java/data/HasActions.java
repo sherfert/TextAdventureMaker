@@ -1,6 +1,3 @@
-/**
- * 
- */
 package data;
 
 import java.util.ArrayList;
@@ -16,39 +13,62 @@ import javax.persistence.OneToOne;
 import data.action.AbstractAction;
 
 /**
+ * Anything that has a primary action and, if necessary, additional actions
+ * being performed at the same time.
+ * 
+ * FIXME this class is "not so good".
  * 
  * @author Satia
  * 
  * @param <E>
+ *            the type of the primary action. A subtype of
+ *            {@link AbstractAction}.
  */
 @MappedSuperclass
 public abstract class HasActions<E extends AbstractAction> extends NamedObject {
 
-	protected HasActions() {
-		additionalActions = new ArrayList<AbstractAction>();
-	}
-
+	/**
+	 * The primary action.
+	 */
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	protected E primaryAction;
 
+	/**
+	 * All additional actions.
+	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable
 	List<AbstractAction> additionalActions;
 
 	/**
-	 * @return the primaryAction
+	 * No-arg constructor for the database. Use
+	 * {@link HasActions#HasActions(String, String)} instead.
 	 */
-	public E getPrimaryAction() {
-		return primaryAction;
+	@Deprecated
+	protected HasActions() {
+		additionalActions = new ArrayList<AbstractAction>();
 	}
 
-	public boolean isPrimaryActionEnabled() {
-		return primaryAction.isEnabled();
+	/**
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
+	 */
+	protected HasActions(String name, String description) {
+		super(name, description);
+		additionalActions = new ArrayList<AbstractAction>();
 	}
 
-	public void setPrimaryActionEnabled(boolean enabled) {
-		primaryAction.setEnabled(enabled);
+	/**
+	 * Adds an additional action.
+	 * 
+	 * @param action
+	 *            the action
+	 */
+	public void addAction(AbstractAction action) {
+		this.additionalActions.add(action);
 	}
 
 	/**
@@ -59,6 +79,45 @@ public abstract class HasActions<E extends AbstractAction> extends NamedObject {
 	}
 
 	/**
+	 * @return the primaryAction
+	 */
+	public E getPrimaryAction() {
+		return primaryAction;
+	}
+
+	/**
+	 * @return the successfulText
+	 */
+	public String getSuccessfulText() {
+		return primaryAction.getSuccessfulText();
+	}
+
+	/**
+	 * @return if the primary action is enabled.
+	 */
+	public boolean isPrimaryActionEnabled() {
+		return primaryAction.isEnabled();
+	}
+
+	/**
+	 * Removes an additional action.
+	 * 
+	 * @param action
+	 *            the action
+	 */
+	public void removeAction(AbstractAction action) {
+		this.additionalActions.remove(action);
+	}
+
+	/**
+	 * @param successfulText
+	 *            the successfulText to set
+	 */
+	public void setSuccessfulText(String successfulText) {
+		primaryAction.setSuccessfulText(successfulText);
+	}
+
+	/**
 	 * @param forbiddenText
 	 *            the forbiddenText to set
 	 */
@@ -66,12 +125,12 @@ public abstract class HasActions<E extends AbstractAction> extends NamedObject {
 		primaryAction.setForbiddenText(forbiddenText);
 	}
 
-	public void addAction(AbstractAction action) {
-		this.additionalActions.add(action);
-	}
-
-	public void removeAction(AbstractAction action) {
-		this.additionalActions.remove(action);
+	/**
+	 * @param enabled
+	 *            if the primary action should be enabled
+	 */
+	public void setPrimaryActionEnabled(boolean enabled) {
+		primaryAction.setEnabled(enabled);
 	}
 
 	/**

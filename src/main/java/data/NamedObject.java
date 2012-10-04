@@ -6,43 +6,49 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
+/**
+ * Anything having a name and a description.
+ * 
+ * @author Satia
+ */
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class NamedObject {
+
+	/**
+	 * The description.
+	 */
+	private String description;
+
+	/**
+	 * The id.
+	 */
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
+	/**
+	 * The name.
+	 */
 	private String name;
-	
-	private String description;
-	
+
 	/**
-	 * @return the id
+	 * No-arg constructor for the database. Use
+	 * {@link NamedObject#NamedObject(String, String)} instead.
 	 */
-	public int getId() {
-		return id;
+	@Deprecated
+	protected NamedObject() {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
 	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
+	protected NamedObject(String name, String description) {
 		this.name = name;
+		this.description = description;
 	}
 
 	/**
@@ -53,18 +59,40 @@ public abstract class NamedObject {
 	}
 
 	/**
-	 * @param description the description to set
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @param id
+	 *            the id to set
 	 */
-	@Override
-	public String toString() {
-		return "NamedObject [id=" + id + ", name=" + name + ", description="
-				+ description + "]";
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 }

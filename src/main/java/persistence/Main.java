@@ -18,16 +18,37 @@ import data.Location;
 import data.Player;
 import data.Way;
 
+/**
+ * TODO Test class.
+ * 
+ * @author Satia
+ */
 public class Main {
 
+	/**
+	 * The name of the persistence unit. Specified in
+	 * src/main/resources/persistence.xml
+	 */
 	public static final String PERSISTENCE_UNIT_NAME = "textAdventureMaker";
 
-	private static EntityManagerFactory entityManagerFactory;
-
-	private static EntityManager entityManager;
-
+	/**
+	 * The criteria builder.
+	 */
 	private static CriteriaBuilder criteriaBuilder;
 
+	/**
+	 * The entity manager.
+	 */
+	private static EntityManager entityManager;
+
+	/**
+	 * The entity manager factory.
+	 */
+	private static EntityManagerFactory entityManagerFactory;
+
+	/**
+	 * Connects to the database.
+	 */
 	public static void connect() {
 		// Create objects for database access
 		entityManagerFactory = Persistence
@@ -40,11 +61,9 @@ public class Main {
 		entityManager.getTransaction().begin();
 	}
 
-	public static void updateChanges() {
-		entityManager.getTransaction().commit();
-		entityManager.getTransaction().begin();
-	}
-
+	/**
+	 * Disconnects from the database.
+	 */
 	public static void disconnect() {
 		entityManager.getTransaction().commit();
 		// Close everything
@@ -52,50 +71,54 @@ public class Main {
 		entityManagerFactory.close();
 	}
 
+	/**
+	 * @return the criteriaBuilder
+	 */
+	public static CriteriaBuilder getCriteriaBuilder() {
+		return criteriaBuilder;
+	}
+
+	/**
+	 * @return the entityManager
+	 */
+	public static EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	/**
+	 * @return the entityManagerFactory
+	 */
+	public static EntityManagerFactory getEntityManagerFactory() {
+		return entityManagerFactory;
+	}
+
+	/**
+	 * Test-main.
+	 */
 	public static void main(String[] args) throws Exception {
 		// Create everything
-		Location flat = new Location();
-		flat.setName("Flat");
-		flat.setDescription("Your little home.");
-		Location balcony = new Location();
-		balcony.setName("Balcony");
-		balcony.setDescription("Nice wooden floor and some chairs.");
+		Location flat = new Location("Flat",
+				"Your little home. A banana and a tv.");
+		Location balcony = new Location("Balcony",
+				"Nice wooden floor and some chairs.");
 
-		Way wayToBalcony = new Way();
-		wayToBalcony.setName("Balcony door");
-		wayToBalcony.setDescription("This door leads to your balcony.");
-		wayToBalcony.setDestination(balcony);
-		flat.addWayOut(wayToBalcony);
-		Way wayToFlat = new Way();
-		wayToFlat.setName("Balcony door");
-		wayToFlat.setDescription("This door leads inside your flat.");
-		wayToFlat.setDestination(flat);
-		balcony.addWayOut(wayToFlat);
+		Way wayToBalcony = new Way("Balcony door",
+				"This door leads to your balcony.", flat, balcony);
+		Way wayToFlat = new Way("Balcony door",
+				"This door leads inside your flat.", balcony, flat);
 
-		InventoryItem bananaInv = new InventoryItem();
-		bananaInv.setName("Banana");
-		bananaInv.setDescription("Rich in cholesterol.");
+		InventoryItem bananaInv = new InventoryItem("Banana", "Rich in cholesterol.");
 
-		Item tv = new Item();
-		tv.setName("Television");
-		tv.setDescription("32\" television.");
+		Item tv = new Item(flat, "Television", "32\" television.");
 		tv.setPrimaryActionEnabled(false);
 		tv.setForbiddenText("This is a little heavy.");
-		flat.addItem(tv);
-		Item banana = new Item();
-		banana.setName("Banana");
-		banana.setDescription("Rich in cholesterol.");
+		Item banana = new Item(flat, "Banana", "Rich in cholesterol.");
+		banana.setSuccessfulText("Ya got bananaaa-a-a.");
 		banana.getPrimaryAction().addPickUpItem(bananaInv);
-
-		flat.addItem(banana);
-		Item chair = new Item();
-		chair.setName("Chair");
-		chair.setDescription("A wooden chair.");
+		Item chair = new Item(balcony, "Chair", "A wooden chair.");
 		chair.setPrimaryActionEnabled(false);
-		balcony.addItem(chair);
 
-		Player player = new Player();
-		player.setLocation(flat);
+		Player player = new Player(flat);
 
 		// Game options
 		Game game = new Game();
@@ -110,7 +133,7 @@ public class Main {
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
-		
+
 		game.addInventoryCommand("inventory");
 		game.addMoveCommand("go (.+)");
 		game.addMoveCommand("move to (.+)");
@@ -133,51 +156,43 @@ public class Main {
 		// Updates changes
 		updateChanges();
 
-		// Find location by id
-		Location lo = entityManager.find(Location.class, 1);
-		System.out.println(lo);
-
-		// Find all locations
-		CriteriaQuery<Location> criteriaQueryLoc = criteriaBuilder
-				.createQuery(Location.class);
-		Root<Location> locationRoot = criteriaQueryLoc.from(Location.class);
-		criteriaQueryLoc.select(locationRoot);
-		List<Location> resultListLoc = entityManager.createQuery(
-				criteriaQueryLoc).getResultList();
-		for (Location l : resultListLoc) {
-			System.out.println(l);
-		}
-		// Find all ways
-		CriteriaQuery<Way> criteriaQueryWay = criteriaBuilder
-				.createQuery(Way.class);
-		Root<Way> wayRoot = criteriaQueryWay.from(Way.class);
-		criteriaQueryWay.select(wayRoot);
-		List<Way> resultListWay = entityManager.createQuery(criteriaQueryWay)
-				.getResultList();
-		for (Way w : resultListWay) {
-			System.out.println(w);
-		}
-		// Find all items
-		CriteriaQuery<Item> criteriaQueryItem = criteriaBuilder
-				.createQuery(Item.class);
-		Root<Item> itemRoot = criteriaQueryItem.from(Item.class);
-		criteriaQueryItem.select(itemRoot);
-		List<Item> resultListItem = entityManager
-				.createQuery(criteriaQueryItem).getResultList();
-		for (Item i : resultListItem) {
-			System.out.println(i);
-		}
-		// Find player
-		Player p = PlayerManager.getPlayer();
-		System.out.println(p);
-
-		// // Test: take banana and go to balcony
-		// banana.getPrimaryAction().triggerAction();
-		// wayToBalcony.getPrimaryAction().triggerAction();
-		//
-		// // Find player again
-		// p = PlayerManager.getPlayer();
-		// System.out.println(p);
+//		// Find location by id
+//		Location lo = entityManager.find(Location.class, 1);
+//		System.out.println(lo);
+//
+//		// Find all locations
+//		CriteriaQuery<Location> criteriaQueryLoc = criteriaBuilder
+//				.createQuery(Location.class);
+//		Root<Location> locationRoot = criteriaQueryLoc.from(Location.class);
+//		criteriaQueryLoc.select(locationRoot);
+//		List<Location> resultListLoc = entityManager.createQuery(
+//				criteriaQueryLoc).getResultList();
+//		for (Location l : resultListLoc) {
+//			System.out.println(l);
+//		}
+//		// Find all ways
+//		CriteriaQuery<Way> criteriaQueryWay = criteriaBuilder
+//				.createQuery(Way.class);
+//		Root<Way> wayRoot = criteriaQueryWay.from(Way.class);
+//		criteriaQueryWay.select(wayRoot);
+//		List<Way> resultListWay = entityManager.createQuery(criteriaQueryWay)
+//				.getResultList();
+//		for (Way w : resultListWay) {
+//			System.out.println(w);
+//		}
+//		// Find all items
+//		CriteriaQuery<Item> criteriaQueryItem = criteriaBuilder
+//				.createQuery(Item.class);
+//		Root<Item> itemRoot = criteriaQueryItem.from(Item.class);
+//		criteriaQueryItem.select(itemRoot);
+//		List<Item> resultListItem = entityManager
+//				.createQuery(criteriaQueryItem).getResultList();
+//		for (Item i : resultListItem) {
+//			System.out.println(i);
+//		}
+//		// Find player
+//		Player p = PlayerManager.getPlayer();
+//		System.out.println(p);
 
 		// Start a game
 		GamePlayer.start();
@@ -186,23 +201,12 @@ public class Main {
 	}
 
 	/**
-	 * @return the entityManagerFactory
+	 * Updates any changes.
+	 * 
+	 * TODO is this necessary?
 	 */
-	public static EntityManagerFactory getEntityManagerFactory() {
-		return entityManagerFactory;
-	}
-
-	/**
-	 * @return the entityManager
-	 */
-	public static EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-	/**
-	 * @return the criteriaBuilder
-	 */
-	public static CriteriaBuilder getCriteriaBuilder() {
-		return criteriaBuilder;
+	public static void updateChanges() {
+		entityManager.getTransaction().commit();
+		entityManager.getTransaction().begin();
 	}
 }

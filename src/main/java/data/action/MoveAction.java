@@ -27,8 +27,9 @@ public class MoveAction extends AbstractAction {
 	private Way way;
 
 	/**
-	 * No-arg constructor for the database. Use
-	 * {@link MoveAction#MoveAction(Way)} instead.
+	 * No-arg constructor for the database.
+	 * 
+	 * @deprecated Use {@link MoveAction#MoveAction(Way)} instead.
 	 */
 	@Deprecated
 	public MoveAction() {
@@ -39,6 +40,46 @@ public class MoveAction extends AbstractAction {
 	 *            the way where the player should move
 	 */
 	public MoveAction(Way way) {
+		this.way = way;
+	}
+
+	/**
+	 * @param way
+	 *            the way where the player should move
+	 * @param enabled
+	 *            if the action should be enabled
+	 */
+	public MoveAction(Way way, boolean enabled) {
+		super(enabled);
+		this.way = way;
+	}
+
+	/**
+	 * @param way
+	 *            the way where the player should move
+	 * @param enabled
+	 *            if the action should be enabled
+	 * @param forbiddenText
+	 *            the forbiddenText
+	 * @param successfulText
+	 *            the successfulText
+	 */
+	public MoveAction(Way way, boolean enabled, String forbiddenText,
+			String successfulText) {
+		super(enabled, forbiddenText, successfulText);
+		this.way = way;
+	}
+
+	/**
+	 * @param way
+	 *            the way where the player should move
+	 * @param forbiddenText
+	 *            the forbiddenText
+	 * @param successfulText
+	 *            the successfulText
+	 */
+	public MoveAction(Way way, String forbiddenText, String successfulText) {
+		super(forbiddenText, successfulText);
 		this.way = way;
 	}
 

@@ -27,16 +27,61 @@ public abstract class AbstractAction {
 	protected boolean enabled;
 
 	/**
-	 * An personalized error message displayed if the action is triggered but
+	 * A personalized error message displayed if the action is triggered but
 	 * disabled.
 	 */
 	protected String forbiddenText;
 
 	/**
-	 * By default actions are enabled.
+	 * A personalized message displayed if the action is triggered successfully.
+	 */
+	protected String successfulText;
+
+	/**
+	 * An enabled action.
 	 */
 	protected AbstractAction() {
 		enabled = true;
+	}
+
+	/**
+	 * An action.
+	 * 
+	 * @param enabled
+	 *            if the action should be enabled
+	 */
+	protected AbstractAction(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	/**
+	 * An action.
+	 * 
+	 * @param enabled
+	 *            if the action should be enabled
+	 * @param forbiddenText
+	 *            the forbiddenText
+	 * @param successfulText
+	 *            the successfulText
+	 */
+	protected AbstractAction(boolean enabled, String forbiddenText,
+			String successfulText) {
+		this.enabled = enabled;
+		this.forbiddenText = forbiddenText;
+		this.successfulText = successfulText;
+	}
+
+	/**
+	 * An enabled action.
+	 * 
+	 * @param forbiddenText
+	 *            the forbiddenText
+	 * @param successfulText
+	 *            the successfulText
+	 */
+	protected AbstractAction(String forbiddenText, String successfulText) {
+		this.forbiddenText = forbiddenText;
+		this.successfulText = successfulText;
 	}
 
 	/**
@@ -51,6 +96,13 @@ public abstract class AbstractAction {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * @return the successfulText
+	 */
+	public String getSuccessfulText() {
+		return successfulText;
 	}
 
 	/**
@@ -77,11 +129,11 @@ public abstract class AbstractAction {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param successfulText
+	 *            the successfulText to set
 	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setSuccessfulText(String successfulText) {
+		this.successfulText = successfulText;
 	}
 
 	/**

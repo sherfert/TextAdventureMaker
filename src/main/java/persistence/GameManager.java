@@ -7,8 +7,15 @@ import javax.persistence.criteria.Root;
 
 import data.Game;
 
+/**
+ * Managing access to the game in a database.
+ * 
+ * @author Satia
+ */
 public class GameManager {
 	/**
+	 * TODO no RuntimeExp
+	 * 
 	 * @return the game
 	 */
 	public static Game getGame() {
