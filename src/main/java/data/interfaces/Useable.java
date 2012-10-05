@@ -3,41 +3,40 @@ package data.interfaces;
 import java.util.List;
 
 import data.action.AbstractAction;
-import data.action.MoveAction;
 
 /**
- * Anything by which one can travel.
+ * Anything useable for itself (without other objects) in the game.
  * 
  * @author Satia
  */
-public interface Travelable extends Identifiable {
+public interface Useable extends Identifiable {
 	/**
 	 * Adds an additional action.
 	 * 
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToMove(AbstractAction action);
+	public void addAdditionalActionToUse(AbstractAction action);
 	
 	/**
 	 * @return the additional actions.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromMove();
-	
+	public List<AbstractAction> getAdditionalActionsFromUse();
+
 	/**
 	 * @return the forbiddenText or {@code null}.
 	 */
-	public String getMoveForbiddenText();
+	public String getUseForbiddenText();
 
 	/**
 	 * @return the successfulText or {@code null}.
 	 */
-	public String getMoveSuccessfulText();
+	public String getUseSuccessfulText();
 
 	/**
-	 * @return if moving is enabled.
+	 * @return if using is enabled.
 	 */
-	public boolean isMovingEnabled();
+	public boolean isUsingEnabled();
 
 	/**
 	 * Removes an additional action.
@@ -45,7 +44,7 @@ public interface Travelable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromMove(AbstractAction action);
+	public void removeAdditionalActionFromUse(AbstractAction action);
 
 	/**
 	 * Sets the forbidden text. If {@code null} passed, the default text will be
@@ -54,7 +53,7 @@ public interface Travelable extends Identifiable {
 	 * @param forbiddenText
 	 *            the forbiddenText to set
 	 */
-	public void setMoveForbiddenText(String forbiddenText);
+	public void setUseForbiddenText(String forbiddenText);
 
 	/**
 	 * Sets the successful text. If {@code null} passed, the default text will
@@ -63,16 +62,16 @@ public interface Travelable extends Identifiable {
 	 * @param successfulText
 	 *            the successfulText to set
 	 */
-	public void setMoveSuccessfulText(String successfulText);
+	public void setUseSuccessfulText(String successfulText);
 
 	/**
 	 * @param enabled
-	 *            if taking should be enabled
+	 *            if using should be enabled
 	 */
-	public void setMovingEnabled(boolean enabled);
+	public void setUsingEnabled(boolean enabled);
 
 	/**
-	 * Triggers the {@link MoveAction} and all additional actions.
+	 * Triggers all additional actions.
 	 */
-	public void travel();
+	public void use();
 }

@@ -137,8 +137,8 @@ public abstract class AbstractAction {
 	}
 
 	/**
-	 * Triggers the associated action without checking preconditions. Should act
-	 * according to the enabled status.
+	 * Triggers the associated action. Should act according to the enabled
+	 * status.
 	 */
 	public abstract void triggerAction();
 }

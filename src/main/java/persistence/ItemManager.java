@@ -10,18 +10,6 @@ import data.Location;
  */
 public class ItemManager {
 	/**
-	 * Removes an item from the database.
-	 * 
-	 * TODO general remove method?
-	 * 
-	 * @param item
-	 *            the item
-	 */
-	public static void removeItem(Item item) {
-		Main.getEntityManager().remove(item);
-	}
-
-	/**
 	 * Gets the item located in the location with the given identifier or
 	 * {@code null} , if there is none.
 	 * 

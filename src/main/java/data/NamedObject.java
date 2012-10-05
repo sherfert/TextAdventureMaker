@@ -17,7 +17,8 @@ import data.action.AbstractAction;
 import data.interfaces.Inspectable;
 
 /**
- * Anything having a name, identifiers, a short and a long description.
+ * Anything having a name, identifiers, a description and being
+ * {@link Inspectable}.
  * 
  * @author Satia
  */
@@ -46,10 +47,10 @@ public abstract class NamedObject implements Inspectable {
 	private List<String> identifiers;
 
 	/**
-	 * The long description. It is being displayed when the named object is
-	 * inspected.
+	 * It is being displayed when the named object is inspected or suggests the
+	 * default text to be displayed if {@code null}.
 	 */
-	private String longDescription;
+	private String inspectionText;
 
 	/**
 	 * The name.
@@ -57,14 +58,14 @@ public abstract class NamedObject implements Inspectable {
 	private String name;
 
 	/**
-	 * The short description. It is being displayed when the named object is
+	 * The description. It is being displayed when the named object is
 	 * e.g. in the same location.
 	 */
-	private String shortDescription;
+	private String description;
 
 	/**
 	 * No-arg constructor for the database. Use
-	 * {@link NamedObject#NamedObject(String, String, String)} instead.
+	 * {@link NamedObject#NamedObject(String, String)} instead.
 	 */
 	@Deprecated
 	protected NamedObject() {
@@ -77,17 +78,13 @@ public abstract class NamedObject implements Inspectable {
 	 * 
 	 * @param name
 	 *            the name
-	 * @param shortDescription
-	 *            the shortDescription
-	 * @param longDescription
-	 *            the longDescription
+	 * @param description
+	 *            the description
 	 */
-	protected NamedObject(String name, String shortDescription,
-			String longDescription) {
+	protected NamedObject(String name, String description) {
 		this();
 		this.name = name;
-		this.shortDescription = shortDescription;
-		this.longDescription = longDescription;
+		this.description = description;
 		addIdentifier(name);
 	}
 
@@ -122,8 +119,8 @@ public abstract class NamedObject implements Inspectable {
 	}
 
 	@Override
-	public String getLongDescription() {
-		return longDescription;
+	public String getInspectionText() {
+		return inspectionText;
 	}
 
 	/**
@@ -134,10 +131,10 @@ public abstract class NamedObject implements Inspectable {
 	}
 
 	/**
-	 * @return the shortDescription
+	 * @return the description
 	 */
-	public String getShortDescription() {
-		return shortDescription;
+	public String getDescription() {
+		return description;
 	}
 
 	@Override
@@ -175,8 +172,8 @@ public abstract class NamedObject implements Inspectable {
 	}
 
 	@Override
-	public void setLongDescription(String longDescription) {
-		this.longDescription = longDescription;
+	public void setInspectionText(String inspectionText) {
+		this.inspectionText = inspectionText;
 	}
 
 	/**
@@ -188,10 +185,10 @@ public abstract class NamedObject implements Inspectable {
 	}
 
 	/**
-	 * @param shortDescription
-	 *            the shortDescription to set
+	 * @param description
+	 *            the description to set
 	 */
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

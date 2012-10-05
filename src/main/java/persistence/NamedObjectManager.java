@@ -2,6 +2,7 @@ package persistence;
 
 import java.util.List;
 
+import data.NamedObject;
 import data.interfaces.Inspectable;
 
 /**
@@ -10,6 +11,16 @@ import data.interfaces.Inspectable;
  * @author Satia
  */
 public class NamedObjectManager {
+	
+	/**
+	 * Removes an object from the database.
+	 * 
+	 * @param object
+	 *            the object
+	 */
+	public static void removeObject(NamedObject object) {
+		Main.getEntityManager().remove(object);
+	}
 
 	/**
 	 * Gets the named object that macthes the given identifier-regexp or

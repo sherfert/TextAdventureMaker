@@ -12,7 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
-import data.action.TakeAction;
+import data.action.AddInventoryItemsAction;
+import data.action.RemoveItemAction;
 import data.interfaces.Takeable;
 
 /**
@@ -23,6 +24,14 @@ import data.interfaces.Takeable;
  */
 @Entity
 public class Item extends NamedObject implements Takeable {
+
+	/**
+	 * The {@link AddInventoryItemsAction}. The successfulText and forbiddenText
+	 * by it are being used.
+	 */
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn
+	private AddInventoryItemsAction addInventoryItemsAction;
 
 	/**
 	 * All additional actions.
@@ -39,74 +48,95 @@ public class Item extends NamedObject implements Takeable {
 	private Location location;
 
 	/**
-	 * The take action.
+	 * The {@link RemoveItemAction}.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn
-	private TakeAction takeAction;
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "item")
+	private RemoveItemAction removeAction;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link Item#Item(String, String, String)} or
-	 *             {@link Item#Item(Location, String, String, String)} instead.
+	 * By default taking will be disabled, but the removeItem (when taking is
+	 * enabled) is enabled.
+	 * 
+	 * @deprecated Use {@link Item#Item(String, String)} or
+	 *             {@link Item#Item(Location, String, String)} instead.
 	 */
 	@Deprecated
 	public Item() {
-		this.takeAction = new TakeAction(this);
+		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
+		this.removeAction = new RemoveItemAction(this);
 		this.additionalTakeActions = new ArrayList<AbstractAction>();
+		setRemoveItem(true);
 	}
 
 	/**
-	 * Copies name, identifiers, short and long description from the given
-	 * inventory item.
+	 * Copies name, description, identifiers and inspectionText from the given
+	 * item.
+	 * 
+	 * By default taking will be disabled, but the removeItem (when taking is
+	 * enabled) is enabled.
 	 * 
 	 * @param item
-	 *            the item to use name, short and long description from
+	 *            the item to use name, description, identifiers and
+	 *            inspectionText from
 	 */
 	public Item(InventoryItem item) {
-		super(item.getName(), item.getShortDescription(), item
-				.getLongDescription());
-		setIdentifiers(item.getIdentifiers());
-		this.takeAction = new TakeAction(this);
+		super(item.getName(), item.getDescription());
+		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
+		this.removeAction = new RemoveItemAction(this);
 		this.additionalTakeActions = new ArrayList<AbstractAction>();
+		setRemoveItem(true);
+
+		setIdentifiers(item.getIdentifiers());
+		setInspectionText(item.getInspectionText());
 	}
 
 	/**
+	 * By default taking will be disabled, but the removeItem (when taking is
+	 * enabled) is enabled.
+	 * 
 	 * @param location
 	 *            the location
 	 * @param name
 	 *            the name
-	 * @param shortDescription
-	 *            the shortDescription
-	 * @param longDescription
-	 *            the longDescription
+	 * @param description
+	 *            the description
 	 */
-	public Item(Location location, String name, String shortDescription,
-			String longDescription) {
-		super(name, shortDescription, longDescription);
+	public Item(Location location, String name, String description) {
+		super(name, description);
 		setLocation(location);
-		this.takeAction = new TakeAction(this);
+		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
+		this.removeAction = new RemoveItemAction(this);
 		this.additionalTakeActions = new ArrayList<AbstractAction>();
+		setRemoveItem(true);
 	}
 
 	/**
+	 * By default taking will be disabled, but the removeItem (when taking is
+	 * enabled) is enabled.
+	 * 
 	 * @param name
 	 *            the name
-	 * @param shortDescription
-	 *            the shortDescription
-	 * @param longDescription
-	 *            the longDescription
+	 * @param description
+	 *            the description
 	 */
-	public Item(String name, String shortDescription, String longDescription) {
-		super(name, shortDescription, longDescription);
-		this.takeAction = new TakeAction(this);
+	public Item(String name, String description) {
+		super(name, description);
+		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
+		this.removeAction = new RemoveItemAction(this);
 		this.additionalTakeActions = new ArrayList<AbstractAction>();
+		setRemoveItem(true);
 	}
 
 	@Override
 	public void addAdditionalActionToTake(AbstractAction action) {
 		additionalTakeActions.add(action);
+	}
+
+	@Override
+	public AddInventoryItemsAction getAddInventoryItemsAction() {
+		return addInventoryItemsAction;
 	}
 
 	@Override
@@ -122,23 +152,23 @@ public class Item extends NamedObject implements Takeable {
 	}
 
 	@Override
-	public TakeAction getTakeAction() {
-		return takeAction;
-	}
-
-	@Override
 	public String getTakeForbiddenText() {
-		return takeAction.getForbiddenText();
+		return addInventoryItemsAction.getForbiddenText();
 	}
 
 	@Override
 	public String getTakeSuccessfulText() {
-		return takeAction.getSuccessfulText();
+		return addInventoryItemsAction.getSuccessfulText();
+	}
+
+	@Override
+	public boolean isRemoveItem() {
+		return removeAction.isEnabled();
 	}
 
 	@Override
 	public boolean isTakingEnabled() {
-		return takeAction.isEnabled();
+		return addInventoryItemsAction.isEnabled();
 	}
 
 	@Override
@@ -164,23 +194,32 @@ public class Item extends NamedObject implements Takeable {
 	}
 
 	@Override
+	public void setRemoveItem(boolean removeItem) {
+		removeAction.setEnabled(removeItem);
+	}
+
+	@Override
 	public void setTakeForbiddenText(String forbiddenText) {
-		takeAction.setForbiddenText(forbiddenText);
+		addInventoryItemsAction.setForbiddenText(forbiddenText);
 	}
 
 	@Override
 	public void setTakeSuccessfulText(String successfulText) {
-		takeAction.setSuccessfulText(successfulText);
+		addInventoryItemsAction.setSuccessfulText(successfulText);
 	}
 
 	@Override
 	public void setTakingEnabled(boolean enabled) {
-		takeAction.setEnabled(enabled);
+		addInventoryItemsAction.setEnabled(enabled);
 	}
 
 	@Override
 	public void take() {
-		takeAction.triggerAction();
+		//  Check just for performance.
+		if (isTakingEnabled()) {
+			addInventoryItemsAction.triggerAction();
+			removeAction.triggerAction();
+		}
 		for (AbstractAction abstractAction : additionalTakeActions) {
 			abstractAction.triggerAction();
 		}

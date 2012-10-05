@@ -41,6 +41,13 @@ public class Game {
 	private List<String> inspectCommands;
 
 	/**
+	 * The text being displayed when an object is inspected that does not have
+	 * an individual inspection text. Valid placeholders:
+	 * {@literal <identifier>}
+	 */
+	private String inspectionDefaultText;
+
+	/**
 	 * All commands that let the player look into his inventory. Must be
 	 * lowercase.
 	 */
@@ -204,6 +211,13 @@ public class Game {
 	}
 
 	/**
+	 * @return the inspectionDefaultText
+	 */
+	public String getInspectionDefaultText() {
+		return inspectionDefaultText;
+	}
+
+	/**
 	 * @return the inventoryCommands
 	 */
 	public List<String> getInventoryCommands() {
@@ -340,6 +354,13 @@ public class Game {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * @param inspectionDefaultText the inspectionDefaultText to set
+	 */
+	public void setInspectionDefaultText(String inspectionDefaultText) {
+		this.inspectionDefaultText = inspectionDefaultText;
 	}
 
 	/**

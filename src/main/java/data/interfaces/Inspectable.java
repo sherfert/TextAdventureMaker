@@ -9,7 +9,7 @@ import data.action.AbstractAction;
  * 
  * @author Satia
  */
-public interface Inspectable {
+public interface Inspectable extends Identifiable {
 	/**
 	 * Adds an additional action.
 	 * 
@@ -19,27 +19,15 @@ public interface Inspectable {
 	public void addAdditionalActionToInspect(AbstractAction action);
 
 	/**
-	 * Adds an identifier.
-	 * 
-	 * @param name
-	 *            the name
-	 */
-	public void addIdentifier(String name);
-
-	/**
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromInspect();
 
 	/**
-	 * @return the identifiers.
+	 * @return the text being displayed when inspected or {@code null} if the
+	 *         default text is to be used.
 	 */
-	public List<String> getIdentifiers();
-
-	/**
-	 * @return the text being displayed when inspected.
-	 */
-	public String getLongDescription();
+	public String getInspectionText();
 
 	/**
 	 * Triggers all additional actions.
@@ -55,22 +43,11 @@ public interface Inspectable {
 	public void removeAdditionalActionFromInspect(AbstractAction action);
 
 	/**
-	 * Removes an identifier.
+	 * Sets the inspection text. If {@code null} passed, the default text will
+	 * be used.
 	 * 
-	 * @param name
-	 *            the name
+	 * @param inspectionText
+	 *            the inspectionText to set
 	 */
-	public void removeIdentifier(String name);
-
-	/**
-	 * @param identifiers
-	 *            the identifiers to set
-	 */
-	public void setIdentifiers(List<String> identifiers);
-
-	/**
-	 * @param longDescription
-	 *            the longDescription to set
-	 */
-	public void setLongDescription(String longDescription);
+	public void setInspectionText(String inspectionText);
 }

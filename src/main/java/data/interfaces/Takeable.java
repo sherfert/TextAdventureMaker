@@ -3,14 +3,15 @@ package data.interfaces;
 import java.util.List;
 
 import data.action.AbstractAction;
-import data.action.TakeAction;
+import data.action.AddInventoryItemsAction;
+import data.action.RemoveItemAction;
 
 /**
  * Anything takeable in the game.
  * 
  * @author Satia
  */
-public interface Takeable {
+public interface Takeable extends Identifiable {
 	/**
 	 * Adds an additional action.
 	 * 
@@ -18,29 +19,16 @@ public interface Takeable {
 	 *            the action
 	 */
 	public void addAdditionalActionToTake(AbstractAction action);
-	
-	/**
-	 * Adds an identifier.
-	 * 
-	 * @param name
-	 *            the name
-	 */
-	public void addIdentifier(String name);
-	
+
 	/**
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromTake();
-	
+
 	/**
-	 * @return the identifiers.
+	 * @return the addInventoryItemsAction
 	 */
-	public List<String> getIdentifiers();
-	
-	/**
-	 * @return the takeAction
-	 */
-	public TakeAction getTakeAction();
+	public AddInventoryItemsAction getAddInventoryItemsAction();
 
 	/**
 	 * @return the forbiddenText or {@code null}.
@@ -58,26 +46,17 @@ public interface Takeable {
 	public boolean isTakingEnabled();
 
 	/**
+	 * @return if the item will be removed when taken.
+	 */
+	public boolean isRemoveItem();
+
+	/**
 	 * Removes an additional action.
 	 * 
 	 * @param action
 	 *            the action
 	 */
 	public void removeAdditionalActionFromTake(AbstractAction action);
-
-	/**
-	 * Removes an identifier.
-	 * 
-	 * @param name
-	 *            the name
-	 */
-	public void removeIdentifier(String name);
-
-	/**
-	 * @param identifiers
-	 *            the identifiers to set
-	 */
-	public void setIdentifiers(List<String> identifiers);
 
 	/**
 	 * Sets the forbidden text. If {@code null} passed, the default text will be
@@ -104,7 +83,14 @@ public interface Takeable {
 	public void setTakingEnabled(boolean enabled);
 
 	/**
-	 * Triggers the {@link TakeAction} and all additional actions.
+	 * @param removeItem
+	 *            if the item should be removed when taken
+	 */
+	public void setRemoveItem(boolean removeItem);
+
+	/**
+	 * Triggers the {@link AddInventoryItemsAction}, the
+	 * {@link RemoveItemAction} and all additional actions.
 	 */
 	public void take();
 }

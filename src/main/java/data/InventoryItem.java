@@ -14,7 +14,7 @@ public class InventoryItem extends NamedObject {
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link InventoryItem#InventoryItem(String, String, String)}
+	 *             {@link InventoryItem#InventoryItem(String, String)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -24,26 +24,24 @@ public class InventoryItem extends NamedObject {
 	/**
 	 * @param name
 	 *            the name
-	 * @param shortDescription
-	 *            the shortDescription
-	 * @param longDescription
-	 *            the longDescription
+	 * @param description
+	 *            the description
 	 */
-	public InventoryItem(String name, String shortDescription,
-			String longDescription) {
-		super(name, shortDescription, longDescription);
+	public InventoryItem(String name, String description) {
+		super(name, description);
 	}
 
 	/**
-	 * Copies name, identifiers, short and long description from the given
+	 * Copies name, description, identifiers and inspectionText from the given
 	 * inventory item.
 	 * 
 	 * @param item
-	 *            the item to use name, short and long description from
+	 *            the item to use name, description, identifiers and
+	 *            inspectionText from
 	 */
 	public InventoryItem(Item item) {
-		super(item.getName(), item.getShortDescription(), item
-				.getLongDescription());
+		super(item.getName(), item.getDescription());
 		setIdentifiers(item.getIdentifiers());
+		setInspectionText(item.getInspectionText());
 	}
 }

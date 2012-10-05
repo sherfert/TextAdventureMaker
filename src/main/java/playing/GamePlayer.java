@@ -11,7 +11,6 @@ import data.InventoryItem;
 import data.Item;
 import data.Player;
 import data.Way;
-import data.action.TakeAction;
 import data.interfaces.Inspectable;
 
 /**
@@ -90,18 +89,19 @@ public class GamePlayer {
 	 *            the object's name
 	 */
 	public void inspect(String name) {
-		// TODO generel "around" for the current location
+		// TODO general "around" for the current location
 		Inspectable object = PlayerManager.getInspectable(player, name);
 
 		if (object != null) {
 			// Effect depends on additional actions
 			object.inspect();
-			io.println(object.getLongDescription());
-
+			io.println(object.getInspectionText() != null ? object
+					.getInspectionText() : game.getInspectionDefaultText()
+					.replaceAll("<identifier>", name));
 		} else {
 			// There is no such thing
-			io.println(game.getNoSuchItemText().replaceAll(
-					"<identifier>", name));
+			io.println(game.getNoSuchItemText()
+					.replaceAll("<identifier>", name));
 		}
 	}
 
@@ -146,12 +146,12 @@ public class GamePlayer {
 				// The location did not change
 				io.println(way.getMoveForbiddenText() != null ? way
 						.getMoveForbiddenText() : game.getNotTravelableText()
-						.replaceAll("<identifier>", way.getName()));
+						.replaceAll("<identifier>", target));
 			}
 		} else {
 			// There is no such way
-			io.println(game.getNoSuchWayText().replaceAll(
-					"<identifier>", target));
+			io.println(game.getNoSuchWayText().replaceAll("<identifier>",
+					target));
 		}
 	}
 
@@ -174,9 +174,9 @@ public class GamePlayer {
 	}
 
 	/**
-	 * Tries to take the object with the given name. The connected
-	 * {@link TakeAction} will be performed if the item is takeable. If not, a
-	 * meaningful message will be displayed.
+	 * Tries to take the object with the given name. The connected actions will
+	 * be performed if the item is takeable. If not, a meaningful message will
+	 * be displayed.
 	 * 
 	 * @param object
 	 *            the object's name
@@ -202,8 +202,8 @@ public class GamePlayer {
 			}
 		} else {
 			// There is no such item
-			io.println(game.getNoSuchItemText().replaceAll(
-					"<identifier>", object));
+			io.println(game.getNoSuchItemText().replaceAll("<identifier>",
+					object));
 		}
 	}
 }

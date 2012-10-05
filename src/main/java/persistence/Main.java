@@ -92,39 +92,34 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		// Create everything
-		Location flat = new Location("Flat", "Your little home.",
-				"Nothing interesting.");
-		Location balcony = new Location("Balcony", "Your balcony.",
-				"Nice wooden floor and some chairs.");
+		Location flat = new Location("Flat", "Your little home.");
+		Location balcony = new Location("Balcony", "Your balcony.");
+		balcony.setInspectionText("Nice wooden floor and some chairs.");
 
 		Way wayToBalcony = new Way("Balcony door",
-				"This door leads to your balcony.", "Nothing special", flat,
-				balcony);
+				"This door leads to your balcony.", flat, balcony);
 		wayToBalcony.removeIdentifier(wayToBalcony.getName());
 		wayToBalcony.addIdentifier("out(side)?");
 		wayToBalcony.addIdentifier("on (the )?balcony");
 		wayToBalcony.addIdentifier("through (the )?balcony door");
 		Way wayToFlat = new Way("Balcony door",
-				"This door leads inside your flat.", "Nothing special",
-				balcony, flat);
+				"This door leads inside your flat.", balcony, flat);
 		wayToFlat.removeIdentifier(wayToFlat.getName());
 		wayToFlat.addIdentifier("in(side)?");
 		wayToFlat.addIdentifier("into (the )?flat");
 		wayToFlat.addIdentifier("through (the )?balcony door");
 
-		Item tv = new Item(flat, "Television", "A television.",
-				"A 32\" television.");
+		Item tv = new Item(flat, "Television", "A television.");
+		tv.setInspectionText("A 32\" television.");
 		tv.addIdentifier("tv");
-		tv.setTakingEnabled(false);
 		tv.setTakeForbiddenText("This is a little heavy.");
-		Item banana = new Item(flat, "Banana", "A banana.",
-				"Rich in cholesterol.");
+		Item banana = new Item(flat, "Banana", "A banana.");
+		banana.setInspectionText("Rich in cholesterol.");
 		InventoryItem bananaInv = new InventoryItem(banana);
 		banana.setTakeSuccessfulText("Ya got bananaaa-a-a.");
-		banana.getTakeAction().addPickUpItem(bananaInv);
-		Item chair = new Item(balcony, "Chair", "A wooden chair.",
-				"Nothing special.");
-		chair.setTakingEnabled(false);
+		banana.setTakingEnabled(true);
+		banana.getAddInventoryItemsAction().addPickUpItem(bananaInv);
+		Item chair = new Item(balcony, "Chair", "A wooden chair.");
 
 		Player player = new Player(flat);
 
@@ -132,6 +127,7 @@ public class Main {
 		Game game = new Game();
 		game.setStartLocation(flat);
 
+		game.setInspectionDefaultText("Nothing interesting.");
 		game.setInventoryEmptyText("Your inventory is empty.");
 		game.setInventoryText("You are carrying the following things:");
 		game.setNoCommandText("I do not understand you.");
@@ -215,9 +211,10 @@ public class Main {
 	}
 
 	/**
-	 * Updates any changes.
+	 * Updates any changes. Should be called after each change of persisted
+	 * data.
 	 * 
-	 * TODO is this necessary?
+	 * TODO call this in triggerAction or not?
 	 */
 	public static void updateChanges() {
 		entityManager.getTransaction().commit();

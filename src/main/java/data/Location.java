@@ -40,7 +40,7 @@ public class Location extends NamedObject {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link Location#Location(String, String, String)}
+	 * @deprecated Use {@link Location#Location(String, String)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -53,13 +53,11 @@ public class Location extends NamedObject {
 	/**
 	 * @param name
 	 *            the name
-	 * @param shortDescription
-	 *            the shortDescription
-	 * @param longDescription
-	 *            the longDescription
+	 * @param description
+	 *            the description
 	 */
-	public Location(String name, String shortDescription, String longDescription) {
-		super(name, shortDescription, longDescription);
+	public Location(String name, String description) {
+		super(name, description);
 		waysOut = new ArrayList<Way>();
 		waysIn = new ArrayList<Way>();
 		items = new ArrayList<Item>();
@@ -108,14 +106,14 @@ public class Location extends NamedObject {
 	 *         here.
 	 */
 	public String getEnteredText() {
-		StringBuilder sb = new StringBuilder(getShortDescription());
+		StringBuilder sb = new StringBuilder(getDescription());
 		// Items
 		for (Item item : items) {
-			sb.append(' ').append(item.getShortDescription());
+			sb.append(' ').append(item.getDescription());
 		}
 		// Ways out
 		for (Way way : waysOut) {
-			sb.append(' ').append(way.getShortDescription());
+			sb.append(' ').append(way.getDescription());
 		}
 		return sb.toString();
 	}

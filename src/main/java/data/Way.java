@@ -33,8 +33,7 @@ public class Way extends NamedObject implements Travelable {
 	/**
 	 * The move action.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn
+	@OneToOne(mappedBy = "way", cascade = CascadeType.ALL)
 	private MoveAction moveAction;
 
 	/**
@@ -43,7 +42,7 @@ public class Way extends NamedObject implements Travelable {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	Location destination;
-	
+
 	/**
 	 * The origin.
 	 */
@@ -64,18 +63,16 @@ public class Way extends NamedObject implements Travelable {
 	/**
 	 * @param name
 	 *            the name
-	 * @param shortDescription
-	 *            the shortDescription
-	 * @param longDescription
-	 *            the longDescription
+	 * @param description
+	 *            the description
 	 * @param origin
 	 *            the origin
 	 * @param destination
 	 *            the destination
 	 */
-	public Way(String name, String shortDescription, String longDescription,
-			Location origin, Location destination) {
-		super(name, shortDescription, longDescription);
+	public Way(String name, String description, Location origin,
+			Location destination) {
+		super(name, description);
 		moveAction = new MoveAction(this);
 		additionalMoveActions = new ArrayList<AbstractAction>();
 		// Add way to the locations. The fields are being set by this.
@@ -98,11 +95,6 @@ public class Way extends NamedObject implements Travelable {
 	 */
 	public Location getDestination() {
 		return destination;
-	}
-
-	@Override
-	public MoveAction getMoveAction() {
-		return moveAction;
 	}
 
 	@Override
