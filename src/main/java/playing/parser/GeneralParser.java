@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import persistence.GameManager;
+import data.Game;
+
 import playing.GamePlayer;
 
 /**
@@ -22,14 +23,22 @@ public class GeneralParser {
 	 * 
 	 * @author Satia
 	 */
-	public static enum Command {
-		MOVE(GameManager.getGame().getMoveCommands(), "move", String.class), TAKE(
-				GameManager.getGame().getTakeCommands(), "take", String.class), INVENTORY(
-				GameManager.getGame().getInventoryCommands(), "inventory");
+	private enum Command {
+		INSPECT("getInspectCommands", "inspect", String.class), //
+		INVENTORY("getInventoryCommands", "inventory"), //
+		MOVE("getMoveCommands", "move", String.class), //
+		TAKE("getTakeCommands", "take", String.class);
+
+		/**
+		 * The name of the method that gets the valid commands. Must be a method
+		 * of the class {@link Game} with no parameters and List<String> as
+		 * return type.
+		 */
+		public final String commandMethodName;
 
 		/**
 		 * The name of the method that should be invoked when this command was
-		 * recognized. Must be a static method of the class {@link GamePlayer}.
+		 * recognized. Must be a method of the class {@link GamePlayer}.
 		 */
 		public final String methodName;
 
@@ -39,16 +48,10 @@ public class GeneralParser {
 		public final Class<?>[] parameterTypes;
 
 		/**
-		 * The pattern for this command that can be used to match input Strings
-		 * against.
-		 */
-		public final Pattern pattern;
-
-		/**
-		 * 
-		 * @param commands
-		 *            a list of regular expressions for each possible way to
-		 *            execute this command
+		 * @param commandMethodName
+		 *            The name of the method that gets the valid commands. Must
+		 *            be a method of the class {@link Game} with no parameters
+		 *            and List<String> as return type.
 		 * @param methodName
 		 *            the name of the method that should be invoked when this
 		 *            command was recognized. Must be a static method of the
@@ -56,50 +59,83 @@ public class GeneralParser {
 		 * @param parameterTypes
 		 *            the parameter types of the method denoted by methodName.
 		 */
-		private Command(List<String> commands, String methodName,
+		private Command(String commandMethodName, String methodName,
 				Class<?>... parameterTypes) {
+			this.commandMethodName = commandMethodName;
 			this.methodName = methodName;
 			this.parameterTypes = parameterTypes;
-			this.pattern = PatternGenerator.getPattern(commands);
 		}
 	}
 
 	/**
-	 * Parses an input String and invokes the according method, if the command
-	 * had a valid syntax. Otherwise the player is told, that the command was
-	 * not valid.
+	 * Recognizes and executes commands.
 	 * 
-	 * @param input
-	 *            the input
+	 * @author Satia
 	 */
-	public static void parse(String input) {
-		// Trimmed, lower case, no multiple spaces
-		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ");
+	private class CommandRecExec {
+		/**
+		 * The pattern for recognizing the command.
+		 */
+		private Pattern pattern;
 
-		for (Command command : Command.values()) {
-			Matcher matcher = command.pattern.matcher(input);
+		/**
+		 * The method being executed when the command was typed.
+		 */
+		private Method executeMethod;
+
+		/**
+		 * @param command
+		 *            the command
+		 */
+		public CommandRecExec(Command command) {
+			try {
+				@SuppressWarnings("unchecked")
+				List<String> cmds = (List<String>) Game.class
+						.getDeclaredMethod(command.commandMethodName).invoke(
+								gamePlayer.getGame());
+				this.pattern = PatternGenerator.getPattern(cmds);
+
+				this.executeMethod = GamePlayer.class.getDeclaredMethod(
+						command.methodName, command.parameterTypes);
+			} catch (ClassCastException | NoSuchMethodException
+					| SecurityException | IllegalAccessException
+					| IllegalArgumentException | InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		/**
+		 * Tests if the input matches the pattern and executes the method in
+		 * this case.
+		 * 
+		 * @param input
+		 *            the input
+		 * @return if the input matches the command's pattern.
+		 */
+		public boolean recognizeAndExecute(String input) {
+			Matcher matcher = pattern.matcher(input);
 
 			if (matcher.matches()) {
 				String[] params = getParameters(matcher);
 
 				try {
-					Method method = GamePlayer.class.getDeclaredMethod(
-							command.methodName, command.parameterTypes);
-					if (method.getParameterTypes().length == params.length) {
-						method.invoke(null, (Object[]) params);
+					if (executeMethod.getParameterTypes().length == params.length) {
+						executeMethod.invoke(gamePlayer, (Object[]) params);
 					} else {
-						// TODO
+						// TODO wrong number of parameters
 					}
-				} catch (NoSuchMethodException | IllegalAccessException
-						| IllegalArgumentException | InvocationTargetException e) {
+				} catch (IllegalAccessException | IllegalArgumentException
+						| InvocationTargetException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				return;
+				// This command matches
+				return true;
 			}
+			// This command did not match
+			return false;
 		}
-		// No command matched
-		GamePlayer.noCommand();
 	}
 
 	/**
@@ -117,5 +153,52 @@ public class GeneralParser {
 			}
 		}
 		return parameters.toArray(new String[0]);
+	}
+
+	/**
+	 * The GamePlayer for this session
+	 */
+	private GamePlayer gamePlayer;
+
+	/**
+	 * A list of {@link CommandRecExec}s for each {@link Command}.
+	 */
+	private List<CommandRecExec> commandRecExecs;
+
+	/**
+	 * Initializes this parser.
+	 * 
+	 * @param gamePlayer
+	 *            the GamePlayer for this session
+	 */
+	public GeneralParser(GamePlayer gamePlayer) {
+		this.gamePlayer = gamePlayer;
+		// Build CommandRecExecs
+		Command[] commands = Command.values();
+		this.commandRecExecs = new ArrayList<CommandRecExec>(commands.length);
+		for (Command command : commands) {
+			this.commandRecExecs.add(new CommandRecExec(command));
+		}
+	}
+
+	/**
+	 * Parses an input String and invokes the according method, if the command
+	 * had a valid syntax. Otherwise the player is told, that the command was
+	 * not valid.
+	 * 
+	 * @param input
+	 *            the input
+	 */
+	public void parse(String input) {
+		// Trimmed, lower case, no multiple spaces
+		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ");
+
+		for (CommandRecExec cmdRE : commandRecExecs) {
+			if (cmdRE.recognizeAndExecute(input)) {
+				return;
+			}
+		}
+		// No command matched
+		gamePlayer.noCommand();
 	}
 }

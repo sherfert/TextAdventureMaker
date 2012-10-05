@@ -20,7 +20,7 @@ import javax.persistence.OneToOne;
 @Entity
 public class Game {
 	/**
-	 * All commands that make the game exit.
+	 * All commands that make the game exit. Must be lowercase.
 	 */
 	@ElementCollection
 	private List<String> exitCommands;
@@ -33,7 +33,16 @@ public class Game {
 	private int id;
 
 	/**
-	 * All commands that let the player look into his inventory.
+	 * All commands that let the player inspect something. Must be lowercase.
+	 * Must contain at least one word and exactly one parameter for the object:
+	 * {@literal (.+)}
+	 */
+	@ElementCollection
+	private List<String> inspectCommands;
+
+	/**
+	 * All commands that let the player look into his inventory. Must be
+	 * lowercase.
 	 */
 	@ElementCollection
 	private List<String> inventoryCommands;
@@ -44,8 +53,13 @@ public class Game {
 	private String inventoryEmptyText;
 
 	/**
-	 * All move commands. Must contain at least one word and exactly one
-	 * parameter for the target: {@literal (.+)}
+	 * The text introducing a look into the inventory.
+	 */
+	private String inventoryText;
+
+	/**
+	 * All move commands. Must be lowercase. Must contain at least one word and
+	 * exactly one parameter for the target: {@literal (.+)}
 	 */
 	@ElementCollection
 	private List<String> moveCommands;
@@ -58,16 +72,29 @@ public class Game {
 
 	/**
 	 * The text being displayed, when the player tries to use, take, etc. a
-	 * non-existing item. Valid placeholders: {@literal <item>}
+	 * non-existing item. Valid placeholders: {@literal <identifier>}
 	 */
 	private String noSuchItemText;
 
 	/**
+	 * The text being displayed, when the player tries to travel by a
+	 * non-existing way. Valid placeholders: {@literal <identifier>}
+	 */
+	private String noSuchWayText;
+
+	/**
 	 * The default text, when the player tries to take a non-takeable item. May
 	 * be overwritten for each individual item. Valid placeholders:
-	 * {@literal <item>}
+	 * {@literal <identifier>}
 	 */
 	private String notTakeableText;
+
+	/**
+	 * The default text, when the player tries to travel by a non-travelable
+	 * qay. May be overwritten for each individual way. Valid placeholders:
+	 * {@literal <identifier>}
+	 */
+	private String notTravelableText;
 
 	/**
 	 * The starting location of the game.
@@ -82,15 +109,15 @@ public class Game {
 	private String startText;
 
 	/**
-	 * All take commands. Must contain at least one word and exactly one
-	 * parameter for the object: {@literal (.+)}
+	 * All take commands. Must be lowercase. Must contain at least one word and
+	 * exactly one parameter for the object: {@literal (.+)}
 	 */
 	@ElementCollection
 	private List<String> takeCommands;
 
 	/**
 	 * The default text, when the player takes an item. May be overwritten for
-	 * each individual item. Valid placeholders: {@literal <item>}
+	 * each individual item. Valid placeholders: {@literal <identifier>}
 	 */
 	private String takenText;
 
@@ -99,6 +126,7 @@ public class Game {
 	 */
 	public Game() {
 		exitCommands = new ArrayList<String>();
+		inspectCommands = new ArrayList<String>();
 		inventoryCommands = new ArrayList<String>();
 		moveCommands = new ArrayList<String>();
 		takeCommands = new ArrayList<String>();
@@ -111,7 +139,17 @@ public class Game {
 	 *            the command
 	 */
 	public void addExitCommand(String cmd) {
-		this.exitCommands.add(cmd);
+		this.exitCommands.add(cmd.toLowerCase());
+	}
+
+	/**
+	 * Adds an inventory command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void addInspectCommand(String cmd) {
+		this.inspectCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -121,7 +159,7 @@ public class Game {
 	 *            the command
 	 */
 	public void addInventoryCommand(String cmd) {
-		this.inventoryCommands.add(cmd);
+		this.inventoryCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -131,7 +169,7 @@ public class Game {
 	 *            the command
 	 */
 	public void addMoveCommand(String cmd) {
-		this.moveCommands.add(cmd);
+		this.moveCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -141,7 +179,7 @@ public class Game {
 	 *            the command
 	 */
 	public void addTakeCommand(String cmd) {
-		this.takeCommands.add(cmd);
+		this.takeCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -159,6 +197,13 @@ public class Game {
 	}
 
 	/**
+	 * @return the inspectCommands
+	 */
+	public List<String> getInspectCommands() {
+		return inspectCommands;
+	}
+
+	/**
 	 * @return the inventoryCommands
 	 */
 	public List<String> getInventoryCommands() {
@@ -170,6 +215,13 @@ public class Game {
 	 */
 	public String getInventoryEmptyText() {
 		return inventoryEmptyText;
+	}
+
+	/**
+	 * @return the inventoryText
+	 */
+	public String getInventoryText() {
+		return inventoryText;
 	}
 
 	/**
@@ -194,10 +246,24 @@ public class Game {
 	}
 
 	/**
+	 * @return the noSuchWayText
+	 */
+	public String getNoSuchWayText() {
+		return noSuchWayText;
+	}
+
+	/**
 	 * @return the notTakeableText
 	 */
 	public String getNotTakeableText() {
 		return notTakeableText;
+	}
+
+	/**
+	 * @return the notTravelableText
+	 */
+	public String getNotTravelableText() {
+		return notTravelableText;
 	}
 
 	/**
@@ -285,6 +351,14 @@ public class Game {
 	}
 
 	/**
+	 * @param inventoryText
+	 *            the inventoryText to set
+	 */
+	public void setInventoryText(String inventoryText) {
+		this.inventoryText = inventoryText;
+	}
+
+	/**
 	 * @param noCommandText
 	 *            the noCommandText to set
 	 */
@@ -301,11 +375,27 @@ public class Game {
 	}
 
 	/**
+	 * @param noSuchWayText
+	 *            the noSuchWayText to set
+	 */
+	public void setNoSuchWayText(String noSuchWayText) {
+		this.noSuchWayText = noSuchWayText;
+	}
+
+	/**
 	 * @param notTakeableText
 	 *            the notTakeableText to set
 	 */
 	public void setNotTakeableText(String notTakeableText) {
 		this.notTakeableText = notTakeableText;
+	}
+
+	/**
+	 * @param notTravelableText
+	 *            the notTravelableText to set
+	 */
+	public void setNotTravelableText(String notTravelableText) {
+		this.notTravelableText = notTravelableText;
 	}
 
 	/**

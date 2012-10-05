@@ -35,7 +35,8 @@ public class InventoryItem extends NamedObject {
 	}
 
 	/**
-	 * Copies the parameters from the given item.
+	 * Copies name, identifiers, short and long description from the given
+	 * inventory item.
 	 * 
 	 * @param item
 	 *            the item to use name, short and long description from
@@ -43,5 +44,6 @@ public class InventoryItem extends NamedObject {
 	public InventoryItem(Item item) {
 		super(item.getName(), item.getShortDescription(), item
 				.getLongDescription());
+		setIdentifiers(item.getIdentifiers());
 	}
 }

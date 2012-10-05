@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -39,12 +38,6 @@ public class Way extends NamedObject implements Travelable {
 	private MoveAction moveAction;
 
 	/**
-	 * All names for the target.
-	 */
-	@ElementCollection
-	private List<String> targetNames;
-
-	/**
 	 * The destination.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
@@ -66,7 +59,6 @@ public class Way extends NamedObject implements Travelable {
 	public Way() {
 		moveAction = new MoveAction(this);
 		additionalMoveActions = new ArrayList<AbstractAction>();
-		targetNames = new ArrayList<String>();
 	}
 
 	/**
@@ -86,7 +78,6 @@ public class Way extends NamedObject implements Travelable {
 		super(name, shortDescription, longDescription);
 		moveAction = new MoveAction(this);
 		additionalMoveActions = new ArrayList<AbstractAction>();
-		targetNames = new ArrayList<String>();
 		// Add way to the locations. The fields are being set by this.
 		origin.addWayOut(this);
 		destination.addWayIn(this);
@@ -95,11 +86,6 @@ public class Way extends NamedObject implements Travelable {
 	@Override
 	public void addAdditionalActionToMove(AbstractAction action) {
 		additionalMoveActions.add(action);
-	}
-
-	@Override
-	public void addTargetName(String name) {
-		targetNames.add(name);
 	}
 
 	@Override
@@ -137,11 +123,6 @@ public class Way extends NamedObject implements Travelable {
 	}
 
 	@Override
-	public List<String> getTargetNames() {
-		return targetNames;
-	}
-
-	@Override
 	public boolean isMovingEnabled() {
 		return moveAction.isEnabled();
 	}
@@ -149,11 +130,6 @@ public class Way extends NamedObject implements Travelable {
 	@Override
 	public void removeAdditionalActionFromMove(AbstractAction action) {
 		additionalMoveActions.remove(action);
-	}
-
-	@Override
-	public void removeTargetName(String name) {
-		targetNames.remove(name);
 	}
 
 	@Override

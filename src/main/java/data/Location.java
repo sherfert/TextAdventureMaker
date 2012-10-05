@@ -7,10 +7,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import data.interfaces.Inspectable;
+
 /**
  * Any location in the game. The player can move from one location to another.
- * 
- * TODO item and way dependent description...
  * 
  * @author Satia
  */
@@ -40,7 +40,8 @@ public class Location extends NamedObject {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link Location#Location(String, String, String)} instead.
+	 * @deprecated Use {@link Location#Location(String, String, String)}
+	 *             instead.
 	 */
 	@Deprecated
 	public Location() {
@@ -57,8 +58,7 @@ public class Location extends NamedObject {
 	 * @param longDescription
 	 *            the longDescription
 	 */
-	public Location(String name, String shortDescription,
-			String longDescription) {
+	public Location(String name, String shortDescription, String longDescription) {
 		super(name, shortDescription, longDescription);
 		waysOut = new ArrayList<Way>();
 		waysIn = new ArrayList<Way>();
@@ -99,6 +99,41 @@ public class Location extends NamedObject {
 	public void addWayOut(Way wayOut) {
 		this.waysOut.add(wayOut);
 		wayOut.origin = this;
+	}
+
+	/**
+	 * This String is being displayed when the player enters the location
+	 * 
+	 * @return the short description plus the short descriptions of everything
+	 *         here.
+	 */
+	public String getEnteredText() {
+		StringBuilder sb = new StringBuilder(getShortDescription());
+		// Items
+		for (Item item : items) {
+			sb.append(' ').append(item.getShortDescription());
+		}
+		// Ways out
+		for (Way way : waysOut) {
+			sb.append(' ').append(way.getShortDescription());
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * @return a list containing everything that can be inspected in this
+	 *         location.
+	 */
+	public List<Inspectable> getInspectables() {
+		List<Inspectable> result = new ArrayList<Inspectable>(1 + items.size()
+				+ waysOut.size());
+		// The location itself
+		result.add(this);
+		// The items
+		result.addAll(items);
+		// The ways leading out
+		result.addAll(waysOut);
+		return result;
 	}
 
 	/**

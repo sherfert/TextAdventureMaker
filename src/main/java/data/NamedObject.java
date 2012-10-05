@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +17,7 @@ import data.action.AbstractAction;
 import data.interfaces.Inspectable;
 
 /**
- * Anything having a name and a description.
+ * Anything having a name, identifiers, a short and a long description.
  * 
  * @author Satia
  */
@@ -37,6 +38,12 @@ public abstract class NamedObject implements Inspectable {
 	@Id
 	@GeneratedValue
 	private int id;
+
+	/**
+	 * All identifiers. Must be lowercase.
+	 */
+	@ElementCollection
+	private List<String> identifiers;
 
 	/**
 	 * The long description. It is being displayed when the named object is
@@ -62,9 +69,12 @@ public abstract class NamedObject implements Inspectable {
 	@Deprecated
 	protected NamedObject() {
 		additionalInspectActions = new ArrayList<AbstractAction>();
+		identifiers = new ArrayList<String>();
 	}
 
 	/**
+	 * Saves the name as an identifier.
+	 * 
 	 * @param name
 	 *            the name
 	 * @param shortDescription
@@ -78,11 +88,20 @@ public abstract class NamedObject implements Inspectable {
 		this.name = name;
 		this.shortDescription = shortDescription;
 		this.longDescription = longDescription;
+		addIdentifier(name);
 	}
 
 	@Override
 	public void addAdditionalActionToInspect(AbstractAction action) {
 		additionalInspectActions.add(action);
+	}
+
+	/**
+	 * Note: The identifier is added as a lower case String.
+	 */
+	@Override
+	public void addIdentifier(String name) {
+		identifiers.add(name.toLowerCase());
 	}
 
 	@Override
@@ -97,9 +116,12 @@ public abstract class NamedObject implements Inspectable {
 		return id;
 	}
 
-	/**
-	 * @return the longDescription
-	 */
+	@Override
+	public List<String> getIdentifiers() {
+		return identifiers;
+	}
+
+	@Override
 	public String getLongDescription() {
 		return longDescription;
 	}
@@ -130,6 +152,11 @@ public abstract class NamedObject implements Inspectable {
 		additionalInspectActions.remove(action);
 	}
 
+	@Override
+	public void removeIdentifier(String name) {
+		identifiers.remove(name);
+	}
+
 	/**
 	 * @param id
 	 *            the id to set
@@ -139,9 +166,15 @@ public abstract class NamedObject implements Inspectable {
 	}
 
 	/**
-	 * @param longDescription
-	 *            the longDescription to set
+	 * Note: This method does not convert the Strings to lowercase, so you must
+	 * do this prior to the call.
 	 */
+	@Override
+	public void setIdentifiers(List<String> identifiers) {
+		this.identifiers = identifiers;
+	}
+
+	@Override
 	public void setLongDescription(String longDescription) {
 		this.longDescription = longDescription;
 	}

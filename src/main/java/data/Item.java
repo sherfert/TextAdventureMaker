@@ -58,7 +58,8 @@ public class Item extends NamedObject implements Takeable {
 	}
 
 	/**
-	 * Copies the parameters from the given inventory item.
+	 * Copies name, identifiers, short and long description from the given
+	 * inventory item.
 	 * 
 	 * @param item
 	 *            the item to use name, short and long description from
@@ -66,6 +67,7 @@ public class Item extends NamedObject implements Takeable {
 	public Item(InventoryItem item) {
 		super(item.getName(), item.getShortDescription(), item
 				.getLongDescription());
+		setIdentifiers(item.getIdentifiers());
 		this.takeAction = new TakeAction(this);
 		this.additionalTakeActions = new ArrayList<AbstractAction>();
 	}

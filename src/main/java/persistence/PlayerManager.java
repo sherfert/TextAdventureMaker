@@ -1,11 +1,13 @@
 package persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.Player;
+import data.interfaces.Inspectable;
 
 /**
  * Managing access to the player in a database.
@@ -35,5 +37,27 @@ public class PlayerManager {
 		}
 
 		return resultListPlayer.get(0);
+	}
+
+	/**
+	 * Gets the inspectable object in the location or in the inventory the given
+	 * identifier or {@code null} , if there is none.
+	 * 
+	 * 
+	 * @param player
+	 *            the player
+	 * @param identifier
+	 *            an identifier of the item
+	 * @return the corresponding item or {@code null}.
+	 */
+	public static Inspectable getInspectable(Player player, String identifier) {
+		List<Inspectable> inspectables = new ArrayList<Inspectable>();
+		// Anything in the room
+		inspectables.addAll(player.getLocation().getInspectables());
+		// Anything in the inventory
+		inspectables.addAll(player.getInventory());
+
+		return NamedObjectManager.getInspectableWithIdentifier(inspectables,
+				identifier);
 	}
 }

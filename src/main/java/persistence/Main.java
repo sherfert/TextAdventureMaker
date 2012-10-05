@@ -94,18 +94,27 @@ public class Main {
 		// Create everything
 		Location flat = new Location("Flat", "Your little home.",
 				"Nothing interesting.");
-		Location balcony = new Location("Balcony", "Your balcony",
+		Location balcony = new Location("Balcony", "Your balcony.",
 				"Nice wooden floor and some chairs.");
 
 		Way wayToBalcony = new Way("Balcony door",
 				"This door leads to your balcony.", "Nothing special", flat,
 				balcony);
+		wayToBalcony.removeIdentifier(wayToBalcony.getName());
+		wayToBalcony.addIdentifier("out(side)?");
+		wayToBalcony.addIdentifier("on (the )?balcony");
+		wayToBalcony.addIdentifier("through (the )?balcony door");
 		Way wayToFlat = new Way("Balcony door",
 				"This door leads inside your flat.", "Nothing special",
 				balcony, flat);
+		wayToFlat.removeIdentifier(wayToFlat.getName());
+		wayToFlat.addIdentifier("in(side)?");
+		wayToFlat.addIdentifier("into (the )?flat");
+		wayToFlat.addIdentifier("through (the )?balcony door");
 
 		Item tv = new Item(flat, "Television", "A television.",
 				"A 32\" television.");
+		tv.addIdentifier("tv");
 		tv.setTakingEnabled(false);
 		tv.setTakeForbiddenText("This is a little heavy.");
 		Item banana = new Item(flat, "Banana", "A banana.",
@@ -124,15 +133,20 @@ public class Main {
 		game.setStartLocation(flat);
 
 		game.setInventoryEmptyText("Your inventory is empty.");
+		game.setInventoryText("You are carrying the following things:");
 		game.setNoCommandText("I do not understand you.");
-		game.setNoSuchItemText("There is no <item> here.");
-		game.setNotTakeableText("You cannot take the <item>.");
+		game.setNoSuchItemText("There is no <identifier> here.");
+		game.setNoSuchWayText("You cannot go <identifier>.");
+		game.setNotTakeableText("You cannot take the <identifier>.");
+		game.setNotTravelableText("You cannot go <identifier>.");
 		game.setStartText("This is a little text adventure.");
-		game.setTakenText("You picked up the <item>.");
+		game.setTakenText("You picked up the <identifier>.");
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
 
+		game.addInspectCommand("look at (.+)");
+		game.addInspectCommand("inspect (.+)");
 		game.addInventoryCommand("inventory");
 		game.addMoveCommand("go (.+)");
 		game.addMoveCommand("move to (.+)");
@@ -194,8 +208,9 @@ public class Main {
 		// System.out.println(p);
 
 		// Start a game
-		GamePlayer.start();
-
+		new GamePlayer(GameManager.getGame(), PlayerManager.getPlayer())
+				.start();
+		// Disconnect
 		disconnect();
 	}
 
