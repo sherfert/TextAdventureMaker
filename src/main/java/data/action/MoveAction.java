@@ -23,7 +23,7 @@ public class MoveAction extends AbstractAction {
 	/**
 	 * The way where the player should move.
 	 */
-	@OneToOne(mappedBy = "primaryAction", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "moveAction", cascade = CascadeType.ALL)
 	private Way way;
 
 	/**

@@ -1,10 +1,19 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
+import data.action.AbstractAction;
+import data.interfaces.Inspectable;
 
 /**
  * Anything having a name and a description.
@@ -13,12 +22,14 @@ import javax.persistence.InheritanceType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class NamedObject {
+public abstract class NamedObject implements Inspectable {
 
 	/**
-	 * The description.
+	 * All additional actions.
 	 */
-	private String description;
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
+	private List<AbstractAction> additionalInspectActions;
 
 	/**
 	 * The id.
@@ -28,34 +39,55 @@ public abstract class NamedObject {
 	private int id;
 
 	/**
+	 * The long description. It is being displayed when the named object is
+	 * inspected.
+	 */
+	private String longDescription;
+
+	/**
 	 * The name.
 	 */
 	private String name;
 
 	/**
+	 * The short description. It is being displayed when the named object is
+	 * e.g. in the same location.
+	 */
+	private String shortDescription;
+
+	/**
 	 * No-arg constructor for the database. Use
-	 * {@link NamedObject#NamedObject(String, String)} instead.
+	 * {@link NamedObject#NamedObject(String, String, String)} instead.
 	 */
 	@Deprecated
 	protected NamedObject() {
+		additionalInspectActions = new ArrayList<AbstractAction>();
 	}
 
 	/**
 	 * @param name
 	 *            the name
-	 * @param description
-	 *            the description
+	 * @param shortDescription
+	 *            the shortDescription
+	 * @param longDescription
+	 *            the longDescription
 	 */
-	protected NamedObject(String name, String description) {
+	protected NamedObject(String name, String shortDescription,
+			String longDescription) {
+		this();
 		this.name = name;
-		this.description = description;
+		this.shortDescription = shortDescription;
+		this.longDescription = longDescription;
 	}
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
+	@Override
+	public void addAdditionalActionToInspect(AbstractAction action) {
+		additionalInspectActions.add(action);
+	}
+
+	@Override
+	public List<AbstractAction> getAdditionalActionsFromInspect() {
+		return additionalInspectActions;
 	}
 
 	/**
@@ -66,6 +98,13 @@ public abstract class NamedObject {
 	}
 
 	/**
+	 * @return the longDescription
+	 */
+	public String getLongDescription() {
+		return longDescription;
+	}
+
+	/**
 	 * @return the name
 	 */
 	public String getName() {
@@ -73,11 +112,22 @@ public abstract class NamedObject {
 	}
 
 	/**
-	 * @param description
-	 *            the description to set
+	 * @return the shortDescription
 	 */
-	public void setDescription(String description) {
-		this.description = description;
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	@Override
+	public void inspect() {
+		for (AbstractAction abstractAction : additionalInspectActions) {
+			abstractAction.triggerAction();
+		}
+	}
+
+	@Override
+	public void removeAdditionalActionFromInspect(AbstractAction action) {
+		additionalInspectActions.remove(action);
 	}
 
 	/**
@@ -89,10 +139,26 @@ public abstract class NamedObject {
 	}
 
 	/**
+	 * @param longDescription
+	 *            the longDescription to set
+	 */
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
+	}
+
+	/**
 	 * @param name
 	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @param shortDescription
+	 *            the shortDescription to set
+	 */
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
 	}
 }

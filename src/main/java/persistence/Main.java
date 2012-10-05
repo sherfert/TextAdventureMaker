@@ -1,16 +1,11 @@
 package persistence;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import playing.GamePlayer;
-
 import data.Game;
 import data.InventoryItem;
 import data.Item;
@@ -97,26 +92,30 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		// Create everything
-		Location flat = new Location("Flat",
-				"Your little home. A banana and a tv.");
-		Location balcony = new Location("Balcony",
+		Location flat = new Location("Flat", "Your little home.",
+				"Nothing interesting.");
+		Location balcony = new Location("Balcony", "Your balcony",
 				"Nice wooden floor and some chairs.");
 
 		Way wayToBalcony = new Way("Balcony door",
-				"This door leads to your balcony.", flat, balcony);
+				"This door leads to your balcony.", "Nothing special", flat,
+				balcony);
 		Way wayToFlat = new Way("Balcony door",
-				"This door leads inside your flat.", balcony, flat);
+				"This door leads inside your flat.", "Nothing special",
+				balcony, flat);
 
-		InventoryItem bananaInv = new InventoryItem("Banana", "Rich in cholesterol.");
-
-		Item tv = new Item(flat, "Television", "32\" television.");
-		tv.setPrimaryActionEnabled(false);
-		tv.setForbiddenText("This is a little heavy.");
-		Item banana = new Item(flat, "Banana", "Rich in cholesterol.");
-		banana.setSuccessfulText("Ya got bananaaa-a-a.");
-		banana.getPrimaryAction().addPickUpItem(bananaInv);
-		Item chair = new Item(balcony, "Chair", "A wooden chair.");
-		chair.setPrimaryActionEnabled(false);
+		Item tv = new Item(flat, "Television", "A television.",
+				"A 32\" television.");
+		tv.setTakingEnabled(false);
+		tv.setTakeForbiddenText("This is a little heavy.");
+		Item banana = new Item(flat, "Banana", "A banana.",
+				"Rich in cholesterol.");
+		InventoryItem bananaInv = new InventoryItem(banana);
+		banana.setTakeSuccessfulText("Ya got bananaaa-a-a.");
+		banana.getTakeAction().addPickUpItem(bananaInv);
+		Item chair = new Item(balcony, "Chair", "A wooden chair.",
+				"Nothing special.");
+		chair.setTakingEnabled(false);
 
 		Player player = new Player(flat);
 
@@ -156,43 +155,43 @@ public class Main {
 		// Updates changes
 		updateChanges();
 
-//		// Find location by id
-//		Location lo = entityManager.find(Location.class, 1);
-//		System.out.println(lo);
-//
-//		// Find all locations
-//		CriteriaQuery<Location> criteriaQueryLoc = criteriaBuilder
-//				.createQuery(Location.class);
-//		Root<Location> locationRoot = criteriaQueryLoc.from(Location.class);
-//		criteriaQueryLoc.select(locationRoot);
-//		List<Location> resultListLoc = entityManager.createQuery(
-//				criteriaQueryLoc).getResultList();
-//		for (Location l : resultListLoc) {
-//			System.out.println(l);
-//		}
-//		// Find all ways
-//		CriteriaQuery<Way> criteriaQueryWay = criteriaBuilder
-//				.createQuery(Way.class);
-//		Root<Way> wayRoot = criteriaQueryWay.from(Way.class);
-//		criteriaQueryWay.select(wayRoot);
-//		List<Way> resultListWay = entityManager.createQuery(criteriaQueryWay)
-//				.getResultList();
-//		for (Way w : resultListWay) {
-//			System.out.println(w);
-//		}
-//		// Find all items
-//		CriteriaQuery<Item> criteriaQueryItem = criteriaBuilder
-//				.createQuery(Item.class);
-//		Root<Item> itemRoot = criteriaQueryItem.from(Item.class);
-//		criteriaQueryItem.select(itemRoot);
-//		List<Item> resultListItem = entityManager
-//				.createQuery(criteriaQueryItem).getResultList();
-//		for (Item i : resultListItem) {
-//			System.out.println(i);
-//		}
-//		// Find player
-//		Player p = PlayerManager.getPlayer();
-//		System.out.println(p);
+		// // Find location by id
+		// Location lo = entityManager.find(Location.class, 1);
+		// System.out.println(lo);
+		//
+		// // Find all locations
+		// CriteriaQuery<Location> criteriaQueryLoc = criteriaBuilder
+		// .createQuery(Location.class);
+		// Root<Location> locationRoot = criteriaQueryLoc.from(Location.class);
+		// criteriaQueryLoc.select(locationRoot);
+		// List<Location> resultListLoc = entityManager.createQuery(
+		// criteriaQueryLoc).getResultList();
+		// for (Location l : resultListLoc) {
+		// System.out.println(l);
+		// }
+		// // Find all ways
+		// CriteriaQuery<Way> criteriaQueryWay = criteriaBuilder
+		// .createQuery(Way.class);
+		// Root<Way> wayRoot = criteriaQueryWay.from(Way.class);
+		// criteriaQueryWay.select(wayRoot);
+		// List<Way> resultListWay = entityManager.createQuery(criteriaQueryWay)
+		// .getResultList();
+		// for (Way w : resultListWay) {
+		// System.out.println(w);
+		// }
+		// // Find all items
+		// CriteriaQuery<Item> criteriaQueryItem = criteriaBuilder
+		// .createQuery(Item.class);
+		// Root<Item> itemRoot = criteriaQueryItem.from(Item.class);
+		// criteriaQueryItem.select(itemRoot);
+		// List<Item> resultListItem = entityManager
+		// .createQuery(criteriaQueryItem).getResultList();
+		// for (Item i : resultListItem) {
+		// System.out.println(i);
+		// }
+		// // Find player
+		// Player p = PlayerManager.getPlayer();
+		// System.out.println(p);
 
 		// Start a game
 		GamePlayer.start();

@@ -25,7 +25,7 @@ public class GamePlayer {
 
 		InputOutput.println(game.getStartText());
 		// FIXME
-		InputOutput.println(game.getStartLocation().getDescription());
+		InputOutput.println(game.getStartLocation().getShortDescription());
 
 		InputOutput.startListeningForInput();
 	}
@@ -55,17 +55,18 @@ public class GamePlayer {
 				.getLocation(), object);
 
 		if (item != null) {
-			item.triggerActions();
-			if (item.isPrimaryActionEnabled()) {
+			// Effect depends on enabled status and additional actions
+			item.take();
+			if (item.isTakingEnabled()) {
 				// FIXME replacement rules
 				// The item was taken
-				InputOutput.println(item.getSuccessfulText() != null ? item
-						.getSuccessfulText() : GameManager.getGame()
+				InputOutput.println(item.getTakeSuccessfulText() != null ? item
+						.getTakeSuccessfulText() : GameManager.getGame()
 						.getTakenText().replaceAll("<item>", item.getName()));
 			} else {
 				// The item was not taken
-				InputOutput.println(item.getForbiddenText() != null ? item
-						.getForbiddenText() : GameManager.getGame()
+				InputOutput.println(item.getTakeForbiddenText() != null ? item
+						.getTakeForbiddenText() : GameManager.getGame()
 						.getNotTakeableText()
 						.replaceAll("<item>", item.getName()));
 			}

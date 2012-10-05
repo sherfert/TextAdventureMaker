@@ -40,7 +40,7 @@ public class Location extends NamedObject {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link Location#Location(String, String)} instead.
+	 * @deprecated Use {@link Location#Location(String, String, String)} instead.
 	 */
 	@Deprecated
 	public Location() {
@@ -52,11 +52,14 @@ public class Location extends NamedObject {
 	/**
 	 * @param name
 	 *            the name
-	 * @param description
-	 *            the description
+	 * @param shortDescription
+	 *            the shortDescription
+	 * @param longDescription
+	 *            the longDescription
 	 */
-	public Location(String name, String description) {
-		super(name, description);
+	public Location(String name, String shortDescription,
+			String longDescription) {
+		super(name, shortDescription, longDescription);
 		waysOut = new ArrayList<Way>();
 		waysIn = new ArrayList<Way>();
 		items = new ArrayList<Item>();

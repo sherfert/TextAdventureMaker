@@ -36,7 +36,7 @@ public class TakeAction extends AbstractAction {
 	/**
 	 * The item to be taked.
 	 */
-	@OneToOne(mappedBy = "primaryAction", cascade = CascadeType.PERSIST)
+	@OneToOne(mappedBy = "takeAction", cascade = CascadeType.PERSIST)
 	private Item item;
 
 	/**
