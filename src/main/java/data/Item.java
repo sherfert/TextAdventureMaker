@@ -23,8 +23,7 @@ import data.interfaces.Takeable;
  * @author Satia
  */
 @Entity
-public class Item extends NamedObject implements Takeable {
-
+public class Item extends UsableObject implements Takeable {
 	/**
 	 * The {@link AddInventoryItemsAction}. The successfulText and forbiddenText
 	 * by it are being used.
@@ -56,7 +55,7 @@ public class Item extends NamedObject implements Takeable {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * By default taking will be disabled, but the removeItem (when taking is
+	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
 	 * 
 	 * @deprecated Use {@link Item#Item(String, String)} or
@@ -64,36 +63,11 @@ public class Item extends NamedObject implements Takeable {
 	 */
 	@Deprecated
 	public Item() {
-		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
-		this.removeAction = new RemoveItemAction(this);
-		this.additionalTakeActions = new ArrayList<AbstractAction>();
-		setRemoveItem(true);
+		init();
 	}
-
+	
 	/**
-	 * Copies name, description, identifiers and inspectionText from the given
-	 * item.
-	 * 
-	 * By default taking will be disabled, but the removeItem (when taking is
-	 * enabled) is enabled.
-	 * 
-	 * @param item
-	 *            the item to use name, description, identifiers and
-	 *            inspectionText from
-	 */
-	public Item(InventoryItem item) {
-		super(item.getName(), item.getDescription());
-		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
-		this.removeAction = new RemoveItemAction(this);
-		this.additionalTakeActions = new ArrayList<AbstractAction>();
-		setRemoveItem(true);
-
-		setIdentifiers(item.getIdentifiers());
-		setInspectionText(item.getInspectionText());
-	}
-
-	/**
-	 * By default taking will be disabled, but the removeItem (when taking is
+	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
 	 * 
 	 * @param location
@@ -105,15 +79,12 @@ public class Item extends NamedObject implements Takeable {
 	 */
 	public Item(Location location, String name, String description) {
 		super(name, description);
+		init();
 		setLocation(location);
-		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
-		this.removeAction = new RemoveItemAction(this);
-		this.additionalTakeActions = new ArrayList<AbstractAction>();
-		setRemoveItem(true);
 	}
 
 	/**
-	 * By default taking will be disabled, but the removeItem (when taking is
+	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
 	 * 
 	 * @param name
@@ -123,10 +94,7 @@ public class Item extends NamedObject implements Takeable {
 	 */
 	public Item(String name, String description) {
 		super(name, description);
-		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
-		this.removeAction = new RemoveItemAction(this);
-		this.additionalTakeActions = new ArrayList<AbstractAction>();
-		setRemoveItem(true);
+		init();
 	}
 
 	@Override
@@ -149,6 +117,11 @@ public class Item extends NamedObject implements Takeable {
 	 */
 	public Location getLocation() {
 		return location;
+	}
+
+	@Override
+	public RemoveItemAction getRemoveItemAction() {
+		return removeAction;
 	}
 
 	@Override
@@ -199,6 +172,14 @@ public class Item extends NamedObject implements Takeable {
 	}
 
 	@Override
+	public void setRemoveItemAction(RemoveItemAction removeAction) {
+		this.removeAction = removeAction;
+		if (removeAction.getItem() != this) {
+			removeAction.setItem(this);
+		}
+	}
+
+	@Override
 	public void setTakeForbiddenText(String forbiddenText) {
 		addInventoryItemsAction.setForbiddenText(forbiddenText);
 	}
@@ -215,7 +196,7 @@ public class Item extends NamedObject implements Takeable {
 
 	@Override
 	public void take() {
-		//  Check just for performance.
+		// Check just for performance.
 		if (isTakingEnabled()) {
 			addInventoryItemsAction.triggerAction();
 			removeAction.triggerAction();
@@ -223,5 +204,15 @@ public class Item extends NamedObject implements Takeable {
 		for (AbstractAction abstractAction : additionalTakeActions) {
 			abstractAction.triggerAction();
 		}
+	}
+
+	/**
+	 * Initializes the fields
+	 */
+	private void init() {
+		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
+		this.removeAction = new RemoveItemAction(this);
+		this.additionalTakeActions = new ArrayList<AbstractAction>();
+		setRemoveItem(true);
 	}
 }

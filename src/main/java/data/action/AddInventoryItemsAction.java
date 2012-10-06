@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import persistence.Main;
 import persistence.PlayerManager;
 import data.InventoryItem;
 
@@ -29,7 +30,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 * A new {@link AddInventoryItemsAction}.
 	 */
 	public AddInventoryItemsAction() {
-		this.pickUpItems = new ArrayList<InventoryItem>();
+		init();
 	}
 
 	/**
@@ -39,7 +40,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 */
 	public AddInventoryItemsAction(boolean enabled) {
 		super(enabled);
-		this.pickUpItems = new ArrayList<InventoryItem>();
+		init();
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 	public AddInventoryItemsAction(boolean enabled, String forbiddenText,
 			String successfulText) {
 		super(enabled, forbiddenText, successfulText);
-		this.pickUpItems = new ArrayList<InventoryItem>();
+		init();
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 */
 	public AddInventoryItemsAction(String forbiddenText, String successfulText) {
 		super(forbiddenText, successfulText);
-		this.pickUpItems = new ArrayList<InventoryItem>();
+		init();
 	}
 
 	/**
@@ -96,5 +97,13 @@ public class AddInventoryItemsAction extends AbstractAction {
 				PlayerManager.getPlayer().addInventoryItem(item);
 			}
 		}
+		Main.updateChanges();
+	}
+
+	/**
+	 * Initializes the fields
+	 */
+	private void init() {
+		this.pickUpItems = new ArrayList<InventoryItem>();
 	}
 }

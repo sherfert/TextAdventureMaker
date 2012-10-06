@@ -25,9 +25,8 @@ import data.interfaces.Inspectable;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class NamedObject implements Inspectable {
-
 	/**
-	 * All additional actions.
+	 * All additional inspect actions.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable
@@ -160,15 +159,6 @@ public abstract class NamedObject implements Inspectable {
 	 */
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	/**
-	 * Note: This method does not convert the Strings to lowercase, so you must
-	 * do this prior to the call.
-	 */
-	@Override
-	public void setIdentifiers(List<String> identifiers) {
-		this.identifiers = identifiers;
 	}
 
 	@Override

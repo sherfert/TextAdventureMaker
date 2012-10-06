@@ -33,7 +33,7 @@ public class Way extends NamedObject implements Travelable {
 	/**
 	 * The move action.
 	 */
-	@OneToOne(mappedBy = "way", cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "way")
 	private MoveAction moveAction;
 
 	/**
@@ -56,10 +56,9 @@ public class Way extends NamedObject implements Travelable {
 	 */
 	@Deprecated
 	public Way() {
-		moveAction = new MoveAction(this);
-		additionalMoveActions = new ArrayList<AbstractAction>();
+		init();
 	}
-
+	
 	/**
 	 * @param name
 	 *            the name
@@ -73,8 +72,7 @@ public class Way extends NamedObject implements Travelable {
 	public Way(String name, String description, Location origin,
 			Location destination) {
 		super(name, description);
-		moveAction = new MoveAction(this);
-		additionalMoveActions = new ArrayList<AbstractAction>();
+		init();
 		// Add way to the locations. The fields are being set by this.
 		origin.addWayOut(this);
 		destination.addWayIn(this);
@@ -90,11 +88,13 @@ public class Way extends NamedObject implements Travelable {
 		return additionalMoveActions;
 	}
 
-	/**
-	 * @return the destination
-	 */
 	public Location getDestination() {
 		return destination;
+	}
+
+	@Override
+	public MoveAction getMoveAction() {
+		return moveAction;
 	}
 
 	@Override
@@ -125,6 +125,14 @@ public class Way extends NamedObject implements Travelable {
 	}
 
 	@Override
+	public void setMoveAction(MoveAction moveAction) {
+		this.moveAction = moveAction;
+		if(moveAction.getWay() != this) {
+			moveAction.setWay(this);
+		}
+	}
+
+	@Override
 	public void setMoveForbiddenText(String forbiddenText) {
 		moveAction.setForbiddenText(forbiddenText);
 	}
@@ -145,5 +153,13 @@ public class Way extends NamedObject implements Travelable {
 		for (AbstractAction abstractAction : additionalMoveActions) {
 			abstractAction.triggerAction();
 		}
+	}
+
+	/**
+	 * Initializes the fields
+	 */
+	private void init() {
+		moveAction = new MoveAction(this);
+		additionalMoveActions = new ArrayList<AbstractAction>();
 	}
 }

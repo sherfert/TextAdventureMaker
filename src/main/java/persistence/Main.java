@@ -12,6 +12,7 @@ import data.Item;
 import data.Location;
 import data.Player;
 import data.Way;
+import data.action.AddInventoryItemsAction;
 
 /**
  * TODO Test class.
@@ -113,13 +114,34 @@ public class Main {
 		tv.setInspectionText("A 32\" television.");
 		tv.addIdentifier("tv");
 		tv.setTakeForbiddenText("This is a little heavy.");
+		/*
+		 * A takeable banana. If the banana (as an item OR as an inventory item)
+		 * is being used the item/inventory item disappears and the peel is
+		 * being added to the inventory.
+		 */
 		Item banana = new Item(flat, "Banana", "A banana.");
 		banana.setInspectionText("Rich in cholesterol.");
-		InventoryItem bananaInv = new InventoryItem(banana);
 		banana.setTakeSuccessfulText("Ya got bananaaa-a-a.");
 		banana.setTakingEnabled(true);
-		banana.getAddInventoryItemsAction().addPickUpItem(bananaInv);
+		banana.setUsingEnabled(true);
+		banana.setUseSuccessfulText("You ate the banana. The peel looks useful, so you kept it.");
+		InventoryItem peel = new InventoryItem("Banana peel",
+				"The peel of the banana you ate.");
+		peel.setInspectionText("You ate the banana inside it.");
+		peel.addIdentifier("peel");
+		peel.setUseForbiddenText("Do you want to eat the peel, too?");
+		AddInventoryItemsAction addPeelAction = new AddInventoryItemsAction();
+		addPeelAction.addPickUpItem(peel);
+		banana.addAdditionalActionToUse(addPeelAction);
+		banana.addAdditionalActionToUse(banana.getRemoveItemAction());
+		banana.getAddInventoryItemsAction().addPickUpItem(
+				new InventoryItem(banana));
+
 		Item chair = new Item(balcony, "Chair", "A wooden chair.");
+		chair.setInspectionText("Made of solid oak.");
+		chair.setTakingEnabled(true);
+		chair.getAddInventoryItemsAction().addPickUpItem(
+				new InventoryItem(chair));
 
 		Player player = new Player(flat);
 
@@ -135,20 +157,23 @@ public class Main {
 		game.setNoSuchWayText("You cannot go <identifier>.");
 		game.setNotTakeableText("You cannot take the <identifier>.");
 		game.setNotTravelableText("You cannot go <identifier>.");
+		game.setNotUsableText("You cannot use the <identifier>.");
 		game.setStartText("This is a little text adventure.");
 		game.setTakenText("You picked up the <identifier>.");
+		game.setUsedText("So you used the <identifier>. Nothing interesting happened.");
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
 
-		game.addInspectCommand("look at (.+)");
+		game.addInspectCommand("look(?: at)? (.+)");
 		game.addInspectCommand("inspect (.+)");
 		game.addInventoryCommand("inventory");
-		game.addMoveCommand("go (.+)");
-		game.addMoveCommand("move to (.+)");
+		game.addMoveCommand("go(?: to)? (.+)");
+		game.addMoveCommand("move(?: to)? (.+)");
 		game.addTakeCommand("take (.+)");
 		game.addTakeCommand("pick up (.+)");
 		game.addTakeCommand("pick (.+) up");
+		game.addUseCommand("use (.+)");
 
 		// Connect to database
 		connect();

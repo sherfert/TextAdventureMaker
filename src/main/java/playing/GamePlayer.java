@@ -8,10 +8,11 @@ import persistence.WayManager;
 import playing.parser.GeneralParser;
 import data.Game;
 import data.InventoryItem;
-import data.Item;
 import data.Player;
-import data.Way;
 import data.interfaces.Inspectable;
+import data.interfaces.Takeable;
+import data.interfaces.Travelable;
+import data.interfaces.Usable;
 
 /**
  * Any methods for actually playing a game.
@@ -116,8 +117,17 @@ public class GamePlayer {
 		} else {
 			// The inventory is not empty
 			io.println(game.getInventoryText());
+			// Determine longest name for formatting
+			int longest = 0;
 			for (InventoryItem item : inventory) {
-				io.println(item.getName());
+				if (item.getName().length() > longest) {
+					longest = item.getName().length();
+				}
+			}
+			// Print names and descriptions
+			for (InventoryItem item : inventory) {
+				io.println(String.format("%-" + longest + "s - %s",
+						item.getName(), item.getDescription()));
 			}
 		}
 	}
@@ -130,8 +140,8 @@ public class GamePlayer {
 	 *            the target's name
 	 */
 	public void move(String target) {
-		Way way = WayManager
-				.getWayOutFromLocation(player.getLocation(), target);
+		Travelable way = WayManager.getWayOutFromLocation(player.getLocation(),
+				target);
 
 		if (way != null) {
 			// Effect depends on enabled status and additional actions
@@ -175,14 +185,14 @@ public class GamePlayer {
 
 	/**
 	 * Tries to take the object with the given name. The connected actions will
-	 * be performed if the item is takeable. If not, a meaningful message will
-	 * be displayed.
+	 * be performed if the item is takeable (additional actions will be
+	 * performed even if not). If not, a meaningful message will be displayed.
 	 * 
 	 * @param object
 	 *            the object's name
 	 */
 	public void take(String object) {
-		Item item = ItemManager.getItemFromLocation(player.getLocation(),
+		Takeable item = ItemManager.getItemFromLocation(player.getLocation(),
 				object);
 
 		if (item != null) {
@@ -204,6 +214,38 @@ public class GamePlayer {
 			// There is no such item
 			io.println(game.getNoSuchItemText().replaceAll("<identifier>",
 					object));
+		}
+	}
+
+	/**
+	 * Tries to use the object with the given name. The additional actions will
+	 * be performed. A message informing about success/failure will be
+	 * displayed.
+	 * 
+	 * @param name
+	 *            the object's name
+	 */
+	public void use(String name) {
+		Usable object = PlayerManager.getUsable(player, name);
+
+		if (object != null) {
+			// Effect depends on additional actions
+			object.use();
+			if (object.isUsingEnabled()) {
+				// The object was used
+				io.println(object.getUseSuccessfulText() != null ? object
+						.getUseSuccessfulText() : game.getUsedText()
+						.replaceAll("<identifier>", name));
+			} else {
+				// The object was not used
+				io.println(object.getUseForbiddenText() != null ? object
+						.getUseForbiddenText() : game.getNotUsableText()
+						.replaceAll("<identifier>", name));
+			}
+		} else {
+			// There is no such object
+			io.println(game.getNoSuchItemText()
+					.replaceAll("<identifier>", name));
 		}
 	}
 }

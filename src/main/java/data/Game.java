@@ -98,10 +98,17 @@ public class Game {
 
 	/**
 	 * The default text, when the player tries to travel by a non-travelable
-	 * qay. May be overwritten for each individual way. Valid placeholders:
+	 * way. May be overwritten for each individual way. Valid placeholders:
 	 * {@literal <identifier>}
 	 */
 	private String notTravelableText;
+
+	/**
+	 * The default text, when the player tries to use a non-usable object. May
+	 * be overwritten for each individual object. Valid placeholders:
+	 * {@literal <identifier>}
+	 */
+	private String notUsableText;
 
 	/**
 	 * The starting location of the game.
@@ -129,6 +136,19 @@ public class Game {
 	private String takenText;
 
 	/**
+	 * All use commands. Must be lowercase. Must contain at least one word and
+	 * exactly one parameter for the object: {@literal (.+)}
+	 */
+	@ElementCollection
+	private List<String> useCommands;
+
+	/**
+	 * The default text, when the player uses an object. May be overwritten for
+	 * each individual object. Valid placeholders: {@literal <identifier>}
+	 */
+	private String usedText;
+
+	/**
 	 * Constructs a new game object.
 	 */
 	public Game() {
@@ -137,6 +157,7 @@ public class Game {
 		inventoryCommands = new ArrayList<String>();
 		moveCommands = new ArrayList<String>();
 		takeCommands = new ArrayList<String>();
+		useCommands = new ArrayList<String>();
 	}
 
 	/**
@@ -187,6 +208,16 @@ public class Game {
 	 */
 	public void addTakeCommand(String cmd) {
 		this.takeCommands.add(cmd.toLowerCase());
+	}
+
+	/**
+	 * Adds a use command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void addUseCommand(String cmd) {
+		this.useCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -281,6 +312,13 @@ public class Game {
 	}
 
 	/**
+	 * @return the notUsableText
+	 */
+	public String getNotUsableText() {
+		return notUsableText;
+	}
+
+	/**
 	 * @return the startLocation
 	 */
 	public Location getStartLocation() {
@@ -306,6 +344,20 @@ public class Game {
 	 */
 	public String getTakenText() {
 		return takenText;
+	}
+
+	/**
+	 * @return the useCommands
+	 */
+	public List<String> getUseCommands() {
+		return useCommands;
+	}
+
+	/**
+	 * @return the usedText
+	 */
+	public String getUsedText() {
+		return usedText;
 	}
 
 	/**
@@ -339,13 +391,23 @@ public class Game {
 	}
 
 	/**
-	 * Removes a move command.
+	 * Removes a take command.
 	 * 
 	 * @param cmd
 	 *            the command
 	 */
 	public void removeTakeCommand(String cmd) {
 		this.takeCommands.remove(cmd);
+	}
+
+	/**
+	 * Removes a use command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void removeUseCommand(String cmd) {
+		this.useCommands.remove(cmd);
 	}
 
 	/**
@@ -357,7 +419,8 @@ public class Game {
 	}
 
 	/**
-	 * @param inspectionDefaultText the inspectionDefaultText to set
+	 * @param inspectionDefaultText
+	 *            the inspectionDefaultText to set
 	 */
 	public void setInspectionDefaultText(String inspectionDefaultText) {
 		this.inspectionDefaultText = inspectionDefaultText;
@@ -420,6 +483,14 @@ public class Game {
 	}
 
 	/**
+	 * @param notUsableText
+	 *            the notUsableText to set
+	 */
+	public void setNotUsableText(String notUsableText) {
+		this.notUsableText = notUsableText;
+	}
+
+	/**
 	 * @param startLocation
 	 *            the startLocation to set
 	 */
@@ -441,5 +512,13 @@ public class Game {
 	 */
 	public void setTakenText(String takenText) {
 		this.takenText = takenText;
+	}
+
+	/**
+	 * @param usedText
+	 *            the usedText to set
+	 */
+	public void setUsedText(String usedText) {
+		this.usedText = usedText;
 	}
 }

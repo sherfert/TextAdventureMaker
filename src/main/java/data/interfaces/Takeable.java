@@ -21,14 +21,19 @@ public interface Takeable extends Identifiable {
 	public void addAdditionalActionToTake(AbstractAction action);
 
 	/**
+	 * @return the addInventoryItemsAction
+	 */
+	public AddInventoryItemsAction getAddInventoryItemsAction();
+
+	/**
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromTake();
 
 	/**
-	 * @return the addInventoryItemsAction
+	 * @return the removeItemAction
 	 */
-	public AddInventoryItemsAction getAddInventoryItemsAction();
+	public RemoveItemAction getRemoveItemAction();
 
 	/**
 	 * @return the forbiddenText or {@code null}.
@@ -41,14 +46,14 @@ public interface Takeable extends Identifiable {
 	public String getTakeSuccessfulText();
 
 	/**
-	 * @return if taking is enabled.
-	 */
-	public boolean isTakingEnabled();
-
-	/**
 	 * @return if the item will be removed when taken.
 	 */
 	public boolean isRemoveItem();
+
+	/**
+	 * @return if taking is enabled.
+	 */
+	public boolean isTakingEnabled();
 
 	/**
 	 * Removes an additional action.
@@ -57,6 +62,18 @@ public interface Takeable extends Identifiable {
 	 *            the action
 	 */
 	public void removeAdditionalActionFromTake(AbstractAction action);
+
+	/**
+	 * @param removeItem
+	 *            if the item should be removed when taken
+	 */
+	public void setRemoveItem(boolean removeItem);
+
+	/**
+	 * @param removeAction
+	 *            the removeAction to set
+	 */
+	public void setRemoveItemAction(RemoveItemAction removeAction);
 
 	/**
 	 * Sets the forbidden text. If {@code null} passed, the default text will be
@@ -81,12 +98,6 @@ public interface Takeable extends Identifiable {
 	 *            if taking should be enabled
 	 */
 	public void setTakingEnabled(boolean enabled);
-
-	/**
-	 * @param removeItem
-	 *            if the item should be removed when taken
-	 */
-	public void setRemoveItem(boolean removeItem);
 
 	/**
 	 * Triggers the {@link AddInventoryItemsAction}, the

@@ -5,12 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import persistence.NamedObjectManager;
+import persistence.Main;
 import data.Item;
-import data.NamedObject;
 
 /**
- * An action removing an {@link NamedObject}.
+ * An action removing an {@link Item}.
  * 
  * @author Satia
  */
@@ -20,66 +19,29 @@ public class RemoveItemAction extends AbstractAction {
 	/**
 	 * The item to be removed.
 	 */
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	private Item item;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link RemoveItemAction#TakeAction(Item)} instead.
+	 * @deprecated Use {@link RemoveItemAction#RemoveItemAction(Item)} instead.
 	 */
 	@Deprecated
 	public RemoveItemAction() {
 	}
 
 	/**
+	 * Note: The item's {@link RemoveItemAction} will be overwritten. You can
+	 * also just get and modify the current by
+	 * {@link Item#getRemoveItemAction()}.
+	 * 
 	 * @param item
 	 *            the item to be removed
 	 */
 	public RemoveItemAction(Item item) {
-		this.item = item;
-	}
-
-	/**
-	 * @param item
-	 *            the item to be removed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public RemoveItemAction(Item item, boolean enabled) {
-		super(enabled);
-		this.item = item;
-	}
-
-	/**
-	 * @param item
-	 *            the item to be removed
-	 * @param enabled
-	 *            if the action should be enabled
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public RemoveItemAction(Item item, boolean enabled,
-			String forbiddenText, String successfulText) {
-		super(enabled, forbiddenText, successfulText);
-		this.item = item;
-	}
-
-	/**
-	 * @param item
-	 *            the item to be removed
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public RemoveItemAction(Item item, String forbiddenText,
-			String successfulText) {
-		super(forbiddenText, successfulText);
-		this.item = item;
+		setItem(item);
 	}
 
 	/**
@@ -89,11 +51,28 @@ public class RemoveItemAction extends AbstractAction {
 		return item;
 	}
 
+	/**
+	 * Sets the item and sets {@code this} as the item's
+	 * {@link RemoveItemAction}.
+	 * 
+	 * @param item
+	 *            the item
+	 */
+	public void setItem(Item item) {
+		this.item = item;
+		if (item.getRemoveItemAction() != this) {
+			item.setRemoveItemAction(this);
+		}
+	}
+
 	@Override
 	public void triggerAction() {
 		if (enabled) {
-			item.getLocation().removeItem(item);
-			NamedObjectManager.removeObject(item);
+			// Only if this item is actually in a location
+			if (item.getLocation() != null) {
+				item.getLocation().removeItem(item);
+			}
 		}
+		Main.updateChanges();
 	}
 }

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import persistence.Main;
 import persistence.PlayerManager;
 
 import data.Way;
@@ -34,51 +35,14 @@ public class MoveAction extends AbstractAction {
 	}
 
 	/**
+	 * Note: The way {@link MoveAction} will be overwritten. You can also just
+	 * get and modify the current by {@link Way#getMoveAction()}.
+	 * 
 	 * @param way
 	 *            the way where the player should move
 	 */
 	public MoveAction(Way way) {
-		this.way = way;
-	}
-
-	/**
-	 * @param way
-	 *            the way where the player should move
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public MoveAction(Way way, boolean enabled) {
-		super(enabled);
-		this.way = way;
-	}
-
-	/**
-	 * @param way
-	 *            the way where the player should move
-	 * @param enabled
-	 *            if the action should be enabled
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public MoveAction(Way way, boolean enabled, String forbiddenText,
-			String successfulText) {
-		super(enabled, forbiddenText, successfulText);
-		this.way = way;
-	}
-
-	/**
-	 * @param way
-	 *            the way where the player should move
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public MoveAction(Way way, String forbiddenText, String successfulText) {
-		super(forbiddenText, successfulText);
-		this.way = way;
+		setWay(way);
 	}
 
 	/**
@@ -88,10 +52,24 @@ public class MoveAction extends AbstractAction {
 		return way;
 	}
 
+	/**
+	 * Sets the way and sets {@code this} as the way's {@link MoveAction}.
+	 * 
+	 * @param way
+	 *            the way to set
+	 */
+	public void setWay(Way way) {
+		this.way = way;
+		if (way.getMoveAction() != this) {
+			way.setMoveAction(this);
+		}
+	}
+
 	@Override
 	public void triggerAction() {
 		if (enabled) {
 			PlayerManager.getPlayer().setLocation(way.getDestination());
 		}
+		Main.updateChanges();
 	}
 }

@@ -45,11 +45,9 @@ public class Location extends NamedObject {
 	 */
 	@Deprecated
 	public Location() {
-		waysOut = new ArrayList<Way>();
-		waysIn = new ArrayList<Way>();
-		items = new ArrayList<Item>();
+		init();
 	}
-
+	
 	/**
 	 * @param name
 	 *            the name
@@ -58,9 +56,7 @@ public class Location extends NamedObject {
 	 */
 	public Location(String name, String description) {
 		super(name, description);
-		waysOut = new ArrayList<Way>();
-		waysIn = new ArrayList<Way>();
-		items = new ArrayList<Item>();
+		init();
 	}
 
 	/**
@@ -181,5 +177,14 @@ public class Location extends NamedObject {
 	public void removeWayOut(Way wayOut) {
 		this.waysOut.remove(wayOut);
 		wayOut.origin = null;
+	}
+
+	/**
+	 * Initializes the fields
+	 */
+	private void init() {
+		waysOut = new ArrayList<Way>();
+		waysIn = new ArrayList<Way>();
+		items = new ArrayList<Item>();
 	}
 }

@@ -2,14 +2,17 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.Location;
 import data.action.AbstractAction;
 import data.action.MoveAction;
+import data.action.RemoveItemAction;
 
 /**
  * Anything by which one can travel.
  * 
  * @author Satia
  */
+@SuppressWarnings("unused")
 public interface Travelable extends Identifiable {
 	/**
 	 * Adds an additional action.
@@ -18,12 +21,28 @@ public interface Travelable extends Identifiable {
 	 *            the action
 	 */
 	public void addAdditionalActionToMove(AbstractAction action);
-	
+
 	/**
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromMove();
-	
+
+	/**
+	 * @return the destination
+	 */
+	public Location getDestination();
+
+	/**
+	 * @return the moveAction
+	 */
+	public MoveAction getMoveAction();
+
+	/**
+	 * @param moveAction
+	 *            the moveAction to set
+	 */
+	public void setMoveAction(MoveAction moveAction);
+
 	/**
 	 * @return the forbiddenText or {@code null}.
 	 */

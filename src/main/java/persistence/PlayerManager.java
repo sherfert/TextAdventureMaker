@@ -7,7 +7,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.Player;
+import data.UsableObject;
 import data.interfaces.Inspectable;
+import data.interfaces.Usable;
 
 /**
  * Managing access to the player in a database.
@@ -43,7 +45,6 @@ public class PlayerManager {
 	 * Gets the inspectable object in the location or in the inventory the given
 	 * identifier or {@code null} , if there is none.
 	 * 
-	 * 
 	 * @param player
 	 *            the player
 	 * @param identifier
@@ -58,6 +59,27 @@ public class PlayerManager {
 		inspectables.addAll(player.getInventory());
 
 		return NamedObjectManager.getInspectableWithIdentifier(inspectables,
+				identifier);
+	}
+	
+	/**
+	 * Gets the usable object in the location or in the inventory the given
+	 * identifier or {@code null} , if there is none.
+	 * 
+	 * @param player
+	 *            the player
+	 * @param identifier
+	 *            an identifier of the item
+	 * @return the corresponding item or {@code null}.
+	 */
+	public static Usable getUsable(Player player, String identifier) {
+		List<UsableObject> usables = new ArrayList<UsableObject>();
+		// Items in the room
+		usables.addAll(player.getLocation().getItems());
+		// Anything in the inventory
+		usables.addAll(player.getInventory());
+
+		return NamedObjectManager.getInspectableWithIdentifier(usables,
 				identifier);
 	}
 }

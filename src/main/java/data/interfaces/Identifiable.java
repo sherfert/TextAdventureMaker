@@ -28,10 +28,4 @@ public interface Identifiable {
 	 *            the name
 	 */
 	public void removeIdentifier(String name);
-
-	/**
-	 * @param identifiers
-	 *            the identifiers to set
-	 */
-	public void setIdentifiers(List<String> identifiers);
 }

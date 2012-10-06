@@ -27,7 +27,8 @@ public class GeneralParser {
 		INSPECT("getInspectCommands", "inspect", String.class), //
 		INVENTORY("getInventoryCommands", "inventory"), //
 		MOVE("getMoveCommands", "move", String.class), //
-		TAKE("getTakeCommands", "take", String.class);
+		TAKE("getTakeCommands", "take", String.class), //
+		USE("getUseCommands","use",String.class);
 
 		/**
 		 * The name of the method that gets the valid commands. Must be a method
