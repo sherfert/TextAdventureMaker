@@ -207,7 +207,7 @@ public class Item extends UsableObject implements Takeable {
 	}
 
 	/**
-	 * Initializes the fields
+	 * Initializes the fields.
 	 */
 	private void init() {
 		this.addInventoryItemsAction = new AddInventoryItemsAction(false);

@@ -78,6 +78,12 @@ public class Game {
 	private String noCommandText;
 
 	/**
+	 * The text being displayed, when the player tries to use, etc. a
+	 * non-existing inventory item. Valid placeholders: {@literal <identifier>}
+	 */
+	private String noSuchInventoryItemText;
+
+	/**
 	 * The text being displayed, when the player tries to use, take, etc. a
 	 * non-existing item. Valid placeholders: {@literal <identifier>}
 	 */
@@ -109,6 +115,14 @@ public class Game {
 	 * {@literal <identifier>}
 	 */
 	private String notUsableText;
+
+	/**
+	 * The default text, when the player tries to use two incompatible object
+	 * with one another. May be overwritten for each individual combination.
+	 * Valid placeholders: {@literal <invIdentifier>},
+	 * {@literal <itemIdentifier>}
+	 */
+	private String notUsableWithText;
 
 	/**
 	 * The starting location of the game.
@@ -149,6 +163,20 @@ public class Game {
 	private String usedText;
 
 	/**
+	 * The default text, when the player uses two compatible object with one
+	 * another. May be overwritten for each individual combination. Valid
+	 * placeholders: {@literal <invIdentifier>}, {@literal <itemIdentifier>}
+	 */
+	private String usedWithText;
+
+	/**
+	 * All useWith/combine commands. Must be lowercase. Must contain at least
+	 * one word and exactly two parameters for the objects: {@literal (.+)}
+	 */
+	@ElementCollection
+	private List<String> useWithCombineCommands;
+
+	/**
 	 * Constructs a new game object.
 	 */
 	public Game() {
@@ -158,6 +186,7 @@ public class Game {
 		moveCommands = new ArrayList<String>();
 		takeCommands = new ArrayList<String>();
 		useCommands = new ArrayList<String>();
+		useWithCombineCommands = new ArrayList<String>();
 	}
 
 	/**
@@ -169,7 +198,7 @@ public class Game {
 	public void addExitCommand(String cmd) {
 		this.exitCommands.add(cmd.toLowerCase());
 	}
-
+	
 	/**
 	 * Adds an inventory command.
 	 * 
@@ -179,7 +208,7 @@ public class Game {
 	public void addInspectCommand(String cmd) {
 		this.inspectCommands.add(cmd.toLowerCase());
 	}
-
+	
 	/**
 	 * Adds an inventory command.
 	 * 
@@ -218,6 +247,16 @@ public class Game {
 	 */
 	public void addUseCommand(String cmd) {
 		this.useCommands.add(cmd.toLowerCase());
+	}
+
+	/**
+	 * Adds an useWith/combine command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void addUseWithCombineCommand(String cmd) {
+		this.useWithCombineCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -284,6 +323,13 @@ public class Game {
 	}
 
 	/**
+	 * @return the noSuchInventoryItemText
+	 */
+	public String getNoSuchInventoryItemText() {
+		return noSuchInventoryItemText;
+	}
+
+	/**
 	 * @return the noSuchItemText
 	 */
 	public String getNoSuchItemText() {
@@ -316,6 +362,13 @@ public class Game {
 	 */
 	public String getNotUsableText() {
 		return notUsableText;
+	}
+
+	/**
+	 * @return the notUsableWithText
+	 */
+	public String getNotUsableWithText() {
+		return notUsableWithText;
 	}
 
 	/**
@@ -358,6 +411,20 @@ public class Game {
 	 */
 	public String getUsedText() {
 		return usedText;
+	}
+
+	/**
+	 * @return the usedWithText
+	 */
+	public String getUsedWithText() {
+		return usedWithText;
+	}
+
+	/**
+	 * @return the useWithCombineCommands
+	 */
+	public List<String> getUseWithCombineCommands() {
+		return useWithCombineCommands;
 	}
 
 	/**
@@ -411,6 +478,16 @@ public class Game {
 	}
 
 	/**
+	 * Removes an useWith/combine command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void removeUseWithCombineCommand(String cmd) {
+		this.useWithCombineCommands.remove(cmd);
+	}
+
+	/**
 	 * @param id
 	 *            the id to set
 	 */
@@ -448,6 +525,14 @@ public class Game {
 	 */
 	public void setNoCommandText(String noCommandText) {
 		this.noCommandText = noCommandText;
+	}
+
+	/**
+	 * @param noSuchInventoryItemText
+	 *            the noSuchInventoryItemText to set
+	 */
+	public void setNoSuchInventoryItemText(String noSuchInventoryItemText) {
+		this.noSuchInventoryItemText = noSuchInventoryItemText;
 	}
 
 	/**
@@ -491,6 +576,14 @@ public class Game {
 	}
 
 	/**
+	 * @param notUsableWithText
+	 *            the notUsableWithText to set
+	 */
+	public void setNotUsableWithText(String notUsableWithText) {
+		this.notUsableWithText = notUsableWithText;
+	}
+
+	/**
 	 * @param startLocation
 	 *            the startLocation to set
 	 */
@@ -520,5 +613,13 @@ public class Game {
 	 */
 	public void setUsedText(String usedText) {
 		this.usedText = usedText;
+	}
+
+	/**
+	 * @param usedWithText
+	 *            the usedWithText to set
+	 */
+	public void setUsedWithText(String usedWithText) {
+		this.usedWithText = usedWithText;
 	}
 }

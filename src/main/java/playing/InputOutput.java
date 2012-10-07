@@ -3,9 +3,6 @@ package playing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.regex.Pattern;
-
-import playing.parser.PatternGenerator;
 
 /**
  * Providing means to print and read input while playing.
@@ -49,14 +46,9 @@ public class InputOutput {
 	 * exit command has been typed.
 	 */
 	public void startListeningForInput() {
-		Pattern exitPattern = PatternGenerator.getPattern(gamePlayer.getGame()
-				.getExitCommands());
-
-		String input = null;
 		try {
-			while (!exitPattern.matcher(input = reader.readLine()).matches()) {
-				gamePlayer.getParser().parse(input);
-			}
+			while (gamePlayer.getParser().parse(reader.readLine()))
+				;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

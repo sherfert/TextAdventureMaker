@@ -68,10 +68,7 @@ public class RemoveItemAction extends AbstractAction {
 	@Override
 	public void triggerAction() {
 		if (enabled) {
-			// Only if this item is actually in a location
-			if (item.getLocation() != null) {
-				item.getLocation().removeItem(item);
-			}
+			item.setLocation(null);
 		}
 		Main.updateChanges();
 	}

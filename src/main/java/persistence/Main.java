@@ -13,6 +13,7 @@ import data.Location;
 import data.Player;
 import data.Way;
 import data.action.AddInventoryItemsAction;
+import data.action.SetItemLocationAction;
 
 /**
  * TODO Test class.
@@ -101,7 +102,7 @@ public class Main {
 				"This door leads to your balcony.", flat, balcony);
 		wayToBalcony.removeIdentifier(wayToBalcony.getName());
 		wayToBalcony.addIdentifier("out(side)?");
-		wayToBalcony.addIdentifier("on (the )?balcony");
+		wayToBalcony.addIdentifier("(on |to )?(the )?balcony");
 		wayToBalcony.addIdentifier("through (the )?balcony door");
 		Way wayToFlat = new Way("Balcony door",
 				"This door leads inside your flat.", balcony, flat);
@@ -114,6 +115,7 @@ public class Main {
 		tv.setInspectionText("A 32\" television.");
 		tv.addIdentifier("tv");
 		tv.setTakeForbiddenText("This is a little heavy.");
+		tv.setUseForbiddenText("I am not in the mood.");
 		/*
 		 * A takeable banana. If the banana (as an item OR as an inventory item)
 		 * is being used the item/inventory item disappears and the peel is
@@ -140,8 +142,29 @@ public class Main {
 		Item chair = new Item(balcony, "Chair", "A wooden chair.");
 		chair.setInspectionText("Made of solid oak.");
 		chair.setTakingEnabled(true);
-		chair.getAddInventoryItemsAction().addPickUpItem(
-				new InventoryItem(chair));
+		InventoryItem invChair = new InventoryItem(chair);
+		chair.getAddInventoryItemsAction().addPickUpItem(invChair);
+
+		/*
+		 * The tv can be hit with the chair. It is then replaced with a
+		 * destroyed tv.
+		 */
+		Item destroyedTv = new Item(null, "Destroyed television",
+				"A destroyed television.");
+		destroyedTv
+				.setInspectionText("You hit it several times with the chair.");
+		destroyedTv.addIdentifier("television");
+		destroyedTv.addIdentifier("tv");
+		destroyedTv
+				.setTakeForbiddenText("What the hell do you want with this mess?");
+		destroyedTv.setUseForbiddenText("It does not work anymore.");
+
+		invChair.addAdditionalActionToUseWith(tv, new SetItemLocationAction(
+				destroyedTv, flat));
+		// TODO removeitemaction -.-
+		invChair.setUseWithSuccessfulText(tv,
+				"You smash the chair into the television.");
+		invChair.setUsingEnabledWith(tv, true);
 
 		Player player = new Player(flat);
 
@@ -153,18 +176,21 @@ public class Main {
 		game.setInventoryEmptyText("Your inventory is empty.");
 		game.setInventoryText("You are carrying the following things:");
 		game.setNoCommandText("I do not understand you.");
+		// TODO vocal/non vocal
+		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
 		game.setNoSuchItemText("There is no <identifier> here.");
 		game.setNoSuchWayText("You cannot go <identifier>.");
 		game.setNotTakeableText("You cannot take the <identifier>.");
 		game.setNotTravelableText("You cannot go <identifier>.");
 		game.setNotUsableText("You cannot use the <identifier>.");
+		game.setNotUsableWithText("You cannot use the <invIdentifier> with the <itemIdentifier>.");
 		game.setStartText("This is a little text adventure.");
 		game.setTakenText("You picked up the <identifier>.");
 		game.setUsedText("So you used the <identifier>. Nothing interesting happened.");
+		game.setUsedWithText("So you used the <invIdentifier> with the <itemIdentifier>. Nothing interesting happened.");
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
-
 		game.addInspectCommand("look(?: at)? (.+)");
 		game.addInspectCommand("inspect (.+)");
 		game.addInventoryCommand("inventory");
@@ -174,6 +200,8 @@ public class Main {
 		game.addTakeCommand("pick up (.+)");
 		game.addTakeCommand("pick (.+) up");
 		game.addUseCommand("use (.+)");
+		game.addUseWithCombineCommand("use (.+) with (.+)");
+		game.addUseWithCombineCommand("combine (.+) and (.+)");
 
 		// Connect to database
 		connect();

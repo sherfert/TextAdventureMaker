@@ -21,14 +21,21 @@ public class GeneralParser {
 	/**
 	 * All possible commands.
 	 * 
+	 * They should be ordered by complexity. E.g. should USEWITHCOMBINE come
+	 * before USE, as USEWITHCOMBINE could have "use X with Y" as a command and
+	 * USE could have "use X". Generally speaking, commands with more parameters
+	 * should come first.
+	 * 
 	 * @author Satia
 	 */
 	private enum Command {
+		USEWITHCOMBINE("getUseWithCombineCommands", "useWithOrCombine",
+				String.class, String.class), //
 		INSPECT("getInspectCommands", "inspect", String.class), //
-		INVENTORY("getInventoryCommands", "inventory"), //
 		MOVE("getMoveCommands", "move", String.class), //
 		TAKE("getTakeCommands", "take", String.class), //
-		USE("getUseCommands","use",String.class);
+		USE("getUseCommands", "use", String.class), //
+		INVENTORY("getInventoryCommands", "inventory");
 
 		/**
 		 * The name of the method that gets the valid commands. Must be a method
@@ -167,6 +174,11 @@ public class GeneralParser {
 	private List<CommandRecExec> commandRecExecs;
 
 	/**
+	 * The pattern for exit commands.
+	 */
+	private Pattern exitPattern;
+
+	/**
 	 * Initializes this parser.
 	 * 
 	 * @param gamePlayer
@@ -174,6 +186,9 @@ public class GeneralParser {
 	 */
 	public GeneralParser(GamePlayer gamePlayer) {
 		this.gamePlayer = gamePlayer;
+		// Build exit patterm
+		exitPattern = PatternGenerator.getPattern(gamePlayer.getGame()
+				.getExitCommands());
 		// Build CommandRecExecs
 		Command[] commands = Command.values();
 		this.commandRecExecs = new ArrayList<CommandRecExec>(commands.length);
@@ -185,21 +200,30 @@ public class GeneralParser {
 	/**
 	 * Parses an input String and invokes the according method, if the command
 	 * had a valid syntax. Otherwise the player is told, that the command was
-	 * not valid.
+	 * not valid. Returns whether an non-exit command has been entered
 	 * 
 	 * @param input
 	 *            the input
+	 * @return {@code true} if the command was NOT an exit command,
+	 *         {@code false} otherwise.
 	 */
-	public void parse(String input) {
-		// Trimmed, lower case, no multiple spaces
-		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ");
+	public boolean parse(String input) {
+		// Trimmed, lower case, no multiple spaces, no punctuation
+		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ")
+				.replaceAll("\\p{Punct}", "");
+
+		// Is it an exit command?
+		if (exitPattern.matcher(input).matches()) {
+			return false;
+		}
 
 		for (CommandRecExec cmdRE : commandRecExecs) {
 			if (cmdRE.recognizeAndExecute(input)) {
-				return;
+				return true;
 			}
 		}
 		// No command matched
 		gamePlayer.noCommand();
+		return true;
 	}
 }

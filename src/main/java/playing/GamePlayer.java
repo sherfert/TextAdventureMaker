@@ -8,11 +8,13 @@ import persistence.WayManager;
 import playing.parser.GeneralParser;
 import data.Game;
 import data.InventoryItem;
+import data.Item;
 import data.Player;
 import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
 import data.interfaces.Travelable;
 import data.interfaces.Usable;
+import data.interfaces.UsableWithItem;
 
 /**
  * Any methods for actually playing a game.
@@ -27,11 +29,6 @@ public class GamePlayer {
 	private Game game;
 
 	/**
-	 * The player object.
-	 */
-	private Player player;
-
-	/**
 	 * The IO object.
 	 */
 	private InputOutput io;
@@ -40,6 +37,11 @@ public class GamePlayer {
 	 * The parser
 	 */
 	private GeneralParser parser;
+
+	/**
+	 * The player object.
+	 */
+	private Player player;
 
 	/**
 	 * @param game
@@ -62,13 +64,6 @@ public class GamePlayer {
 	}
 
 	/**
-	 * @return the player
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/**
 	 * @return the io
 	 */
 	public InputOutput getIo() {
@@ -80,6 +75,13 @@ public class GamePlayer {
 	 */
 	public GeneralParser getParser() {
 		return parser;
+	}
+
+	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return player;
 	}
 
 	/**
@@ -243,9 +245,111 @@ public class GamePlayer {
 						.replaceAll("<identifier>", name));
 			}
 		} else {
-			// There is no such object
+			// There is no such object and you have no such object
 			io.println(game.getNoSuchItemText()
-					.replaceAll("<identifier>", name));
+					.replaceAll("<identifier>", name)
+					+ " "
+					+ game.getNoSuchInventoryItemText().replaceAll(
+							"<identifier>", name));
+		}
+	}
+
+	/**
+	 * Tries to use/combine the objects with the given names. The (additional)
+	 * actions will be performed. A message informing about success/failure will
+	 * be displayed.
+	 * 
+	 * @param obj1
+	 *            the first object's name
+	 * @param obj2
+	 *            the second object's name
+	 */
+	public void useWithOrCombine(String obj1, String obj2) {
+		Usable object1 = PlayerManager.getUsable(player, obj1);
+		Usable object2 = PlayerManager.getUsable(player, obj2);
+
+		// Check types of both objects (which can be null)
+		if (object1 instanceof InventoryItem) {
+			if (object2 instanceof InventoryItem) {
+				// Combine
+				combine((InventoryItem) object1, (InventoryItem) object2);
+			} else if (object2 instanceof Item) {
+				// UseWith
+				useWith((InventoryItem) object1, obj1, (Item) object2, obj2);
+			} else {
+				// Error: Object2 neither in inventory nor in location
+				io.println(game.getNoSuchItemText().replaceAll("<identifier>",
+						obj2)
+						+ " "
+						+ game.getNoSuchInventoryItemText().replaceAll(
+								"<identifier>", obj2));
+			}
+		} else if (object1 instanceof Item) {
+			if (object2 instanceof InventoryItem) {
+				// UseWith
+				useWith((InventoryItem) object2, obj2, (Item) object1, obj1);
+			} else {
+				// Error: Neither Object1 nor Object2 in inventory
+				io.println(game.getNoSuchInventoryItemText().replaceAll(
+						"<identifier>", obj1)
+						+ " "
+						+ game.getNoSuchInventoryItemText().replaceAll(
+								"<identifier>", obj2));
+			}
+		} else {
+			if (object2 instanceof InventoryItem) {
+				// Error: Object1 neither in inventory nor in location
+				io.println(game.getNoSuchItemText().replaceAll("<identifier>",
+						obj1)
+						+ " "
+						+ game.getNoSuchInventoryItemText().replaceAll(
+								"<identifier>", obj1));
+			} else {
+				// Error: Neither Object1 nor Object2 in inventory
+				io.println(game.getNoSuchInventoryItemText().replaceAll(
+						"<identifier>", obj1)
+						+ " "
+						+ game.getNoSuchInventoryItemText().replaceAll(
+								"<identifier>", obj2));
+			}
+		}
+	}
+
+	private void combine(InventoryItem item1, InventoryItem item2) {
+		// TODO also use Interface
+		io.println("You would now combine " + item1.getName() + " and "
+				+ item2.getName() + ".");
+	}
+
+	/**
+	 * Uses an {@link UsableWithItem} with an {@link Item}.
+	 * 
+	 * @param usable
+	 *            the {@link UsableWithItem}
+	 * @param usableIdentifier
+	 *            the used identifer for the usable
+	 * @param item
+	 *            the item
+	 * @param itemIdentiferthe
+	 *            used identifer for the item
+	 */
+	private void useWith(UsableWithItem usable, String usableIdentifier,
+			Item item, String itemIdentifer) {
+		// Effect depends on additional actions
+		usable.useWith(item);
+		if (usable.isUsingEnabledWith(item)) {
+			// Using was successful
+			io.println(usable.getUseWithSuccessfulText(item) != null ? usable
+					.getUseWithSuccessfulText(item) : game.getUsedWithText()
+					.replaceAll("<invIdentifier>", usableIdentifier)
+					.replaceAll("<itemIdentifier>", itemIdentifer));
+		} else {
+			// Using was not successful
+			io.println(usable.getUseWithForbiddenText(item) != null ? usable
+					.getUseWithForbiddenText(item) : game
+					.getNotUsableWithText()
+					.replaceAll("<invIdentifier>", usableIdentifier)
+					.replaceAll("<itemIdentifier>", itemIdentifer));
 		}
 	}
 }
