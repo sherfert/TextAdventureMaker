@@ -13,6 +13,7 @@ import data.Location;
 import data.Player;
 import data.Way;
 import data.action.AddInventoryItemsAction;
+import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
 
 /**
@@ -135,7 +136,7 @@ public class Main {
 		AddInventoryItemsAction addPeelAction = new AddInventoryItemsAction();
 		addPeelAction.addPickUpItem(peel);
 		banana.addAdditionalActionToUse(addPeelAction);
-		banana.addAdditionalActionToUse(banana.getRemoveItemAction());
+		banana.addAdditionalActionToUse(new SetItemLocationAction(banana, null));
 		banana.getAddInventoryItemsAction().addPickUpItem(
 				new InventoryItem(banana));
 
@@ -161,13 +162,46 @@ public class Main {
 
 		invChair.addAdditionalActionToUseWith(tv, new SetItemLocationAction(
 				destroyedTv, flat));
-		// TODO removeitemaction -.-
+		invChair.addAdditionalActionToUseWith(tv, new SetItemLocationAction(tv,
+				null));
 		invChair.setUseWithSuccessfulText(tv,
 				"You smash the chair into the television.");
 		invChair.setUsingEnabledWith(tv, true);
 
-		Player player = new Player(flat);
+		/*
+		 * A pen that can be used to paint the banana peel. The pen can be used
+		 * for that when in the flat and when already taken.
+		 */
+		Item pen = new Item(flat, "Pen", "A pen.");
+		pen.setInspectionText("An advertising gift.");
+		pen.setUseForbiddenText("You must use it with something else.");
+		pen.setTakingEnabled(true);
+		InventoryItem invPen = new InventoryItem(pen);
+		pen.getAddInventoryItemsAction().addPickUpItem(invPen);
 
+		InventoryItem paintedPeel = new InventoryItem("Painted banana peel",
+				"The peel of the banana you ate.");
+		paintedPeel
+				.setInspectionText("You ate the banana and painted the peel.");
+		paintedPeel.addIdentifier("peel");
+		paintedPeel.addIdentifier("banana peel");
+
+		peel.setUsingEnabledWith(pen, true);
+		peel.setCombiningEnabledWith(invPen, true);
+		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
+		peel.setCombineWithSuccessfulText(invPen,
+				"You painted the banana peel.");
+		peel.addNewInventoryItemWhenCombinedWith(invPen, paintedPeel);
+
+		AddInventoryItemsAction addPaintedPeelAction = new AddInventoryItemsAction();
+		RemoveInventoryItemAction removePeelAction = new RemoveInventoryItemAction(
+				peel);
+		addPaintedPeelAction.addPickUpItem(paintedPeel);
+		peel.addAdditionalActionToUseWith(pen, addPaintedPeelAction);
+		peel.addAdditionalActionToUseWith(pen, removePeelAction);
+		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
+
+		Player player = new Player(flat);
 		// Game options
 		Game game = new Game();
 		game.setStartLocation(flat);
@@ -183,11 +217,11 @@ public class Main {
 		game.setNotTakeableText("You cannot take the <identifier>.");
 		game.setNotTravelableText("You cannot go <identifier>.");
 		game.setNotUsableText("You cannot use the <identifier>.");
-		game.setNotUsableWithText("You cannot use the <invIdentifier> with the <itemIdentifier>.");
+		game.setNotUsableWithText("You cannot use the <identifier1> with the <identifier2>.");
 		game.setStartText("This is a little text adventure.");
 		game.setTakenText("You picked up the <identifier>.");
 		game.setUsedText("So you used the <identifier>. Nothing interesting happened.");
-		game.setUsedWithText("So you used the <invIdentifier> with the <itemIdentifier>. Nothing interesting happened.");
+		game.setUsedWithText("So you used the <identifier1> with the <identifier2>. Nothing interesting happened.");
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
@@ -206,12 +240,7 @@ public class Main {
 		// Connect to database
 		connect();
 
-		// Persist everything
-		entityManager.persist(flat);
-		entityManager.persist(balcony);
-		entityManager.persist(tv);
-		entityManager.persist(banana);
-		entityManager.persist(chair);
+		// Persist everything (Cascade.PERSIST persists the rest)
 		entityManager.persist(player);
 		entityManager.persist(game);
 

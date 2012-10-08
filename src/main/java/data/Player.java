@@ -100,14 +100,6 @@ public class Player {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
 	 * @param location
 	 *            the location to set
 	 */

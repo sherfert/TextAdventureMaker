@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
-import data.action.RemoveItemAction;
+import data.action.SetItemLocationAction;
 import data.interfaces.Takeable;
 
 /**
@@ -28,7 +28,7 @@ public class Item extends UsableObject implements Takeable {
 	 * The {@link AddInventoryItemsAction}. The successfulText and forbiddenText
 	 * by it are being used.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	private AddInventoryItemsAction addInventoryItemsAction;
 
@@ -47,10 +47,15 @@ public class Item extends UsableObject implements Takeable {
 	private Location location;
 
 	/**
-	 * The {@link RemoveItemAction}.
+	 * The {@link SetItemLocationAction} which would set the location to
+	 * {@code null}.
+	 * 
+	 * Note: This is NOT the Inverse connection of
+	 * {@link SetItemLocationAction#item}.
 	 */
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "item")
-	private RemoveItemAction removeAction;
+	@OneToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
+	private SetItemLocationAction removeAction;
 
 	/**
 	 * No-arg constructor for the database.
@@ -65,7 +70,7 @@ public class Item extends UsableObject implements Takeable {
 	public Item() {
 		init();
 	}
-	
+
 	/**
 	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
@@ -120,11 +125,6 @@ public class Item extends UsableObject implements Takeable {
 	}
 
 	@Override
-	public RemoveItemAction getRemoveItemAction() {
-		return removeAction;
-	}
-
-	@Override
 	public String getTakeForbiddenText() {
 		return addInventoryItemsAction.getForbiddenText();
 	}
@@ -172,14 +172,6 @@ public class Item extends UsableObject implements Takeable {
 	}
 
 	@Override
-	public void setRemoveItemAction(RemoveItemAction removeAction) {
-		this.removeAction = removeAction;
-		if (removeAction.getItem() != this) {
-			removeAction.setItem(this);
-		}
-	}
-
-	@Override
 	public void setTakeForbiddenText(String forbiddenText) {
 		addInventoryItemsAction.setForbiddenText(forbiddenText);
 	}
@@ -196,7 +188,6 @@ public class Item extends UsableObject implements Takeable {
 
 	@Override
 	public void take() {
-		// Check just for performance.
 		if (isTakingEnabled()) {
 			addInventoryItemsAction.triggerAction();
 			removeAction.triggerAction();
@@ -211,7 +202,7 @@ public class Item extends UsableObject implements Takeable {
 	 */
 	private void init() {
 		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
-		this.removeAction = new RemoveItemAction(this);
+		this.removeAction = new SetItemLocationAction(this, null);
 		this.additionalTakeActions = new ArrayList<AbstractAction>();
 		setRemoveItem(true);
 	}

@@ -119,8 +119,7 @@ public class Game {
 	/**
 	 * The default text, when the player tries to use two incompatible object
 	 * with one another. May be overwritten for each individual combination.
-	 * Valid placeholders: {@literal <invIdentifier>},
-	 * {@literal <itemIdentifier>}
+	 * Valid placeholders: {@literal <identifier1>}, {@literal <identifier2>}
 	 */
 	private String notUsableWithText;
 
@@ -165,7 +164,7 @@ public class Game {
 	/**
 	 * The default text, when the player uses two compatible object with one
 	 * another. May be overwritten for each individual combination. Valid
-	 * placeholders: {@literal <invIdentifier>}, {@literal <itemIdentifier>}
+	 * placeholders: {@literal <identifier1>}, {@literal <identifier2>}
 	 */
 	private String usedWithText;
 
@@ -198,7 +197,7 @@ public class Game {
 	public void addExitCommand(String cmd) {
 		this.exitCommands.add(cmd.toLowerCase());
 	}
-	
+
 	/**
 	 * Adds an inventory command.
 	 * 
@@ -208,7 +207,7 @@ public class Game {
 	public void addInspectCommand(String cmd) {
 		this.inspectCommands.add(cmd.toLowerCase());
 	}
-	
+
 	/**
 	 * Adds an inventory command.
 	 * 
@@ -485,14 +484,6 @@ public class Game {
 	 */
 	public void removeUseWithCombineCommand(String cmd) {
 		this.useWithCombineCommands.remove(cmd);
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/**

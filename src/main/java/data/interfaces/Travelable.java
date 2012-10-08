@@ -5,14 +5,12 @@ import java.util.List;
 import data.Location;
 import data.action.AbstractAction;
 import data.action.MoveAction;
-import data.action.RemoveItemAction;
 
 /**
  * Anything by which one can travel.
  * 
  * @author Satia
  */
-@SuppressWarnings("unused")
 public interface Travelable extends Identifiable {
 	/**
 	 * Adds an additional action.

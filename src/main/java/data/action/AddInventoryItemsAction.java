@@ -80,6 +80,13 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
+	 * @return the pickUpItems.
+	 */
+	public List<InventoryItem> getPickUpItems() {
+		return pickUpItems;
+	}
+
+	/**
 	 * Removes an {@link InventoryItem} from the items to be added to the
 	 * inventory.
 	 * 

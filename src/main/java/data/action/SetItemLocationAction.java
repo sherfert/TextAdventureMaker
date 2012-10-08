@@ -11,7 +11,8 @@ import data.Location;
 
 /**
  * An action setting the location of an an {@link Item}. It can also be used to
- * ADD items, if the former location was {@code null}.
+ * ADD items, if the former location was {@code null} or to REMOVE items, if the
+ * new location is {@code null}.
  * 
  * @author Satia
  */
@@ -25,8 +26,8 @@ public class SetItemLocationAction extends AbstractAction {
 	private Item item;
 
 	/**
-	 * The new location of the item. Can be {@code null}, but in that case a
-	 * {@link RemoveItemAction} should be preferred.
+	 * The new location of the item. Can be {@code null}, which means the Item
+	 * will be removed.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
@@ -48,8 +49,8 @@ public class SetItemLocationAction extends AbstractAction {
 	 * @param item
 	 *            the item to have the location changed
 	 * @param location
-	 *            the new location of the item. Can be {@code null}, but in that
-	 *            case a {@link RemoveItemAction} should be preferred.
+	 *            the new location of the item. Can be {@code null}, which means
+	 *            the Item will be removed.
 	 */
 	public SetItemLocationAction(Item item, Location location) {
 		this.item = item;

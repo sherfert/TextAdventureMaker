@@ -272,7 +272,8 @@ public class GamePlayer {
 		if (object1 instanceof InventoryItem) {
 			if (object2 instanceof InventoryItem) {
 				// Combine
-				combine((InventoryItem) object1, (InventoryItem) object2);
+				combine((InventoryItem) object1, obj1, (InventoryItem) object2,
+						obj2);
 			} else if (object2 instanceof Item) {
 				// UseWith
 				useWith((InventoryItem) object1, obj1, (Item) object2, obj2);
@@ -315,10 +316,35 @@ public class GamePlayer {
 		}
 	}
 
-	private void combine(InventoryItem item1, InventoryItem item2) {
-		// TODO also use Interface
-		io.println("You would now combine " + item1.getName() + " and "
-				+ item2.getName() + ".");
+	/**
+	 * Combines two {@link InventoryItem}s.
+	 * 
+	 * @param item1
+	 *            the first item
+	 * @param id1
+	 *            the used identifier for item1
+	 * @param item2
+	 *            the second item
+	 * @param id2
+	 *            the used identifier for item2
+	 */
+	private void combine(InventoryItem item1, String id1, InventoryItem item2,
+			String id2) {
+		// Effect depends on enabled status and additional actions
+		item1.combineWith(item2);
+		if (item1.isCombiningEnabledWith(item2)) {
+			// Combining was successful
+			io.println(item1.getCombineWithSuccessfulText(item2) != null ? item1
+					.getCombineWithSuccessfulText(item2) : game
+					.getUsedWithText().replaceAll("<identifier1>", id1)
+					.replaceAll("<identifier2>", id2));
+		} else {
+			// Combining was not successful
+			io.println(item1.getCombineWithForbiddenText(item2) != null ? item1
+					.getCombineWithForbiddenText(item2) : game
+					.getNotUsableWithText().replaceAll("<identifier1>", id1)
+					.replaceAll("<identifier2>", id2));
+		}
 	}
 
 	/**
@@ -341,15 +367,15 @@ public class GamePlayer {
 			// Using was successful
 			io.println(usable.getUseWithSuccessfulText(item) != null ? usable
 					.getUseWithSuccessfulText(item) : game.getUsedWithText()
-					.replaceAll("<invIdentifier>", usableIdentifier)
-					.replaceAll("<itemIdentifier>", itemIdentifer));
+					.replaceAll("<identifier1>", usableIdentifier)
+					.replaceAll("<identifier2>", itemIdentifer));
 		} else {
 			// Using was not successful
 			io.println(usable.getUseWithForbiddenText(item) != null ? usable
 					.getUseWithForbiddenText(item) : game
 					.getNotUsableWithText()
-					.replaceAll("<invIdentifier>", usableIdentifier)
-					.replaceAll("<itemIdentifier>", itemIdentifer));
+					.replaceAll("<identifier1>", usableIdentifier)
+					.replaceAll("<identifier2>", itemIdentifer));
 		}
 	}
 }

@@ -153,14 +153,6 @@ public abstract class NamedObject implements Inspectable {
 		identifiers.remove(name);
 	}
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	@Override
 	public void setInspectionText(String inspectionText) {
 		this.inspectionText = inspectionText;

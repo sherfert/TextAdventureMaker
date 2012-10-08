@@ -37,7 +37,7 @@ public class InputOutput {
 	 *            the text to be printed
 	 */
 	public void println(String output) {
-		// FIXME
+		// TODO real IO
 		System.out.println(output);
 	}
 
