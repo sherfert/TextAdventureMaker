@@ -24,6 +24,11 @@ import data.interfaces.UsableWithItem;
 public class GamePlayer {
 
 	/**
+	 * A placeholder replacer for the currently used command.
+	 */
+	private PlaceholderReplacer currentReplacer;
+
+	/**
 	 * The game that is being played.
 	 */
 	private Game game;
@@ -54,6 +59,7 @@ public class GamePlayer {
 		this.player = player;
 		this.io = new InputOutput(this);
 		this.parser = new GeneralParser(this);
+		this.currentReplacer = new PlaceholderReplacer();
 	}
 
 	/**
@@ -88,23 +94,30 @@ public class GamePlayer {
 	 * Tries to inspect an object with the given name. The player will look at
 	 * it if possible and if not, a meaningful message will be displayed.
 	 * 
-	 * @param name
-	 *            the object's name
+	 * @param identifier
+	 *            an identifier of the object
 	 */
-	public void inspect(String name) {
+	public void inspect(String identifier) {
 		// TODO general "around" for the current location
-		Inspectable object = PlayerManager.getInspectable(player, name);
+		Inspectable object = PlayerManager.getInspectable(player, identifier);
+		// Save identifier
+		currentReplacer.setIdentifier(identifier);
 
 		if (object != null) {
+			// Save name
+			currentReplacer.setName(object.getName());
+
+			String message = object.getInspectionText();
+			if (message == null) {
+				message = game.getInspectionDefaultText();
+			}
+			io.println(currentReplacer.replacePlaceholders(message));
 			// Effect depends on additional actions
 			object.inspect();
-			io.println(object.getInspectionText() != null ? object
-					.getInspectionText() : game.getInspectionDefaultText()
-					.replaceAll("<identifier>", name));
 		} else {
 			// There is no such thing
-			io.println(game.getNoSuchItemText()
-					.replaceAll("<identifier>", name));
+			String message = game.getNoSuchItemText();
+			io.println(currentReplacer.replacePlaceholders(message));
 		}
 	}
 
@@ -115,10 +128,12 @@ public class GamePlayer {
 		List<InventoryItem> inventory = player.getInventory();
 		if (inventory.isEmpty()) {
 			// The inventory is empty
-			io.println(game.getInventoryEmptyText());
+			io.println(currentReplacer.replacePlaceholders(game
+					.getInventoryEmptyText()));
 		} else {
 			// The inventory is not empty
-			io.println(game.getInventoryText());
+			io.println(currentReplacer.replacePlaceholders(game
+					.getInventoryText()));
 			// Determine longest name for formatting
 			int longest = 0;
 			for (InventoryItem item : inventory) {
@@ -138,32 +153,39 @@ public class GamePlayer {
 	 * Tries to move to the target with the given name. The player will move
 	 * there if possible and if not, a meaningful message will be displayed.
 	 * 
-	 * @param target
-	 *            the target's name
+	 * @param identifier
+	 *            an identifier of the object
 	 */
-	public void move(String target) {
+	public void move(String identifier) {
 		Travelable way = WayManager.getWayOutFromLocation(player.getLocation(),
-				target);
+				identifier);
+		// Save identifier
+		currentReplacer.setIdentifier(identifier);
 
 		if (way != null) {
-			// Effect depends on enabled status and additional actions
-			way.travel();
+			// Save name
+			currentReplacer.setName(way.getName());
 			if (way.isMovingEnabled()) {
 				// The location changed
-				if (way.getMoveSuccessfulText() != null) {
-					io.println(way.getMoveSuccessfulText());
+				String message = way.getMoveSuccessfulText();
+				if (message != null) {
+					io.println(currentReplacer.replacePlaceholders(message));
 				}
 				io.println(way.getDestination().getEnteredText());
 			} else {
 				// The location did not change
-				io.println(way.getMoveForbiddenText() != null ? way
-						.getMoveForbiddenText() : game.getNotTravelableText()
-						.replaceAll("<identifier>", target));
+				String message = way.getMoveForbiddenText();
+				if (message == null) {
+					message = game.getNotTravelableText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message));
 			}
+			// Effect depends on enabled status and additional actions
+			way.travel();
 		} else {
 			// There is no such way
-			io.println(game.getNoSuchWayText().replaceAll("<identifier>",
-					target));
+			String message = game.getNoSuchWayText();
+			io.println(currentReplacer.replacePlaceholders(message));
 		}
 	}
 
@@ -172,7 +194,18 @@ public class GamePlayer {
 	 * recognizeable.
 	 */
 	public void noCommand() {
-		io.println(game.getNoCommandText());
+		io.println(currentReplacer.replacePlaceholders(game.getNoCommandText()));
+	}
+
+	/**
+	 * Sets the input for the current replacer. The other fields will be reset.
+	 * 
+	 * @param input
+	 *            the typed input
+	 */
+	public void setInput(String input) {
+		currentReplacer.reset();
+		currentReplacer.setInput(input);
 	}
 
 	/**
@@ -190,32 +223,39 @@ public class GamePlayer {
 	 * be performed if the item is takeable (additional actions will be
 	 * performed even if not). If not, a meaningful message will be displayed.
 	 * 
-	 * @param object
-	 *            the object's name
+	 * @param identifier
+	 *            an identifier of the object
 	 */
-	public void take(String object) {
+	public void take(String identifier) {
 		Takeable item = ItemManager.getItemFromLocation(player.getLocation(),
-				object);
+				identifier);
+		// Save identifier
+		currentReplacer.setIdentifier(identifier);
 
 		if (item != null) {
-			// Effect depends on enabled status and additional actions
-			item.take();
+			// Save name
+			currentReplacer.setName(item.getName());
 			if (item.isTakingEnabled()) {
-				// FIXME replacement rules
 				// The item was taken
-				io.println(item.getTakeSuccessfulText() != null ? item
-						.getTakeSuccessfulText() : game.getTakenText()
-						.replaceAll("<identifier>", object));
+				String message = item.getTakeSuccessfulText();
+				if (message == null) {
+					message = game.getTakenText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message));
 			} else {
 				// The item was not taken
-				io.println(item.getTakeForbiddenText() != null ? item
-						.getTakeForbiddenText() : game.getNotTakeableText()
-						.replaceAll("<identifier>", object));
+				String message = item.getTakeForbiddenText();
+				if (message == null) {
+					message = game.getNotTakeableText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message));
 			}
+			// Effect depends on enabled status and additional actions
+			item.take();
 		} else {
 			// There is no such item
-			io.println(game.getNoSuchItemText().replaceAll("<identifier>",
-					object));
+			String message = game.getNoSuchItemText();
+			io.println(currentReplacer.replacePlaceholders(message));
 		}
 	}
 
@@ -224,33 +264,39 @@ public class GamePlayer {
 	 * be performed. A message informing about success/failure will be
 	 * displayed.
 	 * 
-	 * @param name
-	 *            the object's name
+	 * @param identifier
+	 *            an identifier of the object
 	 */
-	public void use(String name) {
-		Usable object = PlayerManager.getUsable(player, name);
+	public void use(String identifier) {
+		Usable object = PlayerManager.getUsable(player, identifier);
+		// Save identifier
+		currentReplacer.setIdentifier(identifier);
 
 		if (object != null) {
-			// Effect depends on additional actions
-			object.use();
+			// Save name
+			currentReplacer.setName(object.getName());
 			if (object.isUsingEnabled()) {
 				// The object was used
-				io.println(object.getUseSuccessfulText() != null ? object
-						.getUseSuccessfulText() : game.getUsedText()
-						.replaceAll("<identifier>", name));
+				String message = object.getUseSuccessfulText();
+				if (message == null) {
+					message = game.getUsedText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message));
 			} else {
 				// The object was not used
-				io.println(object.getUseForbiddenText() != null ? object
-						.getUseForbiddenText() : game.getNotUsableText()
-						.replaceAll("<identifier>", name));
+				String message = object.getUseForbiddenText();
+				if (message == null) {
+					message = game.getNotUsableText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message));
 			}
+			// Effect depends on additional actions
+			object.use();
 		} else {
 			// There is no such object and you have no such object
-			io.println(game.getNoSuchItemText()
-					.replaceAll("<identifier>", name)
-					+ " "
-					+ game.getNoSuchInventoryItemText().replaceAll(
-							"<identifier>", name));
+			String message = game.getNoSuchItemText() + " "
+					+ game.getNoSuchInventoryItemText();
+			io.println(currentReplacer.replacePlaceholders(message));
 		}
 	}
 
@@ -259,59 +305,64 @@ public class GamePlayer {
 	 * actions will be performed. A message informing about success/failure will
 	 * be displayed.
 	 * 
-	 * @param obj1
-	 *            the first object's name
-	 * @param obj2
-	 *            the second object's name
+	 * @param identifier1
+	 *            an identifier of the first object
+	 * @param identifier2
+	 *            an identifier of the second object
 	 */
-	public void useWithOrCombine(String obj1, String obj2) {
-		Usable object1 = PlayerManager.getUsable(player, obj1);
-		Usable object2 = PlayerManager.getUsable(player, obj2);
+	public void useWithOrCombine(String identifier1, String identifier2) {
+		Usable object1 = PlayerManager.getUsable(player, identifier1);
+		Usable object2 = PlayerManager.getUsable(player, identifier2);
+		// Save identifiers
+		currentReplacer.setIdentifier(identifier1);
+		currentReplacer.setIdentifier2(identifier2);
 
 		// Check types of both objects (which can be null)
 		if (object1 instanceof InventoryItem) {
 			if (object2 instanceof InventoryItem) {
 				// Combine
-				combine((InventoryItem) object1, obj1, (InventoryItem) object2,
-						obj2);
+				combine((InventoryItem) object1, (InventoryItem) object2);
 			} else if (object2 instanceof Item) {
 				// UseWith
-				useWith((InventoryItem) object1, obj1, (Item) object2, obj2);
+				useWith((InventoryItem) object1, (Item) object2);
 			} else {
 				// Error: Object2 neither in inventory nor in location
-				io.println(game.getNoSuchItemText().replaceAll("<identifier>",
-						obj2)
+				String message = PlaceholderReplacer
+						.convertFirstToSecondPlaceholders(game
+								.getNoSuchItemText())
 						+ " "
-						+ game.getNoSuchInventoryItemText().replaceAll(
-								"<identifier>", obj2));
+						+ PlaceholderReplacer
+								.convertFirstToSecondPlaceholders(game
+										.getNoSuchInventoryItemText());
+				io.println(currentReplacer.replacePlaceholders(message));
 			}
 		} else if (object1 instanceof Item) {
 			if (object2 instanceof InventoryItem) {
 				// UseWith
-				useWith((InventoryItem) object2, obj2, (Item) object1, obj1);
+				useWith((InventoryItem) object2, (Item) object1);
 			} else {
 				// Error: Neither Object1 nor Object2 in inventory
-				io.println(game.getNoSuchInventoryItemText().replaceAll(
-						"<identifier>", obj1)
+				String message = game.getNoSuchInventoryItemText()
 						+ " "
-						+ game.getNoSuchInventoryItemText().replaceAll(
-								"<identifier>", obj2));
+						+ PlaceholderReplacer
+								.convertFirstToSecondPlaceholders(game
+										.getNoSuchInventoryItemText());
+				io.println(currentReplacer.replacePlaceholders(message));
 			}
 		} else {
 			if (object2 instanceof InventoryItem) {
 				// Error: Object1 neither in inventory nor in location
-				io.println(game.getNoSuchItemText().replaceAll("<identifier>",
-						obj1)
-						+ " "
-						+ game.getNoSuchInventoryItemText().replaceAll(
-								"<identifier>", obj1));
+				String message = game.getNoSuchItemText() + " "
+						+ game.getNoSuchInventoryItemText();
+				io.println(currentReplacer.replacePlaceholders(message));
 			} else {
 				// Error: Neither Object1 nor Object2 in inventory
-				io.println(game.getNoSuchInventoryItemText().replaceAll(
-						"<identifier>", obj1)
+				String message = game.getNoSuchInventoryItemText()
 						+ " "
-						+ game.getNoSuchInventoryItemText().replaceAll(
-								"<identifier>", obj2));
+						+ PlaceholderReplacer
+								.convertFirstToSecondPlaceholders(game
+										.getNoSuchInventoryItemText());
+				io.println(currentReplacer.replacePlaceholders(message));
 			}
 		}
 	}
@@ -321,30 +372,31 @@ public class GamePlayer {
 	 * 
 	 * @param item1
 	 *            the first item
-	 * @param id1
-	 *            the used identifier for item1
 	 * @param item2
 	 *            the second item
-	 * @param id2
-	 *            the used identifier for item2
 	 */
-	private void combine(InventoryItem item1, String id1, InventoryItem item2,
-			String id2) {
-		// Effect depends on enabled status and additional actions
-		item1.combineWith(item2);
+	private void combine(InventoryItem item1, InventoryItem item2) {
+		// Save names
+		currentReplacer.setName(item1.getName());
+		currentReplacer.setName2(item2.getName());
+
 		if (item1.isCombiningEnabledWith(item2)) {
 			// Combining was successful
-			io.println(item1.getCombineWithSuccessfulText(item2) != null ? item1
-					.getCombineWithSuccessfulText(item2) : game
-					.getUsedWithText().replaceAll("<identifier1>", id1)
-					.replaceAll("<identifier2>", id2));
+			String message = item1.getCombineWithSuccessfulText(item2);
+			if (message == null) {
+				message = game.getUsedWithText();
+			}
+			io.println(currentReplacer.replacePlaceholders(message));
 		} else {
 			// Combining was not successful
-			io.println(item1.getCombineWithForbiddenText(item2) != null ? item1
-					.getCombineWithForbiddenText(item2) : game
-					.getNotUsableWithText().replaceAll("<identifier1>", id1)
-					.replaceAll("<identifier2>", id2));
+			String message = item1.getCombineWithForbiddenText(item2);
+			if (message == null) {
+				message = game.getNotUsableWithText();
+			}
+			io.println(currentReplacer.replacePlaceholders(message));
 		}
+		// Effect depends on enabled status and additional actions
+		item1.combineWith(item2);
 	}
 
 	/**
@@ -352,30 +404,30 @@ public class GamePlayer {
 	 * 
 	 * @param usable
 	 *            the {@link UsableWithItem}
-	 * @param usableIdentifier
-	 *            the used identifer for the usable
 	 * @param item
 	 *            the item
-	 * @param itemIdentiferthe
-	 *            used identifer for the item
 	 */
-	private void useWith(UsableWithItem usable, String usableIdentifier,
-			Item item, String itemIdentifer) {
-		// Effect depends on additional actions
-		usable.useWith(item);
+	private void useWith(UsableWithItem usable, Item item) {
+		// Save names
+		currentReplacer.setName(usable.getName());
+		currentReplacer.setName2(item.getName());
+
 		if (usable.isUsingEnabledWith(item)) {
 			// Using was successful
-			io.println(usable.getUseWithSuccessfulText(item) != null ? usable
-					.getUseWithSuccessfulText(item) : game.getUsedWithText()
-					.replaceAll("<identifier1>", usableIdentifier)
-					.replaceAll("<identifier2>", itemIdentifer));
+			String message = usable.getUseWithSuccessfulText(item);
+			if (message == null) {
+				message = game.getUsedWithText();
+			}
+			io.println(currentReplacer.replacePlaceholders(message));
 		} else {
 			// Using was not successful
-			io.println(usable.getUseWithForbiddenText(item) != null ? usable
-					.getUseWithForbiddenText(item) : game
-					.getNotUsableWithText()
-					.replaceAll("<identifier1>", usableIdentifier)
-					.replaceAll("<identifier2>", itemIdentifer));
+			String message = usable.getUseWithForbiddenText(item);
+			if (message == null) {
+				message = game.getNotUsableWithText();
+			}
+			io.println(currentReplacer.replacePlaceholders(message));
 		}
+		// Effect depends on additional actions
+		usable.useWith(item);
 	}
 }

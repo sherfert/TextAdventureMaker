@@ -122,9 +122,6 @@ public abstract class NamedObject implements Inspectable {
 		return inspectionText;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}

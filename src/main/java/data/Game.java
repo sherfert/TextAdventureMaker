@@ -16,6 +16,8 @@ import javax.persistence.OneToOne;
  * There should be only one game per database.
  * 
  * @author Satia
+ * 
+ * TODO update valid placeholders
  */
 @Entity
 public class Game {
@@ -164,7 +166,7 @@ public class Game {
 	/**
 	 * The default text, when the player uses two compatible object with one
 	 * another. May be overwritten for each individual combination. Valid
-	 * placeholders: {@literal <identifier1>}, {@literal <identifier2>}
+	 * placeholders: {@literal <identifier>}, {@literal <identifier2>}
 	 */
 	private String usedWithText;
 

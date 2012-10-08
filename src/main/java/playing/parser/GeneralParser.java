@@ -59,10 +59,10 @@ public class GeneralParser {
 		 * @param commandMethodName
 		 *            The name of the method that gets the valid commands. Must
 		 *            be a method of the class {@link Game} with no parameters
-		 *            and List<String> as return type.
+		 *            and List of Strings as return type.
 		 * @param methodName
 		 *            the name of the method that should be invoked when this
-		 *            command was recognized. Must be a static method of the
+		 *            command was recognized. Must be a method of the
 		 *            class {@link GamePlayer}.
 		 * @param parameterTypes
 		 *            the parameter types of the method denoted by methodName.
@@ -216,6 +216,9 @@ public class GeneralParser {
 		if (exitPattern.matcher(input).matches()) {
 			return false;
 		}
+		
+		// Set the input for the game players' replacer
+		gamePlayer.setInput(input);
 
 		for (CommandRecExec cmdRE : commandRecExecs) {
 			if (cmdRE.recognizeAndExecute(input)) {

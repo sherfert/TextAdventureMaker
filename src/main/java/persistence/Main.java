@@ -13,6 +13,7 @@ import data.Location;
 import data.Player;
 import data.Way;
 import data.action.AddInventoryItemsAction;
+import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
 
@@ -118,13 +119,20 @@ public class Main {
 		tv.setTakeForbiddenText("This is a little heavy.");
 		tv.setUseForbiddenText("I am not in the mood.");
 		/*
+		 * Inspecting the tv will change its inspection text.
+		 */
+		ChangeNamedObjectAction changeTVAction = new ChangeNamedObjectAction(tv);
+		changeTVAction
+				.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
+		tv.addAdditionalActionToInspect(changeTVAction);
+
+		/*
 		 * A takeable banana. If the banana (as an item OR as an inventory item)
 		 * is being used the item/inventory item disappears and the peel is
 		 * being added to the inventory.
 		 */
 		Item banana = new Item(flat, "Banana", "A banana.");
 		banana.setInspectionText("Rich in cholesterol.");
-		banana.setTakeSuccessfulText("Ya got bananaaa-a-a.");
 		banana.setTakingEnabled(true);
 		banana.setUsingEnabled(true);
 		banana.setUseSuccessfulText("You ate the banana. The peel looks useful, so you kept it.");
@@ -205,6 +213,7 @@ public class Main {
 		// Game options
 		Game game = new Game();
 		game.setStartLocation(flat);
+		game.setStartText("This is a little text adventure.");
 
 		game.setInspectionDefaultText("Nothing interesting.");
 		game.setInventoryEmptyText("Your inventory is empty.");
@@ -213,15 +222,14 @@ public class Main {
 		// TODO vocal/non vocal
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
 		game.setNoSuchItemText("There is no <identifier> here.");
-		game.setNoSuchWayText("You cannot go <identifier>.");
-		game.setNotTakeableText("You cannot take the <identifier>.");
-		game.setNotTravelableText("You cannot go <identifier>.");
-		game.setNotUsableText("You cannot use the <identifier>.");
-		game.setNotUsableWithText("You cannot use the <identifier1> with the <identifier2>.");
-		game.setStartText("This is a little text adventure.");
-		game.setTakenText("You picked up the <identifier>.");
-		game.setUsedText("So you used the <identifier>. Nothing interesting happened.");
-		game.setUsedWithText("So you used the <identifier1> with the <identifier2>. Nothing interesting happened.");
+		game.setNoSuchWayText("You cannot <input>.");
+		game.setNotTakeableText("You cannot take the <name>.");
+		game.setNotTravelableText("You cannot <input>.");
+		game.setNotUsableText("You cannot use the <name>.");
+		game.setNotUsableWithText("You cannot use the <name> with the <name2>.");
+		game.setTakenText("You picked up the <name>.");
+		game.setUsedText("So you used the <name>. Nothing interesting happened.");
+		game.setUsedWithText("So you used the <name> with the <name2>. Nothing interesting happened.");
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");

@@ -3,7 +3,7 @@ package data.interfaces;
 import java.util.List;
 
 /**
- * Anything with identifiers in the game.
+ * Anything with identifiers and a name in the game.
  * 
  * @author Satia
  */
@@ -21,6 +21,11 @@ public interface Identifiable {
 	 */
 	public List<String> getIdentifiers();
 
+	/**
+	 * @return the name
+	 */
+	public String getName();
+	
 	/**
 	 * Removes an identifier.
 	 * 

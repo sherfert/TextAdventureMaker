@@ -7,8 +7,8 @@ import data.action.AbstractAction;
 import data.InventoryItem;
 
 /**
- * Anything combineable with other InventoryItems. The InventoryItems may disappear
- * and new {@link InventoryItem}s can be added.
+ * Anything combineable with other InventoryItems. The InventoryItems may
+ * disappear and new {@link InventoryItem}s can be added.
  * 
  * @author Satia
  */
@@ -37,7 +37,8 @@ public interface Combinable extends Identifiable {
 			InventoryItem newItem);
 
 	/**
-	 * Triggers all additional actions for that item, if any. TODO
+	 * Adds new inventory items, removes both partners if removeCombinables is
+	 * enabled andtriggers all additional actions for that item, if any.
 	 * 
 	 * @param partner
 	 *            the partner
