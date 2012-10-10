@@ -29,7 +29,7 @@ public class Item extends UsableObject implements Takeable {
 	 * by it are being used.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	private AddInventoryItemsAction addInventoryItemsAction;
 
 	/**
@@ -40,7 +40,7 @@ public class Item extends UsableObject implements Takeable {
 	private List<AbstractAction> additionalTakeActions;
 
 	/**
-	 * The current location of the item.
+	 * The current location of the item. May be {@code null}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
@@ -53,8 +53,9 @@ public class Item extends UsableObject implements Takeable {
 	 * Note: This is NOT the Inverse connection of
 	 * {@link SetItemLocationAction#item}.
 	 */
+	// TODO why not unnullable?
 	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn//(nullable = false)
 	private SetItemLocationAction removeAction;
 
 	/**

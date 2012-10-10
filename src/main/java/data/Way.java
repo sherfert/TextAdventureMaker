@@ -40,14 +40,14 @@ public class Way extends NamedObject implements Travelable {
 	 * The destination.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	Location destination;
 
 	/**
 	 * The origin.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	Location origin;
 
 	/**

@@ -219,7 +219,6 @@ public class Main {
 		game.setInventoryEmptyText("Your inventory is empty.");
 		game.setInventoryText("You are carrying the following things:");
 		game.setNoCommandText("I do not understand you.");
-		// TODO vocal/non vocal
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
 		game.setNoSuchItemText("There is no <identifier> here.");
 		game.setNoSuchWayText("You cannot <input>.");

@@ -22,13 +22,15 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	 * The item to be removed.
 	 */
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	private InventoryItem item;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link RemoveInventoryItemAction#RemoveInventoryItemAction(Item)} instead.
+	 * @deprecated Use
+	 *             {@link RemoveInventoryItemAction#RemoveInventoryItemAction(Item)}
+	 *             instead.
 	 */
 	@Deprecated
 	public RemoveInventoryItemAction() {
@@ -63,8 +65,8 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	 * @param successfulText
 	 *            the successfulText
 	 */
-	public RemoveInventoryItemAction(InventoryItem item, boolean enabled, String forbiddenText,
-			String successfulText) {
+	public RemoveInventoryItemAction(InventoryItem item, boolean enabled,
+			String forbiddenText, String successfulText) {
 		super(enabled, forbiddenText, successfulText);
 		this.item = item;
 	}

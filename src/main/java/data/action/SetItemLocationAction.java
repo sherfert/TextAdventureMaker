@@ -21,8 +21,9 @@ public class SetItemLocationAction extends AbstractAction {
 	/**
 	 * The item to have the location changed.
 	 */
+	// TODO why not unnullable?
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn//(nullable = false)
 	private Item item;
 
 	/**

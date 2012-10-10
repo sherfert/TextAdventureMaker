@@ -4,7 +4,7 @@
 	version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
 	<persistence-unit name="textAdventureMaker"
 		transaction-type="RESOURCE_LOCAL">
-		
+
 		<!-- All data classes. -->
 		<class>data.action.AbstractAction</class>
 		<class>data.action.AddInventoryItemsAction</class>
@@ -22,7 +22,7 @@
 		<class>data.Player</class>
 		<class>data.UsableObject</class>
 		<class>data.Way</class>
-		
+
 		<properties>
 			<!-- Default database login using Oracle for EclipseLink's internal connection 
 				pool, change this to access your own database. -->
@@ -63,10 +63,10 @@
 				/ -->
 
 			<!-- Configure database to be created on startup if not already existing. -->
-			<!--  <property name="eclipselink.ddl-generation" value="create-tables" />-->
+			<!-- <property name="eclipselink.ddl-generation" value="create-tables" 
+				/> -->
 			<!-- To drop and replace existing schema this can be used. -->
-			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" 
-				/>
+			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 
 			<!-- Configure simple SQL logging for demonstration. -->
 			<property name="eclipselink.logging.level" value="FINE" />

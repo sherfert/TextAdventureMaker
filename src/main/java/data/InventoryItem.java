@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -43,7 +44,7 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 		 * The action adding the new inventory items.
 		 */
 		@ManyToOne(cascade = CascadeType.PERSIST)
-		@JoinColumn
+		@JoinColumn(nullable = false)
 		private AddInventoryItemsAction addInventoryItemsAction;
 
 		/**
@@ -70,6 +71,7 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 		 * Whether combining of the two {@link InventoryItem}s should be
 		 * enabled.
 		 */
+		@Column(nullable = false)
 		private boolean enabled;
 
 		/**
@@ -83,6 +85,7 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 		 * Whether the two partners should be removed when combined
 		 * successfully.
 		 */
+		@Column(nullable = false)
 		private boolean removeCombinables;
 
 		/**
@@ -121,6 +124,7 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 		 * Whether using of this {@link InventoryItem} with the mapped
 		 * {@link Item} should be enabled.
 		 */
+		@Column(nullable = false)
 		private boolean enabled;
 
 		/**
@@ -158,6 +162,7 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	 * and value, if it was not stored before. The other inventory item's map
 	 * will be synchronized, too.
 	 */
+	// TODO why Maps not unnullable?
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn

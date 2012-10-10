@@ -9,12 +9,11 @@ import java.util.regex.Pattern;
  * @author Satia
  */
 public class PlaceholderReplacer {
-
 	/**
 	 * The pattern used to convert first parameters into second parameters.
 	 */
 	public static final Pattern CONVERT_FIRST_TO_SECOND_PATTERN = Pattern
-			.compile("<(IDENTIFIER|Identifier|identifier|NAME|Name|name)>");
+			.compile("<(identifier|name)>", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Converts all placeholders for the first parameter in a Sring to

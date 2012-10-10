@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,12 +55,14 @@ public abstract class NamedObject implements Inspectable {
 	/**
 	 * The name.
 	 */
+	@Column(nullable = false)
 	private String name;
 
 	/**
 	 * The description. It is being displayed when the named object is
 	 * e.g. in the same location.
 	 */
+	@Column(nullable = false)
 	private String description;
 
 	/**

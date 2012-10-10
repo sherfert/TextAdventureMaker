@@ -22,7 +22,7 @@ public class MoveAction extends AbstractAction {
 	 * The way where the player should move.
 	 */
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	private Way way;
 
 	/**

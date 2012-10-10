@@ -36,7 +36,7 @@ public class Player {
 	 * The location.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	private Location location;
 
 	/**

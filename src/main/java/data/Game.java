@@ -3,7 +3,9 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +18,8 @@ import javax.persistence.OneToOne;
  * There should be only one game per database.
  * 
  * @author Satia
- * 
- * TODO update valid placeholders
  */
+@SuppressWarnings("unused")
 @Entity
 public class Game {
 	/**
@@ -44,9 +45,10 @@ public class Game {
 
 	/**
 	 * The text being displayed when an object is inspected that does not have
-	 * an individual inspection text. Valid placeholders:
-	 * {@literal <identifier>}
+	 * an individual inspection text. Valid placeholders: {@literal <input>},
+	 * {@literal <name>}, {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String inspectionDefaultText;
 
 	/**
@@ -58,12 +60,16 @@ public class Game {
 
 	/**
 	 * The text being displayed, when the player looks into his empty inventory.
+	 * Valid placeholders: {@literal <input>}
 	 */
+	@Column(nullable = false)
 	private String inventoryEmptyText;
 
 	/**
-	 * The text introducing a look into the inventory.
+	 * The text introducing a look into the inventory. Valid placeholders:
+	 * {@literal <input>}
 	 */
+	@Column(nullable = false)
 	private String inventoryText;
 
 	/**
@@ -75,66 +81,79 @@ public class Game {
 
 	/**
 	 * The text being displayed, when any entered text is not recognized as a
-	 * valid command.
+	 * valid command. Valid placeholders: {@literal <input>}
 	 */
+	@Column(nullable = false)
 	private String noCommandText;
 
 	/**
 	 * The text being displayed, when the player tries to use, etc. a
-	 * non-existing inventory item. Valid placeholders: {@literal <identifier>}
+	 * non-existing inventory item. Valid placeholders: {@literal <input>},
+	 * {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String noSuchInventoryItemText;
 
 	/**
 	 * The text being displayed, when the player tries to use, take, etc. a
-	 * non-existing item. Valid placeholders: {@literal <identifier>}
+	 * non-existing item. Valid placeholders: {@literal <input>},
+	 * {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String noSuchItemText;
 
 	/**
 	 * The text being displayed, when the player tries to travel by a
-	 * non-existing way. Valid placeholders: {@literal <identifier>}
+	 * non-existing way. Valid placeholders: {@literal <input>},
+	 * {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String noSuchWayText;
 
 	/**
 	 * The default text, when the player tries to take a non-takeable item. May
 	 * be overwritten for each individual item. Valid placeholders:
-	 * {@literal <identifier>}
+	 * {@literal <input>}, {@literal <name>}, {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String notTakeableText;
 
 	/**
 	 * The default text, when the player tries to travel by a non-travelable
 	 * way. May be overwritten for each individual way. Valid placeholders:
-	 * {@literal <identifier>}
+	 * {@literal <input>}, {@literal <name>}, {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String notTravelableText;
 
 	/**
 	 * The default text, when the player tries to use a non-usable object. May
 	 * be overwritten for each individual object. Valid placeholders:
-	 * {@literal <identifier>}
+	 * {@literal <input>}, {@literal <name>}, {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String notUsableText;
 
 	/**
 	 * The default text, when the player tries to use two incompatible object
 	 * with one another. May be overwritten for each individual combination.
-	 * Valid placeholders: {@literal <identifier1>}, {@literal <identifier2>}
+	 * Valid placeholders: {@literal <input>}, {@literal <name>},
+	 * {@literal <identifier>}, {@literal <name2>}, {@literal <identifier2>}
 	 */
+	@Column(nullable = false)
 	private String notUsableWithText;
 
 	/**
 	 * The starting location of the game.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	private Location startLocation;
 
 	/**
 	 * The text being displayed, when the game starts.
 	 */
+	@Column(nullable = false)
 	private String startText;
 
 	/**
@@ -146,8 +165,10 @@ public class Game {
 
 	/**
 	 * The default text, when the player takes an item. May be overwritten for
-	 * each individual item. Valid placeholders: {@literal <identifier>}
+	 * each individual item. Valid placeholders: {@literal <input>},
+	 * {@literal <name>}, {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String takenText;
 
 	/**
@@ -159,15 +180,19 @@ public class Game {
 
 	/**
 	 * The default text, when the player uses an object. May be overwritten for
-	 * each individual object. Valid placeholders: {@literal <identifier>}
+	 * each individual object. Valid placeholders: {@literal <input>},
+	 * {@literal <name>}, {@literal <identifier>}
 	 */
+	@Column(nullable = false)
 	private String usedText;
 
 	/**
 	 * The default text, when the player uses two compatible object with one
 	 * another. May be overwritten for each individual combination. Valid
-	 * placeholders: {@literal <identifier>}, {@literal <identifier2>}
+	 * placeholders: {@literal <input>}, {@literal <name>},
+	 * {@literal <identifier>}, {@literal <name2>}, {@literal <identifier2>}
 	 */
+	@Column(nullable = false)
 	private String usedWithText;
 
 	/**
