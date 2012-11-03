@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 
 /**
@@ -135,6 +136,19 @@ public class Location extends NamedObject {
 			sb.append(' ').append(way.getDescription());
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * @return a list containing the {@link HasLocation}s: Persons and Items.
+	 */
+	public List<HasLocation> getHasLocations() {
+		List<HasLocation> result = new ArrayList<HasLocation>(persons.size()
+				+ items.size());
+		// The persons
+		result.addAll(persons);
+		// The items
+		result.addAll(items);
+		return result;
 	}
 
 	/**

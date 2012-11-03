@@ -10,6 +10,7 @@ import data.Player;
 import data.UsableObject;
 import data.interfaces.Inspectable;
 import data.interfaces.Usable;
+import data.interfaces.UsableOrPassivelyUsable;
 
 /**
  * Managing access to the player in a database.
@@ -58,12 +59,12 @@ public class PlayerManager {
 		// Anything in the inventory
 		inspectables.addAll(player.getInventory());
 
-		return NamedObjectManager.getInspectableWithIdentifier(inspectables,
+		return NamedObjectManager.getIdentifiableWithIdentifier(inspectables,
 				identifier);
 	}
-	
+
 	/**
-	 * Gets the usable object in the location or in the inventory the given
+	 * Gets the usable object in the location or in the inventory with the given
 	 * identifier or {@code null} , if there is none.
 	 * 
 	 * @param player
@@ -79,7 +80,29 @@ public class PlayerManager {
 		// Anything in the inventory
 		usables.addAll(player.getInventory());
 
-		return NamedObjectManager.getInspectableWithIdentifier(usables,
+		return NamedObjectManager.getIdentifiableWithIdentifier(usables,
+				identifier);
+	}
+
+	/**
+	 * Gets the {@link UsableOrPassivelyUsable} in the location or in the
+	 * inventory with the given identifier or {@code null} , if there is none.
+	 * 
+	 * @param player
+	 *            the player
+	 * @param identifier
+	 *            an identifier of the object
+	 * @return the corresponding object or {@code null}.
+	 */
+	public static UsableOrPassivelyUsable getUsableOrPassivelyUsable(Player player,
+			String identifier) {
+		List<UsableOrPassivelyUsable> usables = new ArrayList<UsableOrPassivelyUsable>();
+		// Items ans Persons in the room
+		usables.addAll(player.getLocation().getHasLocations());
+		// Anything in the inventory
+		usables.addAll(player.getInventory());
+
+		return NamedObjectManager.getIdentifiableWithIdentifier(usables,
 				identifier);
 	}
 }

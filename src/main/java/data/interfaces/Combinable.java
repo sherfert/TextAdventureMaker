@@ -12,7 +12,7 @@ import data.InventoryItem;
  * 
  * @author Satia
  */
-public interface Combinable extends Identifiable {
+public interface Combinable extends UsableOrPassivelyUsable {
 	/**
 	 * Adds an additional action for that combineable.
 	 * 

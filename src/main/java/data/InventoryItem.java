@@ -22,7 +22,8 @@ import data.action.AddInventoryItemsAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
 import data.interfaces.Combinable;
-import data.interfaces.UsableWithItem;
+import data.interfaces.HasLocation;
+import data.interfaces.UsableWithHasLocation;
 
 /**
  * Any item that can appear in your inventory. These items are not in locations.
@@ -30,8 +31,8 @@ import data.interfaces.UsableWithItem;
  * @author Satia
  */
 @Entity
-public class InventoryItem extends UsableObject implements UsableWithItem,
-		Combinable {
+public class InventoryItem extends UsableObject implements
+		UsableWithHasLocation, Combinable {
 	/**
 	 * Attributes of an {@link InventoryItem} that can be used with an
 	 * {@link InventoryItem}.
@@ -101,7 +102,7 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	/**
-	 * Attributes of an {@link Item} that can be used with an
+	 * Attributes of an {@link HasLocation} that can be used with an
 	 * {@link InventoryItem}.
 	 * 
 	 * JPA requires this inner class to be static. A back-reference to the
@@ -110,11 +111,11 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	 * @author Satia
 	 */
 	@Entity
-	private static class UsableItem {
+	private static class UsableHasLocation {
 		/**
 		 * All actions triggered when the {@link InventoryItem} is used with the
-		 * mapped {@link Item}. They are triggered regardless of the enabled
-		 * status.
+		 * mapped {@link HasLocation}. They are triggered regardless of the
+		 * enabled status.
 		 */
 		@ManyToMany(cascade = CascadeType.PERSIST)
 		@JoinTable
@@ -149,7 +150,7 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 		/**
 		 * Disabled by default and no forbidden/successful texts.
 		 */
-		public UsableItem() {
+		public UsableHasLocation() {
 			additionalUseWithActions = new ArrayList<AbstractAction>();
 			enabled = false;
 		}
@@ -169,15 +170,28 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
 
 	/**
-	 * An inventory item can be used with items. For each item there are
-	 * additional informations about the usability, etc. The method
-	 * {@link InventoryItem#getUsableItem(Item)} adds key and value, if it was
-	 * not stored before.
+	 * An inventory item can be used with {@link Item}s. For each object there
+	 * are additional informations about the usability, etc. The method
+	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
+	 * value, if it was not stored before. It will choose the right map from the
+	 * two.
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
-	private Map<Item, UsableItem> usableItems;
+	private Map<Item, UsableHasLocation> usableItems;
+
+	/**
+	 * An inventory item can be used with {@link Person}s. For each object there
+	 * are additional informations about the usability, etc. The method
+	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
+	 * value, if it was not stored before. It will choose the right map from the
+	 * two.
+	 */
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
+	@MapKeyJoinColumn
+	private Map<Person, UsableHasLocation> usablePersons;
 
 	/**
 	 * No-arg constructor for the database.
@@ -243,8 +257,9 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	@Override
-	public void addAdditionalActionToUseWith(Item item, AbstractAction action) {
-		getUsableItem(item).additionalUseWithActions.add(action);
+	public void addAdditionalActionToUseWith(HasLocation object,
+			AbstractAction action) {
+		getUsableHasLocation(object).additionalUseWithActions.add(action);
 	}
 
 	@Override
@@ -282,8 +297,9 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	@Override
-	public List<AbstractAction> getAdditionalActionsFromUseWith(Item item) {
-		return getUsableItem(item).additionalUseWithActions;
+	public List<AbstractAction> getAdditionalActionsFromUseWith(
+			HasLocation object) {
+		return getUsableHasLocation(object).additionalUseWithActions;
 	}
 
 	@Override
@@ -309,13 +325,13 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	@Override
-	public String getUseWithForbiddenText(Item item) {
-		return getUsableItem(item).useWithForbiddenText;
+	public String getUseWithForbiddenText(HasLocation object) {
+		return getUsableHasLocation(object).useWithForbiddenText;
 	}
 
 	@Override
-	public String getUseWithSuccessfulText(Item item) {
-		return getUsableItem(item).useWithSuccessfulText;
+	public String getUseWithSuccessfulText(HasLocation object) {
+		return getUsableHasLocation(object).useWithSuccessfulText;
 	}
 
 	@Override
@@ -324,8 +340,8 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	@Override
-	public boolean isUsingEnabledWith(Item item) {
-		return getUsableItem(item).enabled;
+	public boolean isUsingEnabledWith(HasLocation object) {
+		return getUsableHasLocation(object).enabled;
 	}
 
 	@Override
@@ -336,9 +352,9 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	@Override
-	public void removeAdditionalActionFromUseWith(Item item,
+	public void removeAdditionalActionFromUseWith(HasLocation object,
 			AbstractAction action) {
-		getUsableItem(item).additionalUseWithActions.remove(action);
+		getUsableHasLocation(object).additionalUseWithActions.remove(action);
 	}
 
 	@Override
@@ -372,24 +388,25 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	@Override
-	public void setUseWithForbiddenText(Item item, String forbiddenText) {
-		getUsableItem(item).useWithForbiddenText = forbiddenText;
+	public void setUseWithForbiddenText(HasLocation object, String forbiddenText) {
+		getUsableHasLocation(object).useWithForbiddenText = forbiddenText;
 	}
 
 	@Override
-	public void setUseWithSuccessfulText(Item item, String successfulText) {
-		getUsableItem(item).useWithSuccessfulText = successfulText;
+	public void setUseWithSuccessfulText(HasLocation object,
+			String successfulText) {
+		getUsableHasLocation(object).useWithSuccessfulText = successfulText;
 	}
 
 	@Override
-	public void setUsingEnabledWith(Item item, boolean enabled) {
-		getUsableItem(item).enabled = enabled;
+	public void setUsingEnabledWith(HasLocation object, boolean enabled) {
+		getUsableHasLocation(object).enabled = enabled;
 	}
 
 	@Override
-	public void useWith(Item item) {
+	public void useWith(HasLocation object) {
 		// Trigger all additional actions
-		for (AbstractAction abstractAction : getUsableItem(item).additionalUseWithActions) {
+		for (AbstractAction abstractAction : getUsableHasLocation(object).additionalUseWithActions) {
 			abstractAction.triggerAction();
 		}
 	}
@@ -442,17 +459,31 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	}
 
 	/**
-	 * Gets the {@link UsableItem} associated with the given {@link Item}. If no
-	 * mapping exists, one will be created.
+	 * Gets the {@link UsableHasLocation} associated with the given
+	 * {@link HasLocation} . If no mapping exists, one will be created.
 	 * 
-	 * @param item
-	 *            the item
-	 * @return the associated {@link UsableItem}.
+	 * @param object
+	 *            the object
+	 * @return the associated {@link UsableHasLocation}.
 	 */
-	private UsableItem getUsableItem(Item item) {
-		UsableItem result = usableItems.get(item);
-		if (result == null) {
-			usableItems.put(item, result = new UsableItem());
+	private UsableHasLocation getUsableHasLocation(HasLocation object) {
+		UsableHasLocation result;
+
+		if (object instanceof Item) {
+			result = usableItems.get(object);
+			if (result == null) {
+				usableItems
+						.put((Item) object, result = new UsableHasLocation());
+			}
+		} else if (object instanceof Person) {
+			result = usablePersons.get(object);
+			if (result == null) {
+				usablePersons.put((Person) object,
+						result = new UsableHasLocation());
+			}
+		} else {
+			// TODO This should never happen
+			return null;
 		}
 		return result;
 	}
@@ -461,7 +492,8 @@ public class InventoryItem extends UsableObject implements UsableWithItem,
 	 * Initializes the fields.
 	 */
 	private void init() {
-		usableItems = new HashMap<Item, UsableItem>();
+		usableItems = new HashMap<Item, UsableHasLocation>();
+		usablePersons = new HashMap<Person, UsableHasLocation>();
 		combinableInventoryItems = new HashMap<InventoryItem, CombinableInventoryItem>();
 	}
 }

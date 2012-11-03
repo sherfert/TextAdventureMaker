@@ -9,7 +9,7 @@ import data.action.AbstractAction;
  * 
  * @author Satia
  */
-public interface Usable extends Identifiable {
+public interface Usable extends UsableOrPassivelyUsable {
 	/**
 	 * Adds an additional action.
 	 * 

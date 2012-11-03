@@ -8,13 +8,14 @@ import persistence.WayManager;
 import playing.parser.GeneralParser;
 import data.Game;
 import data.InventoryItem;
-import data.Item;
 import data.Player;
+import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
 import data.interfaces.Travelable;
 import data.interfaces.Usable;
-import data.interfaces.UsableWithItem;
+import data.interfaces.UsableOrPassivelyUsable;
+import data.interfaces.UsableWithHasLocation;
 
 /**
  * Any methods for actually playing a game.
@@ -311,8 +312,13 @@ public class GamePlayer {
 	 *            an identifier of the second object
 	 */
 	public void useWithOrCombine(String identifier1, String identifier2) {
-		Usable object1 = PlayerManager.getUsable(player, identifier1);
-		Usable object2 = PlayerManager.getUsable(player, identifier2);
+		// FIXME modify:
+		// Item -> HasLocation
+
+		UsableOrPassivelyUsable object1 = PlayerManager
+				.getUsableOrPassivelyUsable(player, identifier1);
+		UsableOrPassivelyUsable object2 = PlayerManager
+				.getUsableOrPassivelyUsable(player, identifier2);
 		// Save identifiers
 		currentReplacer.setIdentifier(identifier1);
 		currentReplacer.setIdentifier2(identifier2);
@@ -322,9 +328,9 @@ public class GamePlayer {
 			if (object2 instanceof InventoryItem) {
 				// Combine
 				combine((InventoryItem) object1, (InventoryItem) object2);
-			} else if (object2 instanceof Item) {
+			} else if (object2 instanceof HasLocation) {
 				// UseWith
-				useWith((InventoryItem) object1, (Item) object2);
+				useWith((InventoryItem) object1, (HasLocation) object2);
 			} else {
 				// Error: Object2 neither in inventory nor in location
 				String message = PlaceholderReplacer
@@ -336,10 +342,10 @@ public class GamePlayer {
 										.getNoSuchInventoryItemText());
 				io.println(currentReplacer.replacePlaceholders(message));
 			}
-		} else if (object1 instanceof Item) {
+		} else if (object1 instanceof HasLocation) {
 			if (object2 instanceof InventoryItem) {
 				// UseWith
-				useWith((InventoryItem) object2, (Item) object1);
+				useWith((InventoryItem) object2, (HasLocation) object1);
 			} else {
 				// Error: Neither Object1 nor Object2 in inventory
 				String message = game.getNoSuchInventoryItemText()
@@ -400,34 +406,34 @@ public class GamePlayer {
 	}
 
 	/**
-	 * Uses an {@link UsableWithItem} with an {@link Item}.
+	 * Uses an {@link UsableWithHasLocation} with an {@link HasLocation}.
 	 * 
 	 * @param usable
-	 *            the {@link UsableWithItem}
-	 * @param item
-	 *            the item
+	 *            the {@link UsableWithHasLocation}
+	 * @param object
+	 *            the object
 	 */
-	private void useWith(UsableWithItem usable, Item item) {
+	private void useWith(UsableWithHasLocation usable, HasLocation object) {
 		// Save names
 		currentReplacer.setName(usable.getName());
-		currentReplacer.setName2(item.getName());
+		currentReplacer.setName2(object.getName());
 
-		if (usable.isUsingEnabledWith(item)) {
+		if (usable.isUsingEnabledWith(object)) {
 			// Using was successful
-			String message = usable.getUseWithSuccessfulText(item);
+			String message = usable.getUseWithSuccessfulText(object);
 			if (message == null) {
 				message = game.getUsedWithText();
 			}
 			io.println(currentReplacer.replacePlaceholders(message));
 		} else {
 			// Using was not successful
-			String message = usable.getUseWithForbiddenText(item);
+			String message = usable.getUseWithForbiddenText(object);
 			if (message == null) {
 				message = game.getNotUsableWithText();
 			}
 			io.println(currentReplacer.replacePlaceholders(message));
 		}
 		// Effect depends on additional actions
-		usable.useWith(item);
+		usable.useWith(object);
 	}
 }

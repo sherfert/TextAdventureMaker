@@ -113,9 +113,29 @@ public class Main {
 		wayToFlat.addIdentifier("in(side)?");
 		wayToFlat.addIdentifier("into (the )?flat");
 		wayToFlat.addIdentifier("through (the )?balcony door");
-		
-		Person satia = new Person(flat, "Satia", "Satia is hanging around there.");
-		satia.setInspectionText("He looks pretty busy programming nonsense stuff.");
+
+		/*
+		 * Inspecting satia will give you 5 bucks. You can "give them back" by
+		 * using them with him.
+		 * 
+		 * TODO getting money should only be possible once or after giving it
+		 * back!
+		 */
+		InventoryItem money = new InventoryItem("Money", "5 bucks");
+		money.setInspectionText("You stole them from poor Satia.");
+		AddInventoryItemsAction addMoneyAction = new AddInventoryItemsAction();
+		addMoneyAction.addPickUpItem(money);
+		RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction(
+				money);
+
+		Person satia = new Person(flat, "Satia",
+				"Satia is hanging around there.");
+		satia.setInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
+		satia.addAdditionalActionToInspect(addMoneyAction);
+
+		money.setUsingEnabledWith(satia, true);
+		money.setUseWithSuccessfulText(satia, "You feel guilty and put the money back.");
+		money.addAdditionalActionToUseWith(satia, removeMoneyAction);
 
 		Item tv = new Item(flat, "Television", "A television.");
 		tv.setInspectionText("A 32\" television.");

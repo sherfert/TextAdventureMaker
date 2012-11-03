@@ -3,11 +3,11 @@ package data.interfaces;
 import data.Location;
 
 /**
- * Anything with a location in the game.
+ * Anything with one (!) location in the game.
  * 
  * @author Satia
  */
-public interface HasLocation {
+public interface HasLocation extends UsableOrPassivelyUsable {
 
 	/**
 	 * @return the location

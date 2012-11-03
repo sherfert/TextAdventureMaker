@@ -21,7 +21,7 @@ public class WayManager {
 	 * @return the corresponding item or {@code null}.
 	 */
 	public static Way getWayOutFromLocation(Location location, String identifier) {
-		return NamedObjectManager.getInspectableWithIdentifier(
+		return NamedObjectManager.getIdentifiableWithIdentifier(
 				location.getWaysOut(), identifier);
 	}
 }
