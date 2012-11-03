@@ -10,7 +10,7 @@ import data.Item;
 import data.Location;
 
 /**
- * An action setting the location of an an {@link Item}. It can also be used to
+ * An action setting the location of an {@link Item}. It can also be used to
  * ADD items, if the former location was {@code null} or to REMOVE items, if the
  * new location is {@code null}.
  * 

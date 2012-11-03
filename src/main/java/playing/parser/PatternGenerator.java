@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class PatternGenerator {
 	/**
 	 * Builds a pattern that will match any of the given commands. If the list
-	 * is empt the pattern will not match anything.
+	 * is empty the pattern will not match anything.
 	 * 
 	 * @param cmds
 	 *            the valid commands

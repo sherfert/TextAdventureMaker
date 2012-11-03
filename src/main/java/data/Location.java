@@ -24,6 +24,12 @@ public class Location extends NamedObject {
 	private List<Item> items;
 
 	/**
+	 * The persons located here.
+	 */
+	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
+	private List<Person> persons;
+
+	/**
 	 * The ways leading inside this location. They get deleted when the location
 	 * is deleted.
 	 */
@@ -40,14 +46,13 @@ public class Location extends NamedObject {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link Location#Location(String, String)}
-	 *             instead.
+	 * @deprecated Use {@link Location#Location(String, String)} instead.
 	 */
 	@Deprecated
 	public Location() {
 		init();
 	}
-	
+
 	/**
 	 * @param name
 	 *            the name
@@ -70,6 +75,20 @@ public class Location extends NamedObject {
 		if (!this.items.contains(item)) {
 			this.items.add(item);
 			item.setLocation(this);
+		}
+	}
+
+	/**
+	 * Adds a person to this location. The person's location and its old
+	 * location's list are modified, too.
+	 * 
+	 * @param person
+	 *            the person
+	 */
+	public void addPerson(Person person) {
+		if (!this.persons.contains(person)) {
+			this.persons.add(person);
+			person.setLocation(this);
 		}
 	}
 
@@ -103,6 +122,10 @@ public class Location extends NamedObject {
 	 */
 	public String getEnteredText() {
 		StringBuilder sb = new StringBuilder(getDescription());
+		// Persons
+		for (Person person : persons) {
+			sb.append(' ').append(person.getDescription());
+		}
 		// Items
 		for (Item item : items) {
 			sb.append(' ').append(item.getDescription());
@@ -119,10 +142,12 @@ public class Location extends NamedObject {
 	 *         location.
 	 */
 	public List<Inspectable> getInspectables() {
-		List<Inspectable> result = new ArrayList<Inspectable>(1 + items.size()
-				+ waysOut.size());
+		List<Inspectable> result = new ArrayList<Inspectable>(1
+				+ persons.size() + items.size() + waysOut.size());
 		// The location itself
 		result.add(this);
+		// The persons
+		result.addAll(persons);
 		// The items
 		result.addAll(items);
 		// The ways leading out
@@ -135,6 +160,13 @@ public class Location extends NamedObject {
 	 */
 	public List<Item> getItems() {
 		return items;
+	}
+
+	/**
+	 * @return the persons
+	 */
+	public List<Person> getPersons() {
+		return persons;
 	}
 
 	/**
@@ -154,6 +186,20 @@ public class Location extends NamedObject {
 		if (this.items.contains(item)) {
 			this.items.remove(item);
 			item.setLocation(null);
+		}
+	}
+
+	/**
+	 * Removes a person from this location. The person's location is modified,
+	 * too.
+	 * 
+	 * @param person
+	 *            the person
+	 */
+	public void removePerson(Person person) {
+		if (this.persons.contains(person)) {
+			this.persons.remove(person);
+			person.setLocation(null);
 		}
 	}
 
@@ -186,5 +232,6 @@ public class Location extends NamedObject {
 		waysOut = new ArrayList<Way>();
 		waysIn = new ArrayList<Way>();
 		items = new ArrayList<Item>();
+		persons = new ArrayList<Person>();
 	}
 }

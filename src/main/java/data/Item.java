@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
 import data.action.SetItemLocationAction;
+import data.interfaces.HasLocation;
 import data.interfaces.Takeable;
 
 /**
@@ -23,7 +24,7 @@ import data.interfaces.Takeable;
  * @author Satia
  */
 @Entity
-public class Item extends UsableObject implements Takeable {
+public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * The {@link AddInventoryItemsAction}. The successfulText and forbiddenText
 	 * by it are being used.
@@ -118,9 +119,7 @@ public class Item extends UsableObject implements Takeable {
 		return additionalTakeActions;
 	}
 
-	/**
-	 * @return the location
-	 */
+	@Override
 	public Location getLocation() {
 		return location;
 	}
@@ -150,13 +149,7 @@ public class Item extends UsableObject implements Takeable {
 		additionalTakeActions.remove(action);
 	}
 
-	/**
-	 * Sets a new location for this item. The item is removed from the old
-	 * location's list and added to the new one.
-	 * 
-	 * @param location
-	 *            the location to be set
-	 */
+	@Override
 	public void setLocation(Location location) {
 		if (this.location != null) {
 			this.location.removeItem(this);

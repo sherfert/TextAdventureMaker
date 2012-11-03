@@ -10,6 +10,7 @@ import data.Game;
 import data.InventoryItem;
 import data.Item;
 import data.Location;
+import data.Person;
 import data.Player;
 import data.Way;
 import data.action.AddInventoryItemsAction;
@@ -112,6 +113,9 @@ public class Main {
 		wayToFlat.addIdentifier("in(side)?");
 		wayToFlat.addIdentifier("into (the )?flat");
 		wayToFlat.addIdentifier("through (the )?balcony door");
+		
+		Person satia = new Person(flat, "Satia", "Satia is hanging around there.");
+		satia.setInspectionText("He looks pretty busy programming nonsense stuff.");
 
 		Item tv = new Item(flat, "Television", "A television.");
 		tv.setInspectionText("A 32\" television.");
