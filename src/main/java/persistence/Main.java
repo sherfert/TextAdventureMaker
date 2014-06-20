@@ -69,6 +69,9 @@ public class Main {
 		// Close everything
 		entityManager.close();
 		entityManagerFactory.close();
+		// FIXME
+		// At the moment close the vm
+		System.exit(0);
 	}
 
 	/**
@@ -319,8 +322,6 @@ public class Main {
 		// Start a game
 		new GamePlayer(GameManager.getGame(), PlayerManager.getPlayer())
 				.start();
-		// Disconnect
-		disconnect();
 	}
 
 	/**

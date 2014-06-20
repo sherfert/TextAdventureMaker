@@ -77,22 +77,22 @@ public class LanternaScreenTextArea {
 	/**
 	 * The x starting coordinate, included.
 	 */
-	private final int fromX;
+	private int fromX;
 
 	/**
 	 * The x starting ending coordinate, excluded.
 	 */
-	private final int toX;
+	private int toX;
 
 	/**
 	 * The y starting coordinate, included.
 	 */
-	private final int fromY;
+	private int fromY;
 
 	/**
 	 * The y starting ending coordinate, excluded.
 	 */
-	private final int toY;
+	private int toY;
 
 	/**
 	 * A callback implementation to handle input. Can be {@code null}.
@@ -165,6 +165,38 @@ public class LanternaScreenTextArea {
 
 		// Clear
 		clear();
+	}
+
+	/**
+	 * This method applies new dimensions. Behavior not 100 %-ly defined.
+	 * 
+	 * @param fromX
+	 * @param toX
+	 * @param fromY
+	 * @param toY
+	 */
+	public void setNewDimensions(int fromX, int toX, int fromY, int toY) {
+		this.fromX = fromX;
+		this.toX = toX;
+		this.fromY = fromY;
+		this.toY = toY;
+
+		// Set printPointer
+		if (!this.printTop) {
+			printPointer = toY - fromY - 1;
+		}
+
+		// Stack new empty elements into list...
+		for (int i = fromY + lines.size(); i < toY; i++) {
+			lines.add("");
+		}
+		// .. or remove.
+		for (int i = toY - fromY; i < lines.size(); i++) {
+			lines.remove(0);
+		}
+
+		// Print
+		print();
 	}
 
 	/**
@@ -306,8 +338,8 @@ public class LanternaScreenTextArea {
 			}
 			screen.putString(fromX, fromY + printPointer, toPrint,
 					inputFgColor, inputBgColor);
-			screen.setCursorPosition(fromX + currentText.length(), fromY
-					+ printPointer);
+			screen.setCursorPosition(fromX + currentText.length(),
+					Math.min(fromY + printPointer, toY - 1));
 		}
 	}
 

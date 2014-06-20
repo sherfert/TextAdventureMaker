@@ -1,20 +1,27 @@
 package playing;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
+import lanterna.LanternaScreenTextArea;
+import lanterna.LanternaScreenTextArea.TextHandler;
+
+import com.googlecode.lanterna.TerminalFacade;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.Terminal.ResizeListener;
+import com.googlecode.lanterna.terminal.TerminalSize;
+import com.googlecode.lanterna.terminal.swing.SwingTerminal;
 
 /**
  * Providing means to print and read input while playing.
  * 
  * @author Satia
  */
-public class InputOutput {
-
-	/**
-	 * The input reader.
-	 */
-	private BufferedReader reader;
+public class InputOutput implements TextHandler {
 
 	/**
 	 * The GamePlayer for this session
@@ -22,12 +29,77 @@ public class InputOutput {
 	private GamePlayer gamePlayer;
 
 	/**
+	 * The screen that is being used to display to game.
+	 */
+	private Screen screen;
+
+	/**
+	 * The default text area, covering the whole screen.
+	 */
+	private LanternaScreenTextArea defaultTextArea;
+
+	/**
 	 * @param gamePlayer
 	 *            the GamePlayer for this session
 	 */
 	public InputOutput(GamePlayer gamePlayer) {
 		this.gamePlayer = gamePlayer;
-		reader = new BufferedReader(new InputStreamReader(System.in));
+		this.screen = TerminalFacade.createScreen();
+		this.screen.startScreen();
+		Terminal t = this.screen.getTerminal();
+		if (t instanceof SwingTerminal) {
+			modifyJFrame(((SwingTerminal) t).getJFrame());
+		}
+
+		// Rest of the initialization
+		defaultTextArea = new LanternaScreenTextArea(screen, true, true,
+				Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
+				Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
+						.getTerminalSize().getColumns(), 0, screen
+						.getTerminalSize().getRows(), InputOutput.this);
+
+		// TODO the key listener loop must be implemented here as soon
+		// as conversations are supported
+		defaultTextArea.startInputReadingThread();
+
+		screen.getTerminal().addResizeListener(new ResizeListener() {
+			@Override
+			public void onResized(TerminalSize newSize) {
+				defaultTextArea.setNewDimensions(0, newSize.getColumns(), 0,
+						newSize.getRows());
+				screen.refresh();
+			}
+		});
+
+	}
+
+	/**
+	 * If the screen is a JFrame, modifications to it will be executed here
+	 */
+	private void modifyJFrame(final JFrame frame) {
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				frame.dispose();
+				gamePlayer.stop();
+			}
+		});
+		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit()
+				.getScreenSize();
+		// Let the screen cover 80 % of the real screen in each dimension
+		frame.setPreferredSize(new Dimension((int) (fullScreen.width * 0.8),
+				(int) (fullScreen.height * 0.8)));
+		// Not resizable
+		frame.setResizable(false);
+
+		frame.revalidate();
+	}
+
+	/**
+	 * Exits the IO.
+	 */
+	public void exitIO() {
+		screen.stopScreen();
 	}
 
 	/**
@@ -37,21 +109,14 @@ public class InputOutput {
 	 *            the text to be printed
 	 */
 	public void println(String output) {
-		// TODO real IO
-		System.out.println(output);
+		defaultTextArea.println(output);
+		this.screen.refresh();
 	}
 
-	/**
-	 * Starts listening for the player's input and parses line by line until an
-	 * exit command has been typed.
-	 */
-	public void startListeningForInput() {
-		try {
-			while (gamePlayer.getParser().parse(reader.readLine()))
-				;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	@Override
+	public void handleText(String text) {
+		if (!gamePlayer.getParser().parse(text)) {
+			gamePlayer.stop();
 		}
 	}
 }

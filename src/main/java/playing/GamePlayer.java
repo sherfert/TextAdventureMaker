@@ -3,6 +3,7 @@ package playing;
 import java.util.List;
 
 import persistence.ItemManager;
+import persistence.Main;
 import persistence.PlayerManager;
 import persistence.WayManager;
 import playing.parser.GeneralParser;
@@ -210,13 +211,20 @@ public class GamePlayer {
 	}
 
 	/**
-	 * Starts playing the game.
+	 * Starts playing the game. Returns immediately.
 	 */
 	public void start() {
 		io.println(game.getStartText());
 		io.println(game.getStartLocation().getEnteredText());
-
-		io.startListeningForInput();
+	}
+	
+	/**
+	 * Exits the game.
+	 */
+	public void stop() {
+		io.exitIO();
+		// FIXME this needs to be re-designed!
+		Main.disconnect();
 	}
 
 	/**
