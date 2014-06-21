@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -159,9 +161,9 @@ public class InventoryItem extends UsableObject implements
 	/**
 	 * An inventory item can be combined with others. For each inventory item
 	 * there are additional informations about the usability, etc. The method
-	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key
-	 * and value, if it was not stored before. The other inventory item's map
-	 * will be synchronized, too.
+	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key and
+	 * value, if it was not stored before. The other inventory item's map will
+	 * be synchronized, too.
 	 */
 	// TODO why Maps not unnullable?
 	@OneToMany(cascade = CascadeType.ALL)
@@ -285,7 +287,10 @@ public class InventoryItem extends UsableObject implements
 					new RemoveInventoryItemAction((InventoryItem) partner)
 							.triggerAction();
 				} else {
-					// TODO this should never happen
+					Logger.getLogger(this.getClass().getName())
+							.log(Level.WARNING,
+									"Not supported Combinable subclass: {0} Cannot remove it from inventory thus.",
+									partner.getClass().getName());
 				}
 
 			}
@@ -464,7 +469,10 @@ public class InventoryItem extends UsableObject implements
 			}
 			return result;
 		} else {
-			// TODO This should never happen
+			Logger.getLogger(this.getClass().getName())
+			.log(Level.WARNING,
+					"Not supported Combinable subclass: {0}",
+					item.getClass().getName());
 			return null;
 		}
 	}
@@ -493,7 +501,9 @@ public class InventoryItem extends UsableObject implements
 						result = new UsableHasLocation());
 			}
 		} else {
-			// TODO This should never happen
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Not supported HasLocation subclass: {0}",
+					object.getClass().getName());
 			return null;
 		}
 		return result;

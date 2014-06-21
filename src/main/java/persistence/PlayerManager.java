@@ -2,6 +2,8 @@ package persistence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -18,8 +20,8 @@ import data.interfaces.UsableOrPassivelyUsable;
  * @author Satia
  */
 public class PlayerManager {
-	
 	/**
+	 * 
 	 * @return the player
 	 */
 	public static Player getPlayer() {
@@ -34,7 +36,9 @@ public class PlayerManager {
 
 		// There should be exactly 1 player
 		if (resultListPlayer.size() != 1) {
-			throw new RuntimeException("There are " + resultListPlayer.size()
+			Logger.getLogger(PlayerManager.class.getName())
+			.log(Level.SEVERE,
+					"There are " + resultListPlayer.size()
 					+ " players.");
 		}
 

@@ -1,5 +1,7 @@
 package persistence;
 
+import java.util.logging.LogManager;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -100,6 +102,9 @@ public class Main {
 	 * Test-main.
 	 */
 	public static void main(String[] args) throws Exception {
+		// FIXME this must be put into a proper initialize method
+		Class.forName(logging.LogManager.class.getName());
+
 		// Create everything
 		Location flat = new Location("Flat", "Your little home.");
 		Location balcony = new Location("Balcony", "Your balcony.");
@@ -138,7 +143,8 @@ public class Main {
 		satia.addAdditionalActionToInspect(addMoneyAction);
 
 		money.setUsingEnabledWith(satia, true);
-		money.setUseWithSuccessfulText(satia, "You feel guilty and put the money back.");
+		money.setUseWithSuccessfulText(satia,
+				"You feel guilty and put the money back.");
 		money.addAdditionalActionToUseWith(satia, removeMoneyAction);
 
 		Item tv = new Item(flat, "Television", "A television.");

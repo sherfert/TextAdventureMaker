@@ -1,6 +1,8 @@
 package persistence;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -14,7 +16,6 @@ import data.Game;
  */
 public class GameManager {
 	/**
-	 * TODO no RuntimeExp
 	 * 
 	 * @return the game
 	 */
@@ -29,7 +30,9 @@ public class GameManager {
 
 		// There should be exactly 1 game
 		if (resultListGame.size() != 1) {
-			throw new RuntimeException("There are " + resultListGame.size()
+			Logger.getLogger(GameManager.class.getName())
+			.log(Level.SEVERE,
+					"There are " + resultListGame.size()
 					+ " games.");
 		}
 

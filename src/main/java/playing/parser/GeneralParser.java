@@ -4,11 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import data.Game;
-
 import playing.GamePlayer;
 
 /**
@@ -62,8 +63,8 @@ public class GeneralParser {
 		 *            and List of Strings as return type.
 		 * @param methodName
 		 *            the name of the method that should be invoked when this
-		 *            command was recognized. Must be a method of the
-		 *            class {@link GamePlayer}.
+		 *            command was recognized. Must be a method of the class
+		 *            {@link GamePlayer}.
 		 * @param parameterTypes
 		 *            the parameter types of the method denoted by methodName.
 		 */
@@ -108,8 +109,9 @@ public class GeneralParser {
 			} catch (ClassCastException | NoSuchMethodException
 					| SecurityException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(this.getClass().getName())
+				.log(Level.SEVERE,
+						"Problems finding the executeMethod:", e);
 			}
 		}
 
@@ -131,12 +133,17 @@ public class GeneralParser {
 					if (executeMethod.getParameterTypes().length == params.length) {
 						executeMethod.invoke(gamePlayer, (Object[]) params);
 					} else {
-						// TODO wrong number of parameters
+						Logger.getLogger(this.getClass().getName())
+								.log(Level.SEVERE,
+										"Number of parameters for method {0} is wrong.",
+										executeMethod);
 					}
 				} catch (IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logger.getLogger(this.getClass().getName())
+							.log(Level.SEVERE,
+									"Could not invoke method " + executeMethod
+											+ ":", e);
 				}
 				// This command matches
 				return true;
@@ -216,7 +223,7 @@ public class GeneralParser {
 		if (exitPattern.matcher(input).matches()) {
 			return false;
 		}
-		
+
 		// Set the input for the game players' replacer
 		gamePlayer.setInput(input);
 
