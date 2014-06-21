@@ -159,7 +159,7 @@ public class InventoryItem extends UsableObject implements
 	/**
 	 * An inventory item can be combined with others. For each inventory item
 	 * there are additional informations about the usability, etc. The method
-	 * {@link InventoryItem#getCombinableInventoryItem(InventoryItem)} adds key
+	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key
 	 * and value, if it was not stored before. The other inventory item's map
 	 * will be synchronized, too.
 	 */
@@ -250,7 +250,7 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void addAdditionalActionToCombineWith(InventoryItem partner,
+	public void addAdditionalActionToCombineWith(Combinable partner,
 			AbstractAction action) {
 		getCombinableInventoryItem(partner).additionalCombineWithActions
 				.add(action);
@@ -263,14 +263,14 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void addNewInventoryItemWhenCombinedWith(InventoryItem partner,
+	public void addNewInventoryItemWhenCombinedWith(Combinable partner,
 			InventoryItem newItem) {
 		getCombinableInventoryItem(partner).addInventoryItemsAction
 				.addPickUpItem(newItem);
 	}
 
 	@Override
-	public void combineWith(InventoryItem partner) {
+	public void combineWith(Combinable partner) {
 		CombinableInventoryItem combination = getCombinableInventoryItem(partner);
 		if (combination.enabled) {
 			// Add new inventory items
@@ -281,7 +281,13 @@ public class InventoryItem extends UsableObject implements
 				 * RemoveInventoryItemActions.
 				 */
 				new RemoveInventoryItemAction(this).triggerAction();
-				new RemoveInventoryItemAction(partner).triggerAction();
+				if (partner instanceof InventoryItem) {
+					new RemoveInventoryItemAction((InventoryItem) partner)
+							.triggerAction();
+				} else {
+					// TODO this should never happen
+				}
+
 			}
 		}
 		// Trigger all additional actions
@@ -292,7 +298,7 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	public List<AbstractAction> getAdditionalActionsFromCombineWith(
-			InventoryItem partner) {
+			Combinable partner) {
 		return getCombinableInventoryItem(partner).additionalCombineWithActions;
 	}
 
@@ -303,24 +309,24 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public String getCombineWithForbiddenText(InventoryItem partner) {
+	public String getCombineWithForbiddenText(Combinable partner) {
 		return getCombinableInventoryItem(partner).combineWithForbiddenText;
 	}
 
 	@Override
-	public String getCombineWithSuccessfulText(InventoryItem partner) {
+	public String getCombineWithSuccessfulText(Combinable partner) {
 		return getCombinableInventoryItem(partner).combineWithSuccessfulText;
 	}
 
 	@Override
 	public List<InventoryItem> getNewInventoryItemsWhenCombinedWith(
-			InventoryItem partner) {
+			Combinable partner) {
 		return getCombinableInventoryItem(partner).addInventoryItemsAction
 				.getPickUpItems();
 	}
 
 	@Override
-	public boolean getRemoveCombinablesWhenCombinedWith(InventoryItem partner) {
+	public boolean getRemoveCombinablesWhenCombinedWith(Combinable partner) {
 		return getCombinableInventoryItem(partner).removeCombinables;
 	}
 
@@ -335,7 +341,7 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public boolean isCombiningEnabledWith(InventoryItem partner) {
+	public boolean isCombiningEnabledWith(Combinable partner) {
 		return getCombinableInventoryItem(partner).enabled;
 	}
 
@@ -345,7 +351,7 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void removeAdditionalActionFromCombineWith(InventoryItem partner,
+	public void removeAdditionalActionFromCombineWith(Combinable partner,
 			AbstractAction action) {
 		getCombinableInventoryItem(partner).additionalCombineWithActions
 				.remove(action);
@@ -358,31 +364,31 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void removeNewInventoryItemWhenCombinedWith(InventoryItem partner,
+	public void removeNewInventoryItemWhenCombinedWith(Combinable partner,
 			InventoryItem newItem) {
 		getCombinableInventoryItem(partner).addInventoryItemsAction
 				.removePickUpItem(newItem);
 	}
 
 	@Override
-	public void setCombineWithForbiddenText(InventoryItem partner,
+	public void setCombineWithForbiddenText(Combinable partner,
 			String forbiddenText) {
 		getCombinableInventoryItem(partner).combineWithForbiddenText = forbiddenText;
 	}
 
 	@Override
-	public void setCombineWithSuccessfulText(InventoryItem partner,
+	public void setCombineWithSuccessfulText(Combinable partner,
 			String successfulText) {
 		getCombinableInventoryItem(partner).combineWithSuccessfulText = successfulText;
 	}
 
 	@Override
-	public void setCombiningEnabledWith(InventoryItem partner, boolean enabled) {
+	public void setCombiningEnabledWith(Combinable partner, boolean enabled) {
 		getCombinableInventoryItem(partner).enabled = enabled;
 	}
 
 	@Override
-	public void setRemoveCombinablesWhenCombinedWith(InventoryItem partner,
+	public void setRemoveCombinablesWhenCombinedWith(Combinable partner,
 			boolean remove) {
 		getCombinableInventoryItem(partner).removeCombinables = remove;
 	}
@@ -439,23 +445,28 @@ public class InventoryItem extends UsableObject implements
 
 	/**
 	 * Gets the {@link CombinableInventoryItem} associated with the given
-	 * {@link InventoryItem}. If no mapping exists, one will be created on both
+	 * {@link Combinale}. If no mapping exists, one will be created on both
 	 * sides.
 	 * 
 	 * @param item
 	 *            the item
 	 * @return the associated {@link CombinableInventoryItem}.
 	 */
-	private CombinableInventoryItem getCombinableInventoryItem(
-			InventoryItem item) {
-		CombinableInventoryItem result = combinableInventoryItems.get(item);
-		if (result == null) {
-			combinableInventoryItems.put(item,
-					result = new CombinableInventoryItem());
-			// Synchronize other map
-			item.combinableInventoryItems.put(this, result);
+	private CombinableInventoryItem getCombinableInventoryItem(Combinable item) {
+		if (item instanceof InventoryItem) {
+			CombinableInventoryItem result = combinableInventoryItems.get(item);
+			if (result == null) {
+				combinableInventoryItems.put((InventoryItem) item,
+						result = new CombinableInventoryItem());
+				// Synchronize other map
+				((InventoryItem) item).combinableInventoryItems.put(this,
+						result);
+			}
+			return result;
+		} else {
+			// TODO This should never happen
+			return null;
 		}
-		return result;
 	}
 
 	/**

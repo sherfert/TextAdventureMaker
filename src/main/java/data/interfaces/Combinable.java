@@ -21,7 +21,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToCombineWith(InventoryItem partner,
+	public void addAdditionalActionToCombineWith(Combinable partner,
 			AbstractAction action);
 
 	/**
@@ -33,7 +33,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param newItem
 	 *            the new inventory item to be added
 	 */
-	public void addNewInventoryItemWhenCombinedWith(InventoryItem partner,
+	public void addNewInventoryItemWhenCombinedWith(Combinable partner,
 			InventoryItem newItem);
 
 	/**
@@ -43,7 +43,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param partner
 	 *            the partner
 	 */
-	public void combineWith(InventoryItem partner);
+	public void combineWith(Combinable partner);
 
 	/**
 	 * @param partner
@@ -52,7 +52,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @return the additional actions for that item.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromCombineWith(
-			InventoryItem partner);
+			Combinable partner);
 
 	/**
 	 * @param partner
@@ -60,7 +60,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the forbiddenText for that item or {@code null}.
 	 */
-	public String getCombineWithForbiddenText(InventoryItem partner);
+	public String getCombineWithForbiddenText(Combinable partner);
 
 	/**
 	 * @param partner
@@ -68,7 +68,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the successfulText for that item or {@code null}.
 	 */
-	public String getCombineWithSuccessfulText(InventoryItem partner);
+	public String getCombineWithSuccessfulText(Combinable partner);
 
 	/**
 	 * The list of {@link InventoryItem}s that get added, when this Combinable
@@ -79,7 +79,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @return the added {@link InventoryItem}s.
 	 */
 	public List<InventoryItem> getNewInventoryItemsWhenCombinedWith(
-			InventoryItem partner);
+			Combinable partner);
 
 	/**
 	 * Gets if the two Combinables should be removed when combined with the
@@ -89,7 +89,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 *            the partner
 	 * @return whether it should be removed.
 	 */
-	public boolean getRemoveCombinablesWhenCombinedWith(InventoryItem partner);
+	public boolean getRemoveCombinablesWhenCombinedWith(Combinable partner);
 
 	/**
 	 * @param partner
@@ -97,7 +97,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * 
 	 * @return if using is enabled with the given item.
 	 */
-	public boolean isCombiningEnabledWith(InventoryItem partner);
+	public boolean isCombiningEnabledWith(Combinable partner);
 
 	/**
 	 * Removes an additional action for that item.
@@ -107,7 +107,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromCombineWith(InventoryItem partner,
+	public void removeAdditionalActionFromCombineWith(Combinable partner,
 			AbstractAction action);
 
 	/**
@@ -119,7 +119,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param newItem
 	 *            the new inventory item to be removed
 	 */
-	public void removeNewInventoryItemWhenCombinedWith(InventoryItem partner,
+	public void removeNewInventoryItemWhenCombinedWith(Combinable partner,
 			InventoryItem newItem);
 
 	/**
@@ -131,7 +131,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param forbiddenText
 	 *            the forbiddenText to set
 	 */
-	public void setCombineWithForbiddenText(InventoryItem partner,
+	public void setCombineWithForbiddenText(Combinable partner,
 			String forbiddenText);
 
 	/**
@@ -143,7 +143,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param successfulText
 	 *            the successfulText to set
 	 */
-	public void setCombineWithSuccessfulText(InventoryItem partner,
+	public void setCombineWithSuccessfulText(Combinable partner,
 			String successfulText);
 
 	/**
@@ -152,7 +152,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param enabled
 	 *            if using should be enabled with that item
 	 */
-	public void setCombiningEnabledWith(InventoryItem partner, boolean enabled);
+	public void setCombiningEnabledWith(Combinable partner, boolean enabled);
 
 	/**
 	 * Sets if the two Combinables should be removed when combined with the
@@ -163,6 +163,6 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param remove
 	 *            whether it should be removed
 	 */
-	public void setRemoveCombinablesWhenCombinedWith(InventoryItem partner,
+	public void setRemoveCombinablesWhenCombinedWith(Combinable partner,
 			boolean remove);
 }

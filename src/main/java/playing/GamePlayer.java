@@ -355,8 +355,8 @@ public class GamePlayer {
 		if (object1 instanceof UsableWithHasLocation
 				|| object1 instanceof Combinable) {
 			if (object1 instanceof Combinable && object2 instanceof Combinable) {
-				// Combine TODO cast correct
-				combine((InventoryItem) object1, (InventoryItem) object2);
+				// Combine
+				combine((Combinable) object1, (Combinable) object2);
 			} else if (object1 instanceof UsableWithHasLocation
 					&& object2 instanceof HasLocation) {
 				// UseWith
@@ -415,7 +415,7 @@ public class GamePlayer {
 	 * @param item2
 	 *            the second item
 	 */
-	private void combine(InventoryItem item1, InventoryItem item2) {
+	private void combine(Combinable item1, Combinable item2) {
 		// Save names
 		currentReplacer.setName(item1.getName());
 		currentReplacer.setName2(item2.getName());
