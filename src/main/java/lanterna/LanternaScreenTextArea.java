@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * This class provides a wrapper, if you want to simply write text to a certain
@@ -131,6 +132,18 @@ public class LanternaScreenTextArea {
 	private final StringBuilder currentText;
 
 	/**
+	 * Save the last used commands to enable terminal-like up/down-arrow
+	 * functionality.
+	 */
+	private final Stack<String> lastCommands;
+
+	/**
+	 * The stackPointer for the above stack. Points at an invalid location at
+	 * first.
+	 */
+	private int stackPointer = -1;
+
+	/**
 	 * Points to the line to next print to in linesToPrint.
 	 */
 	private int printPointer;
@@ -179,8 +192,9 @@ public class LanternaScreenTextArea {
 		this.fromY = fromY;
 		this.toY = toY;
 		this.textHandler = textHandler;
-		this.lines = new LinkedList<ColoredText>();
+		this.lines = new LinkedList<>();
 		this.currentText = new StringBuilder();
+		this.lastCommands = new Stack<>();
 
 		// Set printPointer
 		if (this.printTop) {
@@ -414,7 +428,12 @@ public class LanternaScreenTextArea {
 			handleBackSpace();
 		} else if (key.getKind() == Kind.NormalKey) {
 			handleChar(key.getCharacter());
+		} else if (key.getKind() == Kind.ArrowUp) {
+			handleUp();
+		} else if (key.getKind() == Kind.ArrowDown) {
+			handleDown();
 		}
+
 		// Print
 		print();
 	}
@@ -430,7 +449,7 @@ public class LanternaScreenTextArea {
 	}
 
 	/**
-	 * Handles if Enter has been pressed.
+	 * Handles if Enter has been pressed. TODO
 	 */
 	private void handleEnter() {
 		if (currentText.length() == 0) {
@@ -442,6 +461,11 @@ public class LanternaScreenTextArea {
 		if (textHandler != null) {
 			textHandler.handleText(currentText.toString());
 		}
+		// Save last used command
+		lastCommands.push(currentText.toString());
+		// Reset stackPointer
+		stackPointer = -1;
+
 		// Reset current text
 		currentText.setLength(0);
 	}
@@ -454,5 +478,31 @@ public class LanternaScreenTextArea {
 			return;
 		}
 		currentText.deleteCharAt(currentText.length() - 1);
+	}
+
+	private void handleUp() {
+		if (stackPointer != lastCommands.size() - 1) {
+			stackPointer++;
+		}
+		if (stackPointer != -1) {
+			currentText.setLength(0);
+			currentText.append(lastCommands.get(lastCommands.size()
+					- stackPointer - 1));
+		}
+
+	}
+
+	private void handleDown() {
+		if (stackPointer == -1) {
+			return;
+		} else if (stackPointer == 0) {
+			stackPointer--;
+			currentText.setLength(0);
+			return;
+		}
+		stackPointer--;
+		currentText.setLength(0);
+		currentText.append(lastCommands.get(lastCommands.size() - stackPointer
+				- 1));
 	}
 }
