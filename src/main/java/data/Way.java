@@ -49,6 +49,16 @@ public class Way extends NamedObject implements Travelable {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	Location origin;
+	
+	/**
+	 * A personalized error message displayed if moving this way was forbidden.
+	 */
+	private String moveForbiddenText;
+
+	/**
+	 * A personalized error message displayed if moving this way was successful.
+	 */
+	private String moveSuccessfulText;
 
 	/**
 	 * No-arg constructor for the database. Use
@@ -99,12 +109,12 @@ public class Way extends NamedObject implements Travelable {
 
 	@Override
 	public String getMoveForbiddenText() {
-		return moveAction.getForbiddenText();
+		return moveForbiddenText;
 	}
 
 	@Override
 	public String getMoveSuccessfulText() {
-		return moveAction.getSuccessfulText();
+		return moveSuccessfulText;
 	}
 
 	/**
@@ -134,12 +144,14 @@ public class Way extends NamedObject implements Travelable {
 
 	@Override
 	public void setMoveForbiddenText(String forbiddenText) {
-		moveAction.setForbiddenText(forbiddenText);
+		moveForbiddenText = forbiddenText;
+		//moveAction.setForbiddenText(forbiddenText);
 	}
 
 	@Override
 	public void setMoveSuccessfulText(String successfulText) {
-		moveAction.setSuccessfulText(successfulText);
+		moveSuccessfulText = successfulText;
+		//moveAction.setSuccessfulText(successfulText);
 	}
 
 	@Override

@@ -441,8 +441,6 @@ public class InventoryItem extends UsableObject implements
 			RemoveInventoryItemAction result = new RemoveInventoryItemAction(
 					this);
 			result.setEnabled(action.isEnabled());
-			result.setForbiddenText(action.getForbiddenText());
-			result.setSuccessfulText(action.getSuccessfulText());
 			return result;
 		}
 		return action;
@@ -450,7 +448,7 @@ public class InventoryItem extends UsableObject implements
 
 	/**
 	 * Gets the {@link CombinableInventoryItem} associated with the given
-	 * {@link Combinale}. If no mapping exists, one will be created on both
+	 * {@link Combinable}. If no mapping exists, one will be created on both
 	 * sides.
 	 * 
 	 * @param item

@@ -56,36 +56,6 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	}
 
 	/**
-	 * @param item
-	 *            the item to be removed
-	 * @param enabled
-	 *            if the action should be enabled
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public RemoveInventoryItemAction(InventoryItem item, boolean enabled,
-			String forbiddenText, String successfulText) {
-		super(enabled, forbiddenText, successfulText);
-		this.item = item;
-	}
-
-	/**
-	 * @param item
-	 *            the item to be removed
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public RemoveInventoryItemAction(InventoryItem item, String forbiddenText,
-			String successfulText) {
-		super(forbiddenText, successfulText);
-		this.item = item;
-	}
-
-	/**
 	 * @return the item
 	 */
 	public InventoryItem getItem() {

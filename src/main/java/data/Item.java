@@ -60,6 +60,16 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	private SetItemLocationAction removeAction;
 
 	/**
+	 * A personalized error message displayed if taking this item was forbidden.
+	 */
+	private String takeForbiddenText;
+
+	/**
+	 * A personalized error message displayed if taking this item was successful.
+	 */
+	private String takeSuccessfulText;
+
+	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * By default taking will be disabled, but removeItem (when taking is
@@ -126,12 +136,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 
 	@Override
 	public String getTakeForbiddenText() {
-		return addInventoryItemsAction.getForbiddenText();
+		return takeForbiddenText;
 	}
 
 	@Override
 	public String getTakeSuccessfulText() {
-		return addInventoryItemsAction.getSuccessfulText();
+		return takeSuccessfulText;
 	}
 
 	@Override
@@ -167,12 +177,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 
 	@Override
 	public void setTakeForbiddenText(String forbiddenText) {
-		addInventoryItemsAction.setForbiddenText(forbiddenText);
+		takeForbiddenText = forbiddenText;
 	}
 
 	@Override
 	public void setTakeSuccessfulText(String successfulText) {
-		addInventoryItemsAction.setSuccessfulText(successfulText);
+		takeSuccessfulText = successfulText;
 	}
 
 	@Override

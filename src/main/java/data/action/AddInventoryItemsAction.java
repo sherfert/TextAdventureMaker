@@ -44,32 +44,6 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
-	 * @param enabled
-	 *            if the action should be enabled
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public AddInventoryItemsAction(boolean enabled, String forbiddenText,
-			String successfulText) {
-		super(enabled, forbiddenText, successfulText);
-		init();
-	}
-
-	/**
-	 * 
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public AddInventoryItemsAction(String forbiddenText, String successfulText) {
-		super(forbiddenText, successfulText);
-		init();
-	}
-
-	/**
 	 * Adds an {@link InventoryItem} to the items to be added to the inventory.
 	 * 
 	 * @param item

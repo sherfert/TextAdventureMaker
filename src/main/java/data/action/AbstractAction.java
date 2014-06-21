@@ -29,17 +29,6 @@ public abstract class AbstractAction {
 	protected boolean enabled;
 
 	/**
-	 * A personalized error message displayed if the action is triggered but
-	 * disabled.
-	 */
-	protected String forbiddenText;
-
-	/**
-	 * A personalized message displayed if the action is triggered successfully.
-	 */
-	protected String successfulText;
-
-	/**
 	 * An enabled action.
 	 */
 	protected AbstractAction() {
@@ -57,54 +46,10 @@ public abstract class AbstractAction {
 	}
 
 	/**
-	 * An action.
-	 * 
-	 * @param enabled
-	 *            if the action should be enabled
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	protected AbstractAction(boolean enabled, String forbiddenText,
-			String successfulText) {
-		this.enabled = enabled;
-		this.forbiddenText = forbiddenText;
-		this.successfulText = successfulText;
-	}
-
-	/**
-	 * An enabled action.
-	 * 
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	protected AbstractAction(String forbiddenText, String successfulText) {
-		this.forbiddenText = forbiddenText;
-		this.successfulText = successfulText;
-	}
-
-	/**
-	 * @return the forbiddenText
-	 */
-	public String getForbiddenText() {
-		return forbiddenText;
-	}
-
-	/**
 	 * @return the id
 	 */
 	public int getId() {
 		return id;
-	}
-
-	/**
-	 * @return the successfulText
-	 */
-	public String getSuccessfulText() {
-		return successfulText;
 	}
 
 	/**
@@ -120,22 +65,6 @@ public abstract class AbstractAction {
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-
-	/**
-	 * @param forbiddenText
-	 *            the forbiddenText to set
-	 */
-	public void setForbiddenText(String forbiddenText) {
-		this.forbiddenText = forbiddenText;
-	}
-
-	/**
-	 * @param successfulText
-	 *            the successfulText to set
-	 */
-	public void setSuccessfulText(String successfulText) {
-		this.successfulText = successfulText;
 	}
 
 	/**

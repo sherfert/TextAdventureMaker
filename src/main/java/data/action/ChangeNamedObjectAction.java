@@ -87,38 +87,6 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public ChangeNamedObjectAction(NamedObject object, boolean enabled,
-			String forbiddenText, String successfulText) {
-		super(enabled, forbiddenText, successfulText);
-		init();
-		this.object = object;
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param forbiddenText
-	 *            the forbiddenText
-	 * @param successfulText
-	 *            the successfulText
-	 */
-	public ChangeNamedObjectAction(NamedObject object, String forbiddenText,
-			String successfulText) {
-		super(forbiddenText, successfulText);
-		init();
-		this.object = object;
-	}
-
-	/**
 	 * Adds an identifier to be added to the identifiers.
 	 * 
 	 * @param name

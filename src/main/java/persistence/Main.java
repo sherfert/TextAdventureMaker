@@ -1,7 +1,5 @@
 package persistence;
 
-import java.util.logging.LogManager;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -116,16 +114,20 @@ public class Main {
 		wayToBalcony.addIdentifier("out(side)?");
 		wayToBalcony.addIdentifier("(on |to )?(the )?balcony");
 		wayToBalcony.addIdentifier("through (the )?balcony door");
+		wayToBalcony.setMoveSuccessfulText("You go outside on the balcony.");
 		Way wayToFlat = new Way("Balcony door",
 				"This door leads inside your flat.", balcony, flat);
 		wayToFlat.removeIdentifier(wayToFlat.getName());
 		wayToFlat.addIdentifier("in(side)?");
 		wayToFlat.addIdentifier("into (the )?flat");
 		wayToFlat.addIdentifier("through (the )?balcony door");
+		wayToFlat.setMoveSuccessfulText("You go back inside");
+		wayToFlat.setMoveForbiddenText("I feel like you need something from here before going back in.");
+		// TODO only let him in if he has the chair
 
 		/*
 		 * Inspecting satia will give you 5 bucks. You can "give them back" by
-		 * using them with him.
+		 * using them with him. This is repeatable.
 		 * 
 		 * TODO getting money should only be possible once or after giving it
 		 * back!
@@ -142,10 +144,24 @@ public class Main {
 		satia.setInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
 		satia.addAdditionalActionToInspect(addMoneyAction);
 
+		ChangeNamedObjectAction changeSatiaAction1 = new ChangeNamedObjectAction(
+				satia);
+		changeSatiaAction1
+				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You stole the poor guy his last 5 bucks.");
+		ChangeNamedObjectAction changeSatiaAction2 = new ChangeNamedObjectAction(
+				satia);
+		changeSatiaAction2
+				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
+
+		satia.addAdditionalActionToInspect(changeSatiaAction1);
+
 		money.setUsingEnabledWith(satia, true);
 		money.setUseWithSuccessfulText(satia,
 				"You feel guilty and put the money back.");
 		money.addAdditionalActionToUseWith(satia, removeMoneyAction);
+		money.addAdditionalActionToUseWith(satia, changeSatiaAction2);
+		
+		// TODO EnableActionAction / DisableActionAction
 
 		Item tv = new Item(flat, "Television", "A television.");
 		tv.setInspectionText("A 32\" television.");
