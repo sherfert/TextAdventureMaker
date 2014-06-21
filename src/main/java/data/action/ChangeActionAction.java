@@ -8,7 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import persistence.Main;
+import persistence.PersistenceManager;
+
 
 /**
  * Another action can be changed with this action. Currently this means
@@ -83,6 +84,6 @@ public class ChangeActionAction extends AbstractAction {
 		if(enabled) {
 			action.setEnabled(enableOrDisableAction);
 		}
-		Main.updateChanges();
+		PersistenceManager.updateChanges();
 	}
 }

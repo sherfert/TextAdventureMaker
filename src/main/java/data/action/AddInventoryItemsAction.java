@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import persistence.Main;
+import persistence.PersistenceManager;
 import persistence.PlayerManager;
 import data.InventoryItem;
 
@@ -78,7 +78,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 				PlayerManager.getPlayer().addInventoryItem(item);
 			}
 		}
-		Main.updateChanges();
+		PersistenceManager.updateChanges();
 	}
 
 	/**

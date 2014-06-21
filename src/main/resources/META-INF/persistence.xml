@@ -29,7 +29,6 @@
 			<!-- Default database login using Oracle for EclipseLink's internal connection 
 				pool, change this to access your own database. -->
 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:h2:C:\Users\Satia\.textAdventureMaker\test.db" />
 
 			<!-- The database platform is auto-detected by default, if you want to 
 				set a specific platform this can be set. -->
@@ -74,7 +73,7 @@
 			<property name="eclipselink.logging.thread" value="false" />
 			<property name="eclipselink.logging.session" value="false" />
 			<property name="eclipselink.logging.exceptions" value="false" />
-			<property name="eclipselink.logging.timestamp" value="false" />
+			<property name="eclipselink.logging.timestamp" value="true" />
 		</properties>
 	</persistence-unit>
 </persistence>

@@ -27,11 +27,11 @@ public class PlayerManager {
 	public static Player getPlayer() {
 
 		// Find all players (hopefully only one)
-		CriteriaQuery<Player> criteriaQueryPlayer = Main.getCriteriaBuilder()
+		CriteriaQuery<Player> criteriaQueryPlayer = PersistenceManager.getCriteriaBuilder()
 				.createQuery(Player.class);
 		Root<Player> playerRoot = criteriaQueryPlayer.from(Player.class);
 		criteriaQueryPlayer.select(playerRoot);
-		List<Player> resultListPlayer = Main.getEntityManager()
+		List<Player> resultListPlayer = PersistenceManager.getEntityManager()
 				.createQuery(criteriaQueryPlayer).getResultList();
 
 		// There should be exactly 1 player

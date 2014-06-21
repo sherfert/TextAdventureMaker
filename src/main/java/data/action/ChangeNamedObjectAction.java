@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import persistence.Main;
+import persistence.PersistenceManager;
 import data.NamedObject;
 
 /**
@@ -221,7 +221,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 				object.removeIdentifier(id);
 			}
 		}
-		Main.updateChanges();
+		PersistenceManager.updateChanges();
 	}
 
 	/**

@@ -1,9 +1,6 @@
 package persistence;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaBuilder;
+import java.io.File;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
@@ -22,80 +19,11 @@ import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
 
 /**
- * TODO Test class.
+ * Test class.
  * 
  * @author Satia
  */
 public class Main {
-
-	/**
-	 * The name of the persistence unit. Specified in
-	 * src/main/resources/persistence.xml
-	 */
-	public static final String PERSISTENCE_UNIT_NAME = "textAdventureMaker";
-
-	/**
-	 * The criteria builder.
-	 */
-	private static CriteriaBuilder criteriaBuilder;
-
-	/**
-	 * The entity manager.
-	 */
-	private static EntityManager entityManager;
-
-	/**
-	 * The entity manager factory.
-	 */
-	private static EntityManagerFactory entityManagerFactory;
-
-	/**
-	 * Connects to the database.
-	 */
-	public static void connect() {
-		// Create objects for database access
-		entityManagerFactory = Persistence
-				.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-
-		entityManager = entityManagerFactory.createEntityManager();
-		criteriaBuilder = entityManager.getCriteriaBuilder();
-
-		// Begin a transaction
-		entityManager.getTransaction().begin();
-	}
-
-	/**
-	 * Disconnects from the database.
-	 */
-	public static void disconnect() {
-		entityManager.getTransaction().commit();
-		// Close everything
-		entityManager.close();
-		entityManagerFactory.close();
-		// FIXME at the moment close the vm
-		System.exit(0);
-	}
-
-	/**
-	 * @return the criteriaBuilder
-	 */
-	public static CriteriaBuilder getCriteriaBuilder() {
-		return criteriaBuilder;
-	}
-
-	/**
-	 * @return the entityManager
-	 */
-	public static EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-	/**
-	 * @return the entityManagerFactory
-	 */
-	public static EntityManagerFactory getEntityManagerFactory() {
-		return entityManagerFactory;
-	}
 
 	/**
 	 * Test-main.
@@ -110,20 +38,21 @@ public class Main {
 		balcony.setInspectionText("Nice wooden floor and some chairs.");
 
 		Way wayToBalcony = new Way("Balcony door",
-				"This door leads to your balcony.", flat, balcony);
+				"There is a door that leads outside.", flat, balcony);
 		wayToBalcony.removeIdentifier(wayToBalcony.getName());
 		wayToBalcony.addIdentifier("out(side)?");
 		wayToBalcony.addIdentifier("(on |to )?(the )?balcony");
 		wayToBalcony.addIdentifier("through (the )?balcony door");
 		wayToBalcony.setMoveSuccessfulText("You go outside on the balcony.");
 		Way wayToFlat = new Way("Balcony door",
-				"This door leads inside your flat.", balcony, flat);
+				"There is a door that leads inside.", balcony, flat);
 		wayToFlat.removeIdentifier(wayToFlat.getName());
 		wayToFlat.addIdentifier("in(side)?");
 		wayToFlat.addIdentifier("into (the )?flat");
 		wayToFlat.addIdentifier("through (the )?balcony door");
 		wayToFlat.setMoveSuccessfulText("You go back inside");
-		wayToFlat.setMoveForbiddenText("I feel like you need something from here before going back in.");
+		wayToFlat
+				.setMoveForbiddenText("I feel like you need something from here before going back in.");
 		wayToFlat.setMovingEnabled(false);
 
 		/*
@@ -139,13 +68,15 @@ public class Main {
 		addMoneyAction.addPickUpItem(money);
 		RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction(
 				money);
-		ChangeActionAction disableAddMoneyAction = new ChangeActionAction(addMoneyAction, false);
-		ChangeActionAction enableAddMoneyAction = new ChangeActionAction(addMoneyAction, true);
+		ChangeActionAction disableAddMoneyAction = new ChangeActionAction(
+				addMoneyAction, false);
+		ChangeActionAction enableAddMoneyAction = new ChangeActionAction(
+				addMoneyAction, true);
 
 		Person satia = new Person(flat, "Satia",
 				"Satia is hanging around there.");
 		satia.setInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
-		// The order here is critical! TODO provide means to change the order of additional actions!?
+		// The order here is critical!
 		satia.addAdditionalActionToInspect(addMoneyAction);
 		satia.addAdditionalActionToInspect(disableAddMoneyAction);
 
@@ -167,7 +98,8 @@ public class Main {
 		money.addAdditionalActionToUseWith(satia, changeSatiaAction2);
 		money.addAdditionalActionToUseWith(satia, enableAddMoneyAction);
 
-		Item tv = new Item(flat, "Television", "A television.");
+		Item tv = new Item(flat, "Television",
+				"There is a television in the corner.");
 		tv.setInspectionText("A 32\" television.");
 		tv.addIdentifier("tv");
 		tv.setTakeForbiddenText("This is a little heavy.");
@@ -185,7 +117,8 @@ public class Main {
 		 * is being used the item/inventory item disappears and the peel is
 		 * being added to the inventory.
 		 */
-		Item banana = new Item(flat, "Banana", "A banana.");
+		Item banana = new Item(flat, "Banana",
+				"In the fruit bowl there's a single, lonely banana.");
 		banana.setInspectionText("Rich in cholesterol.");
 		banana.setTakingEnabled(true);
 		banana.setUsingEnabled(true);
@@ -202,14 +135,16 @@ public class Main {
 		banana.getAddInventoryItemsAction().addPickUpItem(
 				new InventoryItem(banana));
 
-		Item chair = new Item(balcony, "Chair", "A wooden chair.");
+		Item chair = new Item(balcony, "Chair",
+				"A wooden chair stands beside you.");
 		chair.setInspectionText("Made of solid oak.");
 		chair.setTakingEnabled(true);
 		InventoryItem invChair = new InventoryItem(chair);
 		chair.getAddInventoryItemsAction().addPickUpItem(invChair);
-		
+
 		// Only let him in if he has the chair
-		ChangeActionAction allowGettingInsideAction = new ChangeActionAction(wayToFlat.getMoveAction(), true);
+		ChangeActionAction allowGettingInsideAction = new ChangeActionAction(
+				wayToFlat.getMoveAction(), true);
 		chair.addAdditionalActionToTake(allowGettingInsideAction);
 
 		/*
@@ -217,7 +152,7 @@ public class Main {
 		 * destroyed tv.
 		 */
 		Item destroyedTv = new Item(null, "Destroyed television",
-				"A destroyed television.");
+				"The former so glorious television looks severely broken by brutal manforce.");
 		destroyedTv
 				.setInspectionText("You hit it several times with the chair.");
 		destroyedTv.addIdentifier("television");
@@ -238,7 +173,7 @@ public class Main {
 		 * A pen that can be used to paint the banana peel. The pen can be used
 		 * for that when in the flat and when already taken.
 		 */
-		Item pen = new Item(flat, "Pen", "A pen.");
+		Item pen = new Item(flat, "Pen", "A pen lies on a table.");
 		pen.setInspectionText("An advertising gift.");
 		pen.setUseForbiddenText("You must use it with something else.");
 		pen.setTakingEnabled(true);
@@ -267,6 +202,8 @@ public class Main {
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
 
+		// TODO a game should always have a player
+		// (initially at startLocation!?)
 		Player player = new Player(flat);
 		// Game options
 		Game game = new Game();
@@ -294,6 +231,9 @@ public class Main {
 		game.setNeutralBgColor(Color.DEFAULT);
 		game.setFailedBgColor(Color.DEFAULT);
 
+		// TODO special command identifiers like "eat banana" instead of
+		// "use banana"?
+
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
 		game.addInspectCommand("look(?: at)? (.+)");
@@ -309,66 +249,19 @@ public class Main {
 		game.addUseWithCombineCommand("combine (.+) and (.+)");
 
 		// Connect to database
-		connect();
+		PersistenceManager.connect(System.getProperty("user.home")
+				+ File.separator + ".textAdventureMaker" + File.separator
+				+ "test.db");
 
 		// Persist everything (Cascade.PERSIST persists the rest)
-		entityManager.persist(player);
-		entityManager.persist(game);
+		PersistenceManager.getEntityManager().persist(player);
+		PersistenceManager.getEntityManager().persist(game);
 
 		// Updates changes
-		updateChanges();
-
-		// // Find location by id
-		// Location lo = entityManager.find(Location.class, 1);
-		// System.out.println(lo);
-		//
-		// // Find all locations
-		// CriteriaQuery<Location> criteriaQueryLoc = criteriaBuilder
-		// .createQuery(Location.class);
-		// Root<Location> locationRoot = criteriaQueryLoc.from(Location.class);
-		// criteriaQueryLoc.select(locationRoot);
-		// List<Location> resultListLoc = entityManager.createQuery(
-		// criteriaQueryLoc).getResultList();
-		// for (Location l : resultListLoc) {
-		// System.out.println(l);
-		// }
-		// // Find all ways
-		// CriteriaQuery<Way> criteriaQueryWay = criteriaBuilder
-		// .createQuery(Way.class);
-		// Root<Way> wayRoot = criteriaQueryWay.from(Way.class);
-		// criteriaQueryWay.select(wayRoot);
-		// List<Way> resultListWay = entityManager.createQuery(criteriaQueryWay)
-		// .getResultList();
-		// for (Way w : resultListWay) {
-		// System.out.println(w);
-		// }
-		// // Find all items
-		// CriteriaQuery<Item> criteriaQueryItem = criteriaBuilder
-		// .createQuery(Item.class);
-		// Root<Item> itemRoot = criteriaQueryItem.from(Item.class);
-		// criteriaQueryItem.select(itemRoot);
-		// List<Item> resultListItem = entityManager
-		// .createQuery(criteriaQueryItem).getResultList();
-		// for (Item i : resultListItem) {
-		// System.out.println(i);
-		// }
-		// // Find player
-		// Player p = PlayerManager.getPlayer();
-		// System.out.println(p);
+		PersistenceManager.updateChanges();
 
 		// Start a game
 		new GamePlayer(GameManager.getGame(), PlayerManager.getPlayer())
 				.start();
-	}
-
-	/**
-	 * Updates any changes. Should be called after each change of persisted
-	 * data.
-	 * 
-	 * TODO call this in triggerAction or not?
-	 */
-	public static void updateChanges() {
-		entityManager.getTransaction().commit();
-		entityManager.getTransaction().begin();
 	}
 }

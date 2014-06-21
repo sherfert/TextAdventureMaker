@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import persistence.Main;
+import persistence.PersistenceManager;
 import data.Item;
 import data.Location;
 
@@ -108,6 +108,6 @@ public class SetItemLocationAction extends AbstractAction {
 		if (enabled) {
 			item.setLocation(newLocation);
 		}
-		Main.updateChanges();
+		PersistenceManager.updateChanges();
 	}
 }

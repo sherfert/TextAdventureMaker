@@ -19,7 +19,7 @@ public class NamedObjectManager {
 	 *            the object
 	 */
 	public static void removeObject(NamedObject object) {
-		Main.getEntityManager().remove(object);
+		PersistenceManager.getEntityManager().remove(object);
 	}
 
 	/**

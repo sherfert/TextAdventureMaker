@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import persistence.Main;
+import persistence.PersistenceManager;
 import persistence.PlayerManager;
 import data.Way;
 
@@ -83,6 +83,6 @@ public class MoveAction extends AbstractAction {
 		if (enabled) {
 			PlayerManager.getPlayer().setLocation(way.getDestination());
 		}
-		Main.updateChanges();
+		PersistenceManager.updateChanges();
 	}
 }

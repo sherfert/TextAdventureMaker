@@ -21,19 +21,17 @@ public class GameManager {
 	 */
 	public static Game getGame() {
 		// Find all games (hopefully only one)
-		CriteriaQuery<Game> criteriaQueryGame = Main.getCriteriaBuilder()
-				.createQuery(Game.class);
+		CriteriaQuery<Game> criteriaQueryGame = PersistenceManager
+				.getCriteriaBuilder().createQuery(Game.class);
 		Root<Game> gameRoot = criteriaQueryGame.from(Game.class);
 		criteriaQueryGame.select(gameRoot);
-		List<Game> resultListGame = Main.getEntityManager()
+		List<Game> resultListGame = PersistenceManager.getEntityManager()
 				.createQuery(criteriaQueryGame).getResultList();
 
 		// There should be exactly 1 game
 		if (resultListGame.size() != 1) {
-			Logger.getLogger(GameManager.class.getName())
-			.log(Level.SEVERE,
-					"There are " + resultListGame.size()
-					+ " games.");
+			Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE,
+					"There are " + resultListGame.size() + " games.");
 		}
 
 		return resultListGame.get(0);

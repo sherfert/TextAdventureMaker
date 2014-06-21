@@ -3,7 +3,7 @@ package playing;
 import java.util.List;
 
 import persistence.ItemManager;
-import persistence.Main;
+import persistence.PersistenceManager;
 import persistence.PlayerManager;
 import persistence.WayManager;
 import playing.parser.GeneralParser;
@@ -238,8 +238,7 @@ public class GamePlayer {
 	 */
 	public void stop() {
 		io.exitIO();
-		// FIXME this needs to be re-designed!
-		Main.disconnect();
+		PersistenceManager.disconnect();
 	}
 
 	/**
