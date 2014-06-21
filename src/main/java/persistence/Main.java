@@ -16,6 +16,7 @@ import data.Person;
 import data.Player;
 import data.Way;
 import data.action.AddInventoryItemsAction;
+import data.action.ChangeActionAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
@@ -123,7 +124,7 @@ public class Main {
 		wayToFlat.addIdentifier("through (the )?balcony door");
 		wayToFlat.setMoveSuccessfulText("You go back inside");
 		wayToFlat.setMoveForbiddenText("I feel like you need something from here before going back in.");
-		// TODO only let him in if he has the chair
+		wayToFlat.setMovingEnabled(false);
 
 		/*
 		 * Inspecting satia will give you 5 bucks. You can "give them back" by
@@ -138,11 +139,15 @@ public class Main {
 		addMoneyAction.addPickUpItem(money);
 		RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction(
 				money);
+		ChangeActionAction disableAddMoneyAction = new ChangeActionAction(addMoneyAction, false);
+		ChangeActionAction enableAddMoneyAction = new ChangeActionAction(addMoneyAction, true);
 
 		Person satia = new Person(flat, "Satia",
 				"Satia is hanging around there.");
 		satia.setInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
+		// The order here is critical! TODO provide means to change the order of additional actions!?
 		satia.addAdditionalActionToInspect(addMoneyAction);
+		satia.addAdditionalActionToInspect(disableAddMoneyAction);
 
 		ChangeNamedObjectAction changeSatiaAction1 = new ChangeNamedObjectAction(
 				satia);
@@ -160,8 +165,7 @@ public class Main {
 				"You feel guilty and put the money back.");
 		money.addAdditionalActionToUseWith(satia, removeMoneyAction);
 		money.addAdditionalActionToUseWith(satia, changeSatiaAction2);
-		
-		// TODO EnableActionAction / DisableActionAction
+		money.addAdditionalActionToUseWith(satia, enableAddMoneyAction);
 
 		Item tv = new Item(flat, "Television", "A television.");
 		tv.setInspectionText("A 32\" television.");
@@ -203,6 +207,10 @@ public class Main {
 		chair.setTakingEnabled(true);
 		InventoryItem invChair = new InventoryItem(chair);
 		chair.getAddInventoryItemsAction().addPickUpItem(invChair);
+		
+		// Only let him in if he has the chair
+		ChangeActionAction allowGettingInsideAction = new ChangeActionAction(wayToFlat.getMoveAction(), true);
+		chair.addAdditionalActionToTake(allowGettingInsideAction);
 
 		/*
 		 * The tv can be hit with the chair. It is then replaced with a
