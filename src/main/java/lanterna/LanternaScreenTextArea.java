@@ -149,6 +149,12 @@ public class LanternaScreenTextArea {
 	private int printPointer;
 
 	/**
+	 * The current-text based index of the cursor. This is not identically to
+	 * the on-screen cursor position, as the text can be longer than the screen.
+	 */
+	private int currentTextCursorIndex;
+
+	/**
 	 * Construct a new TextArea, that uses the full screen, starts printing on
 	 * top, and includes no input line. Default colors.
 	 * 
@@ -369,21 +375,33 @@ public class LanternaScreenTextArea {
 		if (includeInputLine) {
 			String toPrint;
 			// print currentText (overrides)
-			if (currentText.length() <= toX - fromX) {
-				// fits into the line
+			if (currentText.length() < toX - fromX) {
+				// text plus cursor fit into the line
 				// Create blank string to fill the rest
 				char[] charArray = new char[toX - fromX - currentText.length()];
 				Arrays.fill(charArray, ' ');
 				toPrint = currentText.toString() + new String(charArray);
+				screen.setCursorPosition(fromX + currentTextCursorIndex,
+						Math.min(fromY + printPointer, toY - 1));
 			} else {
-				// does not fit, cut beginning
-				int diff = currentText.length() - (toX - fromX);
-				toPrint = "..." + currentText.substring(3 + diff);
+				// does not fit
+				int startIndex = Math.max(0, currentTextCursorIndex
+						- (toX - fromX) + 1);
+				int endindex = Math.min(
+						currentText.length(),
+						startIndex
+								+ toX
+								- fromX
+								+ (currentTextCursorIndex == currentText
+										.length() ? 0 : 1));
+				toPrint = currentText.substring(startIndex, endindex);
+
+				screen.setCursorPosition(fromX + currentTextCursorIndex
+						- startIndex, Math.min(fromY + printPointer, toY - 1));
+
 			}
 			screen.putString(fromX, fromY + printPointer, toPrint,
 					inputFgColor, inputBgColor);
-			screen.setCursorPosition(fromX + currentText.length(),
-					Math.min(fromY + printPointer, toY - 1));
 		}
 	}
 
@@ -422,17 +440,25 @@ public class LanternaScreenTextArea {
 			return;
 		}
 
-		if (key.getKind() == Kind.Enter) {
+		if (key.getKind() == Kind.NormalKey) {
+			handleChar(key.getCharacter());
+		} else if (key.getKind() == Kind.Enter) {
 			handleEnter();
 		} else if (key.getKind() == Kind.Backspace) {
 			handleBackSpace();
-		} else if (key.getKind() == Kind.NormalKey) {
-			handleChar(key.getCharacter());
+		} else if (key.getKind() == Kind.Delete) {
+			handleDel();
 		} else if (key.getKind() == Kind.ArrowUp) {
 			handleUp();
 		} else if (key.getKind() == Kind.ArrowDown) {
 			handleDown();
+		} else if (key.getKind() == Kind.ArrowLeft) {
+			handleLeft();
+		} else if (key.getKind() == Kind.ArrowRight) {
+			handleRight();
 		}
+		
+		// TODO pos1 and end
 
 		// Print
 		print();
@@ -445,7 +471,13 @@ public class LanternaScreenTextArea {
 	 *            the character
 	 */
 	private void handleChar(char c) {
-		currentText.append(c);
+		if(currentTextCursorIndex == currentText.length()) {
+			currentText.append(c);
+		} else {
+			currentText.insert(currentTextCursorIndex, c);
+		}
+		
+		currentTextCursorIndex++;
 	}
 
 	/**
@@ -468,16 +500,19 @@ public class LanternaScreenTextArea {
 
 		// Reset current text
 		currentText.setLength(0);
+		// Place cursor at the beginning
+		currentTextCursorIndex = 0;
 	}
 
 	/**
 	 * Handles if backspace has been pressed.
 	 */
 	private void handleBackSpace() {
-		if (currentText.length() == 0) {
+		if (currentTextCursorIndex == 0) {
 			return;
 		}
-		currentText.deleteCharAt(currentText.length() - 1);
+		currentText.deleteCharAt(currentTextCursorIndex - 1);
+		currentTextCursorIndex--;
 	}
 
 	private void handleUp() {
@@ -488,8 +523,9 @@ public class LanternaScreenTextArea {
 			currentText.setLength(0);
 			currentText.append(lastCommands.get(lastCommands.size()
 					- stackPointer - 1));
+			// Place cursor at the end
+			currentTextCursorIndex = currentText.length();
 		}
-
 	}
 
 	private void handleDown() {
@@ -498,11 +534,31 @@ public class LanternaScreenTextArea {
 		} else if (stackPointer == 0) {
 			stackPointer--;
 			currentText.setLength(0);
+			// Place cursor at the beginning
+			currentTextCursorIndex = 0;
 			return;
 		}
 		stackPointer--;
 		currentText.setLength(0);
 		currentText.append(lastCommands.get(lastCommands.size() - stackPointer
 				- 1));
+		// Place cursor at the end
+		currentTextCursorIndex = currentText.length();
+	}
+
+	private void handleRight() {
+		if (currentTextCursorIndex != currentText.length()) {
+			currentTextCursorIndex++;
+		}
+	}
+
+	private void handleLeft() {
+		if (currentTextCursorIndex != 0) {
+			currentTextCursorIndex--;
+		}
+	}
+
+	private void handleDel() {
+		// TODO
 	}
 }
