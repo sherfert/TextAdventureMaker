@@ -18,7 +18,6 @@ import java.util.List;
  * @author Satia Herfert
  */
 public class LanternaScreenTextArea {
-
 	/**
 	 * Used to callback if a new line has been typed, when the area includes an
 	 * input line.
@@ -33,6 +32,33 @@ public class LanternaScreenTextArea {
 	}
 
 	/**
+	 * A triplet of text bgColor and fgColor.
+	 * 
+	 * @author Satia Herfert
+	 */
+	private class ColoredText {
+		private String text;
+		private Color bgColor;
+		private Color fgColor;
+
+		/**
+		 * @param text
+		 * @param bgColor
+		 * @param fgColor
+		 */
+		public ColoredText(String text, Color bgColor, Color fgColor) {
+			this.text = text;
+			this.bgColor = bgColor;
+			this.fgColor = fgColor;
+		}
+
+		@Override
+		public String toString() {
+			return text;
+		}
+	}
+
+	/**
 	 * The screen to use.
 	 */
 	private final Screen screen;
@@ -40,7 +66,7 @@ public class LanternaScreenTextArea {
 	/**
 	 * The linesToPrint, which are printed.
 	 */
-	private final List<String> lines;
+	private final List<ColoredText> lines;
 
 	/**
 	 * If {@code true}, prints from top to bottom, if {@code false}, prints from
@@ -153,7 +179,7 @@ public class LanternaScreenTextArea {
 		this.fromY = fromY;
 		this.toY = toY;
 		this.textHandler = textHandler;
-		this.lines = new LinkedList<String>();
+		this.lines = new LinkedList<ColoredText>();
 		this.currentText = new StringBuilder();
 
 		// Set printPointer
@@ -188,7 +214,7 @@ public class LanternaScreenTextArea {
 
 		// Stack new empty elements into list...
 		for (int i = fromY + lines.size(); i < toY; i++) {
-			lines.add("");
+			lines.add(new ColoredText("", textBgColor, textFgColor));
 		}
 		// .. or remove.
 		for (int i = toY - fromY; i < lines.size(); i++) {
@@ -197,16 +223,6 @@ public class LanternaScreenTextArea {
 
 		// Print
 		print();
-	}
-
-	/**
-	 * This returns the displayed linesToPrint. One should not modify this list,
-	 * or undefined behavior may occur.
-	 * 
-	 * @return the displayed linesToPrint.
-	 */
-	public List<String> getDisplayedText() {
-		return lines;
 	}
 
 	/**
@@ -240,7 +256,7 @@ public class LanternaScreenTextArea {
 		lines.clear();
 		// Fill lines with empty strings
 		for (int i = fromY; i < toY; i++) {
-			lines.add("");
+			lines.add(new ColoredText("", textBgColor, textFgColor));
 		}
 		// clear currentText
 		currentText.setLength(0);
@@ -250,12 +266,14 @@ public class LanternaScreenTextArea {
 
 	/**
 	 * Print text to the TextArea. The screen has to be refreshed afterwards.
-	 * Text is automatically wrapped into lines.
+	 * Text is automatically wrapped into lines. Given colors are used.
 	 * 
 	 * @param text
 	 *            the text to print
+	 * @param bgColor
+	 * @param fgColor
 	 */
-	public void println(String text) {
+	public void println(String text, Color bgColor, Color fgColor) {
 		List<String> linesToPrint = new ArrayList<String>(Arrays.asList(text
 				.split("\n")));
 		// Split each after length is reached
@@ -269,8 +287,19 @@ public class LanternaScreenTextArea {
 		}
 		// Include each Text line
 		for (String line : linesToPrint) {
-			includeTextLine(line);
+			includeTextLine(line, bgColor, fgColor);
 		}
+	}
+
+	/**
+	 * Print text to the TextArea. The screen has to be refreshed afterwards.
+	 * Text is automatically wrapped into lines. Default colors are used.
+	 * 
+	 * @param text
+	 *            the text to print
+	 */
+	public void println(String text) {
+		println(text, textBgColor, textFgColor);
 	}
 
 	/**
@@ -280,14 +309,14 @@ public class LanternaScreenTextArea {
 	 * @param line
 	 *            the line
 	 */
-	private void includeTextLine(String line) {
+	private void includeTextLine(String line, Color bgColor, Color fgColor) {
 		// If the area is full, we have to shift input up
 		if (areaFull()) {
 			shiftUp();
 		}
 
 		// Append the line at the correct position in lines
-		lines.set(printPointer, line);
+		lines.set(printPointer, new ColoredText(line, bgColor, fgColor));
 		// Increment the printpointer
 		printPointer++;
 
@@ -300,7 +329,7 @@ public class LanternaScreenTextArea {
 	 */
 	private void shiftUp() {
 		lines.remove(0);
-		lines.add("");
+		lines.add(new ColoredText("", textBgColor, textFgColor));
 		printPointer--;
 	}
 
@@ -313,12 +342,13 @@ public class LanternaScreenTextArea {
 				.size(); linesPointer++, screenPointer++) {
 			// Create blank string to fill the rest
 			char[] charArray = new char[toX - fromX
-					- lines.get(linesPointer).length()];
+					- lines.get(linesPointer).text.length()];
 			Arrays.fill(charArray, ' ');
 			String blanks = new String(charArray);
 
-			screen.putString(fromX, screenPointer, lines.get(linesPointer)
-					+ blanks, textFgColor, textBgColor);
+			screen.putString(fromX, screenPointer, lines.get(linesPointer).text
+					+ blanks, lines.get(linesPointer).fgColor,
+					lines.get(linesPointer).bgColor);
 		}
 
 		// When there's an input line, print it

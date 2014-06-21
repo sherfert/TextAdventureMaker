@@ -3,15 +3,18 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
+import com.googlecode.lanterna.terminal.Terminal.Color;
 
 /**
  * A game that can be played. Contains all configuration and (default) texts.
@@ -19,21 +22,20 @@ import javax.persistence.OneToOne;
  * 
  * @author Satia
  */
-@SuppressWarnings("unused")
 @Entity
 public class Game {
-	/**
-	 * All commands that make the game exit. Must be lowercase.
-	 */
-	@ElementCollection
-	private List<String> exitCommands;
-
 	/**
 	 * The id.
 	 */
 	@Id
 	@GeneratedValue
 	private int id;
+	
+	/**
+	 * All commands that make the game exit. Must be lowercase.
+	 */
+	@ElementCollection
+	private List<String> exitCommands;
 
 	/**
 	 * All commands that let the player inspect something. Must be lowercase.
@@ -201,6 +203,44 @@ public class Game {
 	 */
 	@ElementCollection
 	private List<String> useWithCombineCommands;
+	
+	/**
+	 * The color that is used for text printed after a successful action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color successfullFgColor;
+	/**
+	 * The color that is used for text printed after a neutral action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color neutralFgColor;
+	/**
+	 * The color that is used for text printed after a failed action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color failedFgColor;
+	
+	/**
+	 * The background color that is used for text printed after a successful action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color successfullBgColor;
+	/**
+	 * The background color that is used for text printed after a neutral action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color neutralBgColor;
+	/**
+	 * The background color that is used for text printed after a failed action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color failedBgColor;
 
 	/**
 	 * Constructs a new game object.
@@ -454,6 +494,48 @@ public class Game {
 	}
 
 	/**
+	 * @return the successfullFgColor
+	 */
+	public Color getSuccessfullFgColor() {
+		return successfullFgColor;
+	}
+
+	/**
+	 * @return the neutralFgColor
+	 */
+	public Color getNeutralFgColor() {
+		return neutralFgColor;
+	}
+
+	/**
+	 * @return the failedFgColor
+	 */
+	public Color getFailedFgColor() {
+		return failedFgColor;
+	}
+
+	/**
+	 * @return the successfullBgColor
+	 */
+	public Color getSuccessfullBgColor() {
+		return successfullBgColor;
+	}
+
+	/**
+	 * @return the neutralBgColor
+	 */
+	public Color getNeutralBgColor() {
+		return neutralBgColor;
+	}
+
+	/**
+	 * @return the failedBgColor
+	 */
+	public Color getFailedBgColor() {
+		return failedBgColor;
+	}
+
+	/**
 	 * Removes an exit command.
 	 * 
 	 * @param cmd
@@ -639,5 +721,47 @@ public class Game {
 	 */
 	public void setUsedWithText(String usedWithText) {
 		this.usedWithText = usedWithText;
+	}
+
+	/**
+	 * @param successfullFgColor the successfullFgColor to set
+	 */
+	public void setSuccessfullFgColor(Color successfullFgColor) {
+		this.successfullFgColor = successfullFgColor;
+	}
+
+	/**
+	 * @param neutralFgColor the neutralFgColor to set
+	 */
+	public void setNeutralFgColor(Color neutralFgColor) {
+		this.neutralFgColor = neutralFgColor;
+	}
+
+	/**
+	 * @param failedFgColor the failedFgColor to set
+	 */
+	public void setFailedFgColor(Color failedFgColor) {
+		this.failedFgColor = failedFgColor;
+	}
+
+	/**
+	 * @param successfullBgColor the successfullBgColor to set
+	 */
+	public void setSuccessfullBgColor(Color successfullBgColor) {
+		this.successfullBgColor = successfullBgColor;
+	}
+
+	/**
+	 * @param neutralBgColor the neutralBgColor to set
+	 */
+	public void setNeutralBgColor(Color neutralBgColor) {
+		this.neutralBgColor = neutralBgColor;
+	}
+
+	/**
+	 * @param failedBgColor the failedBgColor to set
+	 */
+	public void setFailedBgColor(Color failedBgColor) {
+		this.failedBgColor = failedBgColor;
 	}
 }

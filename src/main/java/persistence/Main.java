@@ -5,6 +5,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 
+import com.googlecode.lanterna.terminal.Terminal.Color;
+
 import playing.GamePlayer;
 import data.Game;
 import data.InventoryItem;
@@ -69,8 +71,7 @@ public class Main {
 		// Close everything
 		entityManager.close();
 		entityManagerFactory.close();
-		// FIXME
-		// At the moment close the vm
+		// FIXME at the moment close the vm
 		System.exit(0);
 	}
 
@@ -256,6 +257,12 @@ public class Main {
 		game.setTakenText("You picked up the <name>.");
 		game.setUsedText("So you used the <name>. Nothing interesting happened.");
 		game.setUsedWithText("So you used the <name> with the <name2>. Nothing interesting happened.");
+		game.setSuccessfullFgColor(Color.GREEN);
+		game.setNeutralFgColor(Color.YELLOW);
+		game.setFailedFgColor(Color.RED);
+		game.setSuccessfullBgColor(Color.DEFAULT);
+		game.setNeutralBgColor(Color.DEFAULT);
+		game.setFailedBgColor(Color.DEFAULT);
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");

@@ -12,6 +12,7 @@ import lanterna.LanternaScreenTextArea.TextHandler;
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.Terminal.Color;
 import com.googlecode.lanterna.terminal.Terminal.ResizeListener;
 import com.googlecode.lanterna.terminal.TerminalSize;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
@@ -103,13 +104,24 @@ public class InputOutput implements TextHandler {
 	}
 
 	/**
-	 * Prints a line of text for the player.
+	 * Prints a line of text for the player. Default colors.
 	 * 
 	 * @param output
 	 *            the text to be printed
 	 */
 	public void println(String output) {
 		defaultTextArea.println(output);
+		this.screen.refresh();
+	}
+	
+	/**
+	 * Prints a line of text for the player. Given colors.
+	 * 
+	 * @param output
+	 *            the text to be printed
+	 */
+	public void println(String output, Color bgColor, Color fgColor) {
+		defaultTextArea.println(output, bgColor, fgColor);
 		this.screen.refresh();
 	}
 
