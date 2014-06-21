@@ -5,7 +5,7 @@ import java.util.List;
 import data.action.AbstractAction;
 
 /**
- * Anything useable with an {@link HasLocation} (Items or Persons) in the game.
+ * Anything usable with an {@link HasLocation} (Items or Persons) in the game.
  * 
  * @author Satia
  */

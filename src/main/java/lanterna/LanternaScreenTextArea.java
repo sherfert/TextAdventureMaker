@@ -449,7 +449,7 @@ public class LanternaScreenTextArea {
 	}
 
 	/**
-	 * Handles if Enter has been pressed. TODO
+	 * Handles if Enter has been pressed.
 	 */
 	private void handleEnter() {
 		if (currentText.length() == 0) {

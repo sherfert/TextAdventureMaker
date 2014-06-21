@@ -18,9 +18,8 @@ import data.interfaces.UsableOrPassivelyUsable;
  * @author Satia
  */
 public class PlayerManager {
+	
 	/**
-	 * TODO no RuntimeExp
-	 * 
 	 * @return the player
 	 */
 	public static Player getPlayer() {
@@ -43,7 +42,7 @@ public class PlayerManager {
 	}
 
 	/**
-	 * Gets the inspectable object in the location or in the inventory the given
+	 * Gets the Inspectable object in the location or in the inventory the given
 	 * identifier or {@code null} , if there is none.
 	 * 
 	 * @param player
@@ -97,7 +96,7 @@ public class PlayerManager {
 	public static UsableOrPassivelyUsable getUsableOrPassivelyUsable(Player player,
 			String identifier) {
 		List<UsableOrPassivelyUsable> usables = new ArrayList<UsableOrPassivelyUsable>();
-		// Items ans Persons in the room
+		// Items and Persons in the room
 		usables.addAll(player.getLocation().getHasLocations());
 		// Anything in the inventory
 		usables.addAll(player.getInventory());

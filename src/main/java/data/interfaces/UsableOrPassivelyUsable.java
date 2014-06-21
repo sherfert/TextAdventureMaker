@@ -5,8 +5,10 @@ import data.Item;
 import data.Person;
 
 /**
- * Anything that is actively or passivle usable with something else. Namely:
- * {@link Item}, {@link InventoryItem}, {@link Person}.
+ * Anything that is actively or passively usable WITH SOMETHING ELSE. This does
+ * not explicitly include usable by itself.
+ * 
+ * Namely: {@link Item}, {@link InventoryItem}, {@link Person}.
  * 
  * @author Satia
  */

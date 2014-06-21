@@ -5,11 +5,11 @@ import java.util.List;
 import data.action.AbstractAction;
 
 /**
- * Anything useable for itself (without other objects) in the game.
+ * Anything usable for itself (without other objects) in the game.
  * 
  * @author Satia
  */
-public interface Usable extends UsableOrPassivelyUsable {
+public interface Usable extends Identifiable {
 	/**
 	 * Adds an additional action.
 	 * 

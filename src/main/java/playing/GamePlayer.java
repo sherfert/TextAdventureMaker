@@ -10,6 +10,7 @@ import playing.parser.GeneralParser;
 import data.Game;
 import data.InventoryItem;
 import data.Player;
+import data.interfaces.Combinable;
 import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
@@ -113,15 +114,15 @@ public class GamePlayer {
 			if (message == null) {
 				message = game.getInspectionDefaultText();
 			}
-			io.println(currentReplacer.replacePlaceholders(message), game.getNeutralBgColor(), game
-					.getNeutralFgColor());
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getNeutralBgColor(), game.getNeutralFgColor());
 			// Effect depends on additional actions
 			object.inspect();
 		} else {
 			// There is no such thing
 			String message = game.getNoSuchItemText();
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-					.getFailedFgColor());
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getFailedBgColor(), game.getFailedFgColor());
 		}
 	}
 
@@ -150,8 +151,8 @@ public class GamePlayer {
 			// Print names and descriptions
 			for (InventoryItem item : inventory) {
 				io.println(String.format("%-" + longest + "s - %s",
-						item.getName(), item.getDescription()), game.getNeutralBgColor(), game
-						.getNeutralFgColor());
+						item.getName(), item.getDescription()), game
+						.getNeutralBgColor(), game.getNeutralFgColor());
 			}
 		}
 	}
@@ -176,27 +177,28 @@ public class GamePlayer {
 				// The location changed
 				String message = way.getMoveSuccessfulText();
 				if (message != null) {
-					io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(), game
-							.getSuccessfullFgColor());
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getSuccessfullBgColor(),
+							game.getSuccessfullFgColor());
 				}
-				io.println(way.getDestination().getEnteredText(), game.getNeutralBgColor(), game
-						.getNeutralFgColor());
+				io.println(way.getDestination().getEnteredText(),
+						game.getNeutralBgColor(), game.getNeutralFgColor());
 			} else {
 				// The location did not change
 				String message = way.getMoveForbiddenText();
 				if (message == null) {
 					message = game.getNotTravelableText();
 				}
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-						.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 			// Effect depends on enabled status and additional actions
 			way.travel();
 		} else {
 			// There is no such way
 			String message = game.getNoSuchWayText();
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-					.getFailedFgColor());
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getFailedBgColor(), game.getFailedFgColor());
 		}
 	}
 
@@ -205,8 +207,9 @@ public class GamePlayer {
 	 * recognizeable.
 	 */
 	public void noCommand() {
-		io.println(currentReplacer.replacePlaceholders(game.getNoCommandText()), game.getFailedBgColor(), game
-				.getFailedFgColor());
+		io.println(
+				currentReplacer.replacePlaceholders(game.getNoCommandText()),
+				game.getFailedBgColor(), game.getFailedFgColor());
 	}
 
 	/**
@@ -224,10 +227,10 @@ public class GamePlayer {
 	 * Starts playing the game. Returns immediately.
 	 */
 	public void start() {
-		io.println(game.getStartText(), game.getNeutralBgColor(), game
-				.getNeutralFgColor());
-		io.println(game.getStartLocation().getEnteredText(), game.getNeutralBgColor(), game
-				.getNeutralFgColor());
+		io.println(game.getStartText(), game.getNeutralBgColor(),
+				game.getNeutralFgColor());
+		io.println(game.getStartLocation().getEnteredText(),
+				game.getNeutralBgColor(), game.getNeutralFgColor());
 	}
 
 	/**
@@ -262,24 +265,25 @@ public class GamePlayer {
 				if (message == null) {
 					message = game.getTakenText();
 				}
-				io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(), game
-						.getSuccessfullFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getSuccessfullBgColor(),
+						game.getSuccessfullFgColor());
 			} else {
 				// The item was not taken
 				String message = item.getTakeForbiddenText();
 				if (message == null) {
 					message = game.getNotTakeableText();
 				}
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-						.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 			// Effect depends on enabled status and additional actions
 			item.take();
 		} else {
 			// There is no such item
 			String message = game.getNoSuchItemText();
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-					.getFailedFgColor());
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getFailedBgColor(), game.getFailedFgColor());
 		}
 	}
 
@@ -305,16 +309,17 @@ public class GamePlayer {
 				if (message == null) {
 					message = game.getUsedText();
 				}
-				io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(), game
-						.getSuccessfullFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getSuccessfullBgColor(),
+						game.getSuccessfullFgColor());
 			} else {
 				// The object was not used
 				String message = object.getUseForbiddenText();
 				if (message == null) {
 					message = game.getNotUsableText();
 				}
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-						.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 			// Effect depends on additional actions
 			object.use();
@@ -322,8 +327,8 @@ public class GamePlayer {
 			// There is no such object and you have no such object
 			String message = game.getNoSuchItemText() + " "
 					+ game.getNoSuchInventoryItemText();
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-					.getFailedFgColor());
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getFailedBgColor(), game.getFailedFgColor());
 		}
 	}
 
@@ -338,9 +343,6 @@ public class GamePlayer {
 	 *            an identifier of the second object
 	 */
 	public void useWithOrCombine(String identifier1, String identifier2) {
-		// FIXME modify:
-		// Item -> HasLocation
-
 		UsableOrPassivelyUsable object1 = PlayerManager
 				.getUsableOrPassivelyUsable(player, identifier1);
 		UsableOrPassivelyUsable object2 = PlayerManager
@@ -350,13 +352,15 @@ public class GamePlayer {
 		currentReplacer.setIdentifier2(identifier2);
 
 		// Check types of both objects (which can be null)
-		if (object1 instanceof InventoryItem) {
-			if (object2 instanceof InventoryItem) {
-				// Combine
+		if (object1 instanceof UsableWithHasLocation
+				|| object1 instanceof Combinable) {
+			if (object1 instanceof Combinable && object2 instanceof Combinable) {
+				// Combine TODO cast correct
 				combine((InventoryItem) object1, (InventoryItem) object2);
-			} else if (object2 instanceof HasLocation) {
+			} else if (object1 instanceof UsableWithHasLocation
+					&& object2 instanceof HasLocation) {
 				// UseWith
-				useWith((InventoryItem) object1, (HasLocation) object2);
+				useWith((UsableWithHasLocation) object1, (HasLocation) object2);
 			} else {
 				// Error: Object2 neither in inventory nor in location
 				String message = PlaceholderReplacer
@@ -366,13 +370,13 @@ public class GamePlayer {
 						+ PlaceholderReplacer
 								.convertFirstToSecondPlaceholders(game
 										.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-						.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 		} else if (object1 instanceof HasLocation) {
-			if (object2 instanceof InventoryItem) {
+			if (object2 instanceof UsableWithHasLocation) {
 				// UseWith
-				useWith((InventoryItem) object2, (HasLocation) object1);
+				useWith((UsableWithHasLocation) object2, (HasLocation) object1);
 			} else {
 				// Error: Neither Object1 nor Object2 in inventory
 				String message = game.getNoSuchInventoryItemText()
@@ -380,16 +384,16 @@ public class GamePlayer {
 						+ PlaceholderReplacer
 								.convertFirstToSecondPlaceholders(game
 										.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-						.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 		} else {
-			if (object2 instanceof InventoryItem) {
+			if (object2 instanceof UsableWithHasLocation) {
 				// Error: Object1 neither in inventory nor in location
 				String message = game.getNoSuchItemText() + " "
 						+ game.getNoSuchInventoryItemText();
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-						.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 			} else {
 				// Error: Neither Object1 nor Object2 in inventory
 				String message = game.getNoSuchInventoryItemText()
@@ -397,8 +401,8 @@ public class GamePlayer {
 						+ PlaceholderReplacer
 								.convertFirstToSecondPlaceholders(game
 										.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-						.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 		}
 	}
@@ -456,16 +460,16 @@ public class GamePlayer {
 			if (message == null) {
 				message = game.getUsedWithText();
 			}
-			io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(), game
-					.getSuccessfullFgColor());
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getSuccessfullBgColor(), game.getSuccessfullFgColor());
 		} else {
 			// Using was not successful
 			String message = usable.getUseWithForbiddenText(object);
 			if (message == null) {
 				message = game.getNotUsableWithText();
 			}
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game
-					.getFailedFgColor());
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getFailedBgColor(), game.getFailedFgColor());
 		}
 		// Effect depends on additional actions
 		usable.useWith(object);
