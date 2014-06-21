@@ -7,7 +7,6 @@ import javax.persistence.OneToOne;
 
 import persistence.Main;
 import persistence.PlayerManager;
-
 import data.Way;
 
 /**
@@ -35,13 +34,27 @@ public class MoveAction extends AbstractAction {
 	}
 
 	/**
-	 * Note: The way {@link MoveAction} will be overwritten. You can also just
+	 * Note: The way's {@link MoveAction} will be overwritten. You can also just
 	 * get and modify the current by {@link Way#getMoveAction()}.
 	 * 
 	 * @param way
 	 *            the way where the player should move
 	 */
 	public MoveAction(Way way) {
+		setWay(way);
+	}
+	
+	/**
+	 * Note: The way's {@link MoveAction} will be overwritten. You can also just
+	 * get and modify the current by {@link Way#getMoveAction()}.
+	 * 
+	 * @param way
+	 *            the way where the player should move
+	 * @param enabled
+	 *            if the action should be enabled
+	 */
+	public MoveAction(Way way, boolean enabled) {
+		super(enabled);
 		setWay(way);
 	}
 

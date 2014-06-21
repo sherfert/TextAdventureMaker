@@ -57,6 +57,21 @@ public class SetItemLocationAction extends AbstractAction {
 		this.item = item;
 		this.newLocation = location;
 	}
+	
+	/**
+	 * @param item
+	 *            the item to have the location changed
+	 * @param location
+	 *            the new location of the item. Can be {@code null}, which means
+	 *            the Item will be removed.
+	 * @param enabled
+	 *            if the action should be enabled
+	 */
+	public SetItemLocationAction(Item item, Location location, boolean enabled) {
+		super(enabled);
+		this.item = item;
+		this.newLocation = location;
+	}
 
 	/**
 	 * @return the newLocation
