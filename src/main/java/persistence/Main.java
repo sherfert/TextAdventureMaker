@@ -202,11 +202,10 @@ public class Main {
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
 
-		// TODO a game should always have a player
-		// (initially at startLocation!?)
-		Player player = new Player(flat);
+		Player player = new Player();
 		// Game options
 		Game game = new Game();
+		game.setPlayer(player);
 		game.setStartLocation(flat);
 		game.setStartText("This is a little text adventure.");
 

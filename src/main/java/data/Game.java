@@ -32,6 +32,13 @@ public class Game {
 	private int id;
 	
 	/**
+	 * The player of this game.
+	 */
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(nullable = false)
+	private Player player;
+	
+	/**
 	 * All commands that make the game exit. Must be lowercase.
 	 */
 	@ElementCollection
@@ -337,6 +344,13 @@ public class Game {
 	 */
 	public int getId() {
 		return id;
+	}
+
+	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return player;
 	}
 
 	/**
@@ -763,5 +777,12 @@ public class Game {
 	 */
 	public void setFailedBgColor(Color failedBgColor) {
 		this.failedBgColor = failedBgColor;
+	}
+
+	/**
+	 * @param player the player to set
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

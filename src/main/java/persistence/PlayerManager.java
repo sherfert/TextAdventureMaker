@@ -2,11 +2,6 @@ package persistence;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import data.Player;
 import data.UsableObject;
@@ -25,24 +20,8 @@ public class PlayerManager {
 	 * @return the player
 	 */
 	public static Player getPlayer() {
-
-		// Find all players (hopefully only one)
-		CriteriaQuery<Player> criteriaQueryPlayer = PersistenceManager.getCriteriaBuilder()
-				.createQuery(Player.class);
-		Root<Player> playerRoot = criteriaQueryPlayer.from(Player.class);
-		criteriaQueryPlayer.select(playerRoot);
-		List<Player> resultListPlayer = PersistenceManager.getEntityManager()
-				.createQuery(criteriaQueryPlayer).getResultList();
-
-		// There should be exactly 1 player
-		if (resultListPlayer.size() != 1) {
-			Logger.getLogger(PlayerManager.class.getName())
-			.log(Level.SEVERE,
-					"There are " + resultListPlayer.size()
-					+ " players.");
-		}
-
-		return resultListPlayer.get(0);
+		// Return the game's player
+		return GameManager.getGame().getPlayer();
 	}
 
 	/**
@@ -97,8 +76,8 @@ public class PlayerManager {
 	 *            an identifier of the object
 	 * @return the corresponding object or {@code null}.
 	 */
-	public static UsableOrPassivelyUsable getUsableOrPassivelyUsable(Player player,
-			String identifier) {
+	public static UsableOrPassivelyUsable getUsableOrPassivelyUsable(
+			Player player, String identifier) {
 		List<UsableOrPassivelyUsable> usables = new ArrayList<UsableOrPassivelyUsable>();
 		// Items and Persons in the room
 		usables.addAll(player.getLocation().getHasLocations());

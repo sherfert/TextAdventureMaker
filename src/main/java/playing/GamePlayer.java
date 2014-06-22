@@ -227,9 +227,15 @@ public class GamePlayer {
 	 * Starts playing the game. Returns immediately.
 	 */
 	public void start() {
-		io.println(game.getStartText(), game.getNeutralBgColor(),
-				game.getNeutralFgColor());
-		io.println(game.getStartLocation().getEnteredText(),
+		// If the player has no location, this is a new game.
+		if(player.getLocation() == null) {
+			// Transfer him to the start location and start a new game.
+			player.setLocation(game.getStartLocation());
+			io.println(game.getStartText(), game.getNeutralBgColor(),
+					game.getNeutralFgColor());
+		}
+		// Continue by printing the locations's text.
+		io.println(player.getLocation().getEnteredText(),
 				game.getNeutralBgColor(), game.getNeutralFgColor());
 	}
 

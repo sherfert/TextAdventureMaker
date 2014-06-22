@@ -32,7 +32,7 @@ public class PersistenceManager {
 	private static EntityManagerFactory entityManagerFactory;
 	
 	/**
-	 * Connects to the database. TODO connect to filename!
+	 * Connects to the database.
 	 */
 	public static void connect(String filename) {
 		// Create objects for database access

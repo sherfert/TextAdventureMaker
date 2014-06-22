@@ -33,18 +33,16 @@ public class Player {
 	private List<InventoryItem> inventory;
 
 	/**
-	 * The location.
+	 * The location. If {@code null}, the game supposedly has not started yet.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = true)
 	private Location location;
 
 	/**
-	 * No-arg constructor for the database.
-	 * 
-	 * @deprecated Use {@link Player#Player(Location)} instead.
+	 * Creates a player with no location yet. It will be transferred to the
+	 * game's starting location when a new game is started.
 	 */
-	@Deprecated
 	public Player() {
 		inventory = new ArrayList<InventoryItem>();
 	}
