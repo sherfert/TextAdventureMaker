@@ -41,7 +41,7 @@ public class PlayerManager {
 		// Anything in the inventory
 		inspectables.addAll(player.getInventory());
 
-		return NamedObjectManager.getIdentifiableWithIdentifier(inspectables,
+		return InspectableObjectManager.getIdentifiableWithIdentifier(inspectables,
 				identifier);
 	}
 
@@ -62,7 +62,7 @@ public class PlayerManager {
 		// Anything in the inventory
 		usables.addAll(player.getInventory());
 
-		return NamedObjectManager.getIdentifiableWithIdentifier(usables,
+		return InspectableObjectManager.getIdentifiableWithIdentifier(usables,
 				identifier);
 	}
 
@@ -84,7 +84,7 @@ public class PlayerManager {
 		// Anything in the inventory
 		usables.addAll(player.getInventory());
 
-		return NamedObjectManager.getIdentifiableWithIdentifier(usables,
+		return InspectableObjectManager.getIdentifiableWithIdentifier(usables,
 				identifier);
 	}
 }

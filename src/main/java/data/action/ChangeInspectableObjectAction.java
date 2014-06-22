@@ -10,15 +10,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import persistence.PersistenceManager;
-import data.NamedObject;
+import data.InspectableObject;
 
 /**
- * An action changing properties of a {@link NamedObject} .
+ * An action changing properties of a {@link InspectableObject} .
  * 
  * @author Satia
  */
 @Entity
-public class ChangeNamedObjectAction extends AbstractAction {
+public class ChangeInspectableObjectAction extends AbstractAction {
+	// TODO extends changeNamedObjectAction
 	/**
 	 * All identifiers to be added.
 	 */
@@ -51,17 +52,17 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 */
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
-	private NamedObject object;
+	private InspectableObject object;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link ChangeNamedObjectAction#SetPropertiesAction(NamedObject)}
+	 *             {@link ChangeInspectableObjectAction#SetPropertiesAction(InspectableObject)}
 	 *             instead.
 	 */
 	@Deprecated
-	public ChangeNamedObjectAction() {
+	public ChangeInspectableObjectAction() {
 		init();
 	}
 
@@ -69,7 +70,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangeNamedObjectAction(NamedObject object) {
+	public ChangeInspectableObjectAction(InspectableObject object) {
 		init();
 		this.object = object;
 	}
@@ -80,7 +81,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeNamedObjectAction(NamedObject object, boolean enabled) {
+	public ChangeInspectableObjectAction(InspectableObject object, boolean enabled) {
 		super(enabled);
 		init();
 		this.object = object;
@@ -144,7 +145,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	/**
 	 * @return the object
 	 */
-	public NamedObject getObject() {
+	public InspectableObject getObject() {
 		return object;
 	}
 
@@ -196,7 +197,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 * @param object
 	 *            the object to set
 	 */
-	public void setObject(NamedObject object) {
+	public void setObject(InspectableObject object) {
 		this.object = object;
 	}
 

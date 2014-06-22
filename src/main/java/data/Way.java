@@ -21,7 +21,7 @@ import data.interfaces.Travelable;
  * @author Satia
  */
 @Entity
-public class Way extends NamedObject implements Travelable {
+public class Way extends InspectableObject implements Travelable {
 
 	/**
 	 * All additional move actions.

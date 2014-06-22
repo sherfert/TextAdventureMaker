@@ -13,7 +13,7 @@ import data.interfaces.HasLocation;
  * @author Satia
  */
 @Entity
-public class Person extends NamedObject implements HasLocation {
+public class Person extends InspectableObject implements HasLocation {
 
 	/**
 	 * The current location of the person. May be {@code null}.

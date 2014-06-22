@@ -14,7 +14,7 @@ import data.Player;
 import data.Way;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
-import data.action.ChangeNamedObjectAction;
+import data.action.ChangeInspectableObjectAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
 
@@ -32,10 +32,11 @@ public class Main {
 		// FIXME this must be put into a proper initialize method
 		Class.forName(logging.LogManager.class.getName());
 
+		// TODO change balcony desc if chair taken
 		// Create everything
 		Location flat = new Location("Flat", "Your little home.");
-		Location balcony = new Location("Balcony", "Your balcony.");
-		balcony.setInspectionText("Nice wooden floor and some chairs.");
+		Location balcony = new Location("Balcony",
+				"Your balcony. Nice wooden floor and some chairs.");
 
 		Way wayToBalcony = new Way("Balcony door",
 				"There is a door that leads outside.", flat, balcony);
@@ -58,9 +59,6 @@ public class Main {
 		/*
 		 * Inspecting satia will give you 5 bucks. You can "give them back" by
 		 * using them with him. This is repeatable.
-		 * 
-		 * TODO getting money should only be possible once or after giving it
-		 * back!
 		 */
 		InventoryItem money = new InventoryItem("Money", "5 bucks");
 		money.setInspectionText("You stole them from poor Satia.");
@@ -80,11 +78,11 @@ public class Main {
 		satia.addAdditionalActionToInspect(addMoneyAction);
 		satia.addAdditionalActionToInspect(disableAddMoneyAction);
 
-		ChangeNamedObjectAction changeSatiaAction1 = new ChangeNamedObjectAction(
+		ChangeInspectableObjectAction changeSatiaAction1 = new ChangeInspectableObjectAction(
 				satia);
 		changeSatiaAction1
 				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You stole the poor guy his last 5 bucks.");
-		ChangeNamedObjectAction changeSatiaAction2 = new ChangeNamedObjectAction(
+		ChangeInspectableObjectAction changeSatiaAction2 = new ChangeInspectableObjectAction(
 				satia);
 		changeSatiaAction2
 				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
@@ -107,7 +105,7 @@ public class Main {
 		/*
 		 * Inspecting the tv will change its inspection text.
 		 */
-		ChangeNamedObjectAction changeTVAction = new ChangeNamedObjectAction(tv);
+		ChangeInspectableObjectAction changeTVAction = new ChangeInspectableObjectAction(tv);
 		changeTVAction
 				.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
 		tv.addAdditionalActionToInspect(changeTVAction);

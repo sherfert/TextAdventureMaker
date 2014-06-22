@@ -9,11 +9,13 @@
 		<class>data.action.AbstractAction</class>
 		<class>data.action.AddInventoryItemsAction</class>
 		<class>data.action.ChangeActionAction</class>
-		<class>data.action.ChangeNamedObjectAction</class>
+		<class>data.action.ChangeInspectableObjectAction</class>
+		<!-- <class>data.action.ChangeNamedObjectAction</class>-->
 		<class>data.action.MoveAction</class>
 		<class>data.action.RemoveInventoryItemAction</class>
 		<class>data.action.SetItemLocationAction</class>
 		<class>data.Game</class>
+		<class>data.InspectableObject</class>
 		<class>data.InventoryItem</class>
 		<class>data.InventoryItem$CombinableInventoryItem</class>
 		<class>data.InventoryItem$UsableHasLocation</class>

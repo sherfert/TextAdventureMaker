@@ -11,14 +11,14 @@ import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 
 /**
- * Any location in the game. The player can move from one location to another.
+ * Any location in the game. The player can move from one location to another. A
+ * location is not Inspectable, but with a lookaround command, the entered text
+ * is displayed.
  * 
  * @author Satia
  */
 @Entity
 public class Location extends NamedObject {
-	// TODO entered text and inspection text kinda redundant?
-	// Not extend NamedObject!?
 	/**
 	 * The items located here.
 	 */
@@ -159,8 +159,6 @@ public class Location extends NamedObject {
 	public List<Inspectable> getInspectables() {
 		List<Inspectable> result = new ArrayList<Inspectable>(1
 				+ persons.size() + items.size() + waysOut.size());
-		// The location itself
-		result.add(this);
 		// The persons
 		result.addAll(persons);
 		// The items
@@ -192,6 +190,16 @@ public class Location extends NamedObject {
 	}
 
 	/**
+	 * Initializes the fields
+	 */
+	private void init() {
+		waysOut = new ArrayList<Way>();
+		waysIn = new ArrayList<Way>();
+		items = new ArrayList<Item>();
+		persons = new ArrayList<Person>();
+	}
+
+	/**
 	 * Removes an item from this location. The item's location is modified, too.
 	 * 
 	 * @param item
@@ -203,7 +211,7 @@ public class Location extends NamedObject {
 			item.setLocation(null);
 		}
 	}
-
+	
 	/**
 	 * Removes a person from this location. The person's location is modified,
 	 * too.
@@ -238,15 +246,5 @@ public class Location extends NamedObject {
 	public void removeWayOut(Way wayOut) {
 		this.waysOut.remove(wayOut);
 		wayOut.origin = null;
-	}
-
-	/**
-	 * Initializes the fields
-	 */
-	private void init() {
-		waysOut = new ArrayList<Way>();
-		waysIn = new ArrayList<Way>();
-		items = new ArrayList<Item>();
-		persons = new ArrayList<Person>();
 	}
 }

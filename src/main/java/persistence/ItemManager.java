@@ -20,7 +20,7 @@ public class ItemManager {
 	 * @return the corresponding item or {@code null}.
 	 */
 	public static Item getItemFromLocation(Location location, String identifier) {
-		return NamedObjectManager.getIdentifiableWithIdentifier(
+		return InspectableObjectManager.getIdentifiableWithIdentifier(
 				location.getItems(), identifier);
 	}
 }

@@ -22,7 +22,7 @@ import data.interfaces.Usable;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class UsableObject extends NamedObject implements Usable {
+public abstract class UsableObject extends InspectableObject implements Usable {
 	/**
 	 * All additional use actions.
 	 */
