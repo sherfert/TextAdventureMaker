@@ -230,6 +230,16 @@ public class Main {
 		game.setNeutralBgColor(Color.DEFAULT);
 		game.setFailedBgColor(Color.DEFAULT);
 
+		game.setExitCommandHelpText("Exit the game");
+		game.setHelpHelpText("Display this help");
+		game.setInspectHelpText("Inspect an item of your curiosity");
+		game.setInventoryHelpText("Look into your inventory");
+		game.setLookAroundHelpText("Look around");
+		game.setMoveHelpText("Move somewhere else");
+		game.setTakeHelpText("Pick something up and put it in your inventory");
+		game.setUseHelpText("Use an item in any imagineable way");
+		game.setUseWithCombineHelpText("Use one item with another or combine two items in your inventory.");
+
 		// TODO special command identifiers like "eat banana" instead of
 		// "use banana"?
 
@@ -238,6 +248,7 @@ public class Main {
 		game.addInspectCommand("look(?: at)? (.+)");
 		game.addInspectCommand("inspect (.+)");
 		game.addInventoryCommand("inventory");
+		game.addHelpCommand("help");
 		game.addLookAroundCommand("look around");
 		game.addMoveCommand("go(?: to)? (.+)");
 		game.addMoveCommand("move(?: to)? (.+)");

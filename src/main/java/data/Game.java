@@ -24,32 +24,45 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
  */
 @Entity
 public class Game {
+	
+	/**
+	 * The help text being displayed for the exit command
+	 */
+	@Column(nullable = false)
+	private String exitCommandHelpText;
+	/**
+	 * All commands that make the game exit. Must be lowercase.
+	 */
+	@ElementCollection
+	private List<String> exitCommands;
+	/**
+	 * The background color that is used for text printed after a failed action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color failedBgColor;
+	/**
+	 * The color that is used for text printed after a failed action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color failedFgColor;
+	/**
+	 * All commands that let the player see the help. Must be lowercase.
+	 */
+	@ElementCollection
+	private List<String> helpCommands;
+	/**
+	 * The help text being displayed for the help command
+	 */
+	@Column(nullable = false)
+	private String helpHelpText;
 	/**
 	 * The id.
 	 */
 	@Id
 	@GeneratedValue
 	private int id;
-	
-	/**
-	 * The player of this game.
-	 */
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(nullable = false)
-	private Player player;
-	
-	/**
-	 * All commands that make the game exit. Must be lowercase.
-	 */
-	@ElementCollection
-	private List<String> exitCommands;
-	
-	/**
-	 * All commands that let the player look around. Must be lowercase.
-	 */
-	@ElementCollection
-	private List<String> lookAroundCommands;
-
 	/**
 	 * All commands that let the player inspect something. Must be lowercase.
 	 * Must contain at least one word and exactly one parameter for the object:
@@ -57,7 +70,12 @@ public class Game {
 	 */
 	@ElementCollection
 	private List<String> inspectCommands;
-
+	/**
+	 * The help text being displayed for the inspect command
+	 */
+	@Column(nullable = false)
+	private String inspectHelpText;
+	
 	/**
 	 * The text being displayed when an object is inspected that does not have
 	 * an individual inspection text. Valid placeholders: {@literal <input>},
@@ -81,6 +99,12 @@ public class Game {
 	private String inventoryEmptyText;
 
 	/**
+	 * The help text being displayed for the inventory command
+	 */
+	@Column(nullable = false)
+	private String inventoryHelpText;
+
+	/**
 	 * The text introducing a look into the inventory. Valid placeholders:
 	 * {@literal <input>}
 	 */
@@ -88,11 +112,43 @@ public class Game {
 	private String inventoryText;
 
 	/**
+	 * All commands that let the player look around. Must be lowercase.
+	 */
+	@ElementCollection
+	private List<String> lookAroundCommands;
+
+	/**
+	 * The help text being displayed for the look around command
+	 */
+	@Column(nullable = false)
+	private String lookAroundHelpText;
+
+	/**
 	 * All move commands. Must be lowercase. Must contain at least one word and
 	 * exactly one parameter for the target: {@literal (.+)}
 	 */
 	@ElementCollection
 	private List<String> moveCommands;
+
+	/**
+	 * The help text being displayed for the move command
+	 */
+	@Column(nullable = false)
+	private String moveHelpText;
+
+	/**
+	 * The background color that is used for text printed after a neutral action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color neutralBgColor;
+
+	/**
+	 * The color that is used for text printed after a neutral action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color neutralFgColor;
 
 	/**
 	 * The text being displayed, when any entered text is not recognized as a
@@ -157,19 +213,40 @@ public class Game {
 	 */
 	@Column(nullable = false)
 	private String notUsableWithText;
-
+	
+	/**
+	 * The player of this game.
+	 */
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(nullable = false)
+	private Player player;
+	
 	/**
 	 * The starting location of the game.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	private Location startLocation;
-
+	
 	/**
 	 * The text being displayed, when the game starts.
 	 */
 	@Column(nullable = false)
 	private String startText;
+	
+	/**
+	 * The background color that is used for text printed after a successful action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color successfullBgColor;
+
+	/**
+	 * The color that is used for text printed after a successful action.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Color successfullFgColor;
 
 	/**
 	 * All take commands. Must be lowercase. Must contain at least one word and
@@ -177,6 +254,12 @@ public class Game {
 	 */
 	@ElementCollection
 	private List<String> takeCommands;
+
+	/**
+	 * The help text being displayed for the take command
+	 */
+	@Column(nullable = false)
+	private String takeHelpText;
 
 	/**
 	 * The default text, when the player takes an item. May be overwritten for
@@ -211,49 +294,23 @@ public class Game {
 	private String usedWithText;
 
 	/**
+	 * The help text being displayed for the use command
+	 */
+	@Column(nullable = false)
+	private String useHelpText;
+
+	/**
 	 * All useWith/combine commands. Must be lowercase. Must contain at least
 	 * one word and exactly two parameters for the objects: {@literal (.+)}
 	 */
 	@ElementCollection
 	private List<String> useWithCombineCommands;
-	
+
 	/**
-	 * The color that is used for text printed after a successful action.
+	 * The help text being displayed for the use with/combine command
 	 */
-	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Color successfullFgColor;
-	/**
-	 * The color that is used for text printed after a neutral action.
-	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color neutralFgColor;
-	/**
-	 * The color that is used for text printed after a failed action.
-	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color failedFgColor;
-	
-	/**
-	 * The background color that is used for text printed after a successful action.
-	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color successfullBgColor;
-	/**
-	 * The background color that is used for text printed after a neutral action.
-	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color neutralBgColor;
-	/**
-	 * The background color that is used for text printed after a failed action.
-	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color failedBgColor;
+	private String useWithCombineHelpText;
 
 	/**
 	 * Constructs a new game object.
@@ -261,6 +318,7 @@ public class Game {
 	public Game() {
 		exitCommands = new ArrayList<String>();
 		lookAroundCommands = new ArrayList<String>();
+		helpCommands = new ArrayList<String>();
 		inspectCommands = new ArrayList<String>();
 		inventoryCommands = new ArrayList<String>();
 		moveCommands = new ArrayList<String>();
@@ -277,6 +335,16 @@ public class Game {
 	 */
 	public void addExitCommand(String cmd) {
 		this.exitCommands.add(cmd.toLowerCase());
+	}
+
+	/**
+	 * Adds a help command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void addHelpCommand(String cmd) {
+		this.helpCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -298,7 +366,7 @@ public class Game {
 	public void addInventoryCommand(String cmd) {
 		this.inventoryCommands.add(cmd.toLowerCase());
 	}
-	
+
 	/**
 	 * Adds a look-around command.
 	 * 
@@ -350,26 +418,50 @@ public class Game {
 	}
 
 	/**
+	 * @return the exitCommandHelpText
+	 */
+	public String getExitCommandHelpText() {
+		return exitCommandHelpText;
+	}
+
+	/**
 	 * @return the exitCommands
 	 */
 	public List<String> getExitCommands() {
 		return exitCommands;
 	}
-
+	
+	/**
+	 * @return the failedBgColor
+	 */
+	public Color getFailedBgColor() {
+		return failedBgColor;
+	}
+	/**
+	 * @return the failedFgColor
+	 */
+	public Color getFailedFgColor() {
+		return failedFgColor;
+	}
+	/**
+	 * @return the helpCommands
+	 */
+	public List<String> getHelpCommands() {
+		return helpCommands;
+	}
+	
+	/**
+	 * @return the helpHelpText
+	 */
+	public String getHelpHelpText() {
+		return helpHelpText;
+	}
 	/**
 	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
-
-	/**
-	 * @return the player
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
 	/**
 	 * @return the inspectCommands
 	 */
@@ -378,17 +470,17 @@ public class Game {
 	}
 
 	/**
+	 * @return the inspectHelpText
+	 */
+	public String getInspectHelpText() {
+		return inspectHelpText;
+	}
+
+	/**
 	 * @return the inspectionDefaultText
 	 */
 	public String getInspectionDefaultText() {
 		return inspectionDefaultText;
-	}
-
-	/**
-	 * @return the lookAroundCommands
-	 */
-	public List<String> getLookAroundCommands() {
-		return lookAroundCommands;
 	}
 
 	/**
@@ -404,7 +496,14 @@ public class Game {
 	public String getInventoryEmptyText() {
 		return inventoryEmptyText;
 	}
-
+	
+	/**
+	 * @return the inventoryHelpText
+	 */
+	public String getInventoryHelpText() {
+		return inventoryHelpText;
+	}
+	
 	/**
 	 * @return the inventoryText
 	 */
@@ -413,10 +512,45 @@ public class Game {
 	}
 
 	/**
+	 * @return the lookAroundCommands
+	 */
+	public List<String> getLookAroundCommands() {
+		return lookAroundCommands;
+	}
+
+	/**
+	 * @return the lookAroundHelpText
+	 */
+	public String getLookAroundHelpText() {
+		return lookAroundHelpText;
+	}
+
+	/**
 	 * @return the moveCommands
 	 */
 	public List<String> getMoveCommands() {
 		return moveCommands;
+	}
+
+	/**
+	 * @return the moveHelpText
+	 */
+	public String getMoveHelpText() {
+		return moveHelpText;
+	}
+
+	/**
+	 * @return the neutralBgColor
+	 */
+	public Color getNeutralBgColor() {
+		return neutralBgColor;
+	}
+
+	/**
+	 * @return the neutralFgColor
+	 */
+	public Color getNeutralFgColor() {
+		return neutralFgColor;
 	}
 
 	/**
@@ -476,6 +610,13 @@ public class Game {
 	}
 
 	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+
+	/**
 	 * @return the startLocation
 	 */
 	public Location getStartLocation() {
@@ -490,10 +631,31 @@ public class Game {
 	}
 
 	/**
+	 * @return the successfullBgColor
+	 */
+	public Color getSuccessfullBgColor() {
+		return successfullBgColor;
+	}
+
+	/**
+	 * @return the successfullFgColor
+	 */
+	public Color getSuccessfullFgColor() {
+		return successfullFgColor;
+	}
+
+	/**
 	 * @return the takeCommands
 	 */
 	public List<String> getTakeCommands() {
 		return takeCommands;
+	}
+
+	/**
+	 * @return the takeHelpText
+	 */
+	public String getTakeHelpText() {
+		return takeHelpText;
 	}
 
 	/**
@@ -525,6 +687,13 @@ public class Game {
 	}
 
 	/**
+	 * @return the useHelpText
+	 */
+	public String getUseHelpText() {
+		return useHelpText;
+	}
+
+	/**
 	 * @return the useWithCombineCommands
 	 */
 	public List<String> getUseWithCombineCommands() {
@@ -532,45 +701,10 @@ public class Game {
 	}
 
 	/**
-	 * @return the successfullFgColor
+	 * @return the useWithCombineHelpText
 	 */
-	public Color getSuccessfullFgColor() {
-		return successfullFgColor;
-	}
-
-	/**
-	 * @return the neutralFgColor
-	 */
-	public Color getNeutralFgColor() {
-		return neutralFgColor;
-	}
-
-	/**
-	 * @return the failedFgColor
-	 */
-	public Color getFailedFgColor() {
-		return failedFgColor;
-	}
-
-	/**
-	 * @return the successfullBgColor
-	 */
-	public Color getSuccessfullBgColor() {
-		return successfullBgColor;
-	}
-
-	/**
-	 * @return the neutralBgColor
-	 */
-	public Color getNeutralBgColor() {
-		return neutralBgColor;
-	}
-
-	/**
-	 * @return the failedBgColor
-	 */
-	public Color getFailedBgColor() {
-		return failedBgColor;
+	public String getUseWithCombineHelpText() {
+		return useWithCombineHelpText;
 	}
 
 	/**
@@ -584,6 +718,16 @@ public class Game {
 	}
 
 	/**
+	 * Removes a help command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void removeHelpCommand(String cmd) {
+		this.helpCommands.remove(cmd.toLowerCase());
+	}
+
+	/**
 	 * Removes an inventory command.
 	 * 
 	 * @param cmd
@@ -592,9 +736,9 @@ public class Game {
 	public void removeInventoryCommand(String cmd) {
 		this.inventoryCommands.remove(cmd.toLowerCase());
 	}
-	
+
 	/**
-	 * Removes an look-around command.
+	 * Removes a look-around command.
 	 * 
 	 * @param cmd
 	 *            the command
@@ -644,6 +788,41 @@ public class Game {
 	}
 
 	/**
+	 * @param exitCommandHelpText the exitCommandHelpText to set
+	 */
+	public void setExitCommandHelpText(String exitCommandHelpText) {
+		this.exitCommandHelpText = exitCommandHelpText;
+	}
+
+	/**
+	 * @param failedBgColor the failedBgColor to set
+	 */
+	public void setFailedBgColor(Color failedBgColor) {
+		this.failedBgColor = failedBgColor;
+	}
+
+	/**
+	 * @param failedFgColor the failedFgColor to set
+	 */
+	public void setFailedFgColor(Color failedFgColor) {
+		this.failedFgColor = failedFgColor;
+	}
+	
+	/**
+	 * @param helpHelpText the helpHelpText to set
+	 */
+	public void setHelpHelpText(String helpHelpText) {
+		this.helpHelpText = helpHelpText;
+	}
+	
+	/**
+	 * @param inspectHelpText the inspectHelpText to set
+	 */
+	public void setInspectHelpText(String inspectHelpText) {
+		this.inspectHelpText = inspectHelpText;
+	}
+
+	/**
 	 * @param inspectionDefaultText
 	 *            the inspectionDefaultText to set
 	 */
@@ -660,11 +839,46 @@ public class Game {
 	}
 
 	/**
+	 * @param inventoryHelpText the inventoryHelpText to set
+	 */
+	public void setInventoryHelpText(String inventoryHelpText) {
+		this.inventoryHelpText = inventoryHelpText;
+	}
+
+	/**
 	 * @param inventoryText
 	 *            the inventoryText to set
 	 */
 	public void setInventoryText(String inventoryText) {
 		this.inventoryText = inventoryText;
+	}
+
+	/**
+	 * @param lookAroundHelpText the lookAroundHelpText to set
+	 */
+	public void setLookAroundHelpText(String lookAroundHelpText) {
+		this.lookAroundHelpText = lookAroundHelpText;
+	}
+
+	/**
+	 * @param moveHelpText the moveHelpText to set
+	 */
+	public void setMoveHelpText(String moveHelpText) {
+		this.moveHelpText = moveHelpText;
+	}
+
+	/**
+	 * @param neutralBgColor the neutralBgColor to set
+	 */
+	public void setNeutralBgColor(Color neutralBgColor) {
+		this.neutralBgColor = neutralBgColor;
+	}
+
+	/**
+	 * @param neutralFgColor the neutralFgColor to set
+	 */
+	public void setNeutralFgColor(Color neutralFgColor) {
+		this.neutralFgColor = neutralFgColor;
 	}
 
 	/**
@@ -732,6 +946,13 @@ public class Game {
 	}
 
 	/**
+	 * @param player the player to set
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	/**
 	 * @param startLocation
 	 *            the startLocation to set
 	 */
@@ -745,6 +966,27 @@ public class Game {
 	 */
 	public void setStartText(String startText) {
 		this.startText = startText;
+	}
+
+	/**
+	 * @param successfullBgColor the successfullBgColor to set
+	 */
+	public void setSuccessfullBgColor(Color successfullBgColor) {
+		this.successfullBgColor = successfullBgColor;
+	}
+
+	/**
+	 * @param successfullFgColor the successfullFgColor to set
+	 */
+	public void setSuccessfullFgColor(Color successfullFgColor) {
+		this.successfullFgColor = successfullFgColor;
+	}
+
+	/**
+	 * @param takeHelpText the takeHelpText to set
+	 */
+	public void setTakeHelpText(String takeHelpText) {
+		this.takeHelpText = takeHelpText;
 	}
 
 	/**
@@ -772,51 +1014,16 @@ public class Game {
 	}
 
 	/**
-	 * @param successfullFgColor the successfullFgColor to set
+	 * @param useHelpText the useHelpText to set
 	 */
-	public void setSuccessfullFgColor(Color successfullFgColor) {
-		this.successfullFgColor = successfullFgColor;
+	public void setUseHelpText(String useHelpText) {
+		this.useHelpText = useHelpText;
 	}
 
 	/**
-	 * @param neutralFgColor the neutralFgColor to set
+	 * @param useWithCombineHelpText the useWithCombineHelpText to set
 	 */
-	public void setNeutralFgColor(Color neutralFgColor) {
-		this.neutralFgColor = neutralFgColor;
-	}
-
-	/**
-	 * @param failedFgColor the failedFgColor to set
-	 */
-	public void setFailedFgColor(Color failedFgColor) {
-		this.failedFgColor = failedFgColor;
-	}
-
-	/**
-	 * @param successfullBgColor the successfullBgColor to set
-	 */
-	public void setSuccessfullBgColor(Color successfullBgColor) {
-		this.successfullBgColor = successfullBgColor;
-	}
-
-	/**
-	 * @param neutralBgColor the neutralBgColor to set
-	 */
-	public void setNeutralBgColor(Color neutralBgColor) {
-		this.neutralBgColor = neutralBgColor;
-	}
-
-	/**
-	 * @param failedBgColor the failedBgColor to set
-	 */
-	public void setFailedBgColor(Color failedBgColor) {
-		this.failedBgColor = failedBgColor;
-	}
-
-	/**
-	 * @param player the player to set
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
+	public void setUseWithCombineHelpText(String useWithCombineHelpText) {
+		this.useWithCombineHelpText = useWithCombineHelpText;
 	}
 }

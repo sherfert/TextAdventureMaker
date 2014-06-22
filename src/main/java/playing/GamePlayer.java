@@ -7,6 +7,7 @@ import persistence.PersistenceManager;
 import persistence.PlayerManager;
 import persistence.WayManager;
 import playing.parser.GeneralParser;
+import playing.parser.GeneralParser.CommandRecExec;
 import data.Game;
 import data.InventoryItem;
 import data.Player;
@@ -163,6 +164,39 @@ public class GamePlayer {
 		io.println(currentReplacer.replacePlaceholders(player.getLocation()
 				.getEnteredText()), game.getNeutralBgColor(), game
 				.getNeutralFgColor());
+	}
+
+	/**
+	 * Displays the help text to the player
+	 */
+	public void help() {
+		// Iterate through all commands and all their textual commands
+		// Also include exit
+
+		for (CommandRecExec command : parser.getCommandRecExecs()) {
+			printCommandHelp(command.getCommandHelpText(),
+					command.getTextualCommands());
+		}
+
+		printCommandHelp(game.getExitCommandHelpText(), game.getExitCommands());
+	}
+
+	/**
+	 * Prints the help for a command
+	 * 
+	 * @param commandHelpText
+	 *            the help text specified for that command
+	 * @param textualCommands
+	 *            all the textual commands triggering that command
+	 */
+	private void printCommandHelp(String commandHelpText,
+			List<String> textualCommands) {
+		io.println(commandHelpText, game.getNeutralBgColor(),
+				game.getNeutralFgColor());
+		for (String textualCommand : textualCommands) {
+			io.println(" " + textualCommand, game.getNeutralBgColor(),
+					game.getNeutralFgColor());
+		}
 	}
 
 	/**

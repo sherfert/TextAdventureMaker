@@ -34,20 +34,24 @@ public class GeneralParser {
 	 * would hear "there is no around here". The tradeoff is that no item can be
 	 * named "around".
 	 * 
-	 * Generally speaking, commands with more parameters should come first.
+	 * Generally speaking, commands with more parameters should often come
+	 * first.
 	 * 
 	 * @author Satia
 	 */
-	private enum Command {
-		// TODO help command
-		USEWITHCOMBINE("getUseWithCombineCommands", "useWithOrCombine",
-				String.class, String.class), //
-		MOVE("getMoveCommands", "move", String.class), //
-		TAKE("getTakeCommands", "take", String.class), //
-		USE("getUseCommands", "use", String.class), //
-		LOOKAROUND("getLookAroundCommands", "lookAround"), //
-		INSPECT("getInspectCommands", "inspect", String.class), //
-		INVENTORY("getInventoryCommands", "inventory");
+	public enum Command {
+		USEWITHCOMBINE("getUseWithCombineCommands",
+				"getUseWithCombineHelpText", "useWithOrCombine", String.class,
+				String.class), //
+		MOVE("getMoveCommands", "getMoveHelpText", "move", String.class), //
+		TAKE("getTakeCommands", "getTakeHelpText", "take", String.class), //
+		USE("getUseCommands", "getUseHelpText", "use", String.class), //
+		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
+				"lookAround"), //
+		INSPECT("getInspectCommands", "getInspectHelpText", "inspect",
+				String.class), //
+		INVENTORY("getInventoryCommands", "getInventoryHelpText", "inventory"), //
+		HELP("getHelpCommands", "getHelpHelpText", "help");
 
 		/**
 		 * The name of the method that gets the valid commands. Must be a method
@@ -55,6 +59,13 @@ public class GeneralParser {
 		 * return type.
 		 */
 		public final String commandMethodName;
+
+		/**
+		 * The name of the method that gets the help text for that command. Must
+		 * be a method of the class {@link Game} with no parameters and String
+		 * as return type.
+		 */
+		public final String helpTextMethodName;
 
 		/**
 		 * The name of the method that should be invoked when this command was
@@ -72,6 +83,10 @@ public class GeneralParser {
 		 *            The name of the method that gets the valid commands. Must
 		 *            be a method of the class {@link Game} with no parameters
 		 *            and List of Strings as return type.
+		 * @param helpTextMethodName
+		 *            the name of the method that gets the help text for that
+		 *            command. Must be a method of the class {@link Game} with
+		 *            no parameters and String as return type.
 		 * @param methodName
 		 *            the name of the method that should be invoked when this
 		 *            command was recognized. Must be a method of the class
@@ -79,9 +94,10 @@ public class GeneralParser {
 		 * @param parameterTypes
 		 *            the parameter types of the method denoted by methodName.
 		 */
-		private Command(String commandMethodName, String methodName,
-				Class<?>... parameterTypes) {
+		private Command(String commandMethodName, String helpTextMethodName,
+				String methodName, Class<?>... parameterTypes) {
 			this.commandMethodName = commandMethodName;
+			this.helpTextMethodName = helpTextMethodName;
 			this.methodName = methodName;
 			this.parameterTypes = parameterTypes;
 		}
@@ -92,7 +108,7 @@ public class GeneralParser {
 	 * 
 	 * @author Satia
 	 */
-	private class CommandRecExec {
+	public class CommandRecExec {
 		/**
 		 * The pattern for recognizing the command.
 		 */
@@ -104,16 +120,36 @@ public class GeneralParser {
 		private Method executeMethod;
 
 		/**
+		 * The command.
+		 */
+		private Command command;
+
+		/**
+		 * The texual commands.
+		 */
+		private List<String> textualCommands;
+		
+		/**
+		 * The help text for this command.
+		 */
+		private String commandHelpText;
+
+		/**
 		 * @param command
 		 *            the command
 		 */
+		@SuppressWarnings("unchecked")
 		public CommandRecExec(Command command) {
+			this.command = command;
 			try {
-				@SuppressWarnings("unchecked")
-				List<String> cmds = (List<String>) Game.class
+				this.textualCommands = (List<String>) Game.class
 						.getDeclaredMethod(command.commandMethodName).invoke(
 								gamePlayer.getGame());
-				this.pattern = PatternGenerator.getPattern(cmds);
+				this.pattern = PatternGenerator.getPattern(this.textualCommands);
+				
+				commandHelpText = (String) Game.class
+						.getDeclaredMethod(command.helpTextMethodName).invoke(
+								gamePlayer.getGame());
 
 				this.executeMethod = GamePlayer.class.getDeclaredMethod(
 						command.methodName, command.parameterTypes);
@@ -127,13 +163,13 @@ public class GeneralParser {
 
 		/**
 		 * Tests if the input matches the pattern and executes the method in
-		 * this case.
+		 * this case. This method is private, but used by the outer class.
 		 * 
 		 * @param input
 		 *            the input
 		 * @return if the input matches the command's pattern.
 		 */
-		public boolean recognizeAndExecute(String input) {
+		private boolean recognizeAndExecute(String input) {
 			Matcher matcher = pattern.matcher(input);
 
 			if (matcher.matches()) {
@@ -160,6 +196,27 @@ public class GeneralParser {
 			}
 			// This command did not match
 			return false;
+		}
+
+		/**
+		 * @return the command
+		 */
+		public Command getCommand() {
+			return command;
+		}
+
+		/**
+		 * @return the textualCommands
+		 */
+		public List<String> getTextualCommands() {
+			return textualCommands;
+		}
+
+		/**
+		 * @return the commandHelpText
+		 */
+		public String getCommandHelpText() {
+			return commandHelpText;
 		}
 	}
 
@@ -245,5 +302,12 @@ public class GeneralParser {
 		// No command matched
 		gamePlayer.noCommand();
 		return true;
+	}
+
+	/**
+	 * @return the commandRecExecs
+	 */
+	public List<CommandRecExec> getCommandRecExecs() {
+		return commandRecExecs;
 	}
 }
