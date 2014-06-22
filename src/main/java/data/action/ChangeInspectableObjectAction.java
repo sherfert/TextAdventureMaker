@@ -108,6 +108,20 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	}
 
 	/**
+	 * @param identifiersToAdd the identifiersToAdd to set
+	 */
+	public void setIdentifiersToAdd(List<String> identifiersToAdd) {
+		this.identifiersToAdd = identifiersToAdd;
+	}
+
+	/**
+	 * @param identifiersToRemove the identifiersToRemove to set
+	 */
+	public void setIdentifiersToRemove(List<String> identifiersToRemove) {
+		this.identifiersToRemove = identifiersToRemove;
+	}
+
+	/**
 	 * @return the object
 	 */
 	public InspectableObject getObject() {

@@ -61,6 +61,13 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
+	 * @param pickUpItems the pickUpItems to set
+	 */
+	public void setPickUpItems(List<InventoryItem> pickUpItems) {
+		this.pickUpItems = pickUpItems;
+	}
+
+	/**
 	 * Removes an {@link InventoryItem} from the items to be added to the
 	 * inventory.
 	 * 

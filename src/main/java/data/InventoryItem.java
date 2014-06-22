@@ -21,6 +21,8 @@ import javax.persistence.OneToMany;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
+import data.action.ChangeInspectableObjectAction;
+import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
 import data.interfaces.Combinable;
@@ -442,6 +444,30 @@ public class InventoryItem extends UsableObject implements
 					this);
 			result.setEnabled(action.isEnabled());
 			return result;
+		} else if (action instanceof ChangeNamedObjectAction
+				&& ((ChangeNamedObjectAction) action).getObject() == item) {
+			ChangeNamedObjectAction result;
+			if (action instanceof ChangeInspectableObjectAction) {
+				result = new ChangeInspectableObjectAction(this);
+
+				((ChangeInspectableObjectAction) result)
+						.setIdentifiersToAdd(((ChangeInspectableObjectAction) action)
+								.getIdentifiersToAdd());
+				((ChangeInspectableObjectAction) result)
+						.setIdentifiersToRemove(((ChangeInspectableObjectAction) action)
+								.getIdentifiersToRemove());
+				((ChangeInspectableObjectAction) result)
+						.setNewInspectionText(((ChangeInspectableObjectAction) action)
+								.getNewInspectionText());
+			} else {
+				result = new ChangeNamedObjectAction(this);
+			}
+
+			result.setEnabled(action.isEnabled());
+			result.setNewDescription(((ChangeNamedObjectAction) action)
+					.getNewDescription());
+			result.setNewName(((ChangeNamedObjectAction) action).getNewName());
+			return result;
 		}
 		return action;
 	}
@@ -467,8 +493,7 @@ public class InventoryItem extends UsableObject implements
 			}
 			return result;
 		} else {
-			Logger.getLogger(this.getClass().getName())
-			.log(Level.WARNING,
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
 					"Not supported Combinable subclass: {0}",
 					item.getClass().getName());
 			return null;
