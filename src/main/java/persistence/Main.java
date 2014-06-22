@@ -33,7 +33,6 @@ public class Main {
 		// FIXME this must be put into a proper initialize method
 		Class.forName(logging.LogManager.class.getName());
 
-		// TODO change balcony desc if chair taken
 		// Create everything
 		Location flat = new Location("Flat", "Your little home.");
 		Location balcony = new Location("Balcony",

@@ -302,15 +302,21 @@ public class LanternaScreenTextArea {
 		// Split each after length is reached
 		for (int i = 0; i < linesToPrint.size(); i++) {
 			if (linesToPrint.get(i).length() > toX - fromX) {
-				// Split after n chars
+				// Split after n chars or the black before that
 				String before = linesToPrint.get(i);
-				linesToPrint.set(i, before.substring(0, toX - fromX));
-				linesToPrint.add(i + 1, before.substring(toX - fromX));
+				int splitIndex = before.lastIndexOf(' ', toX - fromX) + 1;
+				// Set to the end, if there is no space
+				if(splitIndex == -1) {
+					splitIndex = toX - fromX;
+				}
+				
+				linesToPrint.set(i, before.substring(0, splitIndex));
+				linesToPrint.add(i + 1, before.substring(splitIndex));
 			}
 		}
 		// Include each Text line
 		for (String line : linesToPrint) {
-			includeTextLine(line, bgColor, fgColor);
+			includeTextLine(line.trim(), bgColor, fgColor);
 		}
 	}
 
