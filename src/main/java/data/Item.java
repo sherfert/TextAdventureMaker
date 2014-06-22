@@ -26,15 +26,14 @@ import data.interfaces.Takeable;
 @Entity
 public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
-	 * The {@link AddInventoryItemsAction}. The successfulText and forbiddenText
-	 * by it are being used.
+	 * The {@link AddInventoryItemsAction}.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	private AddInventoryItemsAction addInventoryItemsAction;
 
 	/**
-	 * All additional actions.
+	 * All additional take actions.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable

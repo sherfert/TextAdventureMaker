@@ -56,7 +56,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	protected UsableObject() {
 		init();
 	}
-	
+
 	/**
 	 * By default non-usable.
 	 * 

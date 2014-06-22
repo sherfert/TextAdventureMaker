@@ -12,6 +12,7 @@ import data.Location;
 import data.Person;
 import data.Player;
 import data.Way;
+import data.action.AbstractAction.Enabling;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
 import data.action.ChangeInspectableObjectAction;
@@ -72,9 +73,9 @@ public class Main {
 		RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction(
 				money);
 		ChangeActionAction disableAddMoneyAction = new ChangeActionAction(
-				addMoneyAction, false);
+				addMoneyAction, Enabling.DISABLE);
 		ChangeActionAction enableAddMoneyAction = new ChangeActionAction(
-				addMoneyAction, true);
+				addMoneyAction, Enabling.ENABLE);
 
 		Person satia = new Person(flat, "Satia",
 				"Satia is hanging around there.");
@@ -166,7 +167,7 @@ public class Main {
 
 		// Only let him in if he has the chair
 		ChangeActionAction allowGettingInsideAction = new ChangeActionAction(
-				wayToFlat.getMoveAction(), true);
+				wayToFlat.getMoveAction(), Enabling.ENABLE);
 		chair.addAdditionalActionToTake(allowGettingInsideAction);
 		chair.addAdditionalActionToTake(changeBalconyDescriptionAction);
 

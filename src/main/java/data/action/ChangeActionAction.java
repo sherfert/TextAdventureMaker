@@ -4,12 +4,14 @@
 package data.action;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import persistence.PersistenceManager;
-
 
 /**
  * Another action can be changed with this action. Currently this means
@@ -28,13 +30,11 @@ public class ChangeActionAction extends AbstractAction {
 	private AbstractAction action;
 
 	/**
-	 * Currently, a ChangeActionAction is only good to enable or disable an
-	 * action. Therefore, any of the two has to be done. If AbstractAction
-	 * should get more fields, that should be changeable with this class, this
-	 * has to be replaced with two booleans. If this is true, the action will be
-	 * enabled, and disabled otherwise.
+	 * Enabling or disabling the action
 	 */
-	private boolean enableOrDisableAction;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Enabling enabling;
 
 	/**
 	 * No-arg constructor for the database.
@@ -52,37 +52,38 @@ public class ChangeActionAction extends AbstractAction {
 	 * 
 	 * @param action
 	 *            the action to change
-	 * @param enableOrDisableAction
-	 *            if the other action should be enabled ({@code true}) or
-	 *            disabled ({@code false})
+	 * @param enabling
+	 *            if the other action should be enabled, disabled, or left
+	 *            unchanged
 	 */
-	public ChangeActionAction(AbstractAction action,
-			boolean enableOrDisableAction) {
+	public ChangeActionAction(AbstractAction action, Enabling enabling) {
 		this.action = action;
-		this.enableOrDisableAction = enableOrDisableAction;
+		this.enabling = enabling;
 	}
 
 	/**
 	 * 
 	 * @param action
 	 *            the action to change
-	 * @param enableOrDisableAction
-	 *            if the other action should be enabled ({@code true}) or
-	 *            disabled ({@code false})
+	 * @param enabling
+	 *            if the other action should be enabled, disabled, or left
+	 *            unchanged
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
 	public ChangeActionAction(AbstractAction action,
-			boolean enableOrDisableAction, boolean enabled) {
+			Enabling enabling, boolean enabled) {
 		super(enabled);
 		this.action = action;
-		this.enableOrDisableAction = enableOrDisableAction;
+		this.enabling = enabling;
 	}
 
 	@Override
 	public void triggerAction() {
-		if(enabled) {
-			action.setEnabled(enableOrDisableAction);
+		if (enabling == Enabling.ENABLE) {
+			action.setEnabled(true);
+		} else if(enabling == Enabling.DISABLE) {
+			action.setEnabled(false);
 		}
 		PersistenceManager.updateChanges();
 	}

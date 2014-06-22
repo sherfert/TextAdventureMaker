@@ -15,6 +15,17 @@ import javax.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractAction {
+
+	/**
+	 * When an action changes something that can be disabled or enabled, a
+	 * three-value-type is needed to model that.
+	 * 
+	 * @author Satia
+	 */
+	public enum Enabling {
+		DISABLE, DO_NOT_CHANGE, ENABLE;
+	}
+
 	/**
 	 * The Id.
 	 */
