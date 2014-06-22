@@ -33,7 +33,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	/**
 	 * The object to be changed.
 	 */
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	private NamedObject object;
 

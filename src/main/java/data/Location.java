@@ -102,7 +102,7 @@ public class Location extends NamedObject {
 	 */
 	public void addWayIn(Way wayIn) {
 		this.waysIn.add(wayIn);
-		wayIn.destination = this;
+		wayIn.setDestination(this);
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class Location extends NamedObject {
 	 */
 	public void addWayOut(Way wayOut) {
 		this.waysOut.add(wayOut);
-		wayOut.origin = this;
+		wayOut.setOrigin(this);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class Location extends NamedObject {
 	 */
 	public void removeWayIn(Way wayIn) {
 		this.waysIn.remove(wayIn);
-		wayIn.destination = null;
+		wayIn.setDestination(null);
 	}
 
 	/**
@@ -245,6 +245,6 @@ public class Location extends NamedObject {
 	 */
 	public void removeWayOut(Way wayOut) {
 		this.waysOut.remove(wayOut);
-		wayOut.origin = null;
+		wayOut.setOrigin(null);
 	}
 }

@@ -25,7 +25,7 @@ public class ChangeActionAction extends AbstractAction {
 	/**
 	 * The action to change
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	private AbstractAction action;
 

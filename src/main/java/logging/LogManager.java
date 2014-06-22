@@ -14,6 +14,7 @@ import java.util.logging.SimpleFormatter;
  * @author Satia Herfert
  */
 public class LogManager {
+	// TODO proper logging everywhere
 
 	/**
 	 * The global log level.

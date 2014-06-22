@@ -21,7 +21,7 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	/**
 	 * The item to be removed.
 	 */
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	private InventoryItem item;
 

@@ -41,14 +41,14 @@ public class Way extends InspectableObject implements Travelable {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
-	Location destination;
+	private Location destination;
 
 	/**
 	 * The origin.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
-	Location origin;
+	private Location origin;
 	
 	/**
 	 * A personalized error message displayed if moving this way was forbidden.
@@ -165,6 +165,20 @@ public class Way extends InspectableObject implements Travelable {
 		for (AbstractAction abstractAction : additionalMoveActions) {
 			abstractAction.triggerAction();
 		}
+	}
+
+	/**
+	 * @param destination the destination to set
+	 */
+	public void setDestination(Location destination) {
+		this.destination = destination;
+	}
+
+	/**
+	 * @param origin the origin to set
+	 */
+	public void setOrigin(Location origin) {
+		this.origin = origin;
 	}
 
 	/**

@@ -224,7 +224,7 @@ public class Game {
 	/**
 	 * The starting location of the game.
 	 */
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
 	private Location startLocation;
 	

@@ -54,7 +54,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * {@link SetItemLocationAction#item}.
 	 */
 	// TODO why not unnullable?
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn//(nullable = false)
 	private SetItemLocationAction removeAction;
 
