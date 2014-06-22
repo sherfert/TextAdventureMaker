@@ -101,7 +101,6 @@ public class GamePlayer {
 	 *            an identifier of the object
 	 */
 	public void inspect(String identifier) {
-		// TODO general "around" for the current location
 		Inspectable object = PlayerManager.getInspectable(player, identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
@@ -158,6 +157,15 @@ public class GamePlayer {
 	}
 
 	/**
+	 * Displays the location entered text to the player.
+	 */
+	public void lookAround() {
+		io.println(currentReplacer.replacePlaceholders(player.getLocation()
+				.getEnteredText()), game.getNeutralBgColor(), game
+				.getNeutralFgColor());
+	}
+
+	/**
 	 * Tries to move to the target with the given name. The player will move
 	 * there if possible and if not, a meaningful message will be displayed.
 	 * 
@@ -181,8 +189,9 @@ public class GamePlayer {
 							game.getSuccessfullBgColor(),
 							game.getSuccessfullFgColor());
 				}
-				io.println(way.getDestination().getEnteredText(),
-						game.getNeutralBgColor(), game.getNeutralFgColor());
+				io.println(currentReplacer.replacePlaceholders(way
+						.getDestination().getEnteredText()), game
+						.getNeutralBgColor(), game.getNeutralFgColor());
 			} else {
 				// The location did not change
 				String message = way.getMoveForbiddenText();
@@ -228,7 +237,7 @@ public class GamePlayer {
 	 */
 	public void start() {
 		// If the player has no location, this is a new game.
-		if(player.getLocation() == null) {
+		if (player.getLocation() == null) {
 			// Transfer him to the start location and start a new game.
 			player.setLocation(game.getStartLocation());
 			io.println(game.getStartText(), game.getNeutralBgColor(),

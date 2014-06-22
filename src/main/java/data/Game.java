@@ -43,6 +43,12 @@ public class Game {
 	 */
 	@ElementCollection
 	private List<String> exitCommands;
+	
+	/**
+	 * All commands that let the player look around. Must be lowercase.
+	 */
+	@ElementCollection
+	private List<String> lookAroundCommands;
 
 	/**
 	 * All commands that let the player inspect something. Must be lowercase.
@@ -254,6 +260,7 @@ public class Game {
 	 */
 	public Game() {
 		exitCommands = new ArrayList<String>();
+		lookAroundCommands = new ArrayList<String>();
 		inspectCommands = new ArrayList<String>();
 		inventoryCommands = new ArrayList<String>();
 		moveCommands = new ArrayList<String>();
@@ -290,6 +297,16 @@ public class Game {
 	 */
 	public void addInventoryCommand(String cmd) {
 		this.inventoryCommands.add(cmd.toLowerCase());
+	}
+	
+	/**
+	 * Adds a look-around command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void addLookAroundCommand(String cmd) {
+		this.lookAroundCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -365,6 +382,13 @@ public class Game {
 	 */
 	public String getInspectionDefaultText() {
 		return inspectionDefaultText;
+	}
+
+	/**
+	 * @return the lookAroundCommands
+	 */
+	public List<String> getLookAroundCommands() {
+		return lookAroundCommands;
 	}
 
 	/**
@@ -556,7 +580,7 @@ public class Game {
 	 *            the command
 	 */
 	public void removeExitCommand(String cmd) {
-		this.exitCommands.remove(cmd);
+		this.exitCommands.remove(cmd.toLowerCase());
 	}
 
 	/**
@@ -566,7 +590,17 @@ public class Game {
 	 *            the command
 	 */
 	public void removeInventoryCommand(String cmd) {
-		this.inventoryCommands.remove(cmd);
+		this.inventoryCommands.remove(cmd.toLowerCase());
+	}
+	
+	/**
+	 * Removes an look-around command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void removeLookAroundCommand(String cmd) {
+		this.lookAroundCommands.remove(cmd.toLowerCase());
 	}
 
 	/**
@@ -576,7 +610,7 @@ public class Game {
 	 *            the command
 	 */
 	public void removeMoveCommand(String cmd) {
-		this.moveCommands.remove(cmd);
+		this.moveCommands.remove(cmd.toLowerCase());
 	}
 
 	/**
@@ -586,7 +620,7 @@ public class Game {
 	 *            the command
 	 */
 	public void removeTakeCommand(String cmd) {
-		this.takeCommands.remove(cmd);
+		this.takeCommands.remove(cmd.toLowerCase());
 	}
 
 	/**
@@ -596,7 +630,7 @@ public class Game {
 	 *            the command
 	 */
 	public void removeUseCommand(String cmd) {
-		this.useCommands.remove(cmd);
+		this.useCommands.remove(cmd.toLowerCase());
 	}
 
 	/**
@@ -606,7 +640,7 @@ public class Game {
 	 *            the command
 	 */
 	public void removeUseWithCombineCommand(String cmd) {
-		this.useWithCombineCommands.remove(cmd);
+		this.useWithCombineCommands.remove(cmd.toLowerCase());
 	}
 
 	/**

@@ -238,6 +238,7 @@ public class Main {
 		game.addInspectCommand("look(?: at)? (.+)");
 		game.addInspectCommand("inspect (.+)");
 		game.addInventoryCommand("inventory");
+		game.addLookAroundCommand("look around");
 		game.addMoveCommand("go(?: to)? (.+)");
 		game.addMoveCommand("move(?: to)? (.+)");
 		game.addTakeCommand("take (.+)");

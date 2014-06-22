@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /**
- * A player. There should be only one player per database.
+ * A player. There is exactly one player per game.
  * 
  * @author Satia
  */

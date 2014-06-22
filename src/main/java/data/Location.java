@@ -17,7 +17,8 @@ import data.interfaces.Inspectable;
  */
 @Entity
 public class Location extends NamedObject {
-
+	// TODO entered text and inspection text kinda redundant?
+	// Not extend NamedObject!?
 	/**
 	 * The items located here.
 	 */

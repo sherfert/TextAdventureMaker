@@ -22,20 +22,31 @@ public class GeneralParser {
 	/**
 	 * All possible commands.
 	 * 
-	 * They should be ordered by complexity. E.g. should USEWITHCOMBINE come
-	 * before USE, as USEWITHCOMBINE could have "use X with Y" as a command and
-	 * USE could have "use X". Generally speaking, commands with more parameters
-	 * should come first.
+	 * The ordering must be chosen carefully.
+	 * 
+	 * E.g. should USEWITHCOMBINE come before USE, as USEWITHCOMBINE could have
+	 * "use X with Y" as a command and USE could have "use X". Changing that
+	 * order parsing "use A with b" would result in an answer like
+	 * "there is no A with B here".
+	 * 
+	 * On the other hand, if "look around" is a LOOKAROUND command, it should
+	 * come before INSPECT if "look X" is an INSPECT command, otherwise you
+	 * would hear "there is no around here". The tradeoff is that no item can be
+	 * named "around".
+	 * 
+	 * Generally speaking, commands with more parameters should come first.
 	 * 
 	 * @author Satia
 	 */
 	private enum Command {
+		// TODO help command
 		USEWITHCOMBINE("getUseWithCombineCommands", "useWithOrCombine",
 				String.class, String.class), //
-		INSPECT("getInspectCommands", "inspect", String.class), //
 		MOVE("getMoveCommands", "move", String.class), //
 		TAKE("getTakeCommands", "take", String.class), //
 		USE("getUseCommands", "use", String.class), //
+		LOOKAROUND("getLookAroundCommands", "lookAround"), //
+		INSPECT("getInspectCommands", "inspect", String.class), //
 		INVENTORY("getInventoryCommands", "inventory");
 
 		/**
@@ -109,8 +120,7 @@ public class GeneralParser {
 			} catch (ClassCastException | NoSuchMethodException
 					| SecurityException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
-				Logger.getLogger(this.getClass().getName())
-				.log(Level.SEVERE,
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 						"Problems finding the executeMethod:", e);
 			}
 		}
