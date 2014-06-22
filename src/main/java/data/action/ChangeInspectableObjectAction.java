@@ -5,16 +5,19 @@ import java.util.List;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import persistence.PersistenceManager;
 import data.InspectableObject;
 
 /**
- * An action changing properties of a {@link InspectableObject} .
+ * An action changing properties of a {@link InspectableObject}.
  * 
  * @author Satia
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	/**
 	 * All identifiers to be added.
@@ -124,6 +127,7 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	/**
 	 * @return the object
 	 */
+	@Override
 	public InspectableObject getObject() {
 		return (InspectableObject) super.getObject();
 	}

@@ -11,6 +11,7 @@
 		<class>data.action.ChangeActionAction</class>
 		<class>data.action.ChangeInspectableObjectAction</class>
 		<class>data.action.ChangeNamedObjectAction</class>
+		<class>data.action.ChangeUsableObjectAction</class>
 		<class>data.action.MoveAction</class>
 		<class>data.action.RemoveInventoryItemAction</class>
 		<class>data.action.SetItemLocationAction</class>
