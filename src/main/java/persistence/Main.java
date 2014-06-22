@@ -15,6 +15,7 @@ import data.Way;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
 import data.action.ChangeInspectableObjectAction;
+import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.SetItemLocationAction;
 
@@ -36,7 +37,12 @@ public class Main {
 		// Create everything
 		Location flat = new Location("Flat", "Your little home.");
 		Location balcony = new Location("Balcony",
-				"Your balcony. Nice wooden floor and some chairs.");
+				"Your balcony. Sitting on the chair you can look at the sunset.");
+
+		ChangeNamedObjectAction changeBalconyDescriptionAction = new ChangeNamedObjectAction(
+				balcony);
+		changeBalconyDescriptionAction
+				.setNewDescription("Your balcony. Standing around stupidly you can look at the sunset.");
 
 		Way wayToBalcony = new Way("Balcony door",
 				"There is a door that leads outside.", flat, balcony);
@@ -105,7 +111,8 @@ public class Main {
 		/*
 		 * Inspecting the tv will change its inspection text.
 		 */
-		ChangeInspectableObjectAction changeTVAction = new ChangeInspectableObjectAction(tv);
+		ChangeInspectableObjectAction changeTVAction = new ChangeInspectableObjectAction(
+				tv);
 		changeTVAction
 				.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
 		tv.addAdditionalActionToInspect(changeTVAction);
@@ -146,6 +153,7 @@ public class Main {
 		ChangeActionAction allowGettingInsideAction = new ChangeActionAction(
 				wayToFlat.getMoveAction(), true);
 		chair.addAdditionalActionToTake(allowGettingInsideAction);
+		chair.addAdditionalActionToTake(changeBalconyDescriptionAction);
 
 		/*
 		 * The tv can be hit with the chair. It is then replaced with a

@@ -3,11 +3,8 @@ package data.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import persistence.PersistenceManager;
 import data.InspectableObject;
@@ -18,8 +15,7 @@ import data.InspectableObject;
  * @author Satia
  */
 @Entity
-public class ChangeInspectableObjectAction extends AbstractAction {
-	// TODO extends changeNamedObjectAction
+public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	/**
 	 * All identifiers to be added.
 	 */
@@ -33,32 +29,15 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	private List<String> identifiersToRemove;
 
 	/**
-	 * The new description. If {@code null}, the old will not be changed.
-	 */
-	private String newDescription;
-
-	/**
 	 * The new inspection text. If {@code null}, the old will not be changed.
 	 */
 	private String newInspectionText;
 
 	/**
-	 * The new name. If {@code null}, the old will not be changed.
-	 */
-	private String newName;
-
-	/**
-	 * The object to be changed.
-	 */
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(nullable = false)
-	private InspectableObject object;
-
-	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link ChangeInspectableObjectAction#SetPropertiesAction(InspectableObject)}
+	 *             {@link ChangeInspectableObjectAction#ChangeInspectableObjectAction(InspectableObject)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -71,8 +50,8 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	 *            the object to be changed
 	 */
 	public ChangeInspectableObjectAction(InspectableObject object) {
+		super(object);
 		init();
-		this.object = object;
 	}
 
 	/**
@@ -81,10 +60,10 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeInspectableObjectAction(InspectableObject object, boolean enabled) {
-		super(enabled);
+	public ChangeInspectableObjectAction(InspectableObject object,
+			boolean enabled) {
+		super(object, enabled);
 		init();
-		this.object = object;
 	}
 
 	/**
@@ -93,7 +72,7 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	 * @param name
 	 *            the identifier
 	 */
-	public void addIdentifieToAdd(String name) {
+	public void addIdentifierToAdd(String name) {
 		identifiersToAdd.add(name.toLowerCase());
 	}
 
@@ -103,7 +82,7 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	 * @param name
 	 *            the identifier
 	 */
-	public void addIdentifieToRemove(String name) {
+	public void addIdentifierToRemove(String name) {
 		identifiersToRemove.add(name.toLowerCase());
 	}
 
@@ -122,13 +101,6 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	}
 
 	/**
-	 * @return the newDescription
-	 */
-	public String getNewDescription() {
-		return newDescription;
-	}
-
-	/**
 	 * @return the newInspectionText
 	 */
 	public String getNewInspectionText() {
@@ -136,17 +108,10 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	}
 
 	/**
-	 * @return the newName
-	 */
-	public String getNewName() {
-		return newName;
-	}
-
-	/**
 	 * @return the object
 	 */
 	public InspectableObject getObject() {
-		return object;
+		return (InspectableObject) super.getObject();
 	}
 
 	/**
@@ -155,7 +120,7 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	 * @param name
 	 *            the identifier
 	 */
-	public void removeIdentifieToAdd(String name) {
+	public void removeIdentifierToAdd(String name) {
 		identifiersToAdd.remove(name.toLowerCase());
 	}
 
@@ -165,16 +130,8 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 	 * @param name
 	 *            the identifier
 	 */
-	public void removeIdentifieToRemove(String name) {
+	public void removeIdentifierToRemove(String name) {
 		identifiersToRemove.remove(name.toLowerCase());
-	}
-
-	/**
-	 * @param newDescription
-	 *            the newDescription to set
-	 */
-	public void setNewDescription(String newDescription) {
-		this.newDescription = newDescription;
 	}
 
 	/**
@@ -185,41 +142,22 @@ public class ChangeInspectableObjectAction extends AbstractAction {
 		this.newInspectionText = newInspectionText;
 	}
 
-	/**
-	 * @param newName
-	 *            the newName to set
-	 */
-	public void setNewName(String newName) {
-		this.newName = newName;
-	}
-
-	/**
-	 * @param object
-	 *            the object to set
-	 */
-	public void setObject(InspectableObject object) {
-		this.object = object;
-	}
-
 	@Override
 	public void triggerAction() {
+		// Call the super method
+		super.triggerAction();
+		
 		if (enabled) {
 			// Change fields
-			if (newName != null) {
-				object.setName(newName);
-			}
-			if (newDescription != null) {
-				object.setDescription(newDescription);
-			}
 			if (newInspectionText != null) {
-				object.setInspectionText(newInspectionText);
+				getObject().setInspectionText(newInspectionText);
 			}
 			// Add and remove identifiers
 			for (String id : identifiersToAdd) {
-				object.addIdentifier(id);
+				getObject().addIdentifier(id);
 			}
 			for (String id : identifiersToRemove) {
-				object.removeIdentifier(id);
+				getObject().removeIdentifier(id);
 			}
 		}
 		PersistenceManager.updateChanges();
