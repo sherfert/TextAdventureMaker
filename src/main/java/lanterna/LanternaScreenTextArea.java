@@ -5,6 +5,7 @@ import com.googlecode.lanterna.input.Key.Kind;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -456,12 +457,27 @@ public class LanternaScreenTextArea {
 			handleLeft();
 		} else if (key.getKind() == Kind.ArrowRight) {
 			handleRight();
+		} else if (key.getKind() == Kind.Home) {
+			handleHome();
+		} else if (key.getKind() == Kind.End) {
+			handleEnd();
 		}
-		
-		// TODO pos1 and end
 
 		// Print
 		print();
+	}
+
+	/**
+	 * Checks if a character is printable
+	 * 
+	 * @param c
+	 *            the char
+	 * @return if it is printable.
+	 */
+	private boolean isPrintableChar(char c) {
+		Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
+		return (!Character.isISOControl(c)) && c != KeyEvent.CHAR_UNDEFINED
+				&& block != null && block != Character.UnicodeBlock.SPECIALS;
 	}
 
 	/**
@@ -471,12 +487,17 @@ public class LanternaScreenTextArea {
 	 *            the character
 	 */
 	private void handleChar(char c) {
-		if(currentTextCursorIndex == currentText.length()) {
+		// Exclude non printable chars
+		if (!isPrintableChar(c)) {
+			return;
+		}
+
+		if (currentTextCursorIndex == currentText.length()) {
 			currentText.append(c);
 		} else {
 			currentText.insert(currentTextCursorIndex, c);
 		}
-		
+
 		currentTextCursorIndex++;
 	}
 
@@ -515,6 +536,19 @@ public class LanternaScreenTextArea {
 		currentTextCursorIndex--;
 	}
 
+	/**
+	 * Handles if delete has been pressed.
+	 */
+	private void handleDel() {
+		if (currentTextCursorIndex == currentText.length()) {
+			return;
+		}
+		currentText.deleteCharAt(currentTextCursorIndex);
+	}
+
+	/**
+	 * Handles if up arrow has been pressed.
+	 */
 	private void handleUp() {
 		if (stackPointer != lastCommands.size() - 1) {
 			stackPointer++;
@@ -528,6 +562,9 @@ public class LanternaScreenTextArea {
 		}
 	}
 
+	/**
+	 * Handles if down arrow has been pressed.
+	 */
 	private void handleDown() {
 		if (stackPointer == -1) {
 			return;
@@ -546,19 +583,37 @@ public class LanternaScreenTextArea {
 		currentTextCursorIndex = currentText.length();
 	}
 
+	/**
+	 * Handles if right arrow has been pressed.
+	 */
 	private void handleRight() {
 		if (currentTextCursorIndex != currentText.length()) {
 			currentTextCursorIndex++;
 		}
 	}
 
+	/**
+	 * Handles if left arrow has been pressed.
+	 */
 	private void handleLeft() {
 		if (currentTextCursorIndex != 0) {
 			currentTextCursorIndex--;
 		}
 	}
 
-	private void handleDel() {
-		// TODO
+	/**
+	 * Handles if home/pos1 has been pressed.
+	 */
+	private void handleHome() {
+		// Place cursor at the beginning
+		currentTextCursorIndex = 0;
+	}
+
+	/**
+	 * Handles if end has been pressed.
+	 */
+	private void handleEnd() {
+		// Place cursor at the end
+		currentTextCursorIndex = currentText.length();
 	}
 }
