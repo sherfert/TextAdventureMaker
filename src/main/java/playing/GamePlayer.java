@@ -26,6 +26,7 @@ import data.interfaces.UsableWithHasLocation;
  * @author Satia
  */
 public class GamePlayer {
+	// TODO better error messages like "you cannot take persons"
 
 	/**
 	 * A placeholder replacer for the currently used command.

@@ -20,6 +20,8 @@ import java.util.Stack;
  * @author Satia Herfert
  */
 public class LanternaScreenTextArea {
+	// TODO better word wrapping
+	
 	/**
 	 * Used to callback if a new line has been typed, when the area includes an
 	 * input line.

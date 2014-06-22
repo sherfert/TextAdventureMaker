@@ -132,14 +132,16 @@ public class Main {
 		addPeelAction.addPickUpItem(peel);
 		banana.addAdditionalActionToUse(addPeelAction);
 		banana.addAdditionalActionToUse(new SetItemLocationAction(banana, null));
-		banana.getAddInventoryItemsAction().addPickUpItem(
-				new InventoryItem(banana));
+		InventoryItem invBanana = new InventoryItem(banana);
+		invBanana.setDescription("A banana");
+		banana.getAddInventoryItemsAction().addPickUpItem(invBanana);
 
 		Item chair = new Item(balcony, "Chair",
 				"A wooden chair stands beside you.");
 		chair.setInspectionText("Made of solid oak.");
 		chair.setTakingEnabled(true);
 		InventoryItem invChair = new InventoryItem(chair);
+		invChair.setDescription("A wooden chair");
 		chair.getAddInventoryItemsAction().addPickUpItem(invChair);
 
 		// Only let him in if he has the chair
@@ -178,6 +180,7 @@ public class Main {
 		pen.setUseForbiddenText("You must use it with something else.");
 		pen.setTakingEnabled(true);
 		InventoryItem invPen = new InventoryItem(pen);
+		invPen.setDescription("A pen");
 		pen.getAddInventoryItemsAction().addPickUpItem(invPen);
 
 		InventoryItem paintedPeel = new InventoryItem("Painted banana peel",
@@ -258,6 +261,7 @@ public class Main {
 		game.addUseCommand("use (.+)");
 		game.addUseWithCombineCommand("use (.+) with (.+)");
 		game.addUseWithCombineCommand("combine (.+) and (.+)");
+		game.addUseWithCombineCommand("combine (.+) with (.+)");
 
 		// Connect to database
 		PersistenceManager.connect(System.getProperty("user.home")
