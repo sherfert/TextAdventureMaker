@@ -49,7 +49,7 @@ public class Way extends InspectableObject implements Travelable {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	private Location origin;
-	
+
 	/**
 	 * A personalized error message displayed if moving this way was forbidden.
 	 */
@@ -68,7 +68,7 @@ public class Way extends InspectableObject implements Travelable {
 	public Way() {
 		init();
 	}
-	
+
 	/**
 	 * @param name
 	 *            the name
@@ -83,9 +83,8 @@ public class Way extends InspectableObject implements Travelable {
 			Location destination) {
 		super(name, description);
 		init();
-		// Add way to the locations. The fields are being set by this.
-		origin.addWayOut(this);
-		destination.addWayIn(this);
+		setOrigin(origin);
+		setDestination(destination);
 	}
 
 	@Override
@@ -137,7 +136,7 @@ public class Way extends InspectableObject implements Travelable {
 	@Override
 	public void setMoveAction(MoveAction moveAction) {
 		this.moveAction = moveAction;
-		if(moveAction.getWay() != this) {
+		if (moveAction.getWay() != this) {
 			moveAction.setWay(this);
 		}
 	}
@@ -145,13 +144,13 @@ public class Way extends InspectableObject implements Travelable {
 	@Override
 	public void setMoveForbiddenText(String forbiddenText) {
 		moveForbiddenText = forbiddenText;
-		//moveAction.setForbiddenText(forbiddenText);
+		// moveAction.setForbiddenText(forbiddenText);
 	}
 
 	@Override
 	public void setMoveSuccessfulText(String successfulText) {
 		moveSuccessfulText = successfulText;
-		//moveAction.setSuccessfulText(successfulText);
+		// moveAction.setSuccessfulText(successfulText);
 	}
 
 	@Override
@@ -168,16 +167,34 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	/**
-	 * @param destination the destination to set
+	 * This also modifies the location.
+	 * 
+	 * @param destination
+	 *            the destination to set
 	 */
 	public void setDestination(Location destination) {
+		if (this.destination != null) {
+			this.destination.removeWayIn(this);
+		}
+		if (destination != null) {
+			destination.addWayIn(this);
+		}
 		this.destination = destination;
 	}
 
 	/**
-	 * @param origin the origin to set
+	 * This also modifies the location.
+	 * 
+	 * @param origin
+	 *            the origin to set
 	 */
 	public void setOrigin(Location origin) {
+		if (this.origin != null) {
+			this.origin.removeWayOut(this);
+		}
+		if (origin != null) {
+			origin.addWayOut(this);
+		}
 		this.origin = origin;
 	}
 

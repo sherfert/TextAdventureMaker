@@ -11,7 +11,7 @@ import data.Way;
 public class WayManager {
 
 	/**
-	 * Gets the item located in the location with the given identifier or
+	 * Gets the way out from the given location with the given identifier or
 	 * {@code null} , if there is none.
 	 * 
 	 * @param location

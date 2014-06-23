@@ -67,53 +67,56 @@ public class Location extends NamedObject {
 	}
 
 	/**
-	 * Adds an item to this location. The item's location and its old location's
-	 * list are modified, too.
+	 * Adds an item to this location. Package visibility, so that from outside
+	 * the Item methods are used instead.
 	 * 
 	 * @param item
 	 *            the item
 	 */
-	public void addItem(Item item) {
+	void addItem(Item item) {
 		if (!this.items.contains(item)) {
 			this.items.add(item);
-			item.setLocation(this);
 		}
 	}
 
 	/**
-	 * Adds a person to this location. The person's location and its old
-	 * location's list are modified, too.
+	 * Adds a person to this location. Package visibility, so that from outside
+	 * the Person methods are used instead.
 	 * 
 	 * @param person
 	 *            the person
 	 */
-	public void addPerson(Person person) {
+	void addPerson(Person person) {
 		if (!this.persons.contains(person)) {
 			this.persons.add(person);
-			person.setLocation(this);
 		}
 	}
 
 	/**
-	 * Adds a way in.
+	 * Adds a way in. Package visibility, so that from outside the Way methods
+	 * are used instead.
 	 * 
 	 * @param wayIn
 	 *            the way
 	 */
-	public void addWayIn(Way wayIn) {
-		this.waysIn.add(wayIn);
-		wayIn.setDestination(this);
+	void addWayIn(Way wayIn) {
+		if (!this.waysIn.contains(wayIn)) {
+			this.waysIn.add(wayIn);
+		}
 	}
 
+	// TODO check other add methods if there is if(contains)
 	/**
-	 * Adds a way out.
+	 * Adds a way out. Package visibility, so that from outside the Way methods
+	 * are used instead.
 	 * 
 	 * @param wayOut
 	 *            the way
 	 */
-	public void addWayOut(Way wayOut) {
-		this.waysOut.add(wayOut);
-		wayOut.setOrigin(this);
+	void addWayOut(Way wayOut) {
+		if (!this.waysOut.contains(wayOut)) {
+			this.waysOut.add(wayOut);
+		}
 	}
 
 	/**
@@ -200,51 +203,46 @@ public class Location extends NamedObject {
 	}
 
 	/**
-	 * Removes an item from this location. The item's location is modified, too.
+	 * Removes an item from this location. Package visibility, so that from
+	 * outside the Item methods are used instead.
 	 * 
 	 * @param item
 	 *            the item
 	 */
-	public void removeItem(Item item) {
-		if (this.items.contains(item)) {
-			this.items.remove(item);
-			item.setLocation(null);
-		}
+	void removeItem(Item item) {
+		this.items.remove(item);
 	}
-	
+
 	/**
-	 * Removes a person from this location. The person's location is modified,
-	 * too.
+	 * Removes a person from this location. Package visibility, so that from
+	 * outside the Person methods are used instead.
 	 * 
 	 * @param person
 	 *            the person
 	 */
-	public void removePerson(Person person) {
-		if (this.persons.contains(person)) {
-			this.persons.remove(person);
-			person.setLocation(null);
-		}
+	void removePerson(Person person) {
+		this.persons.remove(person);
 	}
 
 	/**
-	 * Removes a way in.
+	 * Removes a way in. Package visibility, so that from outside the Way
+	 * methods are used instead.
 	 * 
 	 * @param wayIn
 	 *            the way
 	 */
-	public void removeWayIn(Way wayIn) {
+	void removeWayIn(Way wayIn) {
 		this.waysIn.remove(wayIn);
-		wayIn.setDestination(null);
 	}
 
 	/**
-	 * Removes a way out.
+	 * Removes a way out. Package visibility, so that from outside the Way
+	 * methods are used instead.
 	 * 
 	 * @param wayOut
 	 *            the way
 	 */
-	public void removeWayOut(Way wayOut) {
+	void removeWayOut(Way wayOut) {
 		this.waysOut.remove(wayOut);
-		wayOut.setOrigin(null);
 	}
 }

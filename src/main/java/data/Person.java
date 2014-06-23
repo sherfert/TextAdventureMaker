@@ -59,7 +59,9 @@ public class Person extends InspectableObject implements HasLocation {
 	public Location getLocation() {
 		return location;
 	}
-
+	
+	// TODO the duplicate Logic is too much. Just make the Location methods package
+	// visible for Person/Item modification.
 	@Override
 	public void setLocation(Location location) {
 		if (this.location != null) {
