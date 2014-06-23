@@ -24,7 +24,14 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
  */
 @Entity
 public class Game {
-	
+	/*
+	 * Big TODO: Use Sets instead of Lists, where useful. Therefore, if former
+	 * Lists of own classes, let these (or better all) classes override equals,
+	 * hashCode, and toString.
+	 * 
+	 * Then, the "if(contains)" check can be removed.
+	 */
+
 	/**
 	 * The help text being displayed for the exit command
 	 */
@@ -75,7 +82,7 @@ public class Game {
 	 */
 	@Column(nullable = false)
 	private String inspectHelpText;
-	
+
 	/**
 	 * The text being displayed when an object is inspected that does not have
 	 * an individual inspection text. Valid placeholders: {@literal <input>},
@@ -137,7 +144,8 @@ public class Game {
 	private String moveHelpText;
 
 	/**
-	 * The background color that is used for text printed after a neutral action.
+	 * The background color that is used for text printed after a neutral
+	 * action.
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -213,29 +221,30 @@ public class Game {
 	 */
 	@Column(nullable = false)
 	private String notUsableWithText;
-	
+
 	/**
 	 * The player of this game.
 	 */
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
 	private Player player;
-	
+
 	/**
 	 * The starting location of the game.
 	 */
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(nullable = false)
 	private Location startLocation;
-	
+
 	/**
 	 * The text being displayed, when the game starts.
 	 */
 	@Column(nullable = false)
 	private String startText;
-	
+
 	/**
-	 * The background color that is used for text printed after a successful action.
+	 * The background color that is used for text printed after a successful
+	 * action.
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -430,38 +439,42 @@ public class Game {
 	public List<String> getExitCommands() {
 		return exitCommands;
 	}
-	
+
 	/**
 	 * @return the failedBgColor
 	 */
 	public Color getFailedBgColor() {
 		return failedBgColor;
 	}
+
 	/**
 	 * @return the failedFgColor
 	 */
 	public Color getFailedFgColor() {
 		return failedFgColor;
 	}
+
 	/**
 	 * @return the helpCommands
 	 */
 	public List<String> getHelpCommands() {
 		return helpCommands;
 	}
-	
+
 	/**
 	 * @return the helpHelpText
 	 */
 	public String getHelpHelpText() {
 		return helpHelpText;
 	}
+
 	/**
 	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
+
 	/**
 	 * @return the inspectCommands
 	 */
@@ -496,14 +509,14 @@ public class Game {
 	public String getInventoryEmptyText() {
 		return inventoryEmptyText;
 	}
-	
+
 	/**
 	 * @return the inventoryHelpText
 	 */
 	public String getInventoryHelpText() {
 		return inventoryHelpText;
 	}
-	
+
 	/**
 	 * @return the inventoryText
 	 */
@@ -788,35 +801,40 @@ public class Game {
 	}
 
 	/**
-	 * @param exitCommandHelpText the exitCommandHelpText to set
+	 * @param exitCommandHelpText
+	 *            the exitCommandHelpText to set
 	 */
 	public void setExitCommandHelpText(String exitCommandHelpText) {
 		this.exitCommandHelpText = exitCommandHelpText;
 	}
 
 	/**
-	 * @param failedBgColor the failedBgColor to set
+	 * @param failedBgColor
+	 *            the failedBgColor to set
 	 */
 	public void setFailedBgColor(Color failedBgColor) {
 		this.failedBgColor = failedBgColor;
 	}
 
 	/**
-	 * @param failedFgColor the failedFgColor to set
+	 * @param failedFgColor
+	 *            the failedFgColor to set
 	 */
 	public void setFailedFgColor(Color failedFgColor) {
 		this.failedFgColor = failedFgColor;
 	}
-	
+
 	/**
-	 * @param helpHelpText the helpHelpText to set
+	 * @param helpHelpText
+	 *            the helpHelpText to set
 	 */
 	public void setHelpHelpText(String helpHelpText) {
 		this.helpHelpText = helpHelpText;
 	}
-	
+
 	/**
-	 * @param inspectHelpText the inspectHelpText to set
+	 * @param inspectHelpText
+	 *            the inspectHelpText to set
 	 */
 	public void setInspectHelpText(String inspectHelpText) {
 		this.inspectHelpText = inspectHelpText;
@@ -839,7 +857,8 @@ public class Game {
 	}
 
 	/**
-	 * @param inventoryHelpText the inventoryHelpText to set
+	 * @param inventoryHelpText
+	 *            the inventoryHelpText to set
 	 */
 	public void setInventoryHelpText(String inventoryHelpText) {
 		this.inventoryHelpText = inventoryHelpText;
@@ -854,28 +873,32 @@ public class Game {
 	}
 
 	/**
-	 * @param lookAroundHelpText the lookAroundHelpText to set
+	 * @param lookAroundHelpText
+	 *            the lookAroundHelpText to set
 	 */
 	public void setLookAroundHelpText(String lookAroundHelpText) {
 		this.lookAroundHelpText = lookAroundHelpText;
 	}
 
 	/**
-	 * @param moveHelpText the moveHelpText to set
+	 * @param moveHelpText
+	 *            the moveHelpText to set
 	 */
 	public void setMoveHelpText(String moveHelpText) {
 		this.moveHelpText = moveHelpText;
 	}
 
 	/**
-	 * @param neutralBgColor the neutralBgColor to set
+	 * @param neutralBgColor
+	 *            the neutralBgColor to set
 	 */
 	public void setNeutralBgColor(Color neutralBgColor) {
 		this.neutralBgColor = neutralBgColor;
 	}
 
 	/**
-	 * @param neutralFgColor the neutralFgColor to set
+	 * @param neutralFgColor
+	 *            the neutralFgColor to set
 	 */
 	public void setNeutralFgColor(Color neutralFgColor) {
 		this.neutralFgColor = neutralFgColor;
@@ -946,7 +969,8 @@ public class Game {
 	}
 
 	/**
-	 * @param player the player to set
+	 * @param player
+	 *            the player to set
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -969,21 +993,24 @@ public class Game {
 	}
 
 	/**
-	 * @param successfullBgColor the successfullBgColor to set
+	 * @param successfullBgColor
+	 *            the successfullBgColor to set
 	 */
 	public void setSuccessfullBgColor(Color successfullBgColor) {
 		this.successfullBgColor = successfullBgColor;
 	}
 
 	/**
-	 * @param successfullFgColor the successfullFgColor to set
+	 * @param successfullFgColor
+	 *            the successfullFgColor to set
 	 */
 	public void setSuccessfullFgColor(Color successfullFgColor) {
 		this.successfullFgColor = successfullFgColor;
 	}
 
 	/**
-	 * @param takeHelpText the takeHelpText to set
+	 * @param takeHelpText
+	 *            the takeHelpText to set
 	 */
 	public void setTakeHelpText(String takeHelpText) {
 		this.takeHelpText = takeHelpText;
@@ -1014,14 +1041,16 @@ public class Game {
 	}
 
 	/**
-	 * @param useHelpText the useHelpText to set
+	 * @param useHelpText
+	 *            the useHelpText to set
 	 */
 	public void setUseHelpText(String useHelpText) {
 		this.useHelpText = useHelpText;
 	}
 
 	/**
-	 * @param useWithCombineHelpText the useWithCombineHelpText to set
+	 * @param useWithCombineHelpText
+	 *            the useWithCombineHelpText to set
 	 */
 	public void setUseWithCombineHelpText(String useWithCombineHelpText) {
 		this.useWithCombineHelpText = useWithCombineHelpText;

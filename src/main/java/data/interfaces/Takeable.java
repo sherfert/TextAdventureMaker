@@ -4,7 +4,7 @@ import java.util.List;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
-import data.action.SetItemLocationAction;
+import data.action.ChangeItemAction;
 
 /**
  * Anything takeable in the game.
@@ -91,7 +91,7 @@ public interface Takeable extends Identifiable {
 	/**
 	 * Triggers all additional actions and, if enabled, the
 	 * {@link AddInventoryItemsAction} and, if also removeItem, the
-	 * {@link SetItemLocationAction}.
+	 * {@link ChangeItemAction}.
 	 */
 	public void take();
 }

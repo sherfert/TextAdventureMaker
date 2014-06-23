@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
-import data.action.SetItemLocationAction;
+import data.action.ChangeItemAction;
 import data.interfaces.HasLocation;
 import data.interfaces.Takeable;
 
@@ -47,16 +47,16 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	private Location location;
 
 	/**
-	 * The {@link SetItemLocationAction} which would set the location to
+	 * The {@link ChangeItemAction} which would set the location to
 	 * {@code null}.
 	 * 
 	 * Note: This is NOT the Inverse connection of
-	 * {@link SetItemLocationAction#item}.
+	 * {@link ChangeItemAction#item}.
 	 */
 	// TODO why not unnullable?
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn//(nullable = false)
-	private SetItemLocationAction removeAction;
+	private ChangeItemAction removeAction;
 
 	/**
 	 * A personalized error message displayed if taking this item was forbidden.
@@ -205,7 +205,8 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 */
 	private void init() {
 		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
-		this.removeAction = new SetItemLocationAction(this, null);
+		this.removeAction = new ChangeItemAction(this);
+		this.removeAction.setNewLocation(null);
 		this.additionalTakeActions = new ArrayList<AbstractAction>();
 		setRemoveItem(true);
 	}

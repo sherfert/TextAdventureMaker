@@ -24,7 +24,7 @@ import data.action.AddInventoryItemsAction;
 import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
-import data.action.SetItemLocationAction;
+import data.action.ChangeItemAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasLocation;
 import data.interfaces.UsableWithHasLocation;
@@ -425,6 +425,9 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	/**
+	 * TODO check for ChangeNOAction, ChangeIOAction, ChangeItemAction
+	 * OR remove this shit!
+	 * 
 	 * Converts any action connected with the given {@link Item} into an
 	 * equivalent action connected to this InventoryItem.
 	 * 
@@ -436,9 +439,9 @@ public class InventoryItem extends UsableObject implements
 	 */
 	private AbstractAction convertInventoryItemActionToItemAction(Item item,
 			AbstractAction action) {
-		if (action instanceof SetItemLocationAction
-				&& ((SetItemLocationAction) action).getItem() == item
-				&& ((SetItemLocationAction) action).getNewLocation() == null) {
+		if (action instanceof ChangeItemAction
+				&& ((ChangeItemAction) action).getObject() == item
+				&& ((ChangeItemAction) action).getNewLocation() == null) {
 			// This action "removes" the item
 			RemoveInventoryItemAction result = new RemoveInventoryItemAction(
 					this);

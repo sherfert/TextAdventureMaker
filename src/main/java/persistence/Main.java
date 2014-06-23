@@ -18,7 +18,7 @@ import data.action.ChangeActionAction;
 import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
-import data.action.SetItemLocationAction;
+import data.action.ChangeItemAction;
 
 /**
  * Test class.
@@ -152,7 +152,7 @@ public class Main {
 		AddInventoryItemsAction addPeelAction = new AddInventoryItemsAction();
 		addPeelAction.addPickUpItem(peel);
 		banana.addAdditionalActionToUse(addPeelAction);
-		banana.addAdditionalActionToUse(new SetItemLocationAction(banana, null));
+		banana.addAdditionalActionToUse(new ChangeItemAction(banana, null));
 		InventoryItem invBanana = new InventoryItem(banana);
 		invBanana.setDescription("A banana");
 		banana.getAddInventoryItemsAction().addPickUpItem(invBanana);
@@ -185,9 +185,9 @@ public class Main {
 				.setTakeForbiddenText("What the hell do you want with this mess?");
 		destroyedTv.setUseForbiddenText("It does not work anymore.");
 
-		invChair.addAdditionalActionToUseWith(tv, new SetItemLocationAction(
+		invChair.addAdditionalActionToUseWith(tv, new ChangeItemAction(
 				destroyedTv, flat));
-		invChair.addAdditionalActionToUseWith(tv, new SetItemLocationAction(tv,
+		invChair.addAdditionalActionToUseWith(tv, new ChangeItemAction(tv,
 				null));
 		invChair.setUseWithSuccessfulText(tv,
 				"You smash the chair into the television.");

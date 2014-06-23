@@ -32,9 +32,12 @@ public class ChangeNamedObjectAction extends AbstractAction {
 
 	/**
 	 * The object to be changed.
+	 * 
+	 * TODO This should be (nullable = false). This is impossible due to
+	 * circular dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn//(nullable = false)
 	private NamedObject object;
 
 	/**
