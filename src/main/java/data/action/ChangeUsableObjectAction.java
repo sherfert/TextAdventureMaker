@@ -119,10 +119,10 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 		if (enabled) {
 			// Change fields
 			if (newUseForbiddenText != null) {
-				getObject().setUseForbiddenText(newUseForbiddenText);;
+				getObject().setUseForbiddenText(newUseForbiddenText);
 			}
 			if (newUseSuccessfulText != null) {
-				getObject().setUseSuccessfulText(newUseSuccessfulText);;
+				getObject().setUseSuccessfulText(newUseSuccessfulText);
 			}
 			if (enabling == Enabling.ENABLE) {
 				getObject().setUsingEnabled(true);

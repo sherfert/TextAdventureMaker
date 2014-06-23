@@ -105,7 +105,6 @@ public class Location extends NamedObject {
 		}
 	}
 
-	// TODO check other add methods if there is if(contains)
 	/**
 	 * Adds a way out. Package visibility, so that from outside the Way methods
 	 * are used instead.
