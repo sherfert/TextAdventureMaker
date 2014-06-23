@@ -217,7 +217,7 @@ public class Main {
 		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
 		peel.setCombineWithSuccessfulText(invPen,
 				"You painted the banana peel.");
-		peel.addNewInventoryItemWhenCombinedWith(invPen, paintedPeel);
+		peel.addNewCombinableWhenCombinedWith(invPen, paintedPeel);
 
 		AddInventoryItemsAction addPaintedPeelAction = new AddInventoryItemsAction();
 		RemoveInventoryItemAction removePeelAction = new RemoveInventoryItemAction(

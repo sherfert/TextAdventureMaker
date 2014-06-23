@@ -4,15 +4,18 @@ import java.util.List;
 
 import data.action.AbstractAction;
 
-import data.InventoryItem;
-
 /**
  * Anything combineable with other InventoryItems. The InventoryItems may
  * disappear and new {@link InventoryItem}s can be added.
  * 
  * @author Satia
+ * 
+ * @param <E>
+ *            the class to be combinable with. Usually the implementing class
+ *            itself.
  */
-public interface Combinable extends UsableOrPassivelyUsable {
+public interface Combinable<E> extends UsableOrPassivelyUsable {
+
 	/**
 	 * Adds an additional action for that combineable.
 	 * 
@@ -21,11 +24,11 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToCombineWith(Combinable partner,
+	public void addAdditionalActionToCombineWith(Combinable<E> partner,
 			AbstractAction action);
 
 	/**
-	 * Adds a new {@link InventoryItem} to be added when combined with the given
+	 * Adds a new {@link Combinable} to be added when combined with the given
 	 * partner.
 	 * 
 	 * @param partner
@@ -33,8 +36,8 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param newItem
 	 *            the new inventory item to be added
 	 */
-	public void addNewInventoryItemWhenCombinedWith(Combinable partner,
-			InventoryItem newItem);
+	public void addNewCombinableWhenCombinedWith(Combinable<E> partner,
+			E newItem);
 
 	/**
 	 * Adds new inventory items, removes both partners if removeCombinables is
@@ -43,7 +46,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param partner
 	 *            the partner
 	 */
-	public void combineWith(Combinable partner);
+	public void combineWith(Combinable<E> partner);
 
 	/**
 	 * @param partner
@@ -52,7 +55,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @return the additional actions for that item.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromCombineWith(
-			Combinable partner);
+			Combinable<E> partner);
 
 	/**
 	 * @param partner
@@ -60,7 +63,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the forbiddenText for that item or {@code null}.
 	 */
-	public String getCombineWithForbiddenText(Combinable partner);
+	public String getCombineWithForbiddenText(Combinable<E> partner);
 
 	/**
 	 * @param partner
@@ -68,7 +71,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the successfulText for that item or {@code null}.
 	 */
-	public String getCombineWithSuccessfulText(Combinable partner);
+	public String getCombineWithSuccessfulText(Combinable<E> partner);
 
 	/**
 	 * The list of {@link InventoryItem}s that get added, when this Combinable
@@ -78,8 +81,8 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 *            the parter
 	 * @return the added {@link InventoryItem}s.
 	 */
-	public List<InventoryItem> getNewInventoryItemsWhenCombinedWith(
-			Combinable partner);
+	public List<E> getNewCombinablesWhenCombinedWith(
+			Combinable<E> partner);
 
 	/**
 	 * Gets if the two Combinables should be removed when combined with the
@@ -89,7 +92,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 *            the partner
 	 * @return whether it should be removed.
 	 */
-	public boolean getRemoveCombinablesWhenCombinedWith(Combinable partner);
+	public boolean getRemoveCombinablesWhenCombinedWith(Combinable<E> partner);
 
 	/**
 	 * @param partner
@@ -97,7 +100,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * 
 	 * @return if using is enabled with the given item.
 	 */
-	public boolean isCombiningEnabledWith(Combinable partner);
+	public boolean isCombiningEnabledWith(Combinable<E> partner);
 
 	/**
 	 * Removes an additional action for that item.
@@ -107,20 +110,20 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromCombineWith(Combinable partner,
+	public void removeAdditionalActionFromCombineWith(Combinable<E> partner,
 			AbstractAction action);
 
 	/**
-	 * Removes a new {@link InventoryItem} to be added when combined with the
-	 * given partner.
+	 * Removes a new {@link Combinable} to be added when combined with the given
+	 * partner.
 	 * 
 	 * @param partner
 	 *            the partner
 	 * @param newItem
 	 *            the new inventory item to be removed
 	 */
-	public void removeNewInventoryItemWhenCombinedWith(Combinable partner,
-			InventoryItem newItem);
+	public void removeNewCombinableWhenCombinedWith(Combinable<E> partner,
+			E newItem);
 
 	/**
 	 * Sets the forbidden text for that item. If {@code null} passed, the
@@ -131,7 +134,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param forbiddenText
 	 *            the forbiddenText to set
 	 */
-	public void setCombineWithForbiddenText(Combinable partner,
+	public void setCombineWithForbiddenText(Combinable<E> partner,
 			String forbiddenText);
 
 	/**
@@ -143,7 +146,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param successfulText
 	 *            the successfulText to set
 	 */
-	public void setCombineWithSuccessfulText(Combinable partner,
+	public void setCombineWithSuccessfulText(Combinable<E> partner,
 			String successfulText);
 
 	/**
@@ -152,7 +155,7 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param enabled
 	 *            if using should be enabled with that item
 	 */
-	public void setCombiningEnabledWith(Combinable partner, boolean enabled);
+	public void setCombiningEnabledWith(Combinable<E> partner, boolean enabled);
 
 	/**
 	 * Sets if the two Combinables should be removed when combined with the
@@ -163,6 +166,6 @@ public interface Combinable extends UsableOrPassivelyUsable {
 	 * @param remove
 	 *            whether it should be removed
 	 */
-	public void setRemoveCombinablesWhenCombinedWith(Combinable partner,
+	public void setRemoveCombinablesWhenCombinedWith(Combinable<E> partner,
 			boolean remove);
 }
