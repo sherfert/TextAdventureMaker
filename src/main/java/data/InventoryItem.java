@@ -53,7 +53,7 @@ public class InventoryItem extends UsableObject implements
 		 */
 		@ManyToOne(cascade = CascadeType.PERSIST)
 		@JoinColumn(nullable = false)
-		private AddInventoryItemsAction addInventoryItemsAction;
+		private final AddInventoryItemsAction addInventoryItemsAction;
 
 		/**
 		 * All actions triggered when the two {@link InventoryItem}s are
@@ -62,7 +62,7 @@ public class InventoryItem extends UsableObject implements
 		 */
 		@ManyToMany(cascade = CascadeType.PERSIST)
 		@JoinTable
-		private List<AbstractAction> additionalCombineWithActions;
+		private final List<AbstractAction> additionalCombineWithActions;
 
 		/**
 		 * The text displayed when combining is disabled but the user
@@ -102,7 +102,7 @@ public class InventoryItem extends UsableObject implements
 		 * Removing items also disabled by default.
 		 */
 		public CombinableInventoryItem() {
-			additionalCombineWithActions = new ArrayList<AbstractAction>();
+			additionalCombineWithActions = new ArrayList<>();
 			addInventoryItemsAction = new AddInventoryItemsAction();
 			enabled = false;
 			removeCombinables = false;
@@ -119,7 +119,7 @@ public class InventoryItem extends UsableObject implements
 				+ ", enabled=" + enabled + ", id=" + id
 				+ ", removeCombinables=" + removeCombinables + '}';
 		}
-		
+
 		@Override
 		public int getId() {
 			return id;
@@ -145,7 +145,7 @@ public class InventoryItem extends UsableObject implements
 		 */
 		@ManyToMany(cascade = CascadeType.PERSIST)
 		@JoinTable
-		private List<AbstractAction> additionalUseWithActions;
+		private final List<AbstractAction> additionalUseWithActions;
 
 		/**
 		 * Whether using of this {@link InventoryItem} with the mapped
@@ -177,7 +177,7 @@ public class InventoryItem extends UsableObject implements
 		 * Disabled by default and no forbidden/successful texts.
 		 */
 		public UsableHasLocation() {
-			additionalUseWithActions = new ArrayList<AbstractAction>();
+			additionalUseWithActions = new ArrayList<>();
 			enabled = false;
 		}
 
@@ -311,6 +311,9 @@ public class InventoryItem extends UsableObject implements
 	public void combineWith(Combinable<InventoryItem> partner) {
 		CombinableInventoryItem combination = getCombinableInventoryItem(partner);
 		if (combination.enabled) {
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Combining {0} with {1}", new Object[]{this, partner});
+
 			// Add new inventory items
 			combination.addInventoryItemsAction.triggerAction();
 			if (combination.removeCombinables) {
@@ -454,6 +457,10 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	public void useWith(HasLocation object) {
+		// There is no "primary" action, so no "isEnabled" check
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Using {0} with {1}", new Object[]{this, object});
+		
 		// Trigger all additional actions
 		for (AbstractAction abstractAction : getUsableHasLocation(object).additionalUseWithActions) {
 			abstractAction.triggerAction();

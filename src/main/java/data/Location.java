@@ -141,7 +141,7 @@ public class Location extends NamedObject {
 	 * Items.
 	 */
 	public List<HasLocation> getHasLocations() {
-		List<HasLocation> result = new ArrayList<HasLocation>(persons.size()
+		List<HasLocation> result = new ArrayList<>(persons.size()
 			+ items.size());
 		// The persons
 		result.addAll(persons);
@@ -155,8 +155,7 @@ public class Location extends NamedObject {
 	 * location.
 	 */
 	public List<Inspectable> getInspectables() {
-		List<Inspectable> result = new ArrayList<Inspectable>(1
-			+ persons.size() + items.size() + waysOut.size());
+		List<Inspectable> result = new ArrayList<>(persons.size() + items.size() + waysOut.size());
 		// The persons
 		result.addAll(persons);
 		// The items
@@ -191,10 +190,10 @@ public class Location extends NamedObject {
 	 * Initializes the fields
 	 */
 	private void init() {
-		waysOut = new ArrayList<Way>();
-		waysIn = new ArrayList<Way>();
-		items = new ArrayList<Item>();
-		persons = new ArrayList<Person>();
+		waysOut = new ArrayList<>();
+		waysIn = new ArrayList<>();
+		items = new ArrayList<>();
+		persons = new ArrayList<>();
 	}
 
 	/**

@@ -40,7 +40,7 @@ public class Game implements HasId {
 	 * All commands that make the game exit. Must be lowercase.
 	 */
 	@ElementCollection
-	private List<String> exitCommands;
+	private final List<String> exitCommands;
 	/**
 	 * The background color that is used for text printed after a failed action.
 	 */
@@ -57,7 +57,7 @@ public class Game implements HasId {
 	 * All commands that let the player see the help. Must be lowercase.
 	 */
 	@ElementCollection
-	private List<String> helpCommands;
+	private final List<String> helpCommands;
 	/**
 	 * The help text being displayed for the help command
 	 */
@@ -75,7 +75,7 @@ public class Game implements HasId {
 	 * {@literal (.+)}
 	 */
 	@ElementCollection
-	private List<String> inspectCommands;
+	private final List<String> inspectCommands;
 	/**
 	 * The help text being displayed for the inspect command
 	 */
@@ -95,7 +95,7 @@ public class Game implements HasId {
 	 * lowercase.
 	 */
 	@ElementCollection
-	private List<String> inventoryCommands;
+	private final List<String> inventoryCommands;
 
 	/**
 	 * The text being displayed, when the player looks into his empty inventory.
@@ -121,7 +121,7 @@ public class Game implements HasId {
 	 * All commands that let the player look around. Must be lowercase.
 	 */
 	@ElementCollection
-	private List<String> lookAroundCommands;
+	private final List<String> lookAroundCommands;
 
 	/**
 	 * The help text being displayed for the look around command
@@ -134,7 +134,7 @@ public class Game implements HasId {
 	 * exactly one parameter for the target: {@literal (.+)}
 	 */
 	@ElementCollection
-	private List<String> moveCommands;
+	private final List<String> moveCommands;
 
 	/**
 	 * The help text being displayed for the move command
@@ -261,7 +261,7 @@ public class Game implements HasId {
 	 * exactly one parameter for the object: {@literal (.+)}
 	 */
 	@ElementCollection
-	private List<String> takeCommands;
+	private final List<String> takeCommands;
 
 	/**
 	 * The help text being displayed for the take command
@@ -282,7 +282,7 @@ public class Game implements HasId {
 	 * exactly one parameter for the object: {@literal (.+)}
 	 */
 	@ElementCollection
-	private List<String> useCommands;
+	private final List<String> useCommands;
 
 	/**
 	 * The default text, when the player uses an object. May be overwritten for
@@ -312,7 +312,7 @@ public class Game implements HasId {
 	 * one word and exactly two parameters for the objects: {@literal (.+)}
 	 */
 	@ElementCollection
-	private List<String> useWithCombineCommands;
+	private final List<String> useWithCombineCommands;
 
 	/**
 	 * The help text being displayed for the use with/combine command
@@ -324,15 +324,15 @@ public class Game implements HasId {
 	 * Constructs a new game object.
 	 */
 	public Game() {
-		exitCommands = new ArrayList<String>();
-		lookAroundCommands = new ArrayList<String>();
-		helpCommands = new ArrayList<String>();
-		inspectCommands = new ArrayList<String>();
-		inventoryCommands = new ArrayList<String>();
-		moveCommands = new ArrayList<String>();
-		takeCommands = new ArrayList<String>();
-		useCommands = new ArrayList<String>();
-		useWithCombineCommands = new ArrayList<String>();
+		exitCommands = new ArrayList<>();
+		lookAroundCommands = new ArrayList<>();
+		helpCommands = new ArrayList<>();
+		inspectCommands = new ArrayList<>();
+		inventoryCommands = new ArrayList<>();
+		moveCommands = new ArrayList<>();
+		takeCommands = new ArrayList<>();
+		useCommands = new ArrayList<>();
+		useWithCombineCommands = new ArrayList<>();
 	}
 
 	/**
@@ -467,9 +467,7 @@ public class Game implements HasId {
 		return helpHelpText;
 	}
 
-	/**
-	 * @return the id
-	 */
+	@Override
 	public int getId() {
 		return id;
 	}

@@ -16,6 +16,8 @@ import data.action.AddInventoryItemsAction;
 import data.action.ChangeItemAction;
 import data.interfaces.HasLocation;
 import data.interfaces.Takeable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Any item in the game world. This items are stored in locations but cannot be
@@ -116,6 +118,8 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		additionalTakeActions.add(action);
 	}
 
+	// TODO Check if this (and probably other) other-than-additional
+	// actions should be reachable directly!
 	@Override
 	public AddInventoryItemsAction getAddInventoryItemsAction() {
 		return addInventoryItemsAction;
@@ -156,8 +160,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		additionalTakeActions.remove(action);
 	}
 
+	// final as called in constructor.
 	@Override
-	public void setLocation(Location location) {
+	public final void setLocation(Location location) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Setting location of {0} to {1}", new Object[]{this, location});
+		
 		if (this.location != null) {
 			this.location.removeItem(this);
 		}
@@ -190,6 +198,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public void take() {
 		if (isTakingEnabled()) {
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Taking {0}", this);
+			
 			addInventoryItemsAction.triggerAction();
 			removeAction.triggerAction();
 		}
@@ -205,7 +216,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
 		this.removeAction = new ChangeItemAction(this);
 		this.removeAction.setNewLocation(null);
-		this.additionalTakeActions = new ArrayList<AbstractAction>();
+		this.additionalTakeActions = new ArrayList<>();
 		setRemoveItem(true);
 	}
 

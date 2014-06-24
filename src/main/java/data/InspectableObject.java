@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 
 import data.action.AbstractAction;
 import data.interfaces.Inspectable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Anything having a name, identifiers, a description and being
@@ -97,6 +99,9 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 
 	@Override
 	public void inspect() {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Inspecting {0}", this);
+		
 		for (AbstractAction abstractAction : additionalInspectActions) {
 			abstractAction.triggerAction();
 		}
@@ -121,8 +126,8 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 * Initializes the fields
 	 */
 	private void init() {
-		additionalInspectActions = new ArrayList<AbstractAction>();
-		identifiers = new ArrayList<String>();
+		additionalInspectActions = new ArrayList<>();
+		identifiers = new ArrayList<>();
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import data.interfaces.HasLocation;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A person.
@@ -55,8 +57,12 @@ public class Person extends InspectableObject implements HasLocation {
 		return location;
 	}
 
+	// final as called in constructor
 	@Override
-	public void setLocation(Location location) {
+	public final void setLocation(Location location) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Setting location of {0} to {1}", new Object[]{this, location});
+
 		if (this.location != null) {
 			this.location.removePerson(this);
 		}

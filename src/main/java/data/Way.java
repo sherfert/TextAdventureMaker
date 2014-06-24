@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import data.action.AbstractAction;
 import data.action.MoveAction;
 import data.interfaces.Travelable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A one-way connection between two locations.
@@ -95,6 +97,7 @@ public class Way extends InspectableObject implements Travelable {
 		return additionalMoveActions;
 	}
 
+	@Override
 	public Location getDestination() {
 		return destination;
 	}
@@ -156,20 +159,26 @@ public class Way extends InspectableObject implements Travelable {
 		moveAction.setEnabled(enabled);
 	}
 
+	// TODO isEnabled!?
 	@Override
 	public void travel() {
+		// MoveAction is either enabled or not, no need to check here
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Travelling (if enabled) over {0}", this);
+		
 		moveAction.triggerAction();
 		for (AbstractAction abstractAction : additionalMoveActions) {
 			abstractAction.triggerAction();
 		}
 	}
 
+	// final as called in constructor
 	/**
 	 * This also modifies the location.
 	 *
 	 * @param destination the destination to set
 	 */
-	public void setDestination(Location destination) {
+	public final void setDestination(Location destination) {
 		if (this.destination != null) {
 			this.destination.removeWayIn(this);
 		}
@@ -179,12 +188,13 @@ public class Way extends InspectableObject implements Travelable {
 		this.destination = destination;
 	}
 
+	// final as called in constructor
 	/**
 	 * This also modifies the location.
 	 *
 	 * @param origin the origin to set
 	 */
-	public void setOrigin(Location origin) {
+	public final void setOrigin(Location origin) {
 		if (this.origin != null) {
 			this.origin.removeWayOut(this);
 		}
@@ -199,7 +209,7 @@ public class Way extends InspectableObject implements Travelable {
 	 */
 	private void init() {
 		moveAction = new MoveAction(this);
-		additionalMoveActions = new ArrayList<AbstractAction>();
+		additionalMoveActions = new ArrayList<>();
 	}
 
 	@Override

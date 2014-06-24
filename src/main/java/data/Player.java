@@ -3,6 +3,8 @@ package data;
 import data.interfaces.HasId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -44,18 +46,10 @@ public class Player implements HasId {
 
 	/**
 	 * Creates a player with no location yet. It will be transferred to the
-	 * game's starting location when a new game is started.
+	 * game's starting location if a new game is started.
 	 */
 	public Player() {
-		inventory = new ArrayList<InventoryItem>();
-	}
-
-	/**
-	 * @param location the location
-	 */
-	public Player(Location location) {
-		this();
-		this.location = location;
+		inventory = new ArrayList<>();
 	}
 
 	/**
@@ -64,12 +58,13 @@ public class Player implements HasId {
 	 * @param item the item
 	 */
 	public void addInventoryItem(InventoryItem item) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Adding inventory item {0}", item);
+		
 		this.inventory.add(item);
 	}
 
-	/**
-	 * @return the id
-	 */
+	@Override
 	public int getId() {
 		return id;
 	}
@@ -94,6 +89,8 @@ public class Player implements HasId {
 	 * @param item the item
 	 */
 	public void removeInventoryItem(InventoryItem item) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Removing inventory item {0}", item);
 		this.inventory.remove(item);
 	}
 
@@ -101,6 +98,9 @@ public class Player implements HasId {
 	 * @param location the location to set
 	 */
 	public void setLocation(Location location) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Moving player to {0}", location);
+		
 		this.location = location;
 	}
 
