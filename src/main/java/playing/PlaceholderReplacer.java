@@ -75,6 +75,7 @@ public class PlaceholderReplacer {
 			message = message.replaceAll("<INPUT>", input.toUpperCase())
 					.replaceAll("<Input>|<input>", input);
 		}
+		// TODO differentiate normal_case and lower_case
 		if (identifier != null) {
 			message = message.replaceAll("<IDENTIFIER>",
 					identifier.toUpperCase()).replaceAll(
