@@ -10,6 +10,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 
+/**
+ * Manages connections to database files.
+ * 
+ * @author Satia
+ */
 public class PersistenceManager {
 
 	/**

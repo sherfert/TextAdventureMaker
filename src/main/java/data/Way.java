@@ -159,7 +159,6 @@ public class Way extends InspectableObject implements Travelable {
 		moveAction.setEnabled(enabled);
 	}
 
-	// TODO isEnabled!?
 	@Override
 	public void travel() {
 		// MoveAction is either enabled or not, no need to check here

@@ -22,7 +22,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 			AbstractAction action);
 
 	/**
-	 * @param hl
+	 * @param object
 	 *            the object
 	 * 
 	 * @return the additional actions for that object.

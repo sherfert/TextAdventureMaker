@@ -63,6 +63,9 @@ public abstract class NamedObject implements HasId {
 		return id;
 	}
 
+	/**
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
@@ -88,6 +91,9 @@ public abstract class NamedObject implements HasId {
 		this.description = description;
 	}
 
+	/**
+	 * @return a string representation of this object
+	 */
 	@Override
 	public String toString() {
 		return "NamedObject{" + "id=" + id + ", name=" + name + ", description=" + description + '}';

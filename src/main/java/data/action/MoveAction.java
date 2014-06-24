@@ -66,7 +66,7 @@ public class MoveAction extends AbstractAction {
 	 *
 	 * @param way the way to set
 	 */
-	public void setWay(Way way) {
+	public final void setWay(Way way) {
 		this.way = way;
 		if (way.getMoveAction() != this) {
 			way.setMoveAction(this);

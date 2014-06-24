@@ -131,7 +131,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	 * Initializes the fields
 	 */
 	private void init() {
-		additionalUseActions = new ArrayList<AbstractAction>();
+		additionalUseActions = new ArrayList<>();
 		usingEnabled = false;
 	}
 

@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import data.Game;
-import logging.LogManager;
 import playing.GamePlayer;
 
 /**
@@ -41,24 +40,31 @@ public class GeneralParser {
 	 * @author Satia
 	 */
 	public enum Command {
-
+		/** Use one item with another or combine two items */
 		USEWITHCOMBINE("getUseWithCombineCommands",
 			"getUseWithCombineHelpText", "useWithOrCombine", String.class,
 			String.class), //
+		/** Move around */
 		MOVE("getMoveCommands", "getMoveHelpText", "move", String.class), //
+		/** Take something */
 		TAKE("getTakeCommands", "getTakeHelpText", "take", String.class), //
+		/** Use something */
 		USE("getUseCommands", "getUseHelpText", "use", String.class), //
+		/** Look around */
 		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
 			"lookAround"), //
+		/** Inspect something */
 		INSPECT("getInspectCommands", "getInspectHelpText", "inspect",
 			String.class), //
+		/** Look into the inventory */
 		INVENTORY("getInventoryCommands", "getInventoryHelpText", "inventory"), //
+		/** Get help */
 		HELP("getHelpCommands", "getHelpHelpText", "help");
 
 		/**
 		 * The name of the method that gets the valid commands. Must be
 		 * a method of the class {@link Game} with no parameters and
-		 * List<String> as return type.
+		 * List of String as return type.
 		 */
 		public final String commandMethodName;
 
@@ -123,7 +129,7 @@ public class GeneralParser {
 		/**
 		 * The command.
 		 */
-		private Command command;
+		private final Command command;
 
 		/**
 		 * The texual commands.
@@ -226,7 +232,7 @@ public class GeneralParser {
 	 * @return the typed parameters.
 	 */
 	public static String[] getParameters(Matcher matcher) {
-		List<String> parameters = new ArrayList<String>(matcher.groupCount());
+		List<String> parameters = new ArrayList<>(matcher.groupCount());
 		for (int i = 1; i <= matcher.groupCount(); i++) {
 			if (matcher.group(i) != null) {
 				parameters.add(matcher.group(i));
@@ -238,17 +244,17 @@ public class GeneralParser {
 	/**
 	 * The GamePlayer for this session
 	 */
-	private GamePlayer gamePlayer;
+	private final GamePlayer gamePlayer;
 
 	/**
 	 * A list of {@link CommandRecExec}s for each {@link Command}.
 	 */
-	private List<CommandRecExec> commandRecExecs;
+	private final List<CommandRecExec> commandRecExecs;
 
 	/**
 	 * The pattern for exit commands.
 	 */
-	private Pattern exitPattern;
+	private final Pattern exitPattern;
 
 	/**
 	 * Initializes this parser.
@@ -262,7 +268,7 @@ public class GeneralParser {
 			.getExitCommands());
 		// Build CommandRecExecs
 		Command[] commands = Command.values();
-		this.commandRecExecs = new ArrayList<CommandRecExec>(commands.length);
+		this.commandRecExecs = new ArrayList<>(commands.length);
 		for (Command command : commands) {
 			this.commandRecExecs.add(new CommandRecExec(command));
 		}

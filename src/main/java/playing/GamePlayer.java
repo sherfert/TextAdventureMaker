@@ -33,27 +33,27 @@ public class GamePlayer {
 	/**
 	 * A placeholder replacer for the currently used command.
 	 */
-	private PlaceholderReplacer currentReplacer;
+	private final PlaceholderReplacer currentReplacer;
 
 	/**
 	 * The game that is being played.
 	 */
-	private Game game;
+	private final Game game;
 
 	/**
 	 * The IO object.
 	 */
-	private InputOutput io;
+	private final InputOutput io;
 
 	/**
 	 * The parser
 	 */
-	private GeneralParser parser;
+	private final GeneralParser parser;
 
 	/**
 	 * The player object.
 	 */
-	private Player player;
+	private final Player player;
 
 	/**
 	 * @param game the game

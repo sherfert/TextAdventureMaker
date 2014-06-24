@@ -527,7 +527,7 @@ public class InventoryItem extends UsableObject implements
 	private CombinableInventoryItem getCombinableInventoryItem(
 		Combinable<InventoryItem> item) {
 		if (item instanceof InventoryItem) {
-			CombinableInventoryItem result = combinableInventoryItems.get(item);
+			CombinableInventoryItem result = combinableInventoryItems.get((InventoryItem)item);
 			if (result == null) {
 				combinableInventoryItems.put((InventoryItem) item,
 					result = new CombinableInventoryItem());
@@ -555,13 +555,13 @@ public class InventoryItem extends UsableObject implements
 		UsableHasLocation result;
 
 		if (object instanceof Item) {
-			result = usableItems.get(object);
+			result = usableItems.get((Item)object);
 			if (result == null) {
 				usableItems
 					.put((Item) object, result = new UsableHasLocation());
 			}
 		} else if (object instanceof Person) {
-			result = usablePersons.get(object);
+			result = usablePersons.get((Person)object);
 			if (result == null) {
 				usablePersons.put((Person) object,
 					result = new UsableHasLocation());
@@ -579,9 +579,9 @@ public class InventoryItem extends UsableObject implements
 	 * Initializes the fields.
 	 */
 	private void init() {
-		usableItems = new HashMap<Item, UsableHasLocation>();
-		usablePersons = new HashMap<Person, UsableHasLocation>();
-		combinableInventoryItems = new HashMap<InventoryItem, CombinableInventoryItem>();
+		usableItems = new HashMap<>();
+		usablePersons = new HashMap<>();
+		combinableInventoryItems = new HashMap<>();
 	}
 
 	@Override

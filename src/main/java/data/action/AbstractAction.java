@@ -27,7 +27,12 @@ public abstract class AbstractAction implements HasId{
 	 * @author Satia
 	 */
 	public enum Enabling {
-		DISABLE, DO_NOT_CHANGE, ENABLE;
+		/** Disable the object */
+		DISABLE,
+		/** Do not change if the object is enabled */
+		DO_NOT_CHANGE,
+		/** Enable the object */
+		ENABLE;
 	}
 
 	/**

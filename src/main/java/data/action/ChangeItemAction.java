@@ -114,7 +114,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 *
 	 * @param newLocation the newLocation to set
 	 */
-	public void setNewLocation(Location newLocation) {
+	public final void setNewLocation(Location newLocation) {
 		this.newLocation = newLocation;
 		this.changeLocation = true;
 	}

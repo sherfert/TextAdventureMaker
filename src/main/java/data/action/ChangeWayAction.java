@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 
 import data.Location;
 import data.Way;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * An action changing properties of a {@link Way}.
@@ -28,10 +31,14 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	/**
 	 * The new origin. If {@code null}, the old will not be changed.
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
 	private Location newOrigin;
 	/**
 	 * The new destination. If {@code null}, the old will not be changed.
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
 	private Location newDestination;
 
 	/**

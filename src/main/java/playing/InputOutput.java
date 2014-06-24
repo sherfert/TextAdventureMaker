@@ -29,7 +29,7 @@ public class InputOutput implements TextHandler {
 	/**
 	 * The GamePlayer for this session
 	 */
-	private GamePlayer gamePlayer;
+	private final GamePlayer gamePlayer;
 
 	/**
 	 * The screen that is being used to display to game.

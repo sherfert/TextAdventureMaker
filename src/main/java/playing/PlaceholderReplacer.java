@@ -78,12 +78,12 @@ public class PlaceholderReplacer {
 		if (identifier != null) {
 			message = message.replaceAll("<IDENTIFIER>", identifier.toUpperCase())
 				.replaceAll("<Identifier>", identifier)
-				.replaceAll("<identifier>", identifier.toLowerCase());;
+				.replaceAll("<identifier>", identifier.toLowerCase());
 		}
 		if (identifier2 != null) {
 			message = message.replaceAll("<IDENTIFIER2>", identifier2.toUpperCase())
 				.replaceAll("<Identifier2>", identifier2)
-				.replaceAll("<identifier2>", identifier2.toLowerCase());;
+				.replaceAll("<identifier2>", identifier2.toLowerCase());
 		}
 		if (name != null) {
 			message = message.replaceAll("<NAME>", name.toUpperCase())

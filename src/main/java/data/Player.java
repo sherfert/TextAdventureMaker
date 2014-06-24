@@ -34,7 +34,7 @@ public class Player implements HasId {
 	 */
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn
-	private List<InventoryItem> inventory;
+	private final List<InventoryItem> inventory;
 
 	/**
 	 * The location. If {@code null}, the game supposedly has not started
@@ -104,6 +104,9 @@ public class Player implements HasId {
 		this.location = location;
 	}
 
+	/**
+	 * @return a string representation of this object
+	 */
 	@Override
 	public String toString() {
 		return "Player{" + "id=" + id + ", inventoryIDs=" + NamedObject.getIDList(inventory)

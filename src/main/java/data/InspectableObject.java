@@ -78,7 +78,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 * Note: The identifier is added as a lower case String.
 	 */
 	@Override
-	public void addIdentifier(String name) {
+	public final void addIdentifier(String name) {
 		identifiers.add(name.toLowerCase());
 	}
 
