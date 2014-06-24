@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import persistence.PersistenceManager;
 import persistence.PlayerManager;
 import data.InventoryItem;
 import data.NamedObject;
@@ -79,20 +78,17 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	@Override
-	public void triggerAction() {
-		if (enabled) {
-			for (InventoryItem item : pickUpItems) {
-				PlayerManager.getPlayer().addInventoryItem(item);
-			}
+	public void doAction() {
+		for (InventoryItem item : pickUpItems) {
+			PlayerManager.getPlayer().addInventoryItem(item);
 		}
-		PersistenceManager.updateChanges();
 	}
 
 	/**
 	 * Initializes the fields
 	 */
 	private void init() {
-		this.pickUpItems = new ArrayList<InventoryItem>();
+		this.pickUpItems = new ArrayList<>();
 	}
 
 	@Override

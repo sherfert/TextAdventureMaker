@@ -11,8 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import persistence.PersistenceManager;
-
 /**
  * Another action can be changed with this action. Currently this means
  * disabling or enabling it.
@@ -74,13 +72,12 @@ public class ChangeActionAction extends AbstractAction {
 	}
 
 	@Override
-	public void triggerAction() {
+	public void doAction() {
 		if (enabling == Enabling.ENABLE) {
 			action.setEnabled(true);
 		} else if (enabling == Enabling.DISABLE) {
 			action.setEnabled(false);
 		}
-		PersistenceManager.updateChanges();
 	}
 
 	@Override

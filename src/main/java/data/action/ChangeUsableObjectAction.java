@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-import persistence.PersistenceManager;
 import data.InspectableObject;
 import data.UsableObject;
 
@@ -111,25 +110,22 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	public void triggerAction() {
+	public void doAction() {
 		// Call the super method
-		super.triggerAction();
+		super.doAction();
 
-		if (enabled) {
-			// Change fields
-			if (newUseForbiddenText != null) {
-				getObject().setUseForbiddenText(newUseForbiddenText);
-			}
-			if (newUseSuccessfulText != null) {
-				getObject().setUseSuccessfulText(newUseSuccessfulText);
-			}
-			if (enabling == Enabling.ENABLE) {
-				getObject().setUsingEnabled(true);
-			} else if (enabling == Enabling.DISABLE) {
-				getObject().setUsingEnabled(false);
-			}
+		// Change fields
+		if (newUseForbiddenText != null) {
+			getObject().setUseForbiddenText(newUseForbiddenText);
 		}
-		PersistenceManager.updateChanges();
+		if (newUseSuccessfulText != null) {
+			getObject().setUseSuccessfulText(newUseSuccessfulText);
+		}
+		if (enabling == Enabling.ENABLE) {
+			getObject().setUsingEnabled(true);
+		} else if (enabling == Enabling.DISABLE) {
+			getObject().setUsingEnabled(false);
+		}
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-import persistence.PersistenceManager;
 import data.InspectableObject;
 
 /**
@@ -155,24 +154,21 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	}
 
 	@Override
-	public void triggerAction() {
+	public void doAction() {
 		// Call the super method
-		super.triggerAction();
+		super.doAction();
 
-		if (enabled) {
-			// Change fields
-			if (newInspectionText != null) {
-				getObject().setInspectionText(newInspectionText);
-			}
-			// Add and remove identifiers
-			for (String id : identifiersToAdd) {
-				getObject().addIdentifier(id);
-			}
-			for (String id : identifiersToRemove) {
-				getObject().removeIdentifier(id);
-			}
+		// Change fields
+		if (newInspectionText != null) {
+			getObject().setInspectionText(newInspectionText);
 		}
-		PersistenceManager.updateChanges();
+		// Add and remove identifiers
+		for (String id : identifiersToAdd) {
+			getObject().addIdentifier(id);
+		}
+		for (String id : identifiersToRemove) {
+			getObject().removeIdentifier(id);
+		}
 	}
 
 	/**
@@ -185,9 +181,9 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 
 	@Override
 	public String toString() {
-		return "ChangeInspectableObjectAction{" + "identifiersToAdd=" +
-			identifiersToAdd + ", identifiersToRemove=" +
-			identifiersToRemove + ", newInspectionText=" +
-			newInspectionText + " " + super.toString() + '}';
+		return "ChangeInspectableObjectAction{" + "identifiersToAdd="
+			+ identifiersToAdd + ", identifiersToRemove="
+			+ identifiersToRemove + ", newInspectionText="
+			+ newInspectionText + " " + super.toString() + '}';
 	}
 }

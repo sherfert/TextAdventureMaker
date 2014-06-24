@@ -7,7 +7,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import persistence.PersistenceManager;
 import data.InspectableObject;
 import data.NamedObject;
 
@@ -103,17 +102,14 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	}
 
 	@Override
-	public void triggerAction() {
-		if (enabled) {
-			// Change fields
-			if (newName != null) {
-				object.setName(newName);
-			}
-			if (newDescription != null) {
-				object.setDescription(newDescription);
-			}
+	public void doAction() {
+		// Change fields
+		if (newName != null) {
+			object.setName(newName);
 		}
-		PersistenceManager.updateChanges();
+		if (newDescription != null) {
+			object.setDescription(newDescription);
+		}
 	}
 
 	@Override

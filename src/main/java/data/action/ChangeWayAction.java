@@ -2,7 +2,6 @@ package data.action;
 
 import javax.persistence.Entity;
 
-import persistence.PersistenceManager;
 import data.Location;
 import data.Way;
 
@@ -124,12 +123,11 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	public void triggerAction() {
+	public void doAction() {
 		// Call the super method
-		super.triggerAction();
-
-		if (enabled) {
-			// Change fields
+		super.doAction();
+		
+		// Change fields
 			if (newMoveForbiddenText != null) {
 				getObject().setMoveForbiddenText(newMoveForbiddenText);
 			}
@@ -142,8 +140,6 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 			if (newDestination != null) {
 				getObject().setDestination(newDestination);
 			}
-		}
-		PersistenceManager.updateChanges();
 	}
 
 	@Override

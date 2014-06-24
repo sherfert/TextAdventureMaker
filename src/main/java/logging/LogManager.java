@@ -16,10 +16,11 @@ import java.util.logging.SimpleFormatter;
 public class LogManager {
 	// TODO proper logging everywhere
 
+	// TODO this must be configurable.
 	/**
 	 * The global log level.
 	 */
-	public static Level LOG_LEVEL = Level.CONFIG;
+	public static final Level DEFAULT_LOG_LEVEL = Level.CONFIG;
 
 	/**
 	 * Static initializer block
@@ -29,7 +30,7 @@ public class LogManager {
 		System.setProperty("java.util.logging.SimpleFormatter.format",
 				"%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %2$s %5$s%6$s%n");
 		Logger rootLogger = Logger.getLogger("");
-		rootLogger.setLevel(LOG_LEVEL);
+		rootLogger.setLevel(DEFAULT_LOG_LEVEL);
 
 		// Create the directory to put logs into
 		String dirName = System.getProperty("user.home") + File.separator

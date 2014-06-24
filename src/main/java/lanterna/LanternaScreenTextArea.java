@@ -29,6 +29,7 @@ public class LanternaScreenTextArea {
 	public interface TextHandler {
 		/**
 		 * Handles one line of text.
+		 * @param text the text to handle
 		 */
 		void handleText(String text);
 	}
@@ -39,9 +40,9 @@ public class LanternaScreenTextArea {
 	 * @author Satia Herfert
 	 */
 	private class ColoredText {
-		private String text;
-		private Color bgColor;
-		private Color fgColor;
+		private final String text;
+		private final Color bgColor;
+		private final Color fgColor;
 
 		/**
 		 * @param text
@@ -182,6 +183,7 @@ public class LanternaScreenTextArea {
 	 * @param toX
 	 * @param fromY
 	 * @param toY
+	 * @param textHandler
 	 */
 	public LanternaScreenTextArea(Screen screen, boolean printTop,
 			boolean includeInputLine, Color textBgColor, Color textFgColor,
@@ -270,9 +272,10 @@ public class LanternaScreenTextArea {
 	}
 
 	/**
-	 * Clears the text area. The screen has to be refreshed afterwards.
+	 * Clears the text area. The screen has to be refreshed afterwards. This method
+	 * is final, as called in the constructor.
 	 */
-	public void clear() {
+	public final void clear() {
 		// clear lines
 		lines.clear();
 		// Fill lines with empty strings
@@ -295,7 +298,7 @@ public class LanternaScreenTextArea {
 	 * @param fgColor
 	 */
 	public void println(String text, Color bgColor, Color fgColor) {
-		List<String> linesToPrint = new ArrayList<String>(Arrays.asList(text
+		List<String> linesToPrint = new ArrayList<>(Arrays.asList(text
 				.split("\n")));
 		// Split each after length is reached
 		for (int i = 0; i < linesToPrint.size(); i++) {
@@ -424,6 +427,7 @@ public class LanternaScreenTextArea {
 		}
 
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				while (true) {
 					Key key = screen.readInput();
@@ -440,6 +444,7 @@ public class LanternaScreenTextArea {
 	/**
 	 * Reads the input and handles it. The screen has to be refreshed
 	 * afterwards.
+	 * @param key the key to read
 	 */
 	public void readInput(Key key) {
 		if (!includeInputLine) {
