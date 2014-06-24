@@ -11,27 +11,28 @@ import data.Game;
 
 /**
  * Managing access to the game in a database.
- * 
+ *
  * @author Satia
  */
 public class GameManager {
+
 	/**
-	 * 
+	 *
 	 * @return the game
 	 */
 	public static Game getGame() {
 		// Find all games (hopefully only one)
 		CriteriaQuery<Game> criteriaQueryGame = PersistenceManager
-				.getCriteriaBuilder().createQuery(Game.class);
+			.getCriteriaBuilder().createQuery(Game.class);
 		Root<Game> gameRoot = criteriaQueryGame.from(Game.class);
 		criteriaQueryGame.select(gameRoot);
 		List<Game> resultListGame = PersistenceManager.getEntityManager()
-				.createQuery(criteriaQueryGame).getResultList();
+			.createQuery(criteriaQueryGame).getResultList();
 
 		// There should be exactly 1 game
 		if (resultListGame.size() != 1) {
 			Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE,
-					"There are " + resultListGame.size() + " games.");
+				"There are {0} games.", resultListGame.size());
 		}
 
 		return resultListGame.get(0);

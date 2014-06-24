@@ -59,9 +59,7 @@ public abstract class NamedObject implements HasId {
 		this.description = description;
 	}
 
-	/**
-	 * @return the id
-	 */
+	@Override
 	public int getId() {
 		return id;
 	}

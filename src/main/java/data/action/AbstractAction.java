@@ -57,9 +57,7 @@ public abstract class AbstractAction implements HasId{
 		this.enabled = enabled;
 	}
 
-	/**
-	 * @return the id
-	 */
+	@Override
 	public int getId() {
 		return id;
 	}

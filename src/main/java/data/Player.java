@@ -1,5 +1,6 @@
 package data;
 
+import data.interfaces.HasId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import javax.persistence.OneToOne;
  * @author Satia
  */
 @Entity
-public class Player {
+public class Player implements HasId {
 
 	/**
 	 * The id.

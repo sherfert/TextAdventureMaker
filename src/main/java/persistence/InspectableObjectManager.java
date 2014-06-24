@@ -15,6 +15,7 @@ public class InspectableObjectManager {
 	 * Gets the inspectable object that matches the given identifier-regexp or
 	 * {@code null} , if there is none.
 	 * 
+	 * @param <E> the Identifiable subclass
 	 * @param identifiables
 	 *            the identifiables to search
 	 * @param identifier

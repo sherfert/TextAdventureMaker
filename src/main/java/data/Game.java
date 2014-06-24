@@ -1,8 +1,9 @@
 package data;
 
+import com.googlecode.lanterna.terminal.Terminal.Color;
+import data.interfaces.HasId;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -14,8 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import com.googlecode.lanterna.terminal.Terminal.Color;
-
 /**
  * A game that can be played. Contains all configuration and (default) texts.
  * There should be only one game per database.
@@ -23,7 +22,7 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
  * @author Satia
  */
 @Entity
-public class Game {
+public class Game implements HasId {
 	/*
 	 * Big TODO: Use Sets instead of Lists, where useful. Therefore, if former
 	 * Lists of own classes, let these (or better all) classes override equals,

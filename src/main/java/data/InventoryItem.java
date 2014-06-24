@@ -26,6 +26,7 @@ import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.ChangeItemAction;
 import data.interfaces.Combinable;
+import data.interfaces.HasId;
 import data.interfaces.HasLocation;
 import data.interfaces.UsableWithHasLocation;
 
@@ -45,7 +46,7 @@ public class InventoryItem extends UsableObject implements
 	 * @author Satia
 	 */
 	@Entity
-	private static class CombinableInventoryItem {
+	private static class CombinableInventoryItem implements HasId {
 
 		/**
 		 * The action adding the new inventory items.
@@ -118,6 +119,11 @@ public class InventoryItem extends UsableObject implements
 				+ ", enabled=" + enabled + ", id=" + id
 				+ ", removeCombinables=" + removeCombinables + '}';
 		}
+		
+		@Override
+		public int getId() {
+			return id;
+		}
 	}
 
 	/**
@@ -130,7 +136,7 @@ public class InventoryItem extends UsableObject implements
 	 * @author Satia
 	 */
 	@Entity
-	private static class UsableHasLocation {
+	private static class UsableHasLocation implements HasId {
 
 		/**
 		 * All actions triggered when the {@link InventoryItem} is used
@@ -184,6 +190,10 @@ public class InventoryItem extends UsableObject implements
 				+ ", useWithSuccessfulText=" + useWithSuccessfulText + '}';
 		}
 
+		@Override
+		public int getId() {
+			return id;
+		}
 	}
 
 	/**
