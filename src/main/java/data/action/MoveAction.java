@@ -11,7 +11,7 @@ import data.Way;
 
 /**
  * An action changing the location of the player.
- * 
+ *
  * @author Satia
  */
 @Entity
@@ -26,7 +26,7 @@ public class MoveAction extends AbstractAction {
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
+	 *
 	 * @deprecated Use {@link MoveAction#MoveAction(Way)} instead.
 	 */
 	@Deprecated
@@ -34,24 +34,21 @@ public class MoveAction extends AbstractAction {
 	}
 
 	/**
-	 * Note: The way's {@link MoveAction} will be overwritten. You can also just
-	 * get and modify the current by {@link Way#getMoveAction()}.
-	 * 
-	 * @param way
-	 *            the way where the player should move
+	 * Note: The way's {@link MoveAction} will be overwritten. You can also
+	 * just get and modify the current by {@link Way#getMoveAction()}.
+	 *
+	 * @param way the way where the player should move
 	 */
 	public MoveAction(Way way) {
 		setWay(way);
 	}
-	
+
 	/**
-	 * Note: The way's {@link MoveAction} will be overwritten. You can also just
-	 * get and modify the current by {@link Way#getMoveAction()}.
-	 * 
-	 * @param way
-	 *            the way where the player should move
-	 * @param enabled
-	 *            if the action should be enabled
+	 * Note: The way's {@link MoveAction} will be overwritten. You can also
+	 * just get and modify the current by {@link Way#getMoveAction()}.
+	 *
+	 * @param way the way where the player should move
+	 * @param enabled if the action should be enabled
 	 */
 	public MoveAction(Way way, boolean enabled) {
 		super(enabled);
@@ -67,9 +64,8 @@ public class MoveAction extends AbstractAction {
 
 	/**
 	 * Sets the way and sets {@code this} as the way's {@link MoveAction}.
-	 * 
-	 * @param way
-	 *            the way to set
+	 *
+	 * @param way the way to set
 	 */
 	public void setWay(Way way) {
 		this.way = way;
@@ -84,5 +80,10 @@ public class MoveAction extends AbstractAction {
 			PlayerManager.getPlayer().setLocation(way.getDestination());
 		}
 		PersistenceManager.updateChanges();
+	}
+
+	@Override
+	public String toString() {
+		return "MoveAction{" + "wayID=" + way.getId() + " " + super.toString() + '}';
 	}
 }

@@ -17,7 +17,7 @@ import data.interfaces.Travelable;
 
 /**
  * A one-way connection between two locations.
- * 
+ *
  * @author Satia
  */
 @Entity
@@ -51,12 +51,14 @@ public class Way extends InspectableObject implements Travelable {
 	private Location origin;
 
 	/**
-	 * A personalized error message displayed if moving this way was forbidden.
+	 * A personalized error message displayed if moving this way was
+	 * forbidden.
 	 */
 	private String moveForbiddenText;
 
 	/**
-	 * A personalized error message displayed if moving this way was successful.
+	 * A personalized error message displayed if moving this way was
+	 * successful.
 	 */
 	private String moveSuccessfulText;
 
@@ -70,17 +72,13 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	/**
-	 * @param name
-	 *            the name
-	 * @param description
-	 *            the description
-	 * @param origin
-	 *            the origin
-	 * @param destination
-	 *            the destination
+	 * @param name the name
+	 * @param description the description
+	 * @param origin the origin
+	 * @param destination the destination
 	 */
 	public Way(String name, String description, Location origin,
-			Location destination) {
+		Location destination) {
 		super(name, description);
 		init();
 		setOrigin(origin);
@@ -168,9 +166,8 @@ public class Way extends InspectableObject implements Travelable {
 
 	/**
 	 * This also modifies the location.
-	 * 
-	 * @param destination
-	 *            the destination to set
+	 *
+	 * @param destination the destination to set
 	 */
 	public void setDestination(Location destination) {
 		if (this.destination != null) {
@@ -184,9 +181,8 @@ public class Way extends InspectableObject implements Travelable {
 
 	/**
 	 * This also modifies the location.
-	 * 
-	 * @param origin
-	 *            the origin to set
+	 *
+	 * @param origin the origin to set
 	 */
 	public void setOrigin(Location origin) {
 		if (this.origin != null) {
@@ -204,5 +200,15 @@ public class Way extends InspectableObject implements Travelable {
 	private void init() {
 		moveAction = new MoveAction(this);
 		additionalMoveActions = new ArrayList<AbstractAction>();
+	}
+
+	@Override
+	public String toString() {
+		return "Way{" + "additionalMoveActionsIDs="
+			+ NamedObject.getIDList(additionalMoveActions)
+			+ ", moveActionID=" + moveAction.getId() + ", destinationID="
+			+ destination.getId() + ", originID=" + origin.getId()
+			+ ", moveForbiddenText=" + moveForbiddenText
+			+ ", moveSuccessfulText=" + moveSuccessfulText + " " + super.toString() + '}';
 	}
 }

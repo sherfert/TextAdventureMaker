@@ -1,5 +1,6 @@
 package data.action;
 
+import data.interfaces.HasId;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ import javax.persistence.InheritanceType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractAction {
+public abstract class AbstractAction implements HasId{
 
 	/**
 	 * When an action changes something that can be disabled or enabled, a
@@ -76,6 +77,14 @@ public abstract class AbstractAction {
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	/**
+	 * @return the class name, id and enabled status.
+	 */
+	@Override
+	public String toString() {
+		return "AbstractAction{" + "id=" + id + ", enabled=" + enabled + '}';
 	}
 
 	/**

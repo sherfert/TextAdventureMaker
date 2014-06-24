@@ -13,11 +13,12 @@ import javax.persistence.OneToOne;
 
 /**
  * A player. There is exactly one player per game.
- * 
+ *
  * @author Satia
  */
 @Entity
 public class Player {
+
 	/**
 	 * The id.
 	 */
@@ -33,7 +34,8 @@ public class Player {
 	private List<InventoryItem> inventory;
 
 	/**
-	 * The location. If {@code null}, the game supposedly has not started yet.
+	 * The location. If {@code null}, the game supposedly has not started
+	 * yet.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true)
@@ -48,8 +50,7 @@ public class Player {
 	}
 
 	/**
-	 * @param location
-	 *            the location
+	 * @param location the location
 	 */
 	public Player(Location location) {
 		this();
@@ -58,9 +59,8 @@ public class Player {
 
 	/**
 	 * Adds an item to the inventory.
-	 * 
-	 * @param item
-	 *            the item
+	 *
+	 * @param item the item
 	 */
 	public void addInventoryItem(InventoryItem item) {
 		this.inventory.add(item);
@@ -89,19 +89,24 @@ public class Player {
 
 	/**
 	 * Removes an item from the inventory.
-	 * 
-	 * @param item
-	 *            the item
+	 *
+	 * @param item the item
 	 */
 	public void removeInventoryItem(InventoryItem item) {
 		this.inventory.remove(item);
 	}
 
 	/**
-	 * @param location
-	 *            the location to set
+	 * @param location the location to set
 	 */
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+
+	@Override
+	public String toString() {
+		return "Player{" + "id=" + id + ", inventoryIDs=" + NamedObject.getIDList(inventory)
+			+ ", locationID=" + location.getId() + " " + super.toString() + '}';
+	}
+
 }

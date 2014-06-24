@@ -190,4 +190,12 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 		}
 		PersistenceManager.updateChanges();
 	}
+
+	@Override
+	public String toString() {
+		return "ChangeItemAction{" + "changeLocation=" + changeLocation +
+			", newLocationID=" + newLocation.getId() + ", newTakeForbiddenText=" +
+			newTakeForbiddenText + ", newTakeSuccessfulText=" +
+			newTakeSuccessfulText + " " + super.toString() + '}';
+	}
 }

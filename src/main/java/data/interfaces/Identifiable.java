@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * @author Satia
  */
-public interface Identifiable {
+public interface Identifiable extends HasId {
 	/**
 	 * Adds an identifier.
 	 * 

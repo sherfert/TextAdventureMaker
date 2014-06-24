@@ -10,7 +10,7 @@ import data.UsableObject;
 
 /**
  * An action changing properties of a {@link UsableObject}.
- * 
+ *
  * @author Satia
  */
 @Entity
@@ -18,12 +18,14 @@ import data.UsableObject;
 public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 
 	/**
-	 * The new useForbiddenText. If {@code null}, the old will not be changed.
+	 * The new useForbiddenText. If {@code null}, the old will not be
+	 * changed.
 	 */
 	private String newUseForbiddenText;
 
 	/**
-	 * The new useSuccessfulText. If {@code null}, the old will not be changed.
+	 * The new useSuccessfulText. If {@code null}, the old will not be
+	 * changed.
 	 */
 	private String newUseSuccessfulText;
 
@@ -34,33 +36,30 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
+	 *
 	 * @deprecated Use
-	 *             {@link ChangeUsableObjectAction#ChangeUsableObjectAction(InspectableObject)}
-	 *             instead.
+	 * {@link ChangeUsableObjectAction#ChangeUsableObjectAction(InspectableObject)}
+	 * instead.
 	 */
 	@Deprecated
 	public ChangeUsableObjectAction() {
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
+	 * @param object the object to be changed
 	 */
 	public ChangeUsableObjectAction(UsableObject object) {
 		super(object);
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
+	 * @param object the object to be changed
+	 * @param enabled if the action should be enabled
 	 */
 	public ChangeUsableObjectAction(UsableObject object, boolean enabled) {
 		super(object, enabled);
 	}
-	
+
 	/**
 	 * @return the object
 	 */
@@ -110,12 +109,12 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
 	}
-	
+
 	@Override
 	public void triggerAction() {
 		// Call the super method
 		super.triggerAction();
-		
+
 		if (enabled) {
 			// Change fields
 			if (newUseForbiddenText != null) {
@@ -126,11 +125,19 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 			}
 			if (enabling == Enabling.ENABLE) {
 				getObject().setUsingEnabled(true);
-			} else if(enabling == Enabling.DISABLE) {
+			} else if (enabling == Enabling.DISABLE) {
 				getObject().setUsingEnabled(false);
 			}
 		}
 		PersistenceManager.updateChanges();
+	}
+
+	@Override
+	public String toString() {
+		return "ChangeUsableObjectAction{" + "newUseForbiddenText="
+			+ newUseForbiddenText + ", newUseSuccessfulText="
+			+ newUseSuccessfulText + ", enabling=" + enabling
+			+ " " + super.toString() + '}';
 	}
 
 }

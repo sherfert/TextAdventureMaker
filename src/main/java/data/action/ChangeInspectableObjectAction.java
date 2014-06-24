@@ -13,12 +13,13 @@ import data.InspectableObject;
 
 /**
  * An action changing properties of a {@link InspectableObject}.
- * 
+ *
  * @author Satia
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
+
 	/**
 	 * All identifiers to be added.
 	 */
@@ -32,16 +33,17 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	private List<String> identifiersToRemove;
 
 	/**
-	 * The new inspection text. If {@code null}, the old will not be changed.
+	 * The new inspection text. If {@code null}, the old will not be
+	 * changed.
 	 */
 	private String newInspectionText;
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
+	 *
 	 * @deprecated Use
-	 *             {@link ChangeInspectableObjectAction#ChangeInspectableObjectAction(InspectableObject)}
-	 *             instead.
+	 * {@link ChangeInspectableObjectAction#ChangeInspectableObjectAction(InspectableObject)}
+	 * instead.
 	 */
 	@Deprecated
 	public ChangeInspectableObjectAction() {
@@ -49,8 +51,7 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
+	 * @param object the object to be changed
 	 */
 	public ChangeInspectableObjectAction(InspectableObject object) {
 		super(object);
@@ -58,22 +59,19 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
+	 * @param object the object to be changed
+	 * @param enabled if the action should be enabled
 	 */
 	public ChangeInspectableObjectAction(InspectableObject object,
-			boolean enabled) {
+		boolean enabled) {
 		super(object, enabled);
 		init();
 	}
 
 	/**
 	 * Adds an identifier to be added to the identifiers.
-	 * 
-	 * @param name
-	 *            the identifier
+	 *
+	 * @param name the identifier
 	 */
 	public void addIdentifierToAdd(String name) {
 		identifiersToAdd.add(name.toLowerCase());
@@ -81,9 +79,8 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 
 	/**
 	 * Adds an identifier to be removed from the identifiers.
-	 * 
-	 * @param name
-	 *            the identifier
+	 *
+	 * @param name the identifier
 	 */
 	public void addIdentifierToRemove(String name) {
 		identifiersToRemove.add(name.toLowerCase());
@@ -134,9 +131,8 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 
 	/**
 	 * Removes an identifier to be added to the identifiers.
-	 * 
-	 * @param name
-	 *            the identifier
+	 *
+	 * @param name the identifier
 	 */
 	public void removeIdentifierToAdd(String name) {
 		identifiersToAdd.remove(name.toLowerCase());
@@ -144,17 +140,15 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 
 	/**
 	 * Removes an identifier to be removed from the identifiers.
-	 * 
-	 * @param name
-	 *            the identifier
+	 *
+	 * @param name the identifier
 	 */
 	public void removeIdentifierToRemove(String name) {
 		identifiersToRemove.remove(name.toLowerCase());
 	}
 
 	/**
-	 * @param newInspectionText
-	 *            the newInspectionText to set
+	 * @param newInspectionText the newInspectionText to set
 	 */
 	public void setNewInspectionText(String newInspectionText) {
 		this.newInspectionText = newInspectionText;
@@ -164,7 +158,7 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	public void triggerAction() {
 		// Call the super method
 		super.triggerAction();
-		
+
 		if (enabled) {
 			// Change fields
 			if (newInspectionText != null) {
@@ -187,5 +181,13 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	private void init() {
 		identifiersToAdd = new ArrayList<String>();
 		identifiersToRemove = new ArrayList<String>();
+	}
+
+	@Override
+	public String toString() {
+		return "ChangeInspectableObjectAction{" + "identifiersToAdd=" +
+			identifiersToAdd + ", identifiersToRemove=" +
+			identifiersToRemove + ", newInspectionText=" +
+			newInspectionText + " " + super.toString() + '}';
 	}
 }

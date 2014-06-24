@@ -8,19 +8,21 @@ import data.Way;
 
 /**
  * An action changing properties of a {@link Way}.
- * 
+ *
  * @author Satia
  */
 @Entity
 public class ChangeWayAction extends ChangeInspectableObjectAction {
 
 	/**
-	 * The new moveForbiddenText. If {@code null}, the old will not be changed.
+	 * The new moveForbiddenText. If {@code null}, the old will not be
+	 * changed.
 	 */
 	private String newMoveForbiddenText;
 
 	/**
-	 * The new moveSuccessfulText. If {@code null}, the old will not be changed.
+	 * The new moveSuccessfulText. If {@code null}, the old will not be
+	 * changed.
 	 */
 	private String newMoveSuccessfulText;
 
@@ -35,28 +37,23 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
-	 * @deprecated Use
-	 *             {@link ChangeWayAction#ChangeWayAction(Way)}
-	 *             instead.
+	 *
+	 * @deprecated Use {@link ChangeWayAction#ChangeWayAction(Way)} instead.
 	 */
 	@Deprecated
 	public ChangeWayAction() {
 	}
-	
+
 	/**
-	 * @param object
-	 *            the object to be changed
+	 * @param object the object to be changed
 	 */
 	public ChangeWayAction(Way object) {
 		super(object);
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
+	 * @param object the object to be changed
+	 * @param enabled if the action should be enabled
 	 */
 	public ChangeWayAction(Way object, boolean enabled) {
 		super(object, enabled);
@@ -78,8 +75,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param newMoveForbiddenText
-	 *            the newMoveForbiddenText to set
+	 * @param newMoveForbiddenText the newMoveForbiddenText to set
 	 */
 	public void setNewMoveForbiddenText(String newMoveForbiddenText) {
 		this.newMoveForbiddenText = newMoveForbiddenText;
@@ -93,8 +89,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param newMoveSuccessfulText
-	 *            the newMoveSuccessfulText to set
+	 * @param newMoveSuccessfulText the newMoveSuccessfulText to set
 	 */
 	public void setNewMoveSuccessfulText(String newMoveSuccessfulText) {
 		this.newMoveSuccessfulText = newMoveSuccessfulText;
@@ -108,8 +103,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param newOrigin
-	 *            the newOrigin to set
+	 * @param newOrigin the newOrigin to set
 	 */
 	public void setNewOrigin(Location newOrigin) {
 		this.newOrigin = newOrigin;
@@ -123,8 +117,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param newDestination
-	 *            the newDestination to set
+	 * @param newDestination the newDestination to set
 	 */
 	public void setNewDestination(Location newDestination) {
 		this.newDestination = newDestination;
@@ -151,6 +144,14 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 			}
 		}
 		PersistenceManager.updateChanges();
+	}
+
+	@Override
+	public String toString() {
+		return "ChangeWayAction{" + "newMoveForbiddenText="
+			+ newMoveForbiddenText + ", newMoveSuccessfulText="
+			+ newMoveSuccessfulText + ", newOriginID=" + newOrigin.getId()
+			+ ", newDestinationID=" + newDestination.getId() + " " + super.toString() + '}';
 	}
 
 }

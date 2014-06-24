@@ -124,4 +124,12 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 		additionalInspectActions = new ArrayList<AbstractAction>();
 		identifiers = new ArrayList<String>();
 	}
+
+	@Override
+	public String toString() {
+		return "InspectableObject{" + "additionalInspectActionsIDs=" +
+			NamedObject.getIDList(additionalInspectActions) +
+			", identifiers=" + identifiers + ", inspectionText=" +
+			inspectionText + " " + super.toString() + '}';
+	}
 }

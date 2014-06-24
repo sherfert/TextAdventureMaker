@@ -31,20 +31,22 @@ import data.interfaces.UsableWithHasLocation;
 
 /**
  * Any item that can appear in your inventory. These items are not in locations.
- * 
+ *
  * @author Satia
  */
 @Entity
 public class InventoryItem extends UsableObject implements
-		UsableWithHasLocation, Combinable<InventoryItem> {
+	UsableWithHasLocation, Combinable<InventoryItem> {
+
 	/**
 	 * Attributes of an {@link InventoryItem} that can be used with an
 	 * {@link InventoryItem}.
-	 * 
+	 *
 	 * @author Satia
 	 */
 	@Entity
 	private static class CombinableInventoryItem {
+
 		/**
 		 * The action adding the new inventory items.
 		 */
@@ -54,21 +56,22 @@ public class InventoryItem extends UsableObject implements
 
 		/**
 		 * All actions triggered when the two {@link InventoryItem}s are
-		 * combined. They are triggered regardless of the enabled status.
+		 * combined. They are triggered regardless of the enabled
+		 * status.
 		 */
 		@ManyToMany(cascade = CascadeType.PERSIST)
 		@JoinTable
 		private List<AbstractAction> additionalCombineWithActions;
 
 		/**
-		 * The text displayed when combining is disabled but the user tries to
-		 * trigger the connection.
+		 * The text displayed when combining is disabled but the user
+		 * tries to trigger the connection.
 		 */
 		private String combineWithForbiddenText;
 
 		/**
-		 * The text displayed when combining is enabled and the user tries to
-		 * trigger the connection.
+		 * The text displayed when combining is enabled and the user
+		 * tries to trigger the connection.
 		 */
 		private String combineWithSuccessfulText;
 
@@ -94,8 +97,8 @@ public class InventoryItem extends UsableObject implements
 		private boolean removeCombinables;
 
 		/**
-		 * Disabled by default and no forbidden/successful texts. Removing items
-		 * also disabled by default.
+		 * Disabled by default and no forbidden/successful texts.
+		 * Removing items also disabled by default.
 		 */
 		public CombinableInventoryItem() {
 			additionalCombineWithActions = new ArrayList<AbstractAction>();
@@ -103,23 +106,36 @@ public class InventoryItem extends UsableObject implements
 			enabled = false;
 			removeCombinables = false;
 		}
+
+		@Override
+		public String toString() {
+			return "CombinableInventoryItem{" + "addInventoryItemsActionID="
+				+ addInventoryItemsAction.getId()
+				+ ", additionalCombineWithActionsIDs="
+				+ NamedObject.getIDList(additionalCombineWithActions)
+				+ ", combineWithForbiddenText=" + combineWithForbiddenText
+				+ ", combineWithSuccessfulText=" + combineWithSuccessfulText
+				+ ", enabled=" + enabled + ", id=" + id
+				+ ", removeCombinables=" + removeCombinables + '}';
+		}
 	}
 
 	/**
 	 * Attributes of an {@link HasLocation} that can be used with an
 	 * {@link InventoryItem}.
-	 * 
+	 *
 	 * JPA requires this inner class to be static. A back-reference to the
 	 * owning {@link InventoryItem} could optionally be added.
-	 * 
+	 *
 	 * @author Satia
 	 */
 	@Entity
 	private static class UsableHasLocation {
+
 		/**
-		 * All actions triggered when the {@link InventoryItem} is used with the
-		 * mapped {@link HasLocation}. They are triggered regardless of the
-		 * enabled status.
+		 * All actions triggered when the {@link InventoryItem} is used
+		 * with the mapped {@link HasLocation}. They are triggered
+		 * regardless of the enabled status.
 		 */
 		@ManyToMany(cascade = CascadeType.PERSIST)
 		@JoinTable
@@ -140,14 +156,14 @@ public class InventoryItem extends UsableObject implements
 		private int id;
 
 		/**
-		 * The text displayed when using is disabled but the user tries to
-		 * trigger the connection.
+		 * The text displayed when using is disabled but the user tries
+		 * to trigger the connection.
 		 */
 		private String useWithForbiddenText;
 
 		/**
-		 * The text displayed when using is enabled and the user tries to
-		 * trigger the connection.
+		 * The text displayed when using is enabled and the user tries
+		 * to trigger the connection.
 		 */
 		private String useWithSuccessfulText;
 
@@ -158,14 +174,24 @@ public class InventoryItem extends UsableObject implements
 			additionalUseWithActions = new ArrayList<AbstractAction>();
 			enabled = false;
 		}
+
+		@Override
+		public String toString() {
+			return "UsableHasLocation{" + "additionalUseWithActionsIDs="
+				+ NamedObject.getIDList(additionalUseWithActions)
+				+ ", enabled=" + enabled + ", id=" + id
+				+ ", useWithForbiddenText=" + useWithForbiddenText
+				+ ", useWithSuccessfulText=" + useWithSuccessfulText + '}';
+		}
+
 	}
 
 	/**
-	 * An inventory item can be combined with others. For each inventory item
-	 * there are additional informations about the usability, etc. The method
-	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key and
-	 * value, if it was not stored before. The other inventory item's map will
-	 * be synchronized, too.
+	 * An inventory item can be combined with others. For each inventory
+	 * item there are additional informations about the usability, etc. The
+	 * method {@link InventoryItem#getCombinableInventoryItem(Combinable)}
+	 * adds key and value, if it was not stored before. The other inventory
+	 * item's map will be synchronized, too.
 	 */
 	// TODO why Maps not unnullable?
 	@OneToMany(cascade = CascadeType.ALL)
@@ -175,11 +201,11 @@ public class InventoryItem extends UsableObject implements
 
 	// TODO try to join both maps to Map<HasLocation, UsableHasLocation>
 	/**
-	 * An inventory item can be used with {@link Item}s. For each object there
-	 * are additional informations about the usability, etc. The method
-	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
-	 * value, if it was not stored before. It will choose the right map from the
-	 * two.
+	 * An inventory item can be used with {@link Item}s. For each object
+	 * there are additional informations about the usability, etc. The
+	 * method {@link InventoryItem#getUsableHasLocation(HasLocation)} adds
+	 * key and value, if it was not stored before. It will choose the right
+	 * map from the two.
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
@@ -187,11 +213,11 @@ public class InventoryItem extends UsableObject implements
 	private Map<Item, UsableHasLocation> usableItems;
 
 	/**
-	 * An inventory item can be used with {@link Person}s. For each object there
-	 * are additional informations about the usability, etc. The method
-	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
-	 * value, if it was not stored before. It will choose the right map from the
-	 * two.
+	 * An inventory item can be used with {@link Person}s. For each object
+	 * there are additional informations about the usability, etc. The
+	 * method {@link InventoryItem#getUsableHasLocation(HasLocation)} adds
+	 * key and value, if it was not stored before. It will choose the right
+	 * map from the two.
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
@@ -200,9 +226,9 @@ public class InventoryItem extends UsableObject implements
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
+	 *
 	 * @deprecated Use {@link InventoryItem#InventoryItem(String, String)}
-	 *             instead.
+	 * instead.
 	 */
 	@Deprecated
 	public InventoryItem() {
@@ -211,9 +237,8 @@ public class InventoryItem extends UsableObject implements
 
 	/**
 	 * Copies everything from the given item.
-	 * 
-	 * @param item
-	 *            the item to use fields from
+	 *
+	 * @param item the item to use fields from
 	 */
 	public InventoryItem(Item item) {
 		// Name and description
@@ -227,12 +252,12 @@ public class InventoryItem extends UsableObject implements
 		// Additional inspect actions
 		for (AbstractAction action : item.getAdditionalActionsFromInspect()) {
 			addAdditionalActionToInspect(convertInventoryItemActionToItemAction(
-					item, action));
+				item, action));
 		}
 		// Additional use actions
 		for (AbstractAction action : item.getAdditionalActionsFromUse()) {
 			addAdditionalActionToUse(convertInventoryItemActionToItemAction(
-					item, action));
+				item, action));
 		}
 		// Use forbidden/successful text
 		setUseForbiddenText(item.getUseForbiddenText());
@@ -244,10 +269,8 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	/**
-	 * @param name
-	 *            the name
-	 * @param description
-	 *            the description
+	 * @param name the name
+	 * @param description the description
 	 */
 	public InventoryItem(String name, String description) {
 		super(name, description);
@@ -256,22 +279,22 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	public void addAdditionalActionToCombineWith(
-			Combinable<InventoryItem> partner, AbstractAction action) {
+		Combinable<InventoryItem> partner, AbstractAction action) {
 		getCombinableInventoryItem(partner).additionalCombineWithActions
-				.add(action);
+			.add(action);
 	}
 
 	@Override
 	public void addAdditionalActionToUseWith(HasLocation object,
-			AbstractAction action) {
+		AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.add(action);
 	}
 
 	@Override
 	public void addNewCombinableWhenCombinedWith(
-			Combinable<InventoryItem> partner, InventoryItem newItem) {
+		Combinable<InventoryItem> partner, InventoryItem newItem) {
 		getCombinableInventoryItem(partner).addInventoryItemsAction
-				.addPickUpItem(newItem);
+			.addPickUpItem(newItem);
 	}
 
 	@Override
@@ -288,12 +311,12 @@ public class InventoryItem extends UsableObject implements
 				new RemoveInventoryItemAction(this).triggerAction();
 				if (partner instanceof InventoryItem) {
 					new RemoveInventoryItemAction((InventoryItem) partner)
-							.triggerAction();
+						.triggerAction();
 				} else {
 					Logger.getLogger(this.getClass().getName())
-							.log(Level.WARNING,
-									"Not supported Combinable subclass: {0} Cannot remove it from inventory thus.",
-									partner.getClass().getName());
+						.log(Level.WARNING,
+							"Not supported Combinable subclass: {0} Cannot remove it from inventory thus.",
+							partner.getClass().getName());
 				}
 
 			}
@@ -306,13 +329,13 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	public List<AbstractAction> getAdditionalActionsFromCombineWith(
-			Combinable<InventoryItem> partner) {
+		Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).additionalCombineWithActions;
 	}
 
 	@Override
 	public List<AbstractAction> getAdditionalActionsFromUseWith(
-			HasLocation object) {
+		HasLocation object) {
 		return getUsableHasLocation(object).additionalUseWithActions;
 	}
 
@@ -328,14 +351,14 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	public List<InventoryItem> getNewCombinablesWhenCombinedWith(
-			Combinable<InventoryItem> partner) {
+		Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).addInventoryItemsAction
-				.getPickUpItems();
+			.getPickUpItems();
 	}
 
 	@Override
 	public boolean getRemoveCombinablesWhenCombinedWith(
-			Combinable<InventoryItem> partner) {
+		Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).removeCombinables;
 	}
 
@@ -361,45 +384,45 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	public void removeAdditionalActionFromCombineWith(
-			Combinable<InventoryItem> partner, AbstractAction action) {
+		Combinable<InventoryItem> partner, AbstractAction action) {
 		getCombinableInventoryItem(partner).additionalCombineWithActions
-				.remove(action);
+			.remove(action);
 	}
 
 	@Override
 	public void removeAdditionalActionFromUseWith(HasLocation object,
-			AbstractAction action) {
+		AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.remove(action);
 	}
 
 	@Override
 	public void removeNewCombinableWhenCombinedWith(
-			Combinable<InventoryItem> partner, InventoryItem newItem) {
+		Combinable<InventoryItem> partner, InventoryItem newItem) {
 		getCombinableInventoryItem(partner).addInventoryItemsAction
-				.removePickUpItem(newItem);
+			.removePickUpItem(newItem);
 	}
 
 	@Override
 	public void setCombineWithForbiddenText(Combinable<InventoryItem> partner,
-			String forbiddenText) {
+		String forbiddenText) {
 		getCombinableInventoryItem(partner).combineWithForbiddenText = forbiddenText;
 	}
 
 	@Override
 	public void setCombineWithSuccessfulText(Combinable<InventoryItem> partner,
-			String successfulText) {
+		String successfulText) {
 		getCombinableInventoryItem(partner).combineWithSuccessfulText = successfulText;
 	}
 
 	@Override
 	public void setCombiningEnabledWith(Combinable<InventoryItem> partner,
-			boolean enabled) {
+		boolean enabled) {
 		getCombinableInventoryItem(partner).enabled = enabled;
 	}
 
 	@Override
 	public void setRemoveCombinablesWhenCombinedWith(
-			Combinable<InventoryItem> partner, boolean remove) {
+		Combinable<InventoryItem> partner, boolean remove) {
 		getCombinableInventoryItem(partner).removeCombinables = remove;
 	}
 
@@ -410,7 +433,7 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	public void setUseWithSuccessfulText(HasLocation object,
-			String successfulText) {
+		String successfulText) {
 		getUsableHasLocation(object).useWithSuccessfulText = successfulText;
 	}
 
@@ -428,50 +451,48 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	/**
-	 * TODO check for ChangeNOAction, ChangeIOAction, ChangeItemAction OR remove
-	 * this shit!
-	 * 
+	 * TODO check for ChangeNOAction, ChangeIOAction, ChangeItemAction OR
+	 * remove this shit!
+	 *
 	 * Converts any action connected with the given {@link Item} into an
 	 * equivalent action connected to this InventoryItem.
-	 * 
-	 * @param item
-	 *            the {@link Item}
-	 * @param action
-	 *            the action to be converted
+	 *
+	 * @param item the {@link Item}
+	 * @param action the action to be converted
 	 * @return a converted action or the action itself.
 	 */
 	private AbstractAction convertInventoryItemActionToItemAction(Item item,
-			AbstractAction action) {
+		AbstractAction action) {
 		if (action instanceof ChangeItemAction
-				&& ((ChangeItemAction) action).getObject() == item
-				&& ((ChangeItemAction) action).getNewLocation() == null) {
+			&& ((ChangeItemAction) action).getObject() == item
+			&& ((ChangeItemAction) action).getNewLocation() == null) {
 			// This action "removes" the item
 			RemoveInventoryItemAction result = new RemoveInventoryItemAction(
-					this);
+				this);
 			result.setEnabled(action.isEnabled());
 			return result;
 		} else if (action instanceof ChangeNamedObjectAction
-				&& ((ChangeNamedObjectAction) action).getObject() == item) {
+			&& ((ChangeNamedObjectAction) action).getObject() == item) {
 			ChangeNamedObjectAction result;
 			if (action instanceof ChangeInspectableObjectAction) {
 				result = new ChangeInspectableObjectAction(this);
 
 				((ChangeInspectableObjectAction) result)
-						.setIdentifiersToAdd(((ChangeInspectableObjectAction) action)
-								.getIdentifiersToAdd());
+					.setIdentifiersToAdd(((ChangeInspectableObjectAction) action)
+						.getIdentifiersToAdd());
 				((ChangeInspectableObjectAction) result)
-						.setIdentifiersToRemove(((ChangeInspectableObjectAction) action)
-								.getIdentifiersToRemove());
+					.setIdentifiersToRemove(((ChangeInspectableObjectAction) action)
+						.getIdentifiersToRemove());
 				((ChangeInspectableObjectAction) result)
-						.setNewInspectionText(((ChangeInspectableObjectAction) action)
-								.getNewInspectionText());
+					.setNewInspectionText(((ChangeInspectableObjectAction) action)
+						.getNewInspectionText());
 			} else {
 				result = new ChangeNamedObjectAction(this);
 			}
 
 			result.setEnabled(action.isEnabled());
 			result.setNewDescription(((ChangeNamedObjectAction) action)
-					.getNewDescription());
+				.getNewDescription());
 			result.setNewName(((ChangeNamedObjectAction) action).getNewName());
 			return result;
 		}
@@ -482,27 +503,26 @@ public class InventoryItem extends UsableObject implements
 	 * Gets the {@link CombinableInventoryItem} associated with the given
 	 * {@link Combinable}. If no mapping exists, one will be created on both
 	 * sides.
-	 * 
-	 * @param item
-	 *            the item
+	 *
+	 * @param item the item
 	 * @return the associated {@link CombinableInventoryItem}.
 	 */
 	private CombinableInventoryItem getCombinableInventoryItem(
-			Combinable<InventoryItem> item) {
+		Combinable<InventoryItem> item) {
 		if (item instanceof InventoryItem) {
 			CombinableInventoryItem result = combinableInventoryItems.get(item);
 			if (result == null) {
 				combinableInventoryItems.put((InventoryItem) item,
-						result = new CombinableInventoryItem());
+					result = new CombinableInventoryItem());
 				// Synchronize other map
 				((InventoryItem) item).combinableInventoryItems.put(this,
-						result);
+					result);
 			}
 			return result;
 		} else {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"Not supported Combinable subclass: {0}",
-					item.getClass().getName());
+				"Not supported Combinable subclass: {0}",
+				item.getClass().getName());
 			return null;
 		}
 	}
@@ -510,9 +530,8 @@ public class InventoryItem extends UsableObject implements
 	/**
 	 * Gets the {@link UsableHasLocation} associated with the given
 	 * {@link HasLocation} . If no mapping exists, one will be created.
-	 * 
-	 * @param object
-	 *            the object
+	 *
+	 * @param object the object
 	 * @return the associated {@link UsableHasLocation}.
 	 */
 	private UsableHasLocation getUsableHasLocation(HasLocation object) {
@@ -522,18 +541,18 @@ public class InventoryItem extends UsableObject implements
 			result = usableItems.get(object);
 			if (result == null) {
 				usableItems
-						.put((Item) object, result = new UsableHasLocation());
+					.put((Item) object, result = new UsableHasLocation());
 			}
 		} else if (object instanceof Person) {
 			result = usablePersons.get(object);
 			if (result == null) {
 				usablePersons.put((Person) object,
-						result = new UsableHasLocation());
+					result = new UsableHasLocation());
 			}
 		} else {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"Not supported HasLocation subclass: {0}",
-					object.getClass().getName());
+				"Not supported HasLocation subclass: {0}",
+				object.getClass().getName());
 			return null;
 		}
 		return result;
@@ -547,4 +566,13 @@ public class InventoryItem extends UsableObject implements
 		usablePersons = new HashMap<Person, UsableHasLocation>();
 		combinableInventoryItems = new HashMap<InventoryItem, CombinableInventoryItem>();
 	}
+
+	@Override
+	public String toString() {
+		return "InventoryItem{" + "combinableInventoryItems="
+			+ NamedObject.getIDMap(combinableInventoryItems) + ", usableItems="
+			+ NamedObject.getIDMap(usableItems) + ", usablePersons="
+			+ NamedObject.getIDMap(usablePersons) + " " + super.toString() + '}';
+	}
+
 }
