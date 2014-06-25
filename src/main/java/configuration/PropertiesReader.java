@@ -32,6 +32,7 @@ public class PropertiesReader {
 	private static final String propertiesFilePath = DIRECTORY
 		+ "textAdventureMaker.properties";
 
+	// TODO Do NOT read the file every time!!??
 	/**
 	 * To get the properties object
 	 *
@@ -111,12 +112,6 @@ public class PropertiesReader {
 
 			return result;
 
-		} finally {
-			// Log every configuration
-			for(Map.Entry<Object,Object> entry : result.entrySet()) {
-				Logger.getLogger(PropertiesReader.class.getName()).log(Level.CONFIG,
-				"Property {0} -> {1}", new Object[] { entry.getKey(), entry.getValue() });
-			}
 		}
 	}
 
@@ -130,14 +125,14 @@ public class PropertiesReader {
 		BufferedOutputStream bos = new BufferedOutputStream(
 			new FileOutputStream(properties));
 		Properties result = createDefaultProperty();
-			result.store(bos,
-				"# Configuration file for TextAdventureMaker (default generated)");
+		result.store(bos,
+			"# Configuration file for TextAdventureMaker (default generated)");
 		bos.close();
 
 		Logger.getLogger(PropertiesReader.class.getName()).log(Level.INFO,
 			"A new property-File with default values was generated in {0}",
 			propertiesFilePath);
-		
+
 		return result;
 	}
 
@@ -151,5 +146,13 @@ public class PropertiesReader {
 		// Set Properties for Logger
 		props.setProperty(LOG_LEVEL_PROPERTY, LOG_LEVEL_DEFAULT);
 		return props;
+	}
+
+	public static void logConfiguration() {
+		// Log every configuration
+		for (Map.Entry<Object, Object> entry : getProperties().entrySet()) {
+			Logger.getLogger(PropertiesReader.class.getName()).log(Level.CONFIG,
+				"Property: {0} -> {1}", new Object[]{entry.getKey(), entry.getValue()});
+		}
 	}
 }

@@ -52,5 +52,8 @@ public class LogManager {
 				"Logging propery faulty. Thus logging ALL. ", e);
 			rootLogger.setLevel(Level.ALL);
 		}
+		
+		// Log the configuration
+		PropertiesReader.logConfiguration();
 	}
 }
