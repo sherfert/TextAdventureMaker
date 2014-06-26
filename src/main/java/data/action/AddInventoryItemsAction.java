@@ -8,17 +8,18 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import persistence.PersistenceManager;
 import persistence.PlayerManager;
 import data.InventoryItem;
+import data.NamedObject;
 
 /**
  * None, one or multiple {@link InventoryItem}s may be added to the inventory.
- * 
+ *
  * @author Satia
  */
 @Entity
 public class AddInventoryItemsAction extends AbstractAction {
+
 	/**
 	 * All {@link InventoryItem}s that will be added to the inventory.
 	 */
@@ -34,9 +35,8 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
-	 * 
-	 * @param enabled
-	 *            if the action should be enabled
+	 *
+	 * @param enabled if the action should be enabled
 	 */
 	public AddInventoryItemsAction(boolean enabled) {
 		super(enabled);
@@ -44,10 +44,10 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
-	 * Adds an {@link InventoryItem} to the items to be added to the inventory.
-	 * 
-	 * @param item
-	 *            the item
+	 * Adds an {@link InventoryItem} to the items to be added to the
+	 * inventory.
+	 *
+	 * @param item the item
 	 */
 	public void addPickUpItem(InventoryItem item) {
 		this.pickUpItems.add(item);
@@ -70,28 +70,30 @@ public class AddInventoryItemsAction extends AbstractAction {
 	/**
 	 * Removes an {@link InventoryItem} from the items to be added to the
 	 * inventory.
-	 * 
-	 * @param item
-	 *            the item
+	 *
+	 * @param item the item
 	 */
 	public void removePickUpItem(InventoryItem item) {
 		this.pickUpItems.remove(item);
 	}
 
 	@Override
-	public void triggerAction() {
-		if (enabled) {
-			for (InventoryItem item : pickUpItems) {
-				PlayerManager.getPlayer().addInventoryItem(item);
-			}
+	public void doAction() {
+		for (InventoryItem item : pickUpItems) {
+			PlayerManager.getPlayer().addInventoryItem(item);
 		}
-		PersistenceManager.updateChanges();
 	}
 
 	/**
 	 * Initializes the fields
 	 */
 	private void init() {
-		this.pickUpItems = new ArrayList<InventoryItem>();
+		this.pickUpItems = new ArrayList<>();
+	}
+
+	@Override
+	public String toString() {
+		return "AddInventoryItemsAction{" + "pickUpItemsIDs="
+			+ NamedObject.getIDList(pickUpItems) + " " + super.toString() + '}';
 	}
 }

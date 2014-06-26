@@ -35,7 +35,7 @@ public class PlayerManager {
 	 * @return the corresponding item or {@code null}.
 	 */
 	public static Inspectable getInspectable(Player player, String identifier) {
-		List<Inspectable> inspectables = new ArrayList<Inspectable>();
+		List<Inspectable> inspectables = new ArrayList<>();
 		// Anything in the room
 		inspectables.addAll(player.getLocation().getInspectables());
 		// Anything in the inventory
@@ -56,7 +56,7 @@ public class PlayerManager {
 	 * @return the corresponding item or {@code null}.
 	 */
 	public static Usable getUsable(Player player, String identifier) {
-		List<UsableObject> usables = new ArrayList<UsableObject>();
+		List<UsableObject> usables = new ArrayList<>();
 		// Items in the room
 		usables.addAll(player.getLocation().getItems());
 		// Anything in the inventory
@@ -78,7 +78,7 @@ public class PlayerManager {
 	 */
 	public static UsableOrPassivelyUsable getUsableOrPassivelyUsable(
 			Player player, String identifier) {
-		List<UsableOrPassivelyUsable> usables = new ArrayList<UsableOrPassivelyUsable>();
+		List<UsableOrPassivelyUsable> usables = new ArrayList<>();
 		// Items and Persons in the room
 		usables.addAll(player.getLocation().getHasLocations());
 		// Anything in the inventory

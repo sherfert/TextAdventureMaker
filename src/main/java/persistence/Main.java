@@ -29,6 +29,8 @@ public class Main {
 
 	/**
 	 * Test-main.
+	 * @param args
+	 * @throws java.lang.Exception
 	 */
 	public static void main(String[] args) throws Exception {
 		// FIXME this must be put into a proper initialize method

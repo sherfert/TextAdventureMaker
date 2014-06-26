@@ -16,15 +16,18 @@ import data.action.AddInventoryItemsAction;
 import data.action.ChangeItemAction;
 import data.interfaces.HasLocation;
 import data.interfaces.Takeable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Any item in the game world. This items are stored in locations but cannot be
  * in your inventory.
- * 
+ *
  * @author Satia
  */
 @Entity
 public class Item extends UsableObject implements Takeable, HasLocation {
+
 	/**
 	 * The {@link AddInventoryItemsAction}.
 	 */
@@ -49,7 +52,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * The {@link ChangeItemAction} which would set the location to
 	 * {@code null}.
-	 * 
+	 *
 	 * Note: This is NOT the Inverse connection of
 	 * {@link ChangeItemAction#item}.
 	 */
@@ -59,23 +62,25 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	private ChangeItemAction removeAction;
 
 	/**
-	 * A personalized error message displayed if taking this item was forbidden.
+	 * A personalized error message displayed if taking this item was
+	 * forbidden.
 	 */
 	private String takeForbiddenText;
 
 	/**
-	 * A personalized error message displayed if taking this item was successful.
+	 * A personalized error message displayed if taking this item was
+	 * successful.
 	 */
 	private String takeSuccessfulText;
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
+	 *
 	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
-	 * 
+	 *
 	 * @deprecated Use {@link Item#Item(String, String)} or
-	 *             {@link Item#Item(Location, String, String)} instead.
+	 * {@link Item#Item(Location, String, String)} instead.
 	 */
 	@Deprecated
 	public Item() {
@@ -85,13 +90,10 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
-	 * 
-	 * @param location
-	 *            the location
-	 * @param name
-	 *            the name
-	 * @param description
-	 *            the description
+	 *
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
 	 */
 	public Item(Location location, String name, String description) {
 		super(name, description);
@@ -102,11 +104,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param description
-	 *            the description
+	 *
+	 * @param name the name
+	 * @param description the description
 	 */
 	public Item(String name, String description) {
 		super(name, description);
@@ -118,6 +118,8 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		additionalTakeActions.add(action);
 	}
 
+	// TODO Check if this (and probably other) other-than-additional
+	// actions should be reachable directly!
 	@Override
 	public AddInventoryItemsAction getAddInventoryItemsAction() {
 		return addInventoryItemsAction;
@@ -158,8 +160,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		additionalTakeActions.remove(action);
 	}
 
+	// final as called in constructor.
 	@Override
-	public void setLocation(Location location) {
+	public final void setLocation(Location location) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Setting location of {0} to {1}", new Object[]{this, location});
+		
 		if (this.location != null) {
 			this.location.removeItem(this);
 		}
@@ -192,6 +198,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public void take() {
 		if (isTakingEnabled()) {
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Taking {0}", this);
+			
 			addInventoryItemsAction.triggerAction();
 			removeAction.triggerAction();
 		}
@@ -207,7 +216,16 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
 		this.removeAction = new ChangeItemAction(this);
 		this.removeAction.setNewLocation(null);
-		this.additionalTakeActions = new ArrayList<AbstractAction>();
+		this.additionalTakeActions = new ArrayList<>();
 		setRemoveItem(true);
+	}
+
+	@Override
+	public String toString() {
+		return "Item{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId()
+			+ ", additionalTakeActionsIDs=" + NamedObject.getIDList(additionalTakeActions)
+			+ ", locationID=" + location.getId() + ", removeActionID=" + removeAction.getId()
+			+ ", takeForbiddenText=" + takeForbiddenText + ", takeSuccessfulText="
+			+ takeSuccessfulText + " " + super.toString() + '}';
 	}
 }

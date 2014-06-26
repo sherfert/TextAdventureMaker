@@ -1,7 +1,10 @@
 package data;
 
+import data.interfaces.HasId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,11 +16,12 @@ import javax.persistence.OneToOne;
 
 /**
  * A player. There is exactly one player per game.
- * 
+ *
  * @author Satia
  */
 @Entity
-public class Player {
+public class Player implements HasId {
+
 	/**
 	 * The id.
 	 */
@@ -30,10 +34,11 @@ public class Player {
 	 */
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn
-	private List<InventoryItem> inventory;
+	private final List<InventoryItem> inventory;
 
 	/**
-	 * The location. If {@code null}, the game supposedly has not started yet.
+	 * The location. If {@code null}, the game supposedly has not started
+	 * yet.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true)
@@ -41,34 +46,25 @@ public class Player {
 
 	/**
 	 * Creates a player with no location yet. It will be transferred to the
-	 * game's starting location when a new game is started.
+	 * game's starting location if a new game is started.
 	 */
 	public Player() {
-		inventory = new ArrayList<InventoryItem>();
-	}
-
-	/**
-	 * @param location
-	 *            the location
-	 */
-	public Player(Location location) {
-		this();
-		this.location = location;
+		inventory = new ArrayList<>();
 	}
 
 	/**
 	 * Adds an item to the inventory.
-	 * 
-	 * @param item
-	 *            the item
+	 *
+	 * @param item the item
 	 */
 	public void addInventoryItem(InventoryItem item) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Adding inventory item {0}", item);
+		
 		this.inventory.add(item);
 	}
 
-	/**
-	 * @return the id
-	 */
+	@Override
 	public int getId() {
 		return id;
 	}
@@ -89,19 +85,32 @@ public class Player {
 
 	/**
 	 * Removes an item from the inventory.
-	 * 
-	 * @param item
-	 *            the item
+	 *
+	 * @param item the item
 	 */
 	public void removeInventoryItem(InventoryItem item) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Removing inventory item {0}", item);
 		this.inventory.remove(item);
 	}
 
 	/**
-	 * @param location
-	 *            the location to set
+	 * @param location the location to set
 	 */
 	public void setLocation(Location location) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Moving player to {0}", location);
+		
 		this.location = location;
 	}
+
+	/**
+	 * @return a string representation of this object
+	 */
+	@Override
+	public String toString() {
+		return "Player{" + "id=" + id + ", inventoryIDs=" + NamedObject.getIDList(inventory)
+			+ ", locationID=" + location.getId() + " " + super.toString() + '}';
+	}
+
 }

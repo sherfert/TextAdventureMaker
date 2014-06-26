@@ -6,10 +6,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import data.interfaces.HasLocation;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A person.
- * 
+ *
  * @author Satia
  */
 @Entity
@@ -24,21 +26,18 @@ public class Person extends InspectableObject implements HasLocation {
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
+	 *
 	 * @deprecated Use {@link Person#Person(String, String)} or
-	 *             {@link Person#Person(Location, String, String)} instead.
+	 * {@link Person#Person(Location, String, String)} instead.
 	 */
 	@Deprecated
 	public Person() {
 	}
 
 	/**
-	 * @param location
-	 *            the location
-	 * @param name
-	 *            the name
-	 * @param description
-	 *            the description
+	 * @param location the location
+	 * @param name the name
+	 * @param description the description
 	 */
 	public Person(Location location, String name, String description) {
 		super(name, description);
@@ -46,10 +45,8 @@ public class Person extends InspectableObject implements HasLocation {
 	}
 
 	/**
-	 * @param name
-	 *            the name
-	 * @param description
-	 *            the description
+	 * @param name the name
+	 * @param description the description
 	 */
 	public Person(String name, String description) {
 		super(name, description);
@@ -59,9 +56,13 @@ public class Person extends InspectableObject implements HasLocation {
 	public Location getLocation() {
 		return location;
 	}
-	
+
+	// final as called in constructor
 	@Override
-	public void setLocation(Location location) {
+	public final void setLocation(Location location) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Setting location of {0} to {1}", new Object[]{this, location});
+
 		if (this.location != null) {
 			this.location.removePerson(this);
 		}
@@ -70,4 +71,10 @@ public class Person extends InspectableObject implements HasLocation {
 		}
 		this.location = location;
 	}
+
+	@Override
+	public String toString() {
+		return "Person{" + "locationID=" + location.getId() + " " + super.toString() + '}';
+	}
+
 }

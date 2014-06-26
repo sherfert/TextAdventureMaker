@@ -13,6 +13,8 @@ import javax.persistence.ManyToMany;
 
 import data.action.AbstractAction;
 import data.interfaces.Inspectable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Anything having a name, identifiers, a description and being
@@ -76,7 +78,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 * Note: The identifier is added as a lower case String.
 	 */
 	@Override
-	public void addIdentifier(String name) {
+	public final void addIdentifier(String name) {
 		identifiers.add(name.toLowerCase());
 	}
 
@@ -97,6 +99,9 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 
 	@Override
 	public void inspect() {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Inspecting {0}", this);
+		
 		for (AbstractAction abstractAction : additionalInspectActions) {
 			abstractAction.triggerAction();
 		}
@@ -121,7 +126,15 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 * Initializes the fields
 	 */
 	private void init() {
-		additionalInspectActions = new ArrayList<AbstractAction>();
-		identifiers = new ArrayList<String>();
+		additionalInspectActions = new ArrayList<>();
+		identifiers = new ArrayList<>();
+	}
+
+	@Override
+	public String toString() {
+		return "InspectableObject{" + "additionalInspectActionsIDs=" +
+			NamedObject.getIDList(additionalInspectActions) +
+			", identifiers=" + identifiers + ", inspectionText=" +
+			inspectionText + " " + super.toString() + '}';
 	}
 }

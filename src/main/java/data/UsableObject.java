@@ -13,16 +13,19 @@ import javax.persistence.ManyToMany;
 
 import data.action.AbstractAction;
 import data.interfaces.Usable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Anything useable for itself (without other objects) in the game.
  * Implementation of the {@link Usable} interface.
- * 
+ *
  * @author Satia
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class UsableObject extends InspectableObject implements Usable {
+
 	/**
 	 * All additional use actions.
 	 */
@@ -31,14 +34,14 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	private List<AbstractAction> additionalUseActions;
 
 	/**
-	 * The text being displayed when not successfully used. The default message
-	 * is used if this is {@code null}.
+	 * The text being displayed when not successfully used. The default
+	 * message is used if this is {@code null}.
 	 */
 	private String useForbiddenText;
 
 	/**
-	 * The text being displayed when successfully used. The default message is
-	 * used if this is {@code null}.
+	 * The text being displayed when successfully used. The default message
+	 * is used if this is {@code null}.
 	 */
 	private String useSuccessfulText;
 
@@ -59,11 +62,9 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 
 	/**
 	 * By default non-usable.
-	 * 
-	 * @param name
-	 *            the name
-	 * @param description
-	 *            the description
+	 *
+	 * @param name the name
+	 * @param description the description
 	 */
 	protected UsableObject(String name, String description) {
 		super(name, description);
@@ -117,6 +118,10 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 
 	@Override
 	public void use() {
+		// There is no "primary" action, so no "isEnabled" check
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Using {0}", this);
+		
 		for (AbstractAction abstractAction : additionalUseActions) {
 			abstractAction.triggerAction();
 		}
@@ -126,7 +131,16 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	 * Initializes the fields
 	 */
 	private void init() {
-		additionalUseActions = new ArrayList<AbstractAction>();
+		additionalUseActions = new ArrayList<>();
 		usingEnabled = false;
+	}
+
+	@Override
+	public String toString() {
+		return "UsableObject{" + "additionalUseActionsIDs="
+			+ NamedObject.getIDList(additionalUseActions)
+			+ ", useForbiddenText=" + useForbiddenText
+			+ ", useSuccessfulText=" + useSuccessfulText
+			+ ", usingEnabled=" + usingEnabled + " " + super.toString() + '}';
 	}
 }

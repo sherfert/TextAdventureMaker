@@ -1,11 +1,15 @@
 package data.action;
 
+import data.interfaces.HasId;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import persistence.PersistenceManager;
 
 /**
  * Any action that changes something in the game (if enabled).
@@ -14,7 +18,7 @@ import javax.persistence.InheritanceType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractAction {
+public abstract class AbstractAction implements HasId{
 
 	/**
 	 * When an action changes something that can be disabled or enabled, a
@@ -23,7 +27,12 @@ public abstract class AbstractAction {
 	 * @author Satia
 	 */
 	public enum Enabling {
-		DISABLE, DO_NOT_CHANGE, ENABLE;
+		/** Disable the object */
+		DISABLE,
+		/** Do not change if the object is enabled */
+		DO_NOT_CHANGE,
+		/** Enable the object */
+		ENABLE;
 	}
 
 	/**
@@ -56,9 +65,7 @@ public abstract class AbstractAction {
 		this.enabled = enabled;
 	}
 
-	/**
-	 * @return the id
-	 */
+	@Override
 	public int getId() {
 		return id;
 	}
@@ -77,10 +84,31 @@ public abstract class AbstractAction {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	/**
+	 * @return the class name, id and enabled status.
+	 */
+	@Override
+	public String toString() {
+		return "AbstractAction{" + "id=" + id + ", enabled=" + enabled + '}';
+	}
 
 	/**
-	 * Triggers the associated action. Should act according to the enabled
-	 * status.
+	 * Triggers the associated action. This logs, calls doAction
+	 * if enabled, and updates changes
 	 */
-	public abstract void triggerAction();
+	public final void triggerAction() {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+			"Triggering action {0}", this);
+		
+		if (enabled) {
+			doAction();
+		}
+		PersistenceManager.updateChanges();
+	}
+	
+	/**
+	 * Actually perform the action.
+	 */
+	protected abstract void doAction();
 }

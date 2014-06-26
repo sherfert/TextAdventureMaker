@@ -7,13 +7,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import persistence.PersistenceManager;
 import data.InspectableObject;
 import data.NamedObject;
 
 /**
  * An action changing properties of a {@link NamedObject} .
- * 
+ *
  * @author Satia
  */
 @Entity
@@ -32,7 +31,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 
 	/**
 	 * The object to be changed.
-	 * 
+	 *
 	 * TODO This should be (nullable = false). This is impossible due to
 	 * circular dependencies.
 	 */
@@ -42,28 +41,25 @@ public class ChangeNamedObjectAction extends AbstractAction {
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
+	 *
 	 * @deprecated Use
-	 *             {@link ChangeNamedObjectAction#SetPropertiesAction(InspectableObject)}
-	 *             instead.
+	 * {@link ChangeNamedObjectAction#SetPropertiesAction(InspectableObject)}
+	 * instead.
 	 */
 	@Deprecated
 	public ChangeNamedObjectAction() {
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
+	 * @param object the object to be changed
 	 */
 	public ChangeNamedObjectAction(NamedObject object) {
 		this.object = object;
 	}
 
 	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
+	 * @param object the object to be changed
+	 * @param enabled if the action should be enabled
 	 */
 	public ChangeNamedObjectAction(NamedObject object, boolean enabled) {
 		super(enabled);
@@ -92,32 +88,33 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	}
 
 	/**
-	 * @param newDescription
-	 *            the newDescription to set
+	 * @param newDescription the newDescription to set
 	 */
 	public void setNewDescription(String newDescription) {
 		this.newDescription = newDescription;
 	}
 
 	/**
-	 * @param newName
-	 *            the newName to set
+	 * @param newName the newName to set
 	 */
 	public void setNewName(String newName) {
 		this.newName = newName;
 	}
 
 	@Override
-	public void triggerAction() {
-		if (enabled) {
-			// Change fields
-			if (newName != null) {
-				object.setName(newName);
-			}
-			if (newDescription != null) {
-				object.setDescription(newDescription);
-			}
+	public void doAction() {
+		// Change fields
+		if (newName != null) {
+			object.setName(newName);
 		}
-		PersistenceManager.updateChanges();
+		if (newDescription != null) {
+			object.setDescription(newDescription);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "ChangeNamedObjectAction{" + "newDescription=" + newDescription
+			+ ", newName=" + newName + ", objectID=" + object.getId() + " " + super.toString() + '}';
 	}
 }

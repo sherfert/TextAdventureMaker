@@ -2,12 +2,19 @@ package persistence;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 
+/**
+ * Manages connections to database files.
+ * 
+ * @author Satia
+ */
 public class PersistenceManager {
 
 	/**
@@ -33,8 +40,13 @@ public class PersistenceManager {
 	
 	/**
 	 * Connects to the database.
+	 * 
+	 * @param filename the filename to connect to
 	 */
 	public static void connect(String filename) {
+		Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
+			"Connecting to database {0}", filename);
+		
 		// Create objects for database access
 		Map<String, String> properties = new HashMap<>();
 		properties.put("javax.persistence.jdbc.url", "jdbc:h2:" + filename);
@@ -53,6 +65,9 @@ public class PersistenceManager {
 	 * Disconnects from the database.
 	 */
 	public static void disconnect() {
+		Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
+			"Disconnecting from database");
+		
 		entityManager.getTransaction().commit();
 		// Close everything
 		entityManager.close();

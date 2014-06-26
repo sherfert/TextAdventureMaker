@@ -16,10 +16,12 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
 import com.googlecode.lanterna.terminal.Terminal.ResizeListener;
 import com.googlecode.lanterna.terminal.TerminalSize;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Providing means to print and read input while playing.
- * 
+ *
  * @author Satia
  */
 public class InputOutput implements TextHandler {
@@ -27,7 +29,7 @@ public class InputOutput implements TextHandler {
 	/**
 	 * The GamePlayer for this session
 	 */
-	private GamePlayer gamePlayer;
+	private final GamePlayer gamePlayer;
 
 	/**
 	 * The screen that is being used to display to game.
@@ -40,8 +42,7 @@ public class InputOutput implements TextHandler {
 	private LanternaScreenTextArea defaultTextArea;
 
 	/**
-	 * @param gamePlayer
-	 *            the GamePlayer for this session
+	 * @param gamePlayer the GamePlayer for this session
 	 */
 	public InputOutput(GamePlayer gamePlayer) {
 		this.gamePlayer = gamePlayer;
@@ -54,10 +55,10 @@ public class InputOutput implements TextHandler {
 
 		// Rest of the initialization
 		defaultTextArea = new LanternaScreenTextArea(screen, true, true,
-				Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
-				Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
-						.getTerminalSize().getColumns(), 0, screen
-						.getTerminalSize().getRows(), InputOutput.this);
+			Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
+			Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
+			.getTerminalSize().getColumns(), 0, screen
+			.getTerminalSize().getRows(), InputOutput.this);
 
 		// TODO the key listener loop must be implemented here as soon
 		// as conversations are supported
@@ -67,7 +68,7 @@ public class InputOutput implements TextHandler {
 			@Override
 			public void onResized(TerminalSize newSize) {
 				defaultTextArea.setNewDimensions(0, newSize.getColumns(), 0,
-						newSize.getRows());
+					newSize.getRows());
 				screen.refresh();
 			}
 		});
@@ -86,10 +87,10 @@ public class InputOutput implements TextHandler {
 			}
 		});
 		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit()
-				.getScreenSize();
+			.getScreenSize();
 		// Let the screen cover 80 % of the real screen in each dimension
 		frame.setPreferredSize(new Dimension((int) (fullScreen.width * 0.8),
-				(int) (fullScreen.height * 0.8)));
+			(int) (fullScreen.height * 0.8)));
 		// Not resizable
 		frame.setResizable(false);
 
@@ -105,22 +106,28 @@ public class InputOutput implements TextHandler {
 
 	/**
 	 * Prints a line of text for the player. Default colors.
-	 * 
-	 * @param output
-	 *            the text to be printed
+	 *
+	 * @param output the text to be printed
 	 */
 	public void println(String output) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+			"Printing '{0}'", output);
+
 		defaultTextArea.println(output);
 		this.screen.refresh();
 	}
-	
+
 	/**
 	 * Prints a line of text for the player. Given colors.
-	 * 
-	 * @param output
-	 *            the text to be printed
+	 *
+	 * @param output the text to be printed
+	 * @param bgColor the background color
+	 * @param fgColor the foreground color
 	 */
 	public void println(String output, Color bgColor, Color fgColor) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+			"Printing '{0}'", output);
+
 		defaultTextArea.println(output, bgColor, fgColor);
 		this.screen.refresh();
 	}
