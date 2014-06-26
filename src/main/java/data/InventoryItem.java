@@ -173,7 +173,6 @@ public class InventoryItem extends UsableObject implements
 	@MapKeyJoinColumn
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
 
-	// TODO try to join both maps to Map<HasLocation, UsableHasLocation>
 	/**
 	 * An inventory item can be used with {@link Item}s. For each object there
 	 * are additional informations about the usability, etc. The method
