@@ -154,7 +154,7 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	}
 
 	@Override
-	public void doAction() {
+	protected void doAction() {
 		// Call the super method
 		super.doAction();
 

@@ -127,16 +127,11 @@ public class Main {
 		Item banana = new Item(flat, "Banana",
 				"In the fruit bowl there's a single, lonely banana.");
 		banana.setInspectionText("Rich in cholesterol. Now that I look at it, I might also call it banana phone.");
-		banana.setTakingEnabled(true);
 		banana.setUsingEnabled(true);
+		banana.setTakeForbiddenText("It looks delicious, but I don't wanna carry that around.");
 		banana.setUseSuccessfulText("You ate the banana. The peel looks useful, so you kept it.");
 		/*
-		 * Inspecting the banana will "convert" it into a bananaphone. This will
-		 * also work, when inspecting after picking it up.
-		 * 
-		 * TODO when picking up the invItem, it does not have the current
-		 * attributes of the item! This is also not always desirable, but the
-		 * process of enabling it should be easier.
+		 * Inspecting the banana will "convert" it into a bananaphone.
 		 */
 		ChangeInspectableObjectAction changeBananaAction = new ChangeInspectableObjectAction(
 				banana);
@@ -157,7 +152,6 @@ public class Main {
 		banana.addAdditionalActionToUse(new ChangeItemAction(banana, null));
 		InventoryItem invBanana = new InventoryItem(banana);
 		invBanana.setDescription("A banana");
-		banana.addPickUpItem(invBanana);
 
 		Item chair = new Item(balcony, "Chair",
 				"A wooden chair stands beside you.");

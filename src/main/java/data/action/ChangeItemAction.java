@@ -162,7 +162,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	}
 
 	@Override
-	public void doAction() {
+	protected void doAction() {
 		// Call the super method
 		super.doAction();
 

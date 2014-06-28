@@ -72,7 +72,7 @@ public class ChangeActionAction extends AbstractAction {
 	}
 
 	@Override
-	public void doAction() {
+	protected void doAction() {
 		if (enabling == Enabling.ENABLE) {
 			action.setEnabled(true);
 		} else if (enabling == Enabling.DISABLE) {

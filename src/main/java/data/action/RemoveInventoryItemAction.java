@@ -59,7 +59,7 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	}
 
 	@Override
-	public void doAction() {
+	protected void doAction() {
 		// Remove the item from the inventory
 		PlayerManager.getPlayer().removeInventoryItem(item);
 	}

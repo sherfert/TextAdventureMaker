@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Read the information of a properties file. TODO comments
+ * Read the information of a properties file.
  * 
  * @author Satia
  * 

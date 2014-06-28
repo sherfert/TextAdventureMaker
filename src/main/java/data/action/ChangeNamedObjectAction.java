@@ -102,7 +102,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	}
 
 	@Override
-	public void doAction() {
+	protected void doAction() {
 		// Change fields
 		if (newName != null) {
 			object.setName(newName);

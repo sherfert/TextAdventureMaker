@@ -130,7 +130,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	public void doAction() {
+	protected void doAction() {
 		// Call the super method
 		super.doAction();
 		

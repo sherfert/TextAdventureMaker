@@ -245,7 +245,11 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	/**
-	 * Copies everything from the given item.
+	 * Copies name, inspection text, and identifiers from the Item.
+	 * 
+	 * Any additional inspect or use action have to converted and added
+	 * manually. Also the using enabled status, forbidden and successfull texts
+	 * have to be set manually.
 	 *
 	 * @param item the item to use fields from
 	 */
@@ -258,21 +262,21 @@ public class InventoryItem extends UsableObject implements
 		for (String identifier : item.getIdentifiers()) {
 			addIdentifier(identifier);
 		}
-		// Additional inspect actions
-		for (AbstractAction action : item.getAdditionalActionsFromInspect()) {
-			addAdditionalActionToInspect(convertInventoryItemActionToItemAction(
-				item, action));
-		}
-		// Additional use actions
-		for (AbstractAction action : item.getAdditionalActionsFromUse()) {
-			addAdditionalActionToUse(convertInventoryItemActionToItemAction(
-				item, action));
-		}
-		// Use forbidden/successful text
-		setUseForbiddenText(item.getUseForbiddenText());
-		setUseSuccessfulText(item.getUseSuccessfulText());
-		// Using enabled status
-		setUsingEnabled(item.isUsingEnabled());
+//		// Additional inspect actions
+//		for (AbstractAction action : item.getAdditionalActionsFromInspect()) {
+//			addAdditionalActionToInspect(convertInventoryItemActionToItemAction(
+//				item, action));
+//		}
+//		// Additional use actions
+//		for (AbstractAction action : item.getAdditionalActionsFromUse()) {
+//			addAdditionalActionToUse(convertInventoryItemActionToItemAction(
+//				item, action));
+//		}
+//		// Use forbidden/successful text
+//		setUseForbiddenText(item.getUseForbiddenText());
+//		setUseSuccessfulText(item.getUseSuccessfulText());
+//		// Using enabled status
+//		setUsingEnabled(item.isUsingEnabled());
 
 		init();
 	}
@@ -467,8 +471,7 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	/**
-	 * TODO check for ChangeNOAction, ChangeIOAction, ChangeItemAction OR
-	 * remove this shit!
+	 * This is incomplete and should not be used.
 	 *
 	 * Converts any action connected with the given {@link Item} into an
 	 * equivalent action connected to this InventoryItem.
@@ -477,6 +480,8 @@ public class InventoryItem extends UsableObject implements
 	 * @param action the action to be converted
 	 * @return a converted action or the action itself.
 	 */
+	@SuppressWarnings("unused")
+	@Deprecated
 	private AbstractAction convertInventoryItemActionToItemAction(Item item,
 		AbstractAction action) {
 		if (action instanceof ChangeItemAction

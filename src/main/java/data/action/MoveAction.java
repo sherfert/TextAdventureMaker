@@ -74,7 +74,7 @@ public class MoveAction extends AbstractAction {
 	}
 
 	@Override
-	public void doAction() {
+	protected void doAction() {
 		PlayerManager.getPlayer().setLocation(way.getDestination());
 	}
 
