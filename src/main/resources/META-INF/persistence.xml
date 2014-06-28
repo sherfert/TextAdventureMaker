@@ -10,6 +10,7 @@
 		<class>data.action.AddInventoryItemsAction</class>
 		<class>data.action.ChangeActionAction</class>
 		<class>data.action.ChangeConversationAction</class>
+		<class>data.action.ChangeConversationOptionAction</class>
 		<class>data.action.ChangeInspectableObjectAction</class>
 		<class>data.action.ChangeItemAction</class>
 		<class>data.action.ChangeNamedObjectAction</class>

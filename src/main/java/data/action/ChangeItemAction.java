@@ -10,10 +10,10 @@ import data.Location;
 
 /**
  * An action changing attributes of an {@link Item}.
- *
+ * 
  * It can also be used to ADD items, if the former location was {@code null} or
  * to REMOVE items, if the new location is {@code null}.
- *
+ * 
  * @author Satia
  */
 @Entity
@@ -27,47 +27,47 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	private boolean changeLocation;
 
 	/**
-	 * The new location of the item. Can be {@code null}, which means the
-	 * Item will be removed. To apply these changes, {@link #changeLocation}
-	 * has to be set to {@code true}.
+	 * The new location of the item. Can be {@code null}, which means the Item
+	 * will be removed. To apply these changes, {@link #changeLocation} has to
+	 * be set to {@code true}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	private Location newLocation;
 
 	/**
-	 * The new takeForbiddenText. If {@code null}, the old will not be
-	 * changed.
+	 * The new takeForbiddenText. If {@code null}, the old will not be changed.
 	 */
 	private String newTakeForbiddenText;
 
 	/**
-	 * The new takeSuccessfulText. If {@code null}, the old will not be
-	 * changed.
+	 * The new takeSuccessfulText. If {@code null}, the old will not be changed.
 	 */
 	private String newTakeSuccessfulText;
 
 	/**
 	 * No-arg constructor for the database.
-	 *
-	 * @deprecated Use {@link ChangeItemAction#ChangeItemAction(Item)}
-	 * instead.
+	 * 
+	 * @deprecated Use {@link ChangeItemAction#ChangeItemAction(Item)} instead.
 	 */
 	@Deprecated
 	public ChangeItemAction() {
 	}
 
 	/**
-	 * @param object the object to be changed
+	 * @param object
+	 *            the object to be changed
 	 */
 	public ChangeItemAction(Item object) {
 		super(object);
 	}
 
 	/**
-	 * @param object the object to be changed
-	 * @param newLocation The new location of the item. Can be {@code null},
-	 * which means the Item will be removed.
+	 * @param object
+	 *            the object to be changed
+	 * @param newLocation
+	 *            The new location of the item. Can be {@code null}, which means
+	 *            the Item will be removed.
 	 */
 	public ChangeItemAction(Item object, Location newLocation) {
 		super(object);
@@ -75,18 +75,23 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	}
 
 	/**
-	 * @param object the object to be changed
-	 * @param enabled if the action should be enabled
+	 * @param object
+	 *            the object to be changed
+	 * @param enabled
+	 *            if the action should be enabled
 	 */
 	public ChangeItemAction(Item object, boolean enabled) {
 		super(object, enabled);
 	}
 
 	/**
-	 * @param object the object to be changed
-	 * @param newLocation The new location of the item. Can be {@code null},
-	 * which means the Item will be removed.
-	 * @param enabled if the action should be enabled
+	 * @param object
+	 *            the object to be changed
+	 * @param newLocation
+	 *            The new location of the item. Can be {@code null}, which means
+	 *            the Item will be removed.
+	 * @param enabled
+	 *            if the action should be enabled
 	 */
 	public ChangeItemAction(Item object, Location newLocation, boolean enabled) {
 		super(object, enabled);
@@ -108,8 +113,9 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * This also sets changeLocation to true. If you want to undo this,
 	 * explicitly call {@code setChangeLocation(false)}.
-	 *
-	 * @param newLocation the newLocation to set
+	 * 
+	 * @param newLocation
+	 *            the newLocation to set
 	 */
 	public final void setNewLocation(Location newLocation) {
 		this.newLocation = newLocation;
@@ -124,7 +130,8 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	}
 
 	/**
-	 * @param changeLocation the changeLocation to set
+	 * @param changeLocation
+	 *            the changeLocation to set
 	 */
 	public void setChangeLocation(boolean changeLocation) {
 		this.changeLocation = changeLocation;
@@ -138,7 +145,8 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	}
 
 	/**
-	 * @param newTakeForbiddenText the newTakeForbiddenText to set
+	 * @param newTakeForbiddenText
+	 *            the newTakeForbiddenText to set
 	 */
 	public void setNewTakeForbiddenText(String newTakeForbiddenText) {
 		this.newTakeForbiddenText = newTakeForbiddenText;
@@ -152,7 +160,8 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	}
 
 	/**
-	 * @param newTakeSuccessfulText the newTakeSuccessfulText to set
+	 * @param newTakeSuccessfulText
+	 *            the newTakeSuccessfulText to set
 	 */
 	public void setNewTakeSuccessfulText(String newTakeSuccessfulText) {
 		this.newTakeSuccessfulText = newTakeSuccessfulText;
@@ -178,8 +187,10 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	@Override
 	public String toString() {
 		return "ChangeItemAction{" + "changeLocation=" + changeLocation
-			+ ", newLocationID=" + newLocation.getId() + ", newTakeForbiddenText="
-			+ newTakeForbiddenText + ", newTakeSuccessfulText="
-			+ newTakeSuccessfulText + " " + super.toString() + '}';
+				+ ", newLocationID="
+				+ (newLocation != null ? newLocation.getId() : "null")
+				+ ", newTakeForbiddenText=" + newTakeForbiddenText
+				+ ", newTakeSuccessfulText=" + newTakeSuccessfulText + " "
+				+ super.toString() + '}';
 	}
 }

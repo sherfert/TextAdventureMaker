@@ -176,10 +176,12 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	public String toString() {
 		return "ChangePersonAction{newTalkingToForbiddenText="
 				+ newTalkingToForbiddenText + ", changeLocation="
-				+ changeLocation + ", newLocationID=" + newLocation.getId()
+				+ changeLocation + ", newLocationID="
+				+ (newLocation != null ? newLocation.getId() : "null")
 				+ ", changeConversation=" + changeConversation
-				+ ", newConversationID=" + newConversation.getId() + " "
-				+ super.toString() + "}";
+				+ ", newConversationID="
+				+ (newConversation != null ? newConversation.getId() : "null")
+				+ " " + super.toString() + "}";
 	}
 
 }
