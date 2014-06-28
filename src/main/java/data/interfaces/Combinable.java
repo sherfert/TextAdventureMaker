@@ -41,7 +41,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 
 	/**
 	 * Adds new inventory items, removes both partners if removeCombinables is
-	 * enabled andtriggers all additional actions for that item, if any.
+	 * enabled and triggers all additional actions for that item, if any.
 	 * 
 	 * @param partner
 	 *            the partner

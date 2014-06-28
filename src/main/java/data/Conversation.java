@@ -8,14 +8,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import data.action.AbstractAction;
 import data.interfaces.HasId;
 
 /**
- * A conversation, consisting of different layers and a greeting.
- * Can be enabled and disabled.
+ * A conversation, consisting of different layers and a greeting. Can be enabled
+ * and disabled. There are actions than can be triggered if the conversation is
+ * started.
  * 
  * @author Satia
  */
@@ -28,52 +32,56 @@ public class Conversation implements HasId {
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	/**
 	 * The greeting from the Person.
 	 */
 	private String greeting;
-	
+
 	/**
 	 * If this conversation is enabled.
 	 */
 	private boolean enabled;
-	
+
 	/**
-	 * All layers belonging to this conversation. A layer can only belong to
-	 * one conversation.
+	 * All additional actions.
+	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
+	private List<AbstractAction> additionalActions;
+
+	/**
+	 * All layers belonging to this conversation. A layer can only belong to one
+	 * conversation.
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	private List<ConversationLayer> layers;
-	
+
 	/**
-	 * The starting layer. The options of this layer will be presented
-	 * after the greeting. If this is {@code null}, the conversation will
-	 * end after the greeting.
+	 * The starting layer. The options of this layer will be presented after the
+	 * greeting. If this is {@code null}, the conversation will end after the
+	 * greeting.
 	 */
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	private ConversationLayer startLayer;
-	
+
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use
-	 *             {@link #Conversation(String)}
-	 *             instead.
+	 * @deprecated Use {@link #Conversation(String)} instead.
 	 */
 	@Deprecated
 	public Conversation() {
 		layers = new ArrayList<>();
 	}
-	
-	
 
 	/**
 	 * An enabled conversation with no layers yet.
 	 * 
-	 * @param greeting the greeting
+	 * @param greeting
+	 *            the greeting
 	 */
 	public Conversation(String greeting) {
 		this();
@@ -85,8 +93,6 @@ public class Conversation implements HasId {
 		return id;
 	}
 
-
-
 	/**
 	 * @return the greeting
 	 */
@@ -94,16 +100,13 @@ public class Conversation implements HasId {
 		return greeting;
 	}
 
-
-
 	/**
-	 * @param greeting the greeting to set
+	 * @param greeting
+	 *            the greeting to set
 	 */
 	public void setGreeting(String greeting) {
 		this.greeting = greeting;
 	}
-
-
 
 	/**
 	 * @return the enabled
@@ -112,16 +115,13 @@ public class Conversation implements HasId {
 		return enabled;
 	}
 
-
-
 	/**
-	 * @param enabled the enabled to set
+	 * @param enabled
+	 *            the enabled to set
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-
-
 
 	/**
 	 * @return the layers
@@ -130,16 +130,13 @@ public class Conversation implements HasId {
 		return layers;
 	}
 
-
-
 	/**
-	 * @param layers the layers to set
+	 * @param layers
+	 *            the layers to set
 	 */
 	public void setLayers(List<ConversationLayer> layers) {
 		this.layers = layers;
 	}
-
-
 
 	/**
 	 * @return the startLayer
@@ -148,15 +145,29 @@ public class Conversation implements HasId {
 		return startLayer;
 	}
 
-
-
 	/**
-	 * @param startLayer the startLayer to set
+	 * @param startLayer
+	 *            the startLayer to set
 	 */
 	public void setStartLayer(ConversationLayer startLayer) {
 		this.startLayer = startLayer;
 	}
-	
+
+	/**
+	 * @return the additionalActions
+	 */
+	public List<AbstractAction> getAdditionalActions() {
+		return additionalActions;
+	}
+
+	/**
+	 * @param additionalActions
+	 *            the additionalActions to set
+	 */
+	public void setAdditionalActions(List<AbstractAction> additionalActions) {
+		this.additionalActions = additionalActions;
+	}
+
 	/**
 	 * Adds a layer.
 	 * 
@@ -175,6 +186,35 @@ public class Conversation implements HasId {
 	 */
 	public void removeLayer(ConversationLayer layer) {
 		layers.remove(layer);
+	}
+
+	/**
+	 * Adds an additional action.
+	 * 
+	 * @param action
+	 *            the action to add.
+	 */
+	public void addAdditionalAction(AbstractAction action) {
+		additionalActions.add(action);
+	}
+
+	/**
+	 * Removes an additional action.
+	 * 
+	 * @param action
+	 *            the action to remove.
+	 */
+	public void removeAdditionalAction(AbstractAction action) {
+		additionalActions.remove(action);
+	}
+
+	@Override
+	public String toString() {
+		return "Conversation{id=" + id + ", greeting=" + greeting
+				+ ", enabled=" + enabled + ", additionalActionsIDs="
+				+ NamedObject.getIDList(additionalActions) + ", layersIDs="
+				+ NamedObject.getIDList(layers) + ", startLayerID="
+				+ startLayer.getId() + "}";
 	}
 
 }
