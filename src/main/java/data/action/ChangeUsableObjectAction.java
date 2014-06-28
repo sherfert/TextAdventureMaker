@@ -9,6 +9,8 @@ import data.UsableObject;
 
 /**
  * An action changing properties of a {@link UsableObject}.
+ * 
+ * TODO Create a ChangeInventoryItemAction
  *
  * @author Satia
  */

@@ -29,6 +29,7 @@ public class Main {
 
 	/**
 	 * Test-main.
+	 * 
 	 * @param args
 	 * @throws java.lang.Exception
 	 */
@@ -120,9 +121,8 @@ public class Main {
 		tv.addAdditionalActionToInspect(changeTVAction);
 
 		/*
-		 * A takeable banana. If the banana (as an item OR as an inventory item)
-		 * is being used the item/inventory item disappears and the peel is
-		 * being added to the inventory.
+		 * A banana. If the banana is being used the item disappears and the
+		 * peel is being added to the inventory.
 		 */
 		Item banana = new Item(flat, "Banana",
 				"In the fruit bowl there's a single, lonely banana.");
@@ -183,8 +183,8 @@ public class Main {
 
 		invChair.addAdditionalActionToUseWith(tv, new ChangeItemAction(
 				destroyedTv, flat));
-		invChair.addAdditionalActionToUseWith(tv, new ChangeItemAction(tv,
-				null));
+		invChair.addAdditionalActionToUseWith(tv,
+				new ChangeItemAction(tv, null));
 		invChair.setUseWithSuccessfulText(tv,
 				"You smash the chair into the television.");
 		invChair.setUsingEnabledWith(tv, true);

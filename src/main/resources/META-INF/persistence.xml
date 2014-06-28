@@ -17,6 +17,8 @@
 		<class>data.action.MoveAction</class>
 		<class>data.action.RemoveInventoryItemAction</class>
 		<class>data.action.SetItemLocationAction</class>
+		<class>data.ConversationLayer</class>
+		<class>data.ConversationOption</class>
 		<class>data.Game</class>
 		<class>data.InspectableObject</class>
 		<class>data.InventoryItem</class>
