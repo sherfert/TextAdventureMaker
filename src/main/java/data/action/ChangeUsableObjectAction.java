@@ -61,9 +61,6 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 		super(object, enabled);
 	}
 
-	/**
-	 * @return the object
-	 */
 	@Override
 	public UsableObject getObject() {
 		return (UsableObject) super.getObject();

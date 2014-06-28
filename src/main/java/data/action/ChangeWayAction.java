@@ -65,9 +65,6 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 		super(object, enabled);
 	}
 
-	/**
-	 * @return the object
-	 */
 	@Override
 	public Way getObject() {
 		return (Way) super.getObject();

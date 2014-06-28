@@ -93,9 +93,6 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 		setNewLocation(newLocation);
 	}
 
-	/**
-	 * @return the object
-	 */
 	@Override
 	public Item getObject() {
 		return (Item) super.getObject();

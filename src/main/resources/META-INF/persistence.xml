@@ -12,6 +12,7 @@
 		<class>data.action.ChangeInspectableObjectAction</class>
 		<class>data.action.ChangeItemAction</class>
 		<class>data.action.ChangeNamedObjectAction</class>
+		<class>data.action.ChangePersonAction</class>
 		<class>data.action.ChangeUsableObjectAction</class>
 		<class>data.action.ChangeWayAction</class>
 		<class>data.action.MoveAction</class>

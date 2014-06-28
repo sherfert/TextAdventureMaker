@@ -197,6 +197,15 @@ public class Game implements HasId {
 	private String notTakeableText;
 
 	/**
+	 * The default text, when the player tries to talk to a person he cannot
+	 * talk to. way. May be overwritten for each individual person. Valid
+	 * placeholders: {@literal <input>}, {@literal <name>},
+	 * {@literal <identifier>}
+	 */
+	@Column(nullable = false)
+	private String notTalkingToEnabledText;
+
+	/**
 	 * The default text, when the player tries to travel by a non-travelable
 	 * way. May be overwritten for each individual way. Valid placeholders:
 	 * {@literal <input>}, {@literal <name>}, {@literal <identifier>}
@@ -599,6 +608,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the notTalkingToEnabledText
+	 */
+	public String getNotTalkingToEnabledText() {
+		return notTalkingToEnabledText;
+	}
+
+	/**
 	 * @return the notTravelableText
 	 */
 	public String getNotTravelableText() {
@@ -939,6 +955,13 @@ public class Game implements HasId {
 	 */
 	public void setNotTakeableText(String notTakeableText) {
 		this.notTakeableText = notTakeableText;
+	}
+
+	/**
+	 * @param notTalkingToEnabledText the notTalkingToEnabledText to set
+	 */
+	public void setNotTalkingToEnabledText(String notTalkingToEnabledText) {
+		this.notTalkingToEnabledText = notTalkingToEnabledText;
 	}
 
 	/**
