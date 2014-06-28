@@ -118,13 +118,6 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		additionalTakeActions.add(action);
 	}
 
-	// TODO Check if this (and probably other) other-than-additional
-	// actions should be reachable directly!
-	@Override
-	public AddInventoryItemsAction getAddInventoryItemsAction() {
-		return addInventoryItemsAction;
-	}
-
 	@Override
 	public List<AbstractAction> getAdditionalActionsFromTake() {
 		return additionalTakeActions;
@@ -193,6 +186,24 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public void setTakingEnabled(boolean enabled) {
 		addInventoryItemsAction.setEnabled(enabled);
+	}
+	
+	@Override
+	public void setPickUpItems(List<InventoryItem> pickUpItems) {
+		addInventoryItemsAction.setPickUpItems(pickUpItems);
+		
+	}
+
+	@Override
+	public void addPickUpItem(InventoryItem item) {
+		addInventoryItemsAction.addPickUpItem(item);
+		
+	}
+
+	@Override
+	public void removePickUpItem(InventoryItem item) {
+		addInventoryItemsAction.removePickUpItem(item);
+		
 	}
 
 	@Override

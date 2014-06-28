@@ -157,7 +157,7 @@ public class Main {
 		banana.addAdditionalActionToUse(new ChangeItemAction(banana, null));
 		InventoryItem invBanana = new InventoryItem(banana);
 		invBanana.setDescription("A banana");
-		banana.getAddInventoryItemsAction().addPickUpItem(invBanana);
+		banana.addPickUpItem(invBanana);
 
 		Item chair = new Item(balcony, "Chair",
 				"A wooden chair stands beside you.");
@@ -165,7 +165,7 @@ public class Main {
 		chair.setTakingEnabled(true);
 		InventoryItem invChair = new InventoryItem(chair);
 		invChair.setDescription("A wooden chair");
-		chair.getAddInventoryItemsAction().addPickUpItem(invChair);
+		chair.addPickUpItem(invChair);
 
 		// Only let him in if he has the chair
 		ChangeActionAction allowGettingInsideAction = new ChangeActionAction(
@@ -205,7 +205,7 @@ public class Main {
 		pen.setTakingEnabled(true);
 		InventoryItem invPen = new InventoryItem(pen);
 		invPen.setDescription("A pen");
-		pen.getAddInventoryItemsAction().addPickUpItem(invPen);
+		pen.addPickUpItem(invPen);
 
 		InventoryItem paintedPeel = new InventoryItem("Painted banana peel",
 				"The peel of the banana you ate.");

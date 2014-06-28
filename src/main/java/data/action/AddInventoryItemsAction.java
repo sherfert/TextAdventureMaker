@@ -77,6 +77,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 		this.pickUpItems.remove(item);
 	}
 
+	// FIXME public??
 	@Override
 	public void doAction() {
 		for (InventoryItem item : pickUpItems) {

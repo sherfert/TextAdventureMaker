@@ -2,6 +2,7 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.InventoryItem;
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeItemAction;
@@ -21,9 +22,25 @@ public interface Takeable extends Identifiable {
 	public void addAdditionalActionToTake(AbstractAction action);
 
 	/**
-	 * @return the addInventoryItemsAction
+	 * @param pickUpItems the pickUpItems to set
 	 */
-	public AddInventoryItemsAction getAddInventoryItemsAction();
+	public void setPickUpItems(List<InventoryItem> pickUpItems);
+	
+	/**
+	 * Adds an {@link InventoryItem} to the items to be added to the
+	 * inventory.
+	 *
+	 * @param item the item
+	 */
+	public void addPickUpItem(InventoryItem item);
+	
+	/**
+	 * Removes an {@link InventoryItem} from the items to be added to the
+	 * inventory.
+	 *
+	 * @param item the item
+	 */
+	public void removePickUpItem(InventoryItem item);
 
 	/**
 	 * @return the additional actions.
