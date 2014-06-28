@@ -55,10 +55,9 @@ public class ConversationOption implements HasId {
 	/**
 	 * The target layer, which the player gets to after choosing that option. If
 	 * this is {@code null}, the option will end the conversation. By default,
-	 * this will be the owning layer.
-	 */
-	/**
-	 * The options of this layer. Options can only belong to one layer.
+	 * this should be the owning layer.
+	 * 
+	 * This should only point to layers of the same conversation.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
@@ -66,9 +65,6 @@ public class ConversationOption implements HasId {
 
 	/**
 	 * No-arg constructor for the database.
-	 * 
-	 * By default taking will be disabled, but removeItem (when taking is
-	 * enabled) is enabled.
 	 * 
 	 * @deprecated Use
 	 *             {@link #ConversationOption(String, String, ConversationLayer)}
