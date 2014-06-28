@@ -119,8 +119,6 @@ public class Person extends InspectableObject implements HasLocation,
 		if (isTalkingEnabled()) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 					"Talking to {0}", this);
-
-			// TODO more?
 		}
 		if (conversation != null) {
 			// Trigger additional actions

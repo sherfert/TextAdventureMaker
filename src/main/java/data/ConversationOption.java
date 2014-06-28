@@ -31,12 +31,14 @@ public class ConversationOption implements HasId {
 	private int id;
 
 	/**
-	 * The text the player says when choosing that option.
+	 * The text the player says when choosing that option. The answer will only
+	 * be printed, if this option does not end the conversation.
 	 */
 	private String text;
 
 	/**
-	 * The answer the player gets when choosing that option.
+	 * The answer the player gets when choosing that option. The answer will
+	 * only be printed, if this option does not end the conversation.
 	 */
 	private String answer;
 
@@ -189,6 +191,16 @@ public class ConversationOption implements HasId {
 	 */
 	public void removeAdditionalAction(AbstractAction action) {
 		additionalActions.remove(action);
+	}
+
+	/**
+	 * Choose this option. Simply triggers all additional actions.
+	 */
+	public void choose() {
+		// Trigger additional actions
+		for (AbstractAction abstractAction : additionalActions) {
+			abstractAction.triggerAction();
+		}
 	}
 
 	@Override

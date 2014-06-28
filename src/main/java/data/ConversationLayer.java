@@ -84,6 +84,32 @@ public class ConversationLayer implements HasId {
 		options.remove(option);
 	}
 
+	/**
+	 * @return a list of the texts of all options.
+	 */
+	public List<String> getOptionTexts() {
+		List<String> result = new ArrayList<>(options.size());
+		for (ConversationOption option : options) {
+			result.add(option.getText());
+		}
+
+		return result;
+	}
+
+	/**
+	 * A layer is playable if there is at least one enabled option.
+	 * 
+	 * @return if the layer is playable.
+	 */
+	public boolean isPlayable() {
+		for (ConversationOption option : options) {
+			if (option.isEnabled()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		return "ConversationLayer{id=" + id + ", optionsIDs="

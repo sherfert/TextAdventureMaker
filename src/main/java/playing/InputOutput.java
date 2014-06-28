@@ -16,6 +16,8 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
 import com.googlecode.lanterna.terminal.Terminal.ResizeListener;
 import com.googlecode.lanterna.terminal.TerminalSize;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
+
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +42,12 @@ public class InputOutput implements TextHandler {
 	 * The default text area, covering the whole screen.
 	 */
 	private LanternaScreenTextArea defaultTextArea;
+	
+	/**
+	 * The conversation player if currently in conversation mode,
+	 * {@code null} otherwise.
+	 */
+	private ConversationPlayer conversationPlayer;
 
 	/**
 	 * @param gamePlayer the GamePlayer for this session
@@ -61,7 +69,7 @@ public class InputOutput implements TextHandler {
 			.getTerminalSize().getRows(), InputOutput.this);
 
 		// TODO the key listener loop must be implemented here as soon
-		// as conversations are supported
+		// as conversations are supported OR stopThread method
 		defaultTextArea.startInputReadingThread();
 
 		screen.getTerminal().addResizeListener(new ResizeListener() {
@@ -119,6 +127,8 @@ public class InputOutput implements TextHandler {
 
 	/**
 	 * Prints a line of text for the player. Given colors.
+	 * 
+	 * TODO different in conversation mode!
 	 *
 	 * @param output the text to be printed
 	 * @param bgColor the background color
@@ -130,6 +140,25 @@ public class InputOutput implements TextHandler {
 
 		defaultTextArea.println(output, bgColor, fgColor);
 		this.screen.refresh();
+	}
+	
+	public void enterConversationMode(ConversationPlayer conversationPlayer) {
+		this.conversationPlayer = conversationPlayer;
+		// TODO
+	}
+	
+	public void exitConversationMode() {
+		this.conversationPlayer = null;
+		// TODO
+	}
+	
+	public void setOptions(List<String> options) {
+		// TODO
+	}
+	
+	// TODO override sth.
+	public void chooseOption(int index) {
+		conversationPlayer.chooseOption(index);
 	}
 
 	@Override

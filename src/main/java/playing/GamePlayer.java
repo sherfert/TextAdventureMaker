@@ -639,7 +639,15 @@ public class GamePlayer {
 		usable.useWith(object);
 	}
 
-	// TODO implement talkTo
+	/**
+	 * Tries to talk to the person with the given name. The additional actions
+	 * will be performed. Either the conversation will be started or a message
+	 * informing about failure will be displayed.
+	 * 
+	 * 
+	 * @param identifier
+	 *            an identifier of the person
+	 */
 	public void talkTo(String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Talk to identifier {0}", identifier);
@@ -653,11 +661,20 @@ public class GamePlayer {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Talk to id {0}", person.getId());
 
+			// Effect depends also on additional actions
+			// This call is done before anything else, as the ConversationPlayer
+			// will get the control
+			person.talkTo();
+
 			// Save name
 			currentReplacer.setName(person.getName());
 			if (person.isTalkingEnabled()) {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
 						"Talk to id {0} enabled", person.getId());
+
+				// Start the conversation
+				new ConversationPlayer(io, game, person.getConversation(),
+						person.getName());
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
 						"Talk to {0} disabled", person.getId());
@@ -670,9 +687,6 @@ public class GamePlayer {
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
 			}
-			// Effect depends also on additional actions
-			person.talkTo();
-			// TODO more?
 		} else {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Talk to not found {0}", identifier);
