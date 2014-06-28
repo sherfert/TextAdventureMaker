@@ -636,4 +636,10 @@ public class GamePlayer {
 		// Effect depends on additional actions
 		usable.useWith(object);
 	}
+	
+	public void talkTo(String identifier) {
+		// TODO
+		io.println("talking to " + identifier,
+				game.getSuccessfullBgColor(), game.getSuccessfullFgColor());
+	}
 }

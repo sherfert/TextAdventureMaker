@@ -17,6 +17,8 @@ import java.util.Stack;
  * area of the screen. This class will only update the screen, if it handles the
  * input itself.
  * 
+ * TODO allow indentation
+ * 
  * @author Satia Herfert
  */
 public class LanternaScreenTextArea {

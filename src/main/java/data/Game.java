@@ -36,39 +36,46 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String exitCommandHelpText;
+	
 	/**
 	 * All commands that make the game exit. Must be lowercase.
 	 */
 	@ElementCollection
 	private final List<String> exitCommands;
+	
 	/**
 	 * The background color that is used for text printed after a failed action.
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Color failedBgColor;
+	
 	/**
 	 * The color that is used for text printed after a failed action.
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Color failedFgColor;
+	
 	/**
 	 * All commands that let the player see the help. Must be lowercase.
 	 */
 	@ElementCollection
 	private final List<String> helpCommands;
+	
 	/**
 	 * The help text being displayed for the help command
 	 */
 	@Column(nullable = false)
 	private String helpHelpText;
+	
 	/**
 	 * The id.
 	 */
 	@Id
 	@GeneratedValue
 	private int id;
+	
 	/**
 	 * All commands that let the player inspect something. Must be lowercase.
 	 * Must contain at least one word and exactly one parameter for the object:
@@ -76,12 +83,13 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> inspectCommands;
+	
 	/**
 	 * The help text being displayed for the inspect command
 	 */
 	@Column(nullable = false)
 	private String inspectHelpText;
-
+	
 	/**
 	 * The text being displayed when an object is inspected that does not have
 	 * an individual inspection text. Valid placeholders: {@literal <input>},
@@ -89,7 +97,6 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String inspectionDefaultText;
-
 	/**
 	 * All commands that let the player look into his inventory. Must be
 	 * lowercase.
@@ -287,6 +294,20 @@ public class Game implements HasId {
 	private String takenText;
 
 	/**
+	 * All commands that let the player talk to someone. Must be lowercase.
+	 * Must contain at least one word and exactly one parameter for the person:
+	 * {@literal (.+)}
+	 */
+	@ElementCollection
+	private final List<String> talkToCommands;
+
+	/**
+	 * The help text being displayed for the talk to command
+	 */
+	@Column(nullable = false)
+	private String talkToHelpText;
+
+	/**
 	 * All use commands. Must be lowercase. Must contain at least one word and
 	 * exactly one parameter for the object: {@literal (.+)}
 	 */
@@ -342,6 +363,7 @@ public class Game implements HasId {
 		takeCommands = new ArrayList<>();
 		useCommands = new ArrayList<>();
 		useWithCombineCommands = new ArrayList<>();
+		talkToCommands = new ArrayList<>();
 	}
 
 	/**
@@ -373,7 +395,7 @@ public class Game implements HasId {
 	public void addInspectCommand(String cmd) {
 		this.inspectCommands.add(cmd.toLowerCase());
 	}
-
+	
 	/**
 	 * Adds an inventory command.
 	 * 
@@ -412,6 +434,16 @@ public class Game implements HasId {
 	 */
 	public void addTakeCommand(String cmd) {
 		this.takeCommands.add(cmd.toLowerCase());
+	}
+
+	/**
+	 * Adds a talk to command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void addTalkToCommand(String cmd) {
+		this.talkToCommands.add(cmd.toLowerCase());
 	}
 
 	/**
@@ -692,6 +724,20 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the talkToCommands
+	 */
+	public List<String> getTalkToCommands() {
+		return talkToCommands;
+	}
+
+	/**
+	 * @return the talkToHelpText
+	 */
+	public String getTalkToHelpText() {
+		return talkToHelpText;
+	}
+
+	/**
 	 * @return the useCommands
 	 */
 	public List<String> getUseCommands() {
@@ -793,6 +839,16 @@ public class Game implements HasId {
 		this.takeCommands.remove(cmd.toLowerCase());
 	}
 
+	/**
+	 * Removes a talk to command.
+	 * 
+	 * @param cmd
+	 *            the command
+	 */
+	public void removeTalkToCommand(String cmd) {
+		this.talkToCommands.remove(cmd.toLowerCase());
+	}
+	
 	/**
 	 * Removes a use command.
 	 * 
@@ -1042,6 +1098,13 @@ public class Game implements HasId {
 	 */
 	public void setTakenText(String takenText) {
 		this.takenText = takenText;
+	}
+
+	/**
+	 * @param talkToHelpText the talkToHelpText to set
+	 */
+	public void setTalkToHelpText(String talkToHelpText) {
+		this.talkToHelpText = talkToHelpText;
 	}
 
 	/**

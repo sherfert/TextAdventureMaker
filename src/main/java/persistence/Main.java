@@ -260,7 +260,8 @@ public class Main {
 		game.setMoveHelpText("Move somewhere else");
 		game.setTakeHelpText("Pick something up and put it in your inventory");
 		game.setUseHelpText("Use an item in any imagineable way");
-		game.setUseWithCombineHelpText("Use one item with another or combine two items in your inventory.");
+		game.setUseWithCombineHelpText("Use one item with another or combine two items in your inventory");
+		game.setTalkToHelpText("Talk to someone");
 
 		// TODO special command identifiers like "eat banana" instead of
 		// "use banana"?
@@ -281,6 +282,8 @@ public class Main {
 		game.addUseWithCombineCommand("use (.+) with (.+)");
 		game.addUseWithCombineCommand("combine (.+) and (.+)");
 		game.addUseWithCombineCommand("combine (.+) with (.+)");
+		game.addTalkToCommand("talk to (.+)");
+		game.addTalkToCommand("speek with (.+)");
 
 		// Connect to database
 		PersistenceManager.connect(System.getProperty("user.home")

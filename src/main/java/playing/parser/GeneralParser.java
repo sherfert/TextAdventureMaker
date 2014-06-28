@@ -50,6 +50,8 @@ public class GeneralParser {
 		TAKE("getTakeCommands", "getTakeHelpText", "take", String.class), //
 		/** Use something */
 		USE("getUseCommands", "getUseHelpText", "use", String.class), //
+		/** Talk to someone */
+		TALKTO("getTalkToCommands", "getTalkToHelpText", "talkTo", String.class), //
 		/** Look around */
 		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
 			"lookAround"), //
