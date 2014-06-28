@@ -18,6 +18,7 @@ import data.Way;
 import data.action.AbstractAction.Enabling;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
+import data.action.ChangeConversationAction;
 import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.ChangePersonAction;
@@ -143,6 +144,9 @@ public class Main {
 		satiaConversation.addLayer(csLayer);
 		satiaConversation.setStartLayer(startLayer);
 		satia.setConversation(satiaConversation);
+		
+		ChangeConversationAction changeSatiaConversation = new ChangeConversationAction(satiaConversation);
+		changeSatiaConversation.setNewGreeting("What is it, stinky thief?");
 
 		/*
 		 * The short conversation with Satia
@@ -150,6 +154,7 @@ public class Main {
 		satiaShortConversation.addAdditionalAction(removeMoneyAction);
 		satiaShortConversation.addAdditionalAction(changeSatiaAction2);
 		satiaShortConversation.addAdditionalAction(enableAddMoneyAction);
+		satiaShortConversation.addAdditionalAction(changeSatiaConversation);
 
 		money.setUsingEnabledWith(satia, true);
 		money.setUseWithSuccessfulText(satia,

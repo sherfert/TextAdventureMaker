@@ -43,7 +43,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 * No-arg constructor for the database.
 	 *
 	 * @deprecated Use
-	 * {@link ChangeNamedObjectAction#SetPropertiesAction(InspectableObject)}
+	 * {@link #ChangeNamedObjectAction(InspectableObject)}
 	 * instead.
 	 */
 	@Deprecated
