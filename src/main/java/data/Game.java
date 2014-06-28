@@ -36,46 +36,46 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String exitCommandHelpText;
-	
+
 	/**
 	 * All commands that make the game exit. Must be lowercase.
 	 */
 	@ElementCollection
 	private final List<String> exitCommands;
-	
+
 	/**
 	 * The background color that is used for text printed after a failed action.
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Color failedBgColor;
-	
+
 	/**
 	 * The color that is used for text printed after a failed action.
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Color failedFgColor;
-	
+
 	/**
 	 * All commands that let the player see the help. Must be lowercase.
 	 */
 	@ElementCollection
 	private final List<String> helpCommands;
-	
+
 	/**
 	 * The help text being displayed for the help command
 	 */
 	@Column(nullable = false)
 	private String helpHelpText;
-	
+
 	/**
 	 * The id.
 	 */
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	/**
 	 * All commands that let the player inspect something. Must be lowercase.
 	 * Must contain at least one word and exactly one parameter for the object:
@@ -83,13 +83,13 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> inspectCommands;
-	
+
 	/**
 	 * The help text being displayed for the inspect command
 	 */
 	@Column(nullable = false)
 	private String inspectHelpText;
-	
+
 	/**
 	 * The text being displayed when an object is inspected that does not have
 	 * an individual inspection text. Valid placeholders: {@literal <input>},
@@ -186,6 +186,13 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String noSuchItemText;
+
+	/**
+	 * The text being displayed, when the player tries to talk to a non-existing
+	 * perosn. Valid placeholders: {@literal <input>}, {@literal <identifier>}
+	 */
+	@Column(nullable = false)
+	private String noSuchPersonText;
 
 	/**
 	 * The text being displayed, when the player tries to travel by a
@@ -294,8 +301,8 @@ public class Game implements HasId {
 	private String takenText;
 
 	/**
-	 * All commands that let the player talk to someone. Must be lowercase.
-	 * Must contain at least one word and exactly one parameter for the person:
+	 * All commands that let the player talk to someone. Must be lowercase. Must
+	 * contain at least one word and exactly one parameter for the person:
 	 * {@literal (.+)}
 	 */
 	@ElementCollection
@@ -395,7 +402,7 @@ public class Game implements HasId {
 	public void addInspectCommand(String cmd) {
 		this.inspectCommands.add(cmd.toLowerCase());
 	}
-	
+
 	/**
 	 * Adds an inventory command.
 	 * 
@@ -626,6 +633,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the noSuchPersonText
+	 */
+	public String getNoSuchPersonText() {
+		return noSuchPersonText;
+	}
+
+	/**
 	 * @return the noSuchWayText
 	 */
 	public String getNoSuchWayText() {
@@ -848,7 +862,7 @@ public class Game implements HasId {
 	public void removeTalkToCommand(String cmd) {
 		this.talkToCommands.remove(cmd.toLowerCase());
 	}
-	
+
 	/**
 	 * Removes a use command.
 	 * 
@@ -998,6 +1012,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param noSuchPersonText the noSuchPersonText to set
+	 */
+	public void setNoSuchPersonText(String noSuchPersonText) {
+		this.noSuchPersonText = noSuchPersonText;
+	}
+
+	/**
 	 * @param noSuchWayText
 	 *            the noSuchWayText to set
 	 */
@@ -1014,7 +1035,8 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @param notTalkingToEnabledText the notTalkingToEnabledText to set
+	 * @param notTalkingToEnabledText
+	 *            the notTalkingToEnabledText to set
 	 */
 	public void setNotTalkingToEnabledText(String notTalkingToEnabledText) {
 		this.notTalkingToEnabledText = notTalkingToEnabledText;
@@ -1101,7 +1123,8 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @param talkToHelpText the talkToHelpText to set
+	 * @param talkToHelpText
+	 *            the talkToHelpText to set
 	 */
 	public void setTalkToHelpText(String talkToHelpText) {
 		this.talkToHelpText = talkToHelpText;

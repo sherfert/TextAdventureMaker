@@ -7,7 +7,7 @@ import data.Conversation;
  * 
  * @author Satia
  */
-public interface HasConversation {
+public interface HasConversation extends Identifiable {
 
 	/**
 	 * Gets the conversation. Can be {@code null}.

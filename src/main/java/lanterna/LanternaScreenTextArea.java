@@ -17,8 +17,6 @@ import java.util.Stack;
  * area of the screen. This class will only update the screen, if it handles the
  * input itself.
  * 
- * TODO allow indentation
- * 
  * @author Satia Herfert
  */
 public class LanternaScreenTextArea {
@@ -314,12 +312,13 @@ public class LanternaScreenTextArea {
 				}
 				
 				linesToPrint.set(i, before.substring(0, splitIndex));
-				linesToPrint.add(i + 1, before.substring(splitIndex));
+				// if the next line starts with space, trim that
+				linesToPrint.add(i + 1, before.substring(splitIndex).trim());
 			}
 		}
 		// Include each Text line
 		for (String line : linesToPrint) {
-			includeTextLine(line.trim(), bgColor, fgColor);
+			includeTextLine(line, bgColor, fgColor);
 		}
 	}
 

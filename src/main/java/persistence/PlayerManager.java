@@ -25,6 +25,8 @@ public class PlayerManager {
 	}
 
 	/**
+	 * TODO player as paramter!?!? no!?!?!
+	 * 
 	 * Gets the Inspectable object in the location or in the inventory the given
 	 * identifier or {@code null} , if there is none.
 	 * 

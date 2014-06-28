@@ -236,6 +236,7 @@ public class Main {
 		game.setNoCommandText("I do not understand you.");
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
 		game.setNoSuchItemText("There is no <identifier> here.");
+		game.setNoSuchPersonText("There is no <identifier> here.");
 		game.setNoSuchWayText("You cannot <input>.");
 		game.setNotTakeableText("You cannot take the <name>.");
 		game.setNotTravelableText("You cannot <input>.");

@@ -4,6 +4,7 @@ import java.util.List;
 
 import persistence.ItemManager;
 import persistence.PersistenceManager;
+import persistence.PersonManager;
 import persistence.PlayerManager;
 import persistence.WayManager;
 import playing.parser.GeneralParser;
@@ -12,6 +13,7 @@ import data.Game;
 import data.InventoryItem;
 import data.Player;
 import data.interfaces.Combinable;
+import data.interfaces.HasConversation;
 import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
@@ -486,7 +488,7 @@ public class GamePlayer {
 			if (object1 instanceof Combinable && object2 instanceof Combinable
 					&& object1.getClass() == object2.getClass()) {
 				// The rawtype can be used since we know they're the same type
-				
+
 				// Combine
 				combine((Combinable) object1, (Combinable) object2);
 			} else if (object1 instanceof UsableWithHasLocation
@@ -636,10 +638,49 @@ public class GamePlayer {
 		// Effect depends on additional actions
 		usable.useWith(object);
 	}
-	
+
+	// TODO implement talkTo
 	public void talkTo(String identifier) {
-		// TODO
-		io.println("talking to " + identifier,
-				game.getSuccessfullBgColor(), game.getSuccessfullFgColor());
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Talk to identifier {0}", identifier);
+
+		HasConversation person = PersonManager.getPersonFromLocation(
+				player.getLocation(), identifier);
+		// Save identifier
+		currentReplacer.setIdentifier(identifier);
+
+		if (person != null) {
+			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+					"Talk to id {0}", person.getId());
+
+			// Save name
+			currentReplacer.setName(person.getName());
+			if (person.isTalkingEnabled()) {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+						"Talk to id {0} enabled", person.getId());
+			} else {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+						"Talk to {0} disabled", person.getId());
+
+				// Talking disabled
+				String message = person.getTalkingToForbiddenText();
+				if (message == null) {
+					message = game.getNotTalkingToEnabledText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+			}
+			// Effect depends also on additional actions
+			person.talkTo();
+			// TODO more?
+		} else {
+			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+					"Talk to not found {0}", identifier);
+
+			// There is no such person
+			String message = game.getNoSuchPersonText();
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getFailedBgColor(), game.getFailedFgColor());
+		}
 	}
 }
