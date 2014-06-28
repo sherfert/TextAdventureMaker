@@ -1,81 +1,86 @@
 package configuration;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Read the information of a properties file.
- *
+ * Read the information of a properties file. TODO comments
+ * 
  * @author Satia
- *
+ * 
  */
 public class PropertiesReader {
 
+	/** The name of the LogLevel property */
 	public static final String LOG_LEVEL_PROPERTY = "LogLevel";
-
+	/** The default value of the LogLevel property */
 	public static final String LOG_LEVEL_DEFAULT = "CONFIG";
 
-	public static final String DIRECTORY = System
-		.getProperty("user.home")
-		+ File.separator
-		+ ".textAdventureMaker"
-		+ File.separator;
-
-	private static final String propertiesFilePath = DIRECTORY
-		+ "textAdventureMaker.properties";
-
-	// TODO Do NOT read the file every time!!??
 	/**
-	 * To get the properties object
-	 *
-	 * @return properties object
+	 * The directory to store configuration and other stuff:
+	 * ~/.textAdventureMaker
 	 */
-	public static Properties getProperties() {
-		return loadFile();
+	public static final String DIRECTORY = System.getProperty("user.home")
+			+ File.separator + ".textAdventureMaker" + File.separator;
+	/** Path to the properties file */
+	private static final String propertiesFilePath = DIRECTORY
+			+ "textAdventureMaker.properties";
+
+	/** The properties */
+	private static Properties properties;
+
+	/**
+	 * @return the properties
+	 */
+	public static synchronized Properties getProperties() {
+		if (properties == null) {
+			properties = loadFile();
+		}
+		return properties;
 	}
 
 	/**
-	 * To get one value of the given parameter
-	 *
-	 * @param param the parameter of the property
-	 * @return the value, if it exists in the property file a default value,
-	 * if it don't exists in the property file, but it exists a default
-	 * value else null
+	 * Get the value of the given parameter.
+	 * 
+	 * @param param
+	 *            the parameter of the property
+	 * @return the value, if it exists in the property file. A default value, if
+	 *         it does not, but it exists a default value. Else {@code null}.
 	 */
 	public static String getProperty(String param) {
-		Properties property = loadFile();
+		Properties properties = getProperties();
 
-		if (property.getProperty(param) == null) {
+		if (properties.getProperty(param) == null) {
 
 			String defaultPropertyValue = createDefaultProperty().getProperty(
-				param);
+					param);
 
 			// A default value for the param exists, but is still not in the
 			// file
 			// Add this to the file
 			if (defaultPropertyValue != null) {
-
-				property.setProperty(param, defaultPropertyValue);
+				properties.setProperty(param, defaultPropertyValue);
 
 				try {
 					FileOutputStream outputStream = new FileOutputStream(
-						propertiesFilePath);
-					property.store(outputStream,
-						"# Configuration file for TextAdventureMaker (default value for "
-						+ param + " added)");
+							propertiesFilePath);
+					properties.store(outputStream,
+							"# Configuration file for TextAdventureMaker (default value for "
+									+ param + " added)");
 					outputStream.close();
 				} catch (IOException e) {
-					Logger.getLogger(PropertiesReader.class.getName()).log(Level.WARNING,
-						"Could not add the not existing default property to the property-file: "
-						+ param + ": " + defaultPropertyValue, e);
+					Logger.getLogger(PropertiesReader.class.getName()).log(
+							Level.WARNING,
+							"Could not add the not existing default property to the property-file: "
+									+ param + ": " + defaultPropertyValue, e);
 					return defaultPropertyValue;
 				}
 			}
@@ -83,12 +88,12 @@ public class PropertiesReader {
 			return defaultPropertyValue;
 		}
 
-		return property.getProperty(param);
+		return properties.getProperty(param);
 	}
 
 	/**
 	 * to load a properties file
-	 *
+	 * 
 	 * @return the properties loaded from the file
 	 */
 	private static Properties loadFile() {
@@ -98,8 +103,7 @@ public class PropertiesReader {
 		try {
 			if (file.exists()) {
 				Properties property = new Properties();
-				BufferedInputStream stream = new BufferedInputStream(
-					new FileInputStream(propertiesFilePath));
+				InputStream stream = new FileInputStream(propertiesFilePath);
 				property.load(stream);
 				stream.close();
 				return result = property;
@@ -107,8 +111,10 @@ public class PropertiesReader {
 				return result = createPropertyFile();
 			}
 		} catch (IOException e) {
-			Logger.getLogger(PropertiesReader.class.getName()).log(Level.WARNING,
-				"Problem getting or creating the properties file. Using default values.", e);
+			Logger.getLogger(PropertiesReader.class.getName())
+					.log(Level.WARNING,
+							"Problem getting or creating the properties file. Using default values.",
+							e);
 
 			return result;
 
@@ -117,28 +123,29 @@ public class PropertiesReader {
 
 	/**
 	 * To create a properties file with default values
-	 *
-	 * @throws IOException if the file cannot created
+	 * 
+	 * @throws IOException
+	 *             if the file cannot created
 	 */
 	private static Properties createPropertyFile() throws IOException {
 		File properties = new File(propertiesFilePath);
 		BufferedOutputStream bos = new BufferedOutputStream(
-			new FileOutputStream(properties));
+				new FileOutputStream(properties));
 		Properties result = createDefaultProperty();
 		result.store(bos,
-			"# Configuration file for TextAdventureMaker (default generated)");
+				"# Configuration file for TextAdventureMaker (default generated)");
 		bos.close();
 
 		Logger.getLogger(PropertiesReader.class.getName()).log(Level.INFO,
-			"A new property-File with default values was generated in {0}",
-			propertiesFilePath);
+				"A new property-File with default values was generated in {0}",
+				propertiesFilePath);
 
 		return result;
 	}
 
 	/**
 	 * Generate a property with default data.
-	 *
+	 * 
 	 * @return the default property
 	 */
 	private static Properties createDefaultProperty() {
@@ -151,8 +158,9 @@ public class PropertiesReader {
 	public static void logConfiguration() {
 		// Log every configuration
 		for (Map.Entry<Object, Object> entry : getProperties().entrySet()) {
-			Logger.getLogger(PropertiesReader.class.getName()).log(Level.CONFIG,
-				"Property: {0} -> {1}", new Object[]{entry.getKey(), entry.getValue()});
+			Logger.getLogger(PropertiesReader.class.getName()).log(
+					Level.CONFIG, "Property: {0} -> {1}",
+					new Object[] { entry.getKey(), entry.getValue() });
 		}
 	}
 }

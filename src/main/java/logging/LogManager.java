@@ -15,10 +15,6 @@ import java.util.logging.SimpleFormatter;
  * @author Satia Herfert
  */
 public class LogManager {
-
-	// TODO use an xml file. Like that the PropertiesReader Logs are also
-	// Written into the log file! or not?
-	
 	/**
 	 * Static initializer block
 	 */
