@@ -20,6 +20,7 @@ import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
 import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeNamedObjectAction;
+import data.action.ChangePersonAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.ChangeItemAction;
 
@@ -49,6 +50,11 @@ public class Main {
 				balcony);
 		changeBalconyDescriptionAction
 				.setNewDescription("Your balcony. Standing around stupidly you can look at the sunset.");
+
+		ChangeNamedObjectAction changeFlatDescriptionAction = new ChangeNamedObjectAction(
+				flat);
+		changeFlatDescriptionAction
+				.setNewDescription("Your little home. But now, that you know the answer to everything, you take a completely different look at things.");
 
 		Way wayToBalcony = new Way("Balcony door",
 				"There is a door that leads outside.", flat, balcony);
@@ -90,16 +96,60 @@ public class Main {
 		satia.addAdditionalActionToInspect(addMoneyAction);
 		satia.addAdditionalActionToInspect(disableAddMoneyAction);
 
-		ChangeInspectableObjectAction changeSatiaAction1 = new ChangeInspectableObjectAction(
-				satia);
+		// Create conversations first, add other stuff later
+		Conversation satiaConversation = new Conversation(
+				"I'm busy, keep it short.");
+		Conversation satiaShortConversation = new Conversation(
+				"Hey. Gimme back my money! Douche!");
+
+		ChangePersonAction changeSatiaAction1 = new ChangePersonAction(satia);
 		changeSatiaAction1
 				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You stole the poor guy his last 5 bucks.");
-		ChangeInspectableObjectAction changeSatiaAction2 = new ChangeInspectableObjectAction(
-				satia);
+		changeSatiaAction1.setNewConversation(satiaShortConversation);
+
+		ChangePersonAction changeSatiaAction2 = new ChangePersonAction(satia);
 		changeSatiaAction2
 				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
+		changeSatiaAction2.setNewConversation(satiaConversation);
 
 		satia.addAdditionalActionToInspect(changeSatiaAction1);
+
+		/*
+		 * The normal conversation with Satia.
+		 */
+		ConversationLayer startLayer = new ConversationLayer();
+		ConversationLayer csLayer = new ConversationLayer();
+
+		startLayer.addOption(new ConversationOption("Why so hostile?",
+				"Just TextAdventureMaker is harder to code than I though!",
+				startLayer));
+		startLayer.addOption(new ConversationOption(
+				"Let's talk about computer science.", "Ask me anything.",
+				csLayer));
+		startLayer.addOption(new ConversationOption("I'm gonne leave you now.",
+				"Finally.", null));
+
+		ConversationOption option42 = new ConversationOption(
+				"What is the answer to everything?", "42", csLayer);
+		option42.addAdditionalAction(changeFlatDescriptionAction);
+		csLayer.addOption(option42);
+		csLayer.addOption(new ConversationOption("Is Java also an island?",
+				"That's just a rumor.", csLayer));
+		csLayer.addOption(new ConversationOption(
+				"Actually I don't like computer science so much.", "Well",
+				startLayer));
+
+		satiaConversation.addLayer(startLayer);
+		satiaConversation.addLayer(csLayer);
+		satiaConversation.setStartLayer(startLayer);
+		satia.setConversation(satiaConversation);
+
+		/*
+		 * The short conversation with Satia
+		 */
+		satiaShortConversation.addAdditionalAction(removeMoneyAction);
+		satiaShortConversation.addAdditionalAction(changeSatiaAction2);
+		satiaShortConversation.addAdditionalAction(enableAddMoneyAction);
 
 		money.setUsingEnabledWith(satia, true);
 		money.setUseWithSuccessfulText(satia,
@@ -225,35 +275,6 @@ public class Main {
 		peel.addAdditionalActionToUseWith(pen, addPaintedPeelAction);
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
-
-		/*
-		 * The conversation with Satia.
-		 */
-		Conversation satiaConversation = new Conversation(
-				"I'm busy, keep it short.");
-		ConversationLayer startLayer = new ConversationLayer();
-		ConversationLayer csLayer = new ConversationLayer();
-
-		startLayer.addOption(new ConversationOption("Why so hostile?",
-				"Just TextAdventureMaker is harder to code than I though!",
-				startLayer));
-		startLayer.addOption(new ConversationOption(
-				"Let's talk about computer science.", "Ask me anything.",
-				csLayer));
-		startLayer.addOption(new ConversationOption("I'm gonne leave you now.",
-				"Finally.", null));
-
-		csLayer.addOption(new ConversationOption(
-				"What is the answer to everything?", "42", csLayer));
-		csLayer.addOption(new ConversationOption(
-				"Is Java also an island?", "That's just a rumor.", csLayer));
-		csLayer.addOption(new ConversationOption(
-				"Actually I don't like computer science so much.", "Well", startLayer));
-		
-		satiaConversation.addLayer(startLayer);
-		satiaConversation.addLayer(csLayer);
-		satiaConversation.setStartLayer(startLayer);
-		satia.setConversation(satiaConversation);
 
 		Player player = new Player();
 		// Game options

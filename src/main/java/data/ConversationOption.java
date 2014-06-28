@@ -1,5 +1,6 @@
 package data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -72,6 +73,7 @@ public class ConversationOption implements HasId {
 	 */
 	@Deprecated
 	public ConversationOption() {
+		this.additionalActions = new ArrayList<>();
 	}
 
 	/**
@@ -86,6 +88,7 @@ public class ConversationOption implements HasId {
 	 */
 	public ConversationOption(String text, String answer,
 			ConversationLayer target) {
+		this();
 		this.text = text;
 		this.answer = answer;
 		this.target = target;

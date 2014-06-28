@@ -16,6 +16,8 @@ import persistence.PersistenceManager;
  * 
  * TODO abstract String getActionDescription();
  * 
+ * TODO multiaction simply combining multiple actions.
+ * 
  * @author Satia
  */
 @Entity

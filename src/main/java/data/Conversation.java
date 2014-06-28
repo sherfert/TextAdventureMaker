@@ -75,7 +75,7 @@ public class Conversation implements HasId {
 	@Deprecated
 	public Conversation() {
 		this.layers = new ArrayList<>();
-		this.enabled = true;
+		this.additionalActions = new ArrayList<>();
 	}
 
 	/**
@@ -87,6 +87,7 @@ public class Conversation implements HasId {
 	public Conversation(String greeting) {
 		this();
 		this.greeting = greeting;
+		this.enabled = true;
 	}
 
 	@Override
@@ -215,7 +216,7 @@ public class Conversation implements HasId {
 				+ ", enabled=" + enabled + ", additionalActionsIDs="
 				+ NamedObject.getIDList(additionalActions) + ", layersIDs="
 				+ NamedObject.getIDList(layers) + ", startLayerID="
-				+ startLayer.getId() + "}";
+				+ (startLayer != null ? startLayer.getId() : "null") + "}";
 	}
 
 }

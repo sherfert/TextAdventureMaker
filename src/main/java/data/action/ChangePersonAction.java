@@ -151,7 +151,7 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * @param changeConversation
 	 *            the changeConversation to set
 	 */
-	public void setChangConversation(boolean changeConversation) {
+	public void setChangeConversation(boolean changeConversation) {
 		this.changeConversation = changeConversation;
 	}
 

@@ -660,12 +660,6 @@ public class GamePlayer {
 		if (person != null) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Talk to id {0}", person.getId());
-
-			// Effect depends also on additional actions
-			// This call is done before anything else, as the ConversationPlayer
-			// will get the control
-			person.talkTo();
-
 			// Save name
 			currentReplacer.setName(person.getName());
 			if (person.isTalkingEnabled()) {
@@ -687,6 +681,8 @@ public class GamePlayer {
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
 			}
+			// Effect depends on additional actions
+			person.talkTo();
 		} else {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Talk to not found {0}", identifier);
