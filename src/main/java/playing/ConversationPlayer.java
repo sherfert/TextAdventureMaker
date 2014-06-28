@@ -63,24 +63,31 @@ public class ConversationPlayer {
 	}
 
 	/**
-	 * Choose the option with the given index. No index checks!
+	 * Choose the option with the given index. It is being checked, that the
+	 * index is valid, otherwise nothing is done!
 	 * 
 	 * @param index
 	 *            the index of the option to choose
 	 */
 	public void chooseOption(int index) {
+		if(index >= currentLayer.getOptions().size()) {
+			return;
+		}
+		
 		ConversationOption chosenOption = currentLayer.getOptions().get(index);
 		// Trigger additional actions
 		chosenOption.choose();
+
+		// Print text and answer
+		playerSays(chosenOption.getText());
+		personSays(chosenOption.getAnswer());
+
 		// Switch to target layer
 		currentLayer = chosenOption.getTarget();
 
 		if (hasEnded()) {
 			io.exitConversationMode();
 		} else {
-			// Print text and answer
-			playerSays(chosenOption.getText());
-			personSays(chosenOption.getAnswer());
 			// Display new options
 			io.setOptions(currentLayer.getOptionTexts());
 		}

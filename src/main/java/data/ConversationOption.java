@@ -31,14 +31,12 @@ public class ConversationOption implements HasId {
 	private int id;
 
 	/**
-	 * The text the player says when choosing that option. The answer will only
-	 * be printed, if this option does not end the conversation.
+	 * The text the player says when choosing that option.
 	 */
 	private String text;
 
 	/**
-	 * The answer the player gets when choosing that option. The answer will
-	 * only be printed, if this option does not end the conversation.
+	 * The answer the player gets when choosing that option.
 	 */
 	private String answer;
 
@@ -91,6 +89,7 @@ public class ConversationOption implements HasId {
 		this.text = text;
 		this.answer = answer;
 		this.target = target;
+		this.enabled = true;
 	}
 
 	@Override

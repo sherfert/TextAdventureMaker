@@ -5,6 +5,9 @@ import java.io.File;
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import playing.GamePlayer;
+import data.Conversation;
+import data.ConversationLayer;
+import data.ConversationOption;
 import data.Game;
 import data.InventoryItem;
 import data.Item;
@@ -223,6 +226,35 @@ public class Main {
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
 
+		/*
+		 * The conversation with Satia.
+		 */
+		Conversation satiaConversation = new Conversation(
+				"I'm busy, keep it short.");
+		ConversationLayer startLayer = new ConversationLayer();
+		ConversationLayer csLayer = new ConversationLayer();
+
+		startLayer.addOption(new ConversationOption("Why so hostile?",
+				"Just TextAdventureMaker is harder to code than I though!",
+				startLayer));
+		startLayer.addOption(new ConversationOption(
+				"Let's talk about computer science.", "Ask me anything.",
+				csLayer));
+		startLayer.addOption(new ConversationOption("I'm gonne leave you now.",
+				"Finally.", null));
+
+		csLayer.addOption(new ConversationOption(
+				"What is the answer to everything?", "42", csLayer));
+		csLayer.addOption(new ConversationOption(
+				"Is Java also an island?", "That's just a rumor.", csLayer));
+		csLayer.addOption(new ConversationOption(
+				"Actually I don't like computer science so much.", "Well", startLayer));
+		
+		satiaConversation.addLayer(startLayer);
+		satiaConversation.addLayer(csLayer);
+		satiaConversation.setStartLayer(startLayer);
+		satia.setConversation(satiaConversation);
+
 		Player player = new Player();
 		// Game options
 		Game game = new Game();
@@ -236,7 +268,7 @@ public class Main {
 		game.setNoCommandText("I do not understand you.");
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
 		game.setNoSuchItemText("There is no <identifier> here.");
-		game.setNoSuchPersonText("There is no <identifier> here.");
+		game.setNoSuchPersonText("There is no <Identifier> here.");
 		game.setNoSuchWayText("You cannot <input>.");
 		game.setNotTakeableText("You cannot take the <name>.");
 		game.setNotTravelableText("You cannot <input>.");

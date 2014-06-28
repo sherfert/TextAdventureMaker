@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 /**
  * Providing means to print and read input while playing.
- *
+ * 
  * @author Satia
  */
 public class InputOutput implements TextHandler {
@@ -42,15 +42,16 @@ public class InputOutput implements TextHandler {
 	 * The default text area, covering the whole screen.
 	 */
 	private LanternaScreenTextArea defaultTextArea;
-	
+
 	/**
-	 * The conversation player if currently in conversation mode,
-	 * {@code null} otherwise.
+	 * The conversation player if currently in conversation mode, {@code null}
+	 * otherwise.
 	 */
 	private ConversationPlayer conversationPlayer;
 
 	/**
-	 * @param gamePlayer the GamePlayer for this session
+	 * @param gamePlayer
+	 *            the GamePlayer for this session
 	 */
 	public InputOutput(GamePlayer gamePlayer) {
 		this.gamePlayer = gamePlayer;
@@ -63,10 +64,10 @@ public class InputOutput implements TextHandler {
 
 		// Rest of the initialization
 		defaultTextArea = new LanternaScreenTextArea(screen, true, true,
-			Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
-			Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
-			.getTerminalSize().getColumns(), 0, screen
-			.getTerminalSize().getRows(), InputOutput.this);
+				Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
+				Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
+						.getTerminalSize().getColumns(), 0, screen
+						.getTerminalSize().getRows(), InputOutput.this);
 
 		// TODO the key listener loop must be implemented here as soon
 		// as conversations are supported OR stopThread method
@@ -76,7 +77,7 @@ public class InputOutput implements TextHandler {
 			@Override
 			public void onResized(TerminalSize newSize) {
 				defaultTextArea.setNewDimensions(0, newSize.getColumns(), 0,
-					newSize.getRows());
+						newSize.getRows());
 				screen.refresh();
 			}
 		});
@@ -95,10 +96,10 @@ public class InputOutput implements TextHandler {
 			}
 		});
 		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit()
-			.getScreenSize();
+				.getScreenSize();
 		// Let the screen cover 80 % of the real screen in each dimension
 		frame.setPreferredSize(new Dimension((int) (fullScreen.width * 0.8),
-			(int) (fullScreen.height * 0.8)));
+				(int) (fullScreen.height * 0.8)));
 		// Not resizable
 		frame.setResizable(false);
 
@@ -114,12 +115,13 @@ public class InputOutput implements TextHandler {
 
 	/**
 	 * Prints a line of text for the player. Default colors.
-	 *
-	 * @param output the text to be printed
+	 * 
+	 * @param output
+	 *            the text to be printed
 	 */
 	public void println(String output) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-			"Printing '{0}'", output);
+				"Printing '{0}'", output);
 
 		defaultTextArea.println(output);
 		this.screen.refresh();
@@ -129,33 +131,39 @@ public class InputOutput implements TextHandler {
 	 * Prints a line of text for the player. Given colors.
 	 * 
 	 * TODO different in conversation mode!
-	 *
-	 * @param output the text to be printed
-	 * @param bgColor the background color
-	 * @param fgColor the foreground color
+	 * 
+	 * @param output
+	 *            the text to be printed
+	 * @param bgColor
+	 *            the background color
+	 * @param fgColor
+	 *            the foreground color
 	 */
 	public void println(String output, Color bgColor, Color fgColor) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-			"Printing '{0}'", output);
+				"Printing '{0}'", output);
 
 		defaultTextArea.println(output, bgColor, fgColor);
 		this.screen.refresh();
 	}
-	
+
 	public void enterConversationMode(ConversationPlayer conversationPlayer) {
 		this.conversationPlayer = conversationPlayer;
 		// TODO
 	}
-	
+
 	public void exitConversationMode() {
 		this.conversationPlayer = null;
 		// TODO
 	}
-	
+
 	public void setOptions(List<String> options) {
-		// TODO
+		// TODO use a new lanterna class. this is just for test purposes.
+		for (int i = 0; i < options.size(); i++) {
+			println(i + ": " + options.get(i));
+		}
 	}
-	
+
 	// TODO override sth.
 	public void chooseOption(int index) {
 		conversationPlayer.chooseOption(index);
@@ -163,6 +171,16 @@ public class InputOutput implements TextHandler {
 
 	@Override
 	public void handleText(String text) {
+		// TODO use a new lanterna class. this is just for test purposes.
+		if (conversationPlayer != null) {
+			try {
+				int index = Integer.parseInt(text);
+				chooseOption(index);
+			} catch (NumberFormatException e) {
+			}
+			return;
+		}
+
 		if (!gamePlayer.getParser().parse(text)) {
 			gamePlayer.stop();
 		}

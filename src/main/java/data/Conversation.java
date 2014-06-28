@@ -74,7 +74,8 @@ public class Conversation implements HasId {
 	 */
 	@Deprecated
 	public Conversation() {
-		layers = new ArrayList<>();
+		this.layers = new ArrayList<>();
+		this.enabled = true;
 	}
 
 	/**
