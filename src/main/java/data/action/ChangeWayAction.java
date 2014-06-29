@@ -4,7 +4,9 @@ import javax.persistence.Entity;
 
 import data.Location;
 import data.Way;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -20,25 +22,27 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	 * The new moveForbiddenText. If {@code null}, the old will not be
 	 * changed.
 	 */
+	@Column(nullable = true)
 	private String newMoveForbiddenText;
 
 	/**
 	 * The new moveSuccessfulText. If {@code null}, the old will not be
 	 * changed.
 	 */
+	@Column(nullable = true)
 	private String newMoveSuccessfulText;
 
 	/**
 	 * The new origin. If {@code null}, the old will not be changed.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = true)
 	private Location newOrigin;
 	/**
 	 * The new destination. If {@code null}, the old will not be changed.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = true)
 	private Location newDestination;
 
 	/**

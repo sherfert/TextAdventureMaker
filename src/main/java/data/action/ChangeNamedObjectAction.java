@@ -1,6 +1,7 @@
 package data.action;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -22,11 +23,13 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	/**
 	 * The new description. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newDescription;
 
 	/**
 	 * The new name. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newName;
 
 	/**

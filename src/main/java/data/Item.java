@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,13 +17,14 @@ import data.action.AddInventoryItemsAction;
 import data.action.ChangeItemAction;
 import data.interfaces.HasLocation;
 import data.interfaces.Takeable;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Any item in the game world. This items are stored in locations but cannot be
  * in your inventory.
- *
+ * 
  * @author Satia
  */
 @Entity
@@ -50,37 +52,40 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	private Location location;
 
 	/**
-	 * The {@link ChangeItemAction} which would set the location to
-	 * {@code null}.
-	 *
-	 * Note: This is NOT the Inverse connection of
-	 * {@link ChangeItemAction#item}.
+	 * The {@link ChangeItemAction} which would set the location to {@code null}
+	 * .
+	 * 
+	 * Note: This is NOT the Inverse connection of {@link ChangeItemAction#item}
+	 * .
 	 */
 	// TODO why not unnullable?
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn//(nullable = false)
+	@JoinColumn
+	// (nullable = false)
 	private ChangeItemAction removeAction;
 
 	/**
-	 * A personalized error message displayed if taking this item was
-	 * forbidden.
+	 * A personalized error message displayed if taking this item was forbidden
+	 * or suggests the default text to be displayed if {@code null}.
 	 */
+	@Column(nullable = true)
 	private String takeForbiddenText;
 
 	/**
-	 * A personalized error message displayed if taking this item was
-	 * successful.
+	 * A personalized error message displayed if taking this item was successful
+	 * or suggests the default text to be displayed if {@code null}.
 	 */
+	@Column(nullable = true)
 	private String takeSuccessfulText;
 
 	/**
 	 * No-arg constructor for the database.
-	 *
+	 * 
 	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
-	 *
+	 * 
 	 * @deprecated Use {@link Item#Item(String, String)} or
-	 * {@link Item#Item(Location, String, String)} instead.
+	 *             {@link Item#Item(Location, String, String)} instead.
 	 */
 	@Deprecated
 	public Item() {
@@ -90,10 +95,13 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
-	 *
-	 * @param location the location
-	 * @param name the name
-	 * @param description the description
+	 * 
+	 * @param location
+	 *            the location
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
 	 */
 	public Item(Location location, String name, String description) {
 		super(name, description);
@@ -104,9 +112,11 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * By default taking will be disabled, but removeItem (when taking is
 	 * enabled) is enabled.
-	 *
-	 * @param name the name
-	 * @param description the description
+	 * 
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
 	 */
 	public Item(String name, String description) {
 		super(name, description);
@@ -157,8 +167,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public final void setLocation(Location location) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-			"Setting location of {0} to {1}", new Object[]{this, location});
-		
+				"Setting location of {0} to {1}",
+				new Object[] { this, location });
+
 		if (this.location != null) {
 			this.location.removeItem(this);
 		}
@@ -187,31 +198,31 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	public void setTakingEnabled(boolean enabled) {
 		addInventoryItemsAction.setEnabled(enabled);
 	}
-	
+
 	@Override
 	public void setPickUpItems(List<InventoryItem> pickUpItems) {
 		addInventoryItemsAction.setPickUpItems(pickUpItems);
-		
+
 	}
 
 	@Override
 	public void addPickUpItem(InventoryItem item) {
 		addInventoryItemsAction.addPickUpItem(item);
-		
+
 	}
 
 	@Override
 	public void removePickUpItem(InventoryItem item) {
 		addInventoryItemsAction.removePickUpItem(item);
-		
+
 	}
 
 	@Override
 	public void take() {
 		if (isTakingEnabled()) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Taking {0}", this);
-			
+					"Taking {0}", this);
+
 			addInventoryItemsAction.triggerAction();
 			removeAction.triggerAction();
 		}
@@ -233,10 +244,13 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 
 	@Override
 	public String toString() {
-		return "Item{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId()
-			+ ", additionalTakeActionsIDs=" + NamedObject.getIDList(additionalTakeActions)
-			+ ", locationID=" + location.getId() + ", removeActionID=" + removeAction.getId()
-			+ ", takeForbiddenText=" + takeForbiddenText + ", takeSuccessfulText="
-			+ takeSuccessfulText + " " + super.toString() + '}';
+		return "Item{" + "addInventoryItemsActionID="
+				+ addInventoryItemsAction.getId()
+				+ ", additionalTakeActionsIDs="
+				+ NamedObject.getIDList(additionalTakeActions)
+				+ ", locationID=" + location.getId() + ", removeActionID="
+				+ removeAction.getId() + ", takeForbiddenText="
+				+ takeForbiddenText + ", takeSuccessfulText="
+				+ takeSuccessfulText + " " + super.toString() + '}';
 	}
 }

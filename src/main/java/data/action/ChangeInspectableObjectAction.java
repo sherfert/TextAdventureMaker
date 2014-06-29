@@ -3,6 +3,7 @@ package data.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -34,6 +35,7 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	/**
 	 * The new inspection text. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newInspectionText;
 
 	/**

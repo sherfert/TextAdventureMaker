@@ -36,11 +36,13 @@ public class ChangeConversationAction extends AbstractAction {
 	/**
 	 * The new greeting. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newGreeting;
 	
 	/**
 	 * The new event. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newEvent;
 
 	/**
@@ -50,6 +52,7 @@ public class ChangeConversationAction extends AbstractAction {
 	 */
 	@Deprecated
 	public ChangeConversationAction() {
+		init();
 	}
 
 	/**
@@ -58,8 +61,8 @@ public class ChangeConversationAction extends AbstractAction {
 	 */
 	public ChangeConversationAction(Conversation conversation) {
 		super();
+		init();
 		this.conversation = conversation;
-		this.enabling = Enabling.DO_NOT_CHANGE;
 	}
 
 	/**
@@ -70,7 +73,14 @@ public class ChangeConversationAction extends AbstractAction {
 	 */
 	public ChangeConversationAction(Conversation conversation, boolean enabled) {
 		super(enabled);
+		init();
 		this.conversation = conversation;
+	}
+	
+	/**
+	 * Initializes the fields.
+	 */
+	private void init() {
 		this.enabling = Enabling.DO_NOT_CHANGE;
 	}
 

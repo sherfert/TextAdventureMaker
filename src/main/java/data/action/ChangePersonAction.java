@@ -1,6 +1,7 @@
 package data.action;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,6 +22,7 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * The new talkingToForbidden text. If {@code null}, the old will not be
 	 * changed.
 	 */
+	@Column(nullable = true)
 	private String newTalkingToForbiddenText;
 
 	/**
@@ -28,6 +30,7 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * necessary, as {@code null} is a valid location and cannot be used to
 	 * identify no changes to be applied.
 	 */
+	@Column(nullable = false)
 	private boolean changeLocation;
 
 	/**
@@ -36,7 +39,7 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * has to be set to {@code true}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = true)
 	private Location newLocation;
 
 	/**
@@ -44,6 +47,7 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * necessary, as {@code null} is a valid conversation and cannot be used to
 	 * identify no changes to be applied.
 	 */
+	@Column(nullable = false)
 	private boolean changeConversation;
 
 	/**
@@ -52,7 +56,7 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * {@link #changeConversation} has to be set to {@code true}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = true)
 	private Conversation newConversation;
 
 	/**

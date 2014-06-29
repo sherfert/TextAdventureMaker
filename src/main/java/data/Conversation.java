@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,17 +37,20 @@ public class Conversation implements HasId {
 	/**
 	 * The greeting from the Person.
 	 */
+	@Column(nullable = false)
 	private String greeting;
 
 	/**
 	 * A text describing what is going on additionally. If empty, nothing is
 	 * printed.
 	 */
+	@Column(nullable = false)
 	private String event;
 
 	/**
 	 * If this conversation is enabled.
 	 */
+	@Column(nullable = false)
 	private boolean enabled;
 
 	/**

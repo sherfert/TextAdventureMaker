@@ -1,6 +1,7 @@
 package data.action;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,6 +25,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 * necessary, as {@code null} is a valid location and cannot be used to
 	 * identify no changes to be applied.
 	 */
+	@Column(nullable = false)
 	private boolean changeLocation;
 
 	/**
@@ -32,17 +34,19 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 * be set to {@code true}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = true)
 	private Location newLocation;
 
 	/**
 	 * The new takeForbiddenText. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newTakeForbiddenText;
 
 	/**
 	 * The new takeSuccessfulText. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newTakeSuccessfulText;
 
 	/**

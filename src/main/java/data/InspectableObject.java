@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToMany;
 
 import data.action.AbstractAction;
 import data.interfaces.Inspectable;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +44,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 * It is being displayed when the named object is inspected or suggests the
 	 * default text to be displayed if {@code null}.
 	 */
+	@Column(nullable = true)
 	private String inspectionText;
 
 	/**

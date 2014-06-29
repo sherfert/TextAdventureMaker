@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import data.ConversationOption;
+import data.action.AbstractAction.Enabling;
 
 /**
  * Changes a conversation. It can be dis- or enabled and the greeting can be
@@ -36,16 +37,19 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * The new text. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newText;
 	
 	/**
 	 * The new answer. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newAnswer;
 	
 	/**
 	 * The new event. If {@code null}, the old will not be changed.
 	 */
+	@Column(nullable = true)
 	private String newEvent;
 
 	/**
@@ -55,6 +59,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 */
 	@Deprecated
 	public ChangeConversationOptionAction() {
+		init();
 	}
 
 	/**
@@ -63,8 +68,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 */
 	public ChangeConversationOptionAction(ConversationOption option) {
 		super();
+		init();
 		this.option = option;
-		this.enabling = Enabling.DO_NOT_CHANGE;
 	}
 
 	/**
@@ -75,7 +80,16 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 */
 	public ChangeConversationOptionAction(ConversationOption option, boolean enabled) {
 		super(enabled);
+		init();
 		this.option = option;
+	}
+	
+	
+	
+	/**
+	 * Initializes the fields.
+	 */
+	private void init() {
 		this.enabling = Enabling.DO_NOT_CHANGE;
 	}
 

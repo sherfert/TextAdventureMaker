@@ -1,6 +1,9 @@
 package data.action;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
@@ -22,17 +25,21 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	 * The new useForbiddenText. If {@code null}, the old will not be
 	 * changed.
 	 */
+	@Column(nullable = true)
 	private String newUseForbiddenText;
 
 	/**
 	 * The new useSuccessfulText. If {@code null}, the old will not be
 	 * changed.
 	 */
+	@Column(nullable = true)
 	private String newUseSuccessfulText;
 
 	/**
 	 * Enabling or disabling if the UsableObject is actually usable.
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	private Enabling enabling;
 
 	/**
@@ -44,6 +51,7 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	 */
 	@Deprecated
 	public ChangeUsableObjectAction() {
+		init();
 	}
 
 	/**
@@ -51,6 +59,7 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	 */
 	public ChangeUsableObjectAction(UsableObject object) {
 		super(object);
+		init();
 	}
 
 	/**
@@ -59,6 +68,14 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	 */
 	public ChangeUsableObjectAction(UsableObject object, boolean enabled) {
 		super(object, enabled);
+		init();
+	}
+	
+	/**
+	 * Initializes the fields.
+	 */
+	private void init() {
+		this.enabling = Enabling.DO_NOT_CHANGE;
 	}
 
 	@Override

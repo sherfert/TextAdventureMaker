@@ -1,6 +1,7 @@
 package data;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,12 +37,13 @@ public class Person extends InspectableObject implements HasLocation,
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
 	private Conversation conversation;
-	
+
 	/**
-	 * The text displayed when trying to talk to, but this is disabled.
-	 * There is no such successful text, as then the conversation is
-	 * started immediately.
+	 * The text displayed when trying to talk to, but this is disabled. There is
+	 * no such successful text, as then the conversation is started immediately.
+	 * Suggests the default text to be displayed if {@code null}.
 	 */
+	@Column(nullable = true)
 	private String talkingToForbiddenText;
 
 	/**

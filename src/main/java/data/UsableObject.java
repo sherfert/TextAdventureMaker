@@ -37,12 +37,14 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	 * The text being displayed when not successfully used. The default
 	 * message is used if this is {@code null}.
 	 */
+	@Column(nullable = true)
 	private String useForbiddenText;
 
 	/**
 	 * The text being displayed when successfully used. The default message
 	 * is used if this is {@code null}.
 	 */
+	@Column(nullable = true)
 	private String useSuccessfulText;
 
 	/**

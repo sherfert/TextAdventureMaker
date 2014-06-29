@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,8 +19,6 @@ import data.interfaces.HasId;
 /**
  * An option in a conversation. The player can choose between options to say in
  * a certain {@link ConversationLayer}
- * 
- * TODO @nullable in many situations!
  * 
  * @author Satia
  */
@@ -36,17 +35,20 @@ public class ConversationOption implements HasId {
 	/**
 	 * The text the player says when choosing that option.
 	 */
+	@Column(nullable = false)
 	private String text;
 
 	/**
 	 * The answer the player gets when choosing that option.
 	 */
+	@Column(nullable = false)
 	private String answer;
 
 	/**
 	 * A text describing what is going on additionally. If empty, nothing is
 	 * printed.
 	 */
+	@Column(nullable = false)
 	private String event;
 
 	/**
@@ -59,6 +61,7 @@ public class ConversationOption implements HasId {
 	/**
 	 * Only enabled options from a layer are listed.
 	 */
+	@Column(nullable = false)
 	private boolean enabled;
 
 	/**
