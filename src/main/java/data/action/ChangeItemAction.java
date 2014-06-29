@@ -1,13 +1,21 @@
 package data.action;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import data.InventoryItem;
 import data.Item;
 import data.Location;
+import data.NamedObject;
 
 /**
  * An action changing attributes of an {@link Item}.
@@ -15,9 +23,6 @@ import data.Location;
  * It can also be used to ADD items to a location, if the former location was
  * {@code null} or to REMOVE items from a location, if the new location is
  * {@code null}.
- * 
- * TODO all the stuff that is embedded into addInventoryItemsAction and
- * removeAction must be changeable too!
  * 
  * @author Satia
  */
@@ -54,12 +59,41 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	private String newTakeSuccessfulText;
 
 	/**
+	 * Enabling or disabling if the item is takeable.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Enabling enablingTakeable;
+
+	/**
+	 * All pick up item to be added.
+	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
+	private List<InventoryItem> pickUpItemsToAdd;
+
+	/**
+	 * All pick up item to be removed.
+	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
+	private List<InventoryItem> pickUpItemsToRemove;
+
+	/**
+	 * Enabling or disabling if the item will be removed when taken.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Enabling enablingRemoveItem;
+
+	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use {@link ChangeItemAction#ChangeItemAction(Item)} instead.
 	 */
 	@Deprecated
 	public ChangeItemAction() {
+		init();
 	}
 
 	/**
@@ -68,6 +102,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 */
 	public ChangeItemAction(Item object) {
 		super(object);
+		init();
 	}
 
 	/**
@@ -79,6 +114,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 */
 	public ChangeItemAction(Item object, Location newLocation) {
 		super(object);
+		init();
 		setNewLocation(newLocation);
 	}
 
@@ -90,6 +126,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 */
 	public ChangeItemAction(Item object, boolean enabled) {
 		super(object, enabled);
+		init();
 	}
 
 	/**
@@ -103,7 +140,16 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 */
 	public ChangeItemAction(Item object, Location newLocation, boolean enabled) {
 		super(object, enabled);
+		init();
 		setNewLocation(newLocation);
+	}
+
+	/**
+	 * Initializes the fields.
+	 */
+	private void init() {
+		this.enablingTakeable = Enabling.DO_NOT_CHANGE;
+		this.enablingRemoveItem = Enabling.DO_NOT_CHANGE;
 	}
 
 	@Override
@@ -190,16 +236,40 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 		if (newTakeSuccessfulText != null) {
 			getObject().setTakeSuccessfulText(newTakeSuccessfulText);
 		}
+		if (enablingTakeable == Enabling.ENABLE) {
+			getObject().setTakingEnabled(true);
+		} else if (enablingTakeable == Enabling.DISABLE) {
+			getObject().setTakingEnabled(false);
+		}
+		if (enablingRemoveItem == Enabling.ENABLE) {
+			getObject().setRemoveItem(true);
+		} else if (enablingRemoveItem == Enabling.DISABLE) {
+			getObject().setRemoveItem(false);
+		}
+
+		// Add and remove pick up items
+		for (InventoryItem item : pickUpItemsToAdd) {
+			getObject().addPickUpItem(item);
+		}
+		for (InventoryItem item : pickUpItemsToRemove) {
+			getObject().removePickUpItem(item);
+		}
 	}
 
 	@Override
 	public String toString() {
-		return "ChangeItemAction{" + "changeLocation=" + changeLocation
+		return "ChangeItemAction{changeLocation=" + changeLocation
 				+ ", newLocationID="
 				+ (newLocation != null ? newLocation.getId() : "null")
 				+ ", newTakeForbiddenText=" + newTakeForbiddenText
-				+ ", newTakeSuccessfulText=" + newTakeSuccessfulText + " "
-				+ super.toString() + '}';
+				+ ", newTakeSuccessfulText=" + newTakeSuccessfulText
+				+ ", enablingTakeable=" + enablingTakeable
+				+ ", pickUpItemsToAddIDs="
+				+ NamedObject.getIDList(pickUpItemsToAdd)
+				+ ", pickUpItemsToRemoveIDs="
+				+ NamedObject.getIDList(pickUpItemsToRemove)
+				+ ", enablingRemoveItem=" + enablingRemoveItem + " "
+				+ super.toString() + "}";
 	}
 
 	@Override
@@ -217,6 +287,30 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 		if (newTakeForbiddenText != null) {
 			builder.append(" Setting take forbidden text to '")
 					.append(newTakeForbiddenText).append("'.");
+		}
+		if (enablingTakeable != Enabling.DO_NOT_CHANGE) {
+			builder.append(" ").append(enablingTakeable.description)
+					.append(" taking.");
+		}
+		if (enablingRemoveItem != Enabling.DO_NOT_CHANGE) {
+			builder.append(" ").append(enablingRemoveItem.description)
+					.append(" removing the item when taken.");
+		}
+		if (!pickUpItemsToAdd.isEmpty()) {
+			builder.append(" Adding pick up items: ");
+			for (InventoryItem item : pickUpItemsToAdd) {
+				builder.append(item.getName()).append(", ");
+			}
+			builder.setLength(builder.length() - 2);
+			builder.append(".");
+		}
+		if (!pickUpItemsToRemove.isEmpty()) {
+			builder.append(" Removing pick up items: ");
+			for (InventoryItem item : pickUpItemsToRemove) {
+				builder.append(item.getName()).append(", ");
+			}
+			builder.setLength(builder.length() - 2);
+			builder.append(".");
 		}
 		return builder.toString();
 	}
