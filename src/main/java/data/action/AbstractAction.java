@@ -16,13 +16,11 @@ import persistence.PersistenceManager;
  * 
  * TODO abstract String getActionDescription();
  * 
- * TODO multiaction simply combining multiple actions.
- * 
  * @author Satia
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractAction implements HasId{
+public abstract class AbstractAction implements HasId {
 
 	/**
 	 * When an action changes something that can be disabled or enabled, a
@@ -82,13 +80,15 @@ public abstract class AbstractAction implements HasId{
 	}
 
 	/**
+	 * Enables or disables an action.
+	 * 
 	 * @param enabled
-	 *            the enabled to set
+	 *            whether to enable or disable the action
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
-	
+
 	/**
 	 * @return the class name, id and enabled status.
 	 */
@@ -98,19 +98,19 @@ public abstract class AbstractAction implements HasId{
 	}
 
 	/**
-	 * Triggers the associated action. This logs, calls doAction
-	 * if enabled, and updates changes
+	 * Triggers the associated action. This logs, calls doAction if enabled, and
+	 * updates changes.
 	 */
 	public final void triggerAction() {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-			"Triggering action {0}", this);
-		
+				"Triggering action {0}", this);
+
 		if (enabled) {
 			doAction();
 		}
 		PersistenceManager.updateChanges();
 	}
-	
+
 	/**
 	 * Actually perform the action.
 	 */

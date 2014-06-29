@@ -23,6 +23,7 @@ import data.action.ChangeConversationOptionAction;
 import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.ChangePersonAction;
+import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.ChangeItemAction;
 
@@ -80,39 +81,55 @@ public class Main {
 		 * Inspecting satia will give you 5 bucks. You can "give them back" by
 		 * using them with him. This is repeatable.
 		 */
-		InventoryItem money = new InventoryItem("Money", "5 bucks");
-		money.setInspectionText("You stole them from poor Satia.");
-		AddInventoryItemsAction addMoneyAction = new AddInventoryItemsAction();
-		addMoneyAction.addPickUpItem(money);
-		RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction(
-				money);
-		ChangeActionAction disableAddMoneyAction = new ChangeActionAction(
-				addMoneyAction, Enabling.DISABLE);
-		ChangeActionAction enableAddMoneyAction = new ChangeActionAction(
-				addMoneyAction, Enabling.ENABLE);
-
 		Person satia = new Person(flat, "Satia",
 				"Satia is hanging around there.");
 		satia.setInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
-		// The order here is critical!
-		satia.addAdditionalActionToInspect(addMoneyAction);
-		satia.addAdditionalActionToInspect(disableAddMoneyAction);
+		InventoryItem money = new InventoryItem("Money", "5 bucks");
+		money.setInspectionText("You stole them from poor Satia.");
 
 		// Create conversations first, add other stuff later
 		Conversation satiaConversation = new Conversation(
 				"I'm busy, keep it short.");
 		Conversation satiaShortConversation = new Conversation(
-				"Hey. Gimme back my money! Douche!", "Satia takes him money back semi-violently.");
+				"Hey. Gimme back my money! Douche!",
+				"Satia takes his money back semi-violently.");
+
+		// Combining these 2 actions
+		MultiAction stealMoneyAction;
+		{
+			AddInventoryItemsAction addMoneyAction = new AddInventoryItemsAction();
+			addMoneyAction.addPickUpItem(money);
+			// The order here is critical!
+			stealMoneyAction = new MultiAction(addMoneyAction);
+			ChangeActionAction disableStealMoneyAction = new ChangeActionAction(
+					stealMoneyAction, Enabling.DISABLE);
+			stealMoneyAction.addAction(disableStealMoneyAction);
+
+		}
+
+		// Combining these 3 actions
+		MultiAction giveMoneyBackAction;
+		{
+			RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction(
+					money);
+			ChangePersonAction changeSatiaAction2 = new ChangePersonAction(
+					satia);
+			changeSatiaAction2
+					.setNewInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
+			changeSatiaAction2.setNewConversation(satiaConversation);
+			ChangeActionAction enableAddMoneyAction = new ChangeActionAction(
+					stealMoneyAction, Enabling.ENABLE);
+			giveMoneyBackAction = new MultiAction(removeMoneyAction,
+					changeSatiaAction2, enableAddMoneyAction);
+		}
+
+		// The order here is critical!
+		satia.addAdditionalActionToInspect(stealMoneyAction);
 
 		ChangePersonAction changeSatiaAction1 = new ChangePersonAction(satia);
 		changeSatiaAction1
 				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You stole the poor guy his last 5 bucks.");
 		changeSatiaAction1.setNewConversation(satiaShortConversation);
-
-		ChangePersonAction changeSatiaAction2 = new ChangePersonAction(satia);
-		changeSatiaAction2
-				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
-		changeSatiaAction2.setNewConversation(satiaConversation);
 
 		satia.addAdditionalActionToInspect(changeSatiaAction1);
 
@@ -160,19 +177,16 @@ public class Main {
 		/*
 		 * The short conversation with Satia
 		 */
-		satiaShortConversation.addAdditionalAction(removeMoneyAction);
-		satiaShortConversation.addAdditionalAction(changeSatiaAction2);
-		satiaShortConversation.addAdditionalAction(enableAddMoneyAction);
+		satiaShortConversation.addAdditionalAction(giveMoneyBackAction);
 		satiaShortConversation.addAdditionalAction(changeSatiaConversation);
 		satiaShortConversation.addAdditionalAction(changeSatiaOption42);
-		satiaShortConversation.addAdditionalAction(disableChangeFlatDescriptionAction);
+		satiaShortConversation
+				.addAdditionalAction(disableChangeFlatDescriptionAction);
 
 		money.setUsingEnabledWith(satia, true);
 		money.setUseWithSuccessfulText(satia,
 				"You feel guilty and put the money back.");
-		money.addAdditionalActionToUseWith(satia, removeMoneyAction);
-		money.addAdditionalActionToUseWith(satia, changeSatiaAction2);
-		money.addAdditionalActionToUseWith(satia, enableAddMoneyAction);
+		money.addAdditionalActionToUseWith(satia, giveMoneyBackAction);
 
 		Item tv = new Item(flat, "Television",
 				"There is a television in the corner.");

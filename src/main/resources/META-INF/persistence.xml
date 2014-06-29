@@ -18,6 +18,7 @@
 		<class>data.action.ChangeUsableObjectAction</class>
 		<class>data.action.ChangeWayAction</class>
 		<class>data.action.MoveAction</class>
+		<class>data.action.MultiAction</class>
 		<class>data.action.RemoveInventoryItemAction</class>
 		<class>data.action.SetItemLocationAction</class>
 		<class>data.Conversation</class>
