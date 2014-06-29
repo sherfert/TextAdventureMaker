@@ -42,6 +42,11 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 * The new answer. If {@code null}, the old will not be changed.
 	 */
 	private String newAnswer;
+	
+	/**
+	 * The new event. If {@code null}, the old will not be changed.
+	 */
+	private String newEvent;
 
 	/**
 	 * No-arg constructor for the database.
@@ -130,6 +135,20 @@ public class ChangeConversationOptionAction extends AbstractAction {
 		this.newAnswer = newAnswer;
 	}
 
+	/**
+	 * @return the newEvent
+	 */
+	public String getNewEvent() {
+		return newEvent;
+	}
+
+	/**
+	 * @param newEvent the newEvent to set
+	 */
+	public void setNewEvent(String newEvent) {
+		this.newEvent = newEvent;
+	}
+
 	@Override
 	protected void doAction() {
 		// Change fields
@@ -139,10 +158,20 @@ public class ChangeConversationOptionAction extends AbstractAction {
 		if (newAnswer != null) {
 			option.setAnswer(newAnswer);
 		}
+		if (newEvent != null) {
+			option.setEvent(newEvent);
+		}
 		if (enabling == Enabling.ENABLE) {
 			option.setEnabled(true);
 		} else if (enabling == Enabling.DISABLE) {
 			option.setEnabled(false);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ChangeConversationOptionAction{optionID=" + option.getId()
+				+ ", enabling=" + enabling + ", newText=" + newText
+				+ ", newAnswer=" + newAnswer + ", newEvent=" + newEvent + "}";
 	}
 }

@@ -37,6 +37,11 @@ public class ChangeConversationAction extends AbstractAction {
 	 * The new greeting. If {@code null}, the old will not be changed.
 	 */
 	private String newGreeting;
+	
+	/**
+	 * The new event. If {@code null}, the old will not be changed.
+	 */
+	private String newEvent;
 
 	/**
 	 * No-arg constructor for the database.
@@ -98,6 +103,20 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	/**
+	 * @return the newEvent
+	 */
+	public String getNewEvent() {
+		return newEvent;
+	}
+
+	/**
+	 * @param newEvent the newEvent to set
+	 */
+	public void setNewEvent(String newEvent) {
+		this.newEvent = newEvent;
+	}
+
+	/**
 	 * @return the conversation
 	 */
 	public Conversation getConversation() {
@@ -117,10 +136,23 @@ public class ChangeConversationAction extends AbstractAction {
 		if (newGreeting != null) {
 			conversation.setGreeting(newGreeting);
 		}
+		if (newEvent != null) {
+			conversation.setEvent(newEvent);
+		}
 		if (enabling == Enabling.ENABLE) {
 			conversation.setEnabled(true);
 		} else if (enabling == Enabling.DISABLE) {
 			conversation.setEnabled(false);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ChangeConversationAction{conversationID=" + conversation.getId()
+				+ ", enabling=" + enabling + ", newGreeting=" + newGreeting
+				+ ", newEvent=" + newEvent + "}";
 	}
 }

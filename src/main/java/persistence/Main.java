@@ -102,7 +102,7 @@ public class Main {
 		Conversation satiaConversation = new Conversation(
 				"I'm busy, keep it short.");
 		Conversation satiaShortConversation = new Conversation(
-				"Hey. Gimme back my money! Douche!");
+				"Hey. Gimme back my money! Douche!", "Satia takes him money back semi-violently.");
 
 		ChangePersonAction changeSatiaAction1 = new ChangePersonAction(satia);
 		changeSatiaAction1

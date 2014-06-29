@@ -19,6 +19,8 @@ import data.interfaces.HasId;
  * An option in a conversation. The player can choose between options to say in
  * a certain {@link ConversationLayer}
  * 
+ * TODO @nullable in many situations!
+ * 
  * @author Satia
  */
 @Entity
@@ -40,6 +42,12 @@ public class ConversationOption implements HasId {
 	 * The answer the player gets when choosing that option.
 	 */
 	private String answer;
+
+	/**
+	 * A text describing what is going on additionally. If empty, nothing is
+	 * printed.
+	 */
+	private String event;
 
 	/**
 	 * All additional actions.
@@ -78,6 +86,7 @@ public class ConversationOption implements HasId {
 
 	/**
 	 * Create an enabled ConversationOption, with given text, answer and target.
+	 * No event text.
 	 * 
 	 * @param text
 	 *            the text
@@ -91,6 +100,30 @@ public class ConversationOption implements HasId {
 		this();
 		this.text = text;
 		this.answer = answer;
+		this.event = "";
+		this.target = target;
+		this.enabled = true;
+	}
+
+	/**
+	 * Create an enabled ConversationOption, with given text, answer, event and
+	 * target.
+	 * 
+	 * @param text
+	 *            the text
+	 * @param answer
+	 *            the answer
+	 * @param event
+	 *            the event
+	 * @param target
+	 *            the target
+	 */
+	public ConversationOption(String text, String answer, String event,
+			ConversationLayer target) {
+		this();
+		this.text = text;
+		this.answer = answer;
+		this.event = event;
 		this.target = target;
 		this.enabled = true;
 	}
@@ -128,6 +161,21 @@ public class ConversationOption implements HasId {
 	 */
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	/**
+	 * @return the event
+	 */
+	public String getEvent() {
+		return event;
+	}
+
+	/**
+	 * @param event
+	 *            the event to set
+	 */
+	public void setEvent(String event) {
+		this.event = event;
 	}
 
 	/**
@@ -208,7 +256,7 @@ public class ConversationOption implements HasId {
 	@Override
 	public String toString() {
 		return "ConversationOption{id=" + id + ", text=" + text + ", answer="
-				+ answer + ", additionalActionsIDs="
+				+ answer + ", event=" + event + ", additionalActionsIDs="
 				+ NamedObject.getIDList(additionalActions) + ", enabled="
 				+ enabled + ", target=" + target + "}";
 	}

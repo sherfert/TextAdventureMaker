@@ -39,6 +39,12 @@ public class Conversation implements HasId {
 	private String greeting;
 
 	/**
+	 * A text describing what is going on additionally. If empty, nothing is
+	 * printed.
+	 */
+	private String event;
+
+	/**
 	 * If this conversation is enabled.
 	 */
 	private boolean enabled;
@@ -87,6 +93,22 @@ public class Conversation implements HasId {
 	public Conversation(String greeting) {
 		this();
 		this.greeting = greeting;
+		this.event = "";
+		this.enabled = true;
+	}
+
+	/**
+	 * An enabled conversation with no layers yet.
+	 * 
+	 * @param greeting
+	 *            the greeting
+	 * @param event
+	 *            the event
+	 */
+	public Conversation(String greeting, String event) {
+		this();
+		this.greeting = greeting;
+		this.event = event;
 		this.enabled = true;
 	}
 
@@ -108,6 +130,21 @@ public class Conversation implements HasId {
 	 */
 	public void setGreeting(String greeting) {
 		this.greeting = greeting;
+	}
+
+	/**
+	 * @return the event
+	 */
+	public String getEvent() {
+		return event;
+	}
+
+	/**
+	 * @param event
+	 *            the event to set
+	 */
+	public void setEvent(String event) {
+		this.event = event;
 	}
 
 	/**
@@ -212,8 +249,8 @@ public class Conversation implements HasId {
 
 	@Override
 	public String toString() {
-		return "Conversation{id=" + id + ", greeting=" + greeting
-				+ ", enabled=" + enabled + ", additionalActionsIDs="
+		return "Conversation{id=" + id + ", greeting=" + greeting + ", event="
+				+ event + ", enabled=" + enabled + ", additionalActionsIDs="
 				+ NamedObject.getIDList(additionalActions) + ", layersIDs="
 				+ NamedObject.getIDList(layers) + ", startLayerID="
 				+ (startLayer != null ? startLayer.getId() : "null") + "}";

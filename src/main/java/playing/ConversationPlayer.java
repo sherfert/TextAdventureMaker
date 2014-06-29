@@ -70,10 +70,10 @@ public class ConversationPlayer {
 	 *            the index of the option to choose
 	 */
 	public void chooseOption(int index) {
-		if(index >= currentLayer.getOptions().size()) {
+		if (index >= currentLayer.getOptions().size()) {
 			return;
 		}
-		
+
 		ConversationOption chosenOption = currentLayer.getOptions().get(index);
 		// Trigger additional actions
 		chosenOption.choose();
@@ -81,6 +81,7 @@ public class ConversationPlayer {
 		// Print text and answer
 		playerSays(chosenOption.getText());
 		personSays(chosenOption.getAnswer());
+		happens(chosenOption.getEvent());
 
 		// Switch to target layer
 		currentLayer = chosenOption.getTarget();
@@ -101,10 +102,12 @@ public class ConversationPlayer {
 		if (hasEnded()) {
 			// Print the greeting without going into conversation mode
 			personSays(conversation.getGreeting());
+			happens(conversation.getEvent());
 		} else {
 			io.enterConversationMode(this);
 			// Print the greeting after going into conversation mode
 			personSays(conversation.getGreeting());
+			happens(conversation.getEvent());
 			// Display the options
 			io.setOptions(currentLayer.getOptionTexts());
 		}
@@ -117,8 +120,8 @@ public class ConversationPlayer {
 	 *            the text
 	 */
 	private void personSays(String text) {
-		io.println(personName + ": " + text, game.getNeutralBgColor(),
-				game.getNeutralFgColor());
+		io.println(personName + ": " + text, game.getSuccessfullBgColor(),
+				game.getSuccessfullFgColor());
 	}
 
 	/**
@@ -129,6 +132,18 @@ public class ConversationPlayer {
 	 */
 	private void playerSays(String text) {
 		io.println(text);
+	}
+
+	/**
+	 * Prints the text of anything that happens
+	 * 
+	 * @param text
+	 *            the text
+	 */
+	private void happens(String text) {
+		if (!text.isEmpty()) {
+			io.println(text, game.getNeutralBgColor(), game.getNeutralFgColor());
+		}
 	}
 
 	/**
