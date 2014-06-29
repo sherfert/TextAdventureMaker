@@ -29,7 +29,9 @@ public class LanternaScreenTextArea {
 	public interface TextHandler {
 		/**
 		 * Handles one line of text.
-		 * @param text the text to handle
+		 * 
+		 * @param text
+		 *            the text to handle
 		 */
 		void handleText(String text);
 	}
@@ -84,22 +86,22 @@ public class LanternaScreenTextArea {
 	private final boolean includeInputLine;
 
 	/**
-	 * The background color for the text
+	 * The background color for the text.
 	 */
 	private final Color textBgColor;
 
 	/**
-	 * The foreground color for the text
+	 * The foreground color for the text.
 	 */
 	private final Color textFgColor;
 
 	/**
-	 * The background color for the input
+	 * The background color for the input.
 	 */
 	private final Color inputBgColor;
 
 	/**
-	 * The foreground color for the input
+	 * The foreground color for the input.
 	 */
 	private final Color inputFgColor;
 
@@ -109,7 +111,7 @@ public class LanternaScreenTextArea {
 	private int fromX;
 
 	/**
-	 * The x starting ending coordinate, excluded.
+	 * The x ending coordinate, excluded.
 	 */
 	private int toX;
 
@@ -119,7 +121,7 @@ public class LanternaScreenTextArea {
 	private int fromY;
 
 	/**
-	 * The y starting ending coordinate, excluded.
+	 * The y ending coordinate, excluded.
 	 */
 	private int toY;
 
@@ -146,7 +148,7 @@ public class LanternaScreenTextArea {
 	private int stackPointer = -1;
 
 	/**
-	 * Points to the line to next print to in linesToPrint.
+	 * Points to the line to print next in linesToPrint.
 	 */
 	private int printPointer;
 
@@ -161,7 +163,7 @@ public class LanternaScreenTextArea {
 	 * top, and includes no input line. Default colors.
 	 * 
 	 * @param screen
-	 *            the screen to use.
+	 *            the screen to use
 	 */
 	public LanternaScreenTextArea(Screen screen) {
 		this(screen, true, false, Color.DEFAULT, Color.DEFAULT, Color.DEFAULT,
@@ -173,17 +175,31 @@ public class LanternaScreenTextArea {
 	 * Constructs a full configurable TextArea.
 	 * 
 	 * @param screen
+	 *            the screen to use
 	 * @param printTop
+	 *            if {@code true}, prints from top to bottom, if {@code false},
+	 *            prints from bottom to top
 	 * @param includeInputLine
+	 *            if {@code true}, the last line will be used as input. The
+	 *            readInput method has to be called then
 	 * @param textBgColor
+	 *            The background color for the text
 	 * @param textFgColor
+	 *            The foreground color for the text
 	 * @param inputBgColor
+	 *            The background color for the input
 	 * @param inputFgColor
+	 *            The foreground color for the input
 	 * @param fromX
+	 *            the x starting coordinate, included
 	 * @param toX
+	 *            the x ending coordinate, excluded
 	 * @param fromY
+	 *            the y starting coordinate, included
 	 * @param toY
+	 *            the y ending coordinate, excluded
 	 * @param textHandler
+	 *            the text handler or {@code null}, if the text can be ignored
 	 */
 	public LanternaScreenTextArea(Screen screen, boolean printTop,
 			boolean includeInputLine, Color textBgColor, Color textFgColor,
@@ -209,7 +225,7 @@ public class LanternaScreenTextArea {
 		if (this.printTop) {
 			printPointer = 0;
 		} else {
-			printPointer = toY - fromY - 1;
+			printPointer = rows() - 1;
 		}
 
 		// Clear
@@ -220,9 +236,13 @@ public class LanternaScreenTextArea {
 	 * This method applies new dimensions. Behavior not 100 %-ly defined.
 	 * 
 	 * @param fromX
+	 *            the x starting coordinate, included
 	 * @param toX
+	 *            the x ending coordinate, excluded
 	 * @param fromY
+	 *            the y starting coordinate, included
 	 * @param toY
+	 *            the y ending coordinate, excluded
 	 */
 	public void setNewDimensions(int fromX, int toX, int fromY, int toY) {
 		this.fromX = fromX;
@@ -231,8 +251,8 @@ public class LanternaScreenTextArea {
 		this.toY = toY;
 
 		// Set printPointer
-		if (!this.printTop) {
-			printPointer = toY - fromY - 1;
+		if (!this.printTop || areaFull()) {
+			printPointer = rows() - 1;
 		}
 
 		// Stack new empty elements into list...
@@ -240,8 +260,19 @@ public class LanternaScreenTextArea {
 			lines.add(new ColoredText("", textBgColor, textFgColor));
 		}
 		// .. or remove.
-		for (int i = toY - fromY; i < lines.size(); i++) {
-			lines.remove(0);
+		for (int i = rows(); i < lines.size();) {
+			if (printTop) {
+				// If the last lines are empty, remove these, otherwise remove
+				// the first line
+				if (lines.get(lines.size() - 1).text.isEmpty()) {
+					lines.remove(lines.size() - 1);
+				} else {
+					lines.remove(0);
+				}
+			} else {
+				// When printing from bottom to top, just remove the first lines
+				lines.remove(0);
+			}
 		}
 
 		// Print
@@ -267,13 +298,13 @@ public class LanternaScreenTextArea {
 	 *         to, that means, the area is full.
 	 */
 	public boolean areaFull() {
-		return (includeInputLine && printPointer == toY - fromY - 1)
-				|| (!includeInputLine && printPointer == toY - fromY);
+		return (includeInputLine && printPointer >= rows() - 1)
+				|| (!includeInputLine && printPointer >= rows());
 	}
 
 	/**
-	 * Clears the text area. The screen has to be refreshed afterwards. This method
-	 * is final, as called in the constructor.
+	 * Clears the text area. The screen has to be refreshed afterwards. This
+	 * method is final, as called in the constructor.
 	 */
 	public final void clear() {
 		// clear lines
@@ -302,15 +333,15 @@ public class LanternaScreenTextArea {
 				.split("\n")));
 		// Split each after length is reached
 		for (int i = 0; i < linesToPrint.size(); i++) {
-			if (linesToPrint.get(i).length() > toX - fromX) {
-				// Split after n chars or the black before that
+			if (linesToPrint.get(i).length() > columns()) {
+				// Split after n chars or the blank before that
 				String before = linesToPrint.get(i);
-				int splitIndex = before.lastIndexOf(' ', toX - fromX) + 1;
+				int splitIndex = before.lastIndexOf(' ', columns()) + 1;
 				// Set to the end, if there is no space
-				if(splitIndex == -1) {
-					splitIndex = toX - fromX;
+				if (splitIndex == -1) {
+					splitIndex = columns();
 				}
-				
+
 				linesToPrint.set(i, before.substring(0, splitIndex));
 				// if the next line starts with space, trim that
 				linesToPrint.add(i + 1, before.substring(splitIndex).trim());
@@ -372,10 +403,8 @@ public class LanternaScreenTextArea {
 		for (int linesPointer = 0, screenPointer = fromY; linesPointer < lines
 				.size(); linesPointer++, screenPointer++) {
 			// Create blank string to fill the rest
-			char[] charArray = new char[toX - fromX
-					- lines.get(linesPointer).text.length()];
-			Arrays.fill(charArray, ' ');
-			String blanks = new String(charArray);
+			String blanks = blankString(columns()
+					- lines.get(linesPointer).text.length());
 
 			screen.putString(fromX, screenPointer, lines.get(linesPointer).text
 					+ blanks, lines.get(linesPointer).fgColor,
@@ -386,18 +415,17 @@ public class LanternaScreenTextArea {
 		if (includeInputLine) {
 			String toPrint;
 			// print currentText (overrides)
-			if (currentText.length() < toX - fromX) {
+			if (currentText.length() < columns()) {
 				// text plus cursor fit into the line
 				// Create blank string to fill the rest
-				char[] charArray = new char[toX - fromX - currentText.length()];
-				Arrays.fill(charArray, ' ');
-				toPrint = currentText.toString() + new String(charArray);
+				toPrint = currentText.toString()
+						+ blankString(columns() - currentText.length());
 				screen.setCursorPosition(fromX + currentTextCursorIndex,
 						Math.min(fromY + printPointer, toY - 1));
 			} else {
 				// does not fit
 				int startIndex = Math.max(0, currentTextCursorIndex
-						- (toX - fromX) + 1);
+						- (columns()) + 1);
 				int endindex = Math.min(
 						currentText.length(),
 						startIndex
@@ -445,7 +473,9 @@ public class LanternaScreenTextArea {
 	/**
 	 * Reads the input and handles it. The screen has to be refreshed
 	 * afterwards.
-	 * @param key the key to read
+	 * 
+	 * @param key
+	 *            the key to read
 	 */
 	public void readInput(Key key) {
 		if (!includeInputLine) {
@@ -473,6 +503,8 @@ public class LanternaScreenTextArea {
 			handleHome();
 		} else if (key.getKind() == Kind.End) {
 			handleEnd();
+		} else {
+			return;
 		}
 
 		// Print
@@ -526,6 +558,7 @@ public class LanternaScreenTextArea {
 		if (textHandler != null) {
 			textHandler.handleText(currentText.toString());
 		}
+
 		// Save last used command
 		lastCommands.push(currentText.toString());
 		// Reset stackPointer
@@ -535,6 +568,7 @@ public class LanternaScreenTextArea {
 		currentText.setLength(0);
 		// Place cursor at the beginning
 		currentTextCursorIndex = 0;
+
 	}
 
 	/**
@@ -627,5 +661,18 @@ public class LanternaScreenTextArea {
 	private void handleEnd() {
 		// Place cursor at the end
 		currentTextCursorIndex = currentText.length();
+	}
+
+	/**
+	 * Generates a blank string of the given size.
+	 * 
+	 * @param size
+	 * @return
+	 */
+	public static String blankString(int size) {
+		// Create blank string to fill the rest
+		char[] charArray = new char[size];
+		Arrays.fill(charArray, ' ');
+		return new String(charArray);
 	}
 }

@@ -22,6 +22,8 @@ import data.interfaces.HasId;
  * and disabled. There are actions than can be triggered if the conversation is
  * started.
  * 
+ * TODO removeOption / removeOptionPermanently?
+ * 
  * @author Satia
  */
 @Entity

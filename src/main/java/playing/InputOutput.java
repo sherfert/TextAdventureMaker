@@ -6,10 +6,13 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import lanterna.LanternaScreenOptionChooser;
+import lanterna.LanternaScreenOptionChooser.OptionHandler;
 import lanterna.LanternaScreenTextArea;
 import lanterna.LanternaScreenTextArea.TextHandler;
 
 import com.googlecode.lanterna.TerminalFacade;
+import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.Terminal.Color;
@@ -24,9 +27,17 @@ import java.util.logging.Logger;
 /**
  * Providing means to print and read input while playing.
  * 
+ * // TODO green Xs //
+ * https://groups.google.com/forum/#!topic/lanterna-discuss/xWgK1xUBogg
+ * 
  * @author Satia
  */
-public class InputOutput implements TextHandler {
+public class InputOutput implements TextHandler, OptionHandler {
+
+	/**
+	 * The number of lines used to display options in dialogues.
+	 */
+	public static final int NUMBER_OF_OPTION_LINES = 6;
 
 	/**
 	 * The GamePlayer for this session
@@ -50,6 +61,12 @@ public class InputOutput implements TextHandler {
 	private ConversationPlayer conversationPlayer;
 
 	/**
+	 * The option choser if currently in conversation mode, {@code null}
+	 * otherwise.
+	 */
+	private LanternaScreenOptionChooser optionChoser;
+
+	/**
 	 * @param gamePlayer
 	 *            the GamePlayer for this session
 	 */
@@ -68,10 +85,8 @@ public class InputOutput implements TextHandler {
 				Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
 						.getTerminalSize().getColumns(), 0, screen
 						.getTerminalSize().getRows(), InputOutput.this);
-
-		// TODO the key listener loop must be implemented here as soon
-		// as conversations are supported OR stopThread method
-		defaultTextArea.startInputReadingThread();
+		
+		startInputReadingThread();
 
 		screen.getTerminal().addResizeListener(new ResizeListener() {
 			@Override
@@ -107,6 +122,44 @@ public class InputOutput implements TextHandler {
 	}
 
 	/**
+	 * Starts a thread that reads the input in an infinite loop.
+	 */
+	private void startInputReadingThread() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					Key key = screen.readInput();
+					if (key == null) {
+						continue;
+					}
+					readInput(key);
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * Reads a key and forwards them to the readInput methods of the lanterna
+	 * classes. This will also refresh the screen.
+	 * 
+	 * @param key
+	 *            the typed key.
+	 */
+	private void readInput(Key key) {
+		if (conversationPlayer == null) {
+			// If not in conversation mode, the default text area handles the
+			// key,
+			defaultTextArea.readInput(key);
+		} else {
+			// otherwise the optionChoser
+			optionChoser.readInput(key);
+		}
+
+		screen.refresh();
+	}
+
+	/**
 	 * Exits the IO.
 	 */
 	public void exitIO() {
@@ -130,8 +183,6 @@ public class InputOutput implements TextHandler {
 	/**
 	 * Prints a line of text for the player. Given colors.
 	 * 
-	 * TODO different in conversation mode!
-	 * 
 	 * @param output
 	 *            the text to be printed
 	 * @param bgColor
@@ -147,40 +198,63 @@ public class InputOutput implements TextHandler {
 		this.screen.refresh();
 	}
 
-	public void enterConversationMode(ConversationPlayer conversationPlayer) {
+	/**
+	 * Enters conversation mode. Now {@link #setOptions(List)} may be called.
+	 * 
+	 * @param conversationPlayer
+	 *            the conversation player
+	 * @param options
+	 *            the first options to display.
+	 */
+	public void enterConversationMode(ConversationPlayer conversationPlayer,
+			List<String> options) {
 		this.conversationPlayer = conversationPlayer;
-		// TODO
+
+		// Resize text area by cutting the last lines
+		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize()
+				.getColumns(), 0, screen.getTerminalSize().getRows()
+				- NUMBER_OF_OPTION_LINES);
+		// Use the last lines to display options
+		this.optionChoser = new LanternaScreenOptionChooser(screen, options,
+				this, 0, screen.getTerminalSize().getColumns(), screen
+						.getTerminalSize().getRows() - NUMBER_OF_OPTION_LINES,
+				screen.getTerminalSize().getRows());
+
+		// Refresh
+		this.screen.refresh();
 	}
 
+	/**
+	 * Exits conversation mode. Now {@link #setOptions(List)} must not be called
+	 * any more.
+	 */
 	public void exitConversationMode() {
 		this.conversationPlayer = null;
-		// TODO
+		this.optionChoser = null;
+		// Resize text area by giving back the last lines
+		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize()
+				.getColumns(), 0, screen.getTerminalSize().getRows());
+		// Refresh
+		this.screen.refresh();
 	}
 
+	/**
+	 * Sets the options to display. Must only be called in conversation mode.
+	 * 
+	 * @param options
+	 *            the options to display
+	 */
 	public void setOptions(List<String> options) {
-		// TODO use a new lanterna class. this is just for test purposes.
-		for (int i = 0; i < options.size(); i++) {
-			println(i + ": " + options.get(i));
-		}
+		optionChoser.setOptions(options);
 	}
 
-	// TODO override sth.
+	@Override
 	public void chooseOption(int index) {
 		conversationPlayer.chooseOption(index);
 	}
 
 	@Override
 	public void handleText(String text) {
-		// TODO use a new lanterna class. this is just for test purposes.
-		if (conversationPlayer != null) {
-			try {
-				int index = Integer.parseInt(text);
-				chooseOption(index);
-			} catch (NumberFormatException e) {
-			}
-			return;
-		}
-
 		if (!gamePlayer.getParser().parse(text)) {
 			gamePlayer.stop();
 		}

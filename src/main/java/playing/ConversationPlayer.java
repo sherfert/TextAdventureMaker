@@ -83,14 +83,18 @@ public class ConversationPlayer {
 		personSays(chosenOption.getAnswer());
 		happens(chosenOption.getEvent());
 
+		// Save lastLayer
+		ConversationLayer lastLayer = currentLayer;
 		// Switch to target layer
 		currentLayer = chosenOption.getTarget();
 
 		if (hasEnded()) {
 			io.exitConversationMode();
 		} else {
-			// Display new options
-			io.setOptions(currentLayer.getOptionTexts());
+			// Display new options, only if layer changed
+			if (lastLayer != currentLayer) {
+				io.setOptions(currentLayer.getOptionTexts());
+			}
 		}
 	}
 
@@ -104,12 +108,11 @@ public class ConversationPlayer {
 			personSays(conversation.getGreeting());
 			happens(conversation.getEvent());
 		} else {
-			io.enterConversationMode(this);
+			// Enter conversation mode, directly displaying the options
+			io.enterConversationMode(this, currentLayer.getOptionTexts());
 			// Print the greeting after going into conversation mode
 			personSays(conversation.getGreeting());
 			happens(conversation.getEvent());
-			// Display the options
-			io.setOptions(currentLayer.getOptionTexts());
 		}
 	}
 

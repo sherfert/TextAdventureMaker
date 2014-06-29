@@ -150,7 +150,8 @@ public class Main {
 				"Finally.", null));
 
 		ConversationOption option42 = new ConversationOption(
-				"What is the answer to everything?", "42", csLayer);
+				"What is the answer to the Ultimate Question of Life, the Universe, and Everything? "
+				+ "Additionally, here is some text to make it cover two lines.", "42", csLayer);
 		option42.addAdditionalAction(changeFlatDescriptionAction);
 		csLayer.addOption(option42);
 		csLayer.addOption(new ConversationOption("Is Java also an island?",
