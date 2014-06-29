@@ -11,7 +11,7 @@ import data.Item;
 
 /**
  * An action removing an {@link InventoryItem}.
- *
+ * 
  * @author Satia
  */
 @Entity
@@ -26,25 +26,28 @@ public class RemoveInventoryItemAction extends AbstractAction {
 
 	/**
 	 * No-arg constructor for the database.
-	 *
+	 * 
 	 * @deprecated Use
-	 * {@link RemoveInventoryItemAction#RemoveInventoryItemAction(Item)}
-	 * instead.
+	 *             {@link RemoveInventoryItemAction#RemoveInventoryItemAction(Item)}
+	 *             instead.
 	 */
 	@Deprecated
 	public RemoveInventoryItemAction() {
 	}
 
 	/**
-	 * @param item the item to be removed
+	 * @param item
+	 *            the item to be removed
 	 */
 	public RemoveInventoryItemAction(InventoryItem item) {
 		this.item = item;
 	}
 
 	/**
-	 * @param item the item to be removed
-	 * @param enabled if the action should be enabled
+	 * @param item
+	 *            the item to be removed
+	 * @param enabled
+	 *            if the action should be enabled
 	 */
 	public RemoveInventoryItemAction(InventoryItem item, boolean enabled) {
 		super(enabled);
@@ -66,7 +69,14 @@ public class RemoveInventoryItemAction extends AbstractAction {
 
 	@Override
 	public String toString() {
-		return "RemoveInventoryItemAction{" + "itemID=" + item.getId()
-			+ " " + super.toString() + '}';
+		return "RemoveInventoryItemAction{" + "itemID=" + item.getId() + " "
+				+ super.toString() + '}';
+	}
+
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Removing  ").append(item.getName()).append(".");
+		return builder.toString();
 	}
 }

@@ -9,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import data.ConversationOption;
-import data.action.AbstractAction.Enabling;
 
 /**
  * Changes a conversation. It can be dis- or enabled and the greeting can be
@@ -39,13 +38,13 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 */
 	@Column(nullable = true)
 	private String newText;
-	
+
 	/**
 	 * The new answer. If {@code null}, the old will not be changed.
 	 */
 	@Column(nullable = true)
 	private String newAnswer;
-	
+
 	/**
 	 * The new event. If {@code null}, the old will not be changed.
 	 */
@@ -55,7 +54,9 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #ChangeConversationOptionAction(ConversationOption)} instead.
+	 * @deprecated Use
+	 *             {@link #ChangeConversationOptionAction(ConversationOption)}
+	 *             instead.
 	 */
 	@Deprecated
 	public ChangeConversationOptionAction() {
@@ -78,14 +79,13 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeConversationOptionAction(ConversationOption option, boolean enabled) {
+	public ChangeConversationOptionAction(ConversationOption option,
+			boolean enabled) {
 		super(enabled);
 		init();
 		this.option = option;
 	}
-	
-	
-	
+
 	/**
 	 * Initializes the fields.
 	 */
@@ -101,7 +101,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	/**
-	 * @param enabling the enabling to set
+	 * @param enabling
+	 *            the enabling to set
 	 */
 	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
@@ -115,7 +116,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	/**
-	 * @param option the option to set
+	 * @param option
+	 *            the option to set
 	 */
 	public void setOption(ConversationOption option) {
 		this.option = option;
@@ -129,7 +131,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	/**
-	 * @param newText the newText to set
+	 * @param newText
+	 *            the newText to set
 	 */
 	public void setNewText(String newText) {
 		this.newText = newText;
@@ -143,7 +146,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	/**
-	 * @param newAnswer the newAnswer to set
+	 * @param newAnswer
+	 *            the newAnswer to set
 	 */
 	public void setNewAnswer(String newAnswer) {
 		this.newAnswer = newAnswer;
@@ -157,7 +161,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	/**
-	 * @param newEvent the newEvent to set
+	 * @param newEvent
+	 *            the newEvent to set
 	 */
 	public void setNewEvent(String newEvent) {
 		this.newEvent = newEvent;
@@ -186,6 +191,27 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	public String toString() {
 		return "ChangeConversationOptionAction{optionID=" + option.getId()
 				+ ", enabling=" + enabling + ", newText=" + newText
-				+ ", newAnswer=" + newAnswer + ", newEvent=" + newEvent + "}";
+				+ ", newAnswer=" + newAnswer + ", newEvent=" + newEvent + " "
+				+ super.toString() + "}";
+	}
+
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Changing conversation option ").append(option.getId());
+		if (enabling != Enabling.DO_NOT_CHANGE) {
+			builder.append(" ").append(enabling.description).append(" it.");
+		}
+		if (newText != null) {
+			builder.append(" Setting text to '").append(newText).append("'.");
+		}
+		if (newAnswer != null) {
+			builder.append(" Setting answer to '").append(newAnswer)
+					.append("'.");
+		}
+		if (newEvent != null) {
+			builder.append(" Setting event to '").append(newEvent).append("'.");
+		}
+		return builder.toString();
 	}
 }

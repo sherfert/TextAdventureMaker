@@ -196,4 +196,30 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 				+ identifiersToRemove + ", newInspectionText="
 				+ newInspectionText + " " + super.toString() + '}';
 	}
+
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder(super.getActionDescription());
+		if (newInspectionText != null) {
+			builder.append(" Setting inspection text to '")
+					.append(newInspectionText).append("'.");
+		}
+		if (!identifiersToAdd.isEmpty()) {
+			builder.append(" Adding identifiers: ");
+			for (String identifier : identifiersToAdd) {
+				builder.append("'").append(identifier).append("', ");
+			}
+			builder.setLength(builder.length() - 2);
+			builder.append(".");
+		}
+		if (!identifiersToAdd.isEmpty()) {
+			builder.append(" Removing identifiers: ");
+			for (String identifier : identifiersToRemove) {
+				builder.append("'").append(identifier).append("', ");
+			}
+			builder.setLength(builder.length() - 2);
+			builder.append(".");
+		}
+		return builder.toString();
+	}
 }

@@ -12,8 +12,12 @@ import data.Location;
 /**
  * An action changing attributes of an {@link Item}.
  * 
- * It can also be used to ADD items, if the former location was {@code null} or
- * to REMOVE items, if the new location is {@code null}.
+ * It can also be used to ADD items to a location, if the former location was
+ * {@code null} or to REMOVE items from a location, if the new location is
+ * {@code null}.
+ * 
+ * TODO all the stuff that is embedded into addInventoryItemsAction and
+ * removeAction must be changeable too!
  * 
  * @author Satia
  */
@@ -197,4 +201,24 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 				+ ", newTakeSuccessfulText=" + newTakeSuccessfulText + " "
 				+ super.toString() + '}';
 	}
+
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder(super.getActionDescription());
+		if (changeLocation) {
+			builder.append(" Setting location to '")
+					.append(newLocation != null ? newLocation.getName()
+							: "null").append("'.");
+		}
+		if (newTakeSuccessfulText != null) {
+			builder.append(" Setting take successful text to '")
+					.append(newTakeSuccessfulText).append("'.");
+		}
+		if (newTakeForbiddenText != null) {
+			builder.append(" Setting take forbidden text to '")
+					.append(newTakeForbiddenText).append("'.");
+		}
+		return builder.toString();
+	}
+
 }

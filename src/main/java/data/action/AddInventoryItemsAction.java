@@ -14,7 +14,7 @@ import data.NamedObject;
 
 /**
  * None, one or multiple {@link InventoryItem}s may be added to the inventory.
- *
+ * 
  * @author Satia
  */
 @Entity
@@ -35,8 +35,9 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
-	 *
-	 * @param enabled if the action should be enabled
+	 * 
+	 * @param enabled
+	 *            if the action should be enabled
 	 */
 	public AddInventoryItemsAction(boolean enabled) {
 		super(enabled);
@@ -44,10 +45,10 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
-	 * Adds an {@link InventoryItem} to the items to be added to the
-	 * inventory.
-	 *
-	 * @param item the item
+	 * Adds an {@link InventoryItem} to the items to be added to the inventory.
+	 * 
+	 * @param item
+	 *            the item
 	 */
 	public void addPickUpItem(InventoryItem item) {
 		this.pickUpItems.add(item);
@@ -61,7 +62,8 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
-	 * @param pickUpItems the pickUpItems to set
+	 * @param pickUpItems
+	 *            the pickUpItems to set
 	 */
 	public void setPickUpItems(List<InventoryItem> pickUpItems) {
 		this.pickUpItems = pickUpItems;
@@ -70,8 +72,9 @@ public class AddInventoryItemsAction extends AbstractAction {
 	/**
 	 * Removes an {@link InventoryItem} from the items to be added to the
 	 * inventory.
-	 *
-	 * @param item the item
+	 * 
+	 * @param item
+	 *            the item
 	 */
 	public void removePickUpItem(InventoryItem item) {
 		this.pickUpItems.remove(item);
@@ -94,6 +97,18 @@ public class AddInventoryItemsAction extends AbstractAction {
 	@Override
 	public String toString() {
 		return "AddInventoryItemsAction{" + "pickUpItemsIDs="
-			+ NamedObject.getIDList(pickUpItems) + " " + super.toString() + '}';
+				+ NamedObject.getIDList(pickUpItems) + " " + super.toString()
+				+ '}';
+	}
+
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Picking up: ");
+		for (InventoryItem item : pickUpItems) {
+			builder.append(item.getName()).append(", ");
+		}
+		builder.setLength(builder.length() - 2);
+		return builder.toString();
 	}
 }

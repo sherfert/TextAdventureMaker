@@ -188,4 +188,24 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 				+ " " + super.toString() + "}";
 	}
 
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder(super.getActionDescription());
+		if (changeConversation) {
+			builder.append(" Setting conversation to '")
+					.append(newConversation != null ? newConversation.getId()
+							: "null").append("'.");
+		}
+		if (changeLocation) {
+			builder.append(" Setting location to '")
+					.append(newLocation != null ? newLocation.getName()
+							: "null").append("'.");
+		}
+		if (newTalkingToForbiddenText != null) {
+			builder.append(" Setting talking forbidden text to '")
+					.append(newTalkingToForbiddenText).append("'.");
+		}
+		return builder.toString();
+	}
+
 }

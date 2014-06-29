@@ -22,6 +22,11 @@ import java.util.logging.Logger;
 /**
  * A one-way connection between two locations.
  * 
+ * TODO hide access to move action, adapt changeWayAction
+ * Have MoveAction only know the destination, not the way, and
+ * such these is not a OneToOne mapping any more and users can use
+ * MoveActions without ways.
+ * 
  * @author Satia
  */
 @Entity

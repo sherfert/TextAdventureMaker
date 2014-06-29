@@ -158,4 +158,27 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 			+ ", newDestinationID=" + newDestination.getId() + " " + super.toString() + '}';
 	}
 
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder(super.getActionDescription());
+		if (newOrigin != null) {
+			builder.append(" Setting origin to '")
+			.append(newOrigin.getName()).append("'.");
+		}
+		if (newDestination != null) {
+			builder.append(" Setting destination to '")
+			.append(newDestination.getName()).append("'.");
+		}
+		
+		if (newMoveSuccessfulText != null) {
+			builder.append(" Setting move successful text to '")
+					.append(newMoveSuccessfulText).append("'.");
+		}
+		if (newMoveForbiddenText != null) {
+			builder.append(" Setting move forbidden text to '")
+					.append(newMoveSuccessfulText).append("'.");
+		}
+		return builder.toString();
+	}
+
 }

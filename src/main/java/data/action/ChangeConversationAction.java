@@ -38,7 +38,7 @@ public class ChangeConversationAction extends AbstractAction {
 	 */
 	@Column(nullable = true)
 	private String newGreeting;
-	
+
 	/**
 	 * The new event. If {@code null}, the old will not be changed.
 	 */
@@ -76,7 +76,7 @@ public class ChangeConversationAction extends AbstractAction {
 		init();
 		this.conversation = conversation;
 	}
-	
+
 	/**
 	 * Initializes the fields.
 	 */
@@ -92,7 +92,8 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	/**
-	 * @param enabling the enabling to set
+	 * @param enabling
+	 *            the enabling to set
 	 */
 	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
@@ -106,7 +107,8 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	/**
-	 * @param newGreeting the newGreeting to set
+	 * @param newGreeting
+	 *            the newGreeting to set
 	 */
 	public void setNewGreeting(String newGreeting) {
 		this.newGreeting = newGreeting;
@@ -120,7 +122,8 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	/**
-	 * @param newEvent the newEvent to set
+	 * @param newEvent
+	 *            the newEvent to set
 	 */
 	public void setNewEvent(String newEvent) {
 		this.newEvent = newEvent;
@@ -134,7 +137,8 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	/**
-	 * @param conversation the conversation to set
+	 * @param conversation
+	 *            the conversation to set
 	 */
 	public void setConversation(Conversation conversation) {
 		this.conversation = conversation;
@@ -156,13 +160,33 @@ public class ChangeConversationAction extends AbstractAction {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "ChangeConversationAction{conversationID=" + conversation.getId()
-				+ ", enabling=" + enabling + ", newGreeting=" + newGreeting
-				+ ", newEvent=" + newEvent + "}";
+		return "ChangeConversationAction{conversationID="
+				+ conversation.getId() + ", enabling=" + enabling
+				+ ", newGreeting=" + newGreeting + ", newEvent=" + newEvent
+				+ " " + super.toString() 
+				+ "}";
+	}
+
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Changing conversation ").append(conversation.getId());
+		if (enabling != Enabling.DO_NOT_CHANGE) {
+			builder.append(" ").append(enabling.description).append(" it.");
+		}
+		if (newGreeting != null) {
+			builder.append(" Setting greeting to '").append(newGreeting).append("'.");
+		}
+		if (newEvent != null) {
+			builder.append(" Setting event to '").append(newEvent).append("'.");
+		}
+		return builder.toString();
 	}
 }

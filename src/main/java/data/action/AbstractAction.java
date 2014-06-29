@@ -14,8 +14,6 @@ import persistence.PersistenceManager;
 /**
  * Any action that changes something in the game (if enabled).
  * 
- * TODO abstract String getActionDescription();
- * 
  * @author Satia
  */
 @Entity
@@ -30,11 +28,24 @@ public abstract class AbstractAction implements HasId {
 	 */
 	public enum Enabling {
 		/** Disable the object */
-		DISABLE,
+		DISABLE("Disabling"),
 		/** Do not change if the object is enabled */
-		DO_NOT_CHANGE,
+		DO_NOT_CHANGE("Neither enabling or disabling"),
 		/** Enable the object */
-		ENABLE;
+		ENABLE("Enabling");
+
+		/**
+		 * A text describing what this Enabling value does.
+		 */
+		public final String description;
+
+		/**
+		 * @param description
+		 *            a text describing what this Enabling value does
+		 */
+		private Enabling(String description) {
+			this.description = description;
+		}
 	}
 
 	/**
@@ -115,4 +126,12 @@ public abstract class AbstractAction implements HasId {
 	 * Actually perform the action.
 	 */
 	protected abstract void doAction();
+
+	/**
+	 * Constructs a string explaining the action. This is for the GUI, whereas
+	 * {@link #toString()} should be preferred for debugging.
+	 * 
+	 * @return a description of the action.
+	 */
+	public abstract String getActionDescription();
 }

@@ -14,7 +14,7 @@ import javax.persistence.OneToOne;
 /**
  * Another action can be changed with this action. Currently this means
  * disabling or enabling it.
- *
+ * 
  * @author Satia Herfert
  */
 @Entity
@@ -36,10 +36,10 @@ public class ChangeActionAction extends AbstractAction {
 
 	/**
 	 * No-arg constructor for the database.
-	 *
+	 * 
 	 * @deprecated Use
-	 * {@link ChangeActionAction#ChangeActionAction(AbstractAction)}
-	 * instead.
+	 *             {@link ChangeActionAction#ChangeActionAction(AbstractAction)}
+	 *             instead.
 	 */
 	@Deprecated
 	public ChangeActionAction() {
@@ -47,10 +47,12 @@ public class ChangeActionAction extends AbstractAction {
 
 	/**
 	 * An action changing another action.
-	 *
-	 * @param action the action to change
-	 * @param enabling if the other action should be enabled, disabled, or
-	 * left unchanged
+	 * 
+	 * @param action
+	 *            the action to change
+	 * @param enabling
+	 *            if the other action should be enabled, disabled, or left
+	 *            unchanged
 	 */
 	public ChangeActionAction(AbstractAction action, Enabling enabling) {
 		this.action = action;
@@ -58,14 +60,17 @@ public class ChangeActionAction extends AbstractAction {
 	}
 
 	/**
-	 *
-	 * @param action the action to change
-	 * @param enabling if the other action should be enabled, disabled, or
-	 * left unchanged
-	 * @param enabled if the action should be enabled
+	 * 
+	 * @param action
+	 *            the action to change
+	 * @param enabling
+	 *            if the other action should be enabled, disabled, or left
+	 *            unchanged
+	 * @param enabled
+	 *            if the action should be enabled
 	 */
-	public ChangeActionAction(AbstractAction action,
-		Enabling enabling, boolean enabled) {
+	public ChangeActionAction(AbstractAction action, Enabling enabling,
+			boolean enabled) {
 		super(enabled);
 		this.action = action;
 		this.enabling = enabling;
@@ -82,6 +87,12 @@ public class ChangeActionAction extends AbstractAction {
 
 	@Override
 	public String toString() {
-		return "ChangeActionAction{" + "actionID=" + action.getId() + ", enabling=" + enabling + " " + super.toString() + '}';
+		return "ChangeActionAction{" + "actionID=" + action.getId()
+				+ ", enabling=" + enabling + " " + super.toString() + '}';
+	}
+
+	@Override
+	public String getActionDescription() {
+		return enabling.description + " action " + action.getId();
 	}
 }

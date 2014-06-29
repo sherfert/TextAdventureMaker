@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import data.NamedObject;
+
 /**
  * A MultiAction simply combines multiple actions into one. One should only
  * combine actions that are always meant to be triggered together. Enabling or
@@ -117,6 +119,27 @@ public class MultiAction extends AbstractAction {
 		for (AbstractAction action : actions) {
 			action.triggerAction();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "MultiAction{actionsIDs=" + NamedObject.getIDList(actions) + " "
+				+ super.toString() + "}";
+	}
+
+	/**
+	 * {@inheritDoc} This method includes the action description of all embedded
+	 * actions. Therefore it has to be ensured, that no other action does the
+	 * same.
+	 */
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Combining actions: ");
+		for (AbstractAction action : actions) {
+			builder.append(action.getActionDescription());
+		}
+		return builder.toString();
 	}
 
 }

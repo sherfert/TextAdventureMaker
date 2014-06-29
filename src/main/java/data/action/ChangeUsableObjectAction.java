@@ -14,7 +14,7 @@ import data.UsableObject;
  * An action changing properties of a {@link UsableObject}.
  * 
  * TODO Create a ChangeInventoryItemAction
- *
+ * 
  * @author Satia
  */
 @Entity
@@ -22,15 +22,13 @@ import data.UsableObject;
 public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 
 	/**
-	 * The new useForbiddenText. If {@code null}, the old will not be
-	 * changed.
+	 * The new useForbiddenText. If {@code null}, the old will not be changed.
 	 */
 	@Column(nullable = true)
 	private String newUseForbiddenText;
 
 	/**
-	 * The new useSuccessfulText. If {@code null}, the old will not be
-	 * changed.
+	 * The new useSuccessfulText. If {@code null}, the old will not be changed.
 	 */
 	@Column(nullable = true)
 	private String newUseSuccessfulText;
@@ -44,10 +42,10 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 
 	/**
 	 * No-arg constructor for the database.
-	 *
+	 * 
 	 * @deprecated Use
-	 * {@link ChangeUsableObjectAction#ChangeUsableObjectAction(InspectableObject)}
-	 * instead.
+	 *             {@link ChangeUsableObjectAction#ChangeUsableObjectAction(InspectableObject)}
+	 *             instead.
 	 */
 	@Deprecated
 	public ChangeUsableObjectAction() {
@@ -55,7 +53,8 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param object the object to be changed
+	 * @param object
+	 *            the object to be changed
 	 */
 	public ChangeUsableObjectAction(UsableObject object) {
 		super(object);
@@ -63,14 +62,16 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param object the object to be changed
-	 * @param enabled if the action should be enabled
+	 * @param object
+	 *            the object to be changed
+	 * @param enabled
+	 *            if the action should be enabled
 	 */
 	public ChangeUsableObjectAction(UsableObject object, boolean enabled) {
 		super(object, enabled);
 		init();
 	}
-	
+
 	/**
 	 * Initializes the fields.
 	 */
@@ -91,7 +92,8 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param newUseForbiddenText the newUseForbiddenText to set
+	 * @param newUseForbiddenText
+	 *            the newUseForbiddenText to set
 	 */
 	public void setNewUseForbiddenText(String newUseForbiddenText) {
 		this.newUseForbiddenText = newUseForbiddenText;
@@ -105,7 +107,8 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param newUseSuccessfulText the newUseSuccessfulText to set
+	 * @param newUseSuccessfulText
+	 *            the newUseSuccessfulText to set
 	 */
 	public void setNewUseSuccessfulText(String newUseSuccessfulText) {
 		this.newUseSuccessfulText = newUseSuccessfulText;
@@ -119,7 +122,8 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
-	 * @param enabling the enabling to set
+	 * @param enabling
+	 *            the enabling to set
 	 */
 	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
@@ -147,9 +151,25 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	@Override
 	public String toString() {
 		return "ChangeUsableObjectAction{" + "newUseForbiddenText="
-			+ newUseForbiddenText + ", newUseSuccessfulText="
-			+ newUseSuccessfulText + ", enabling=" + enabling
-			+ " " + super.toString() + '}';
+				+ newUseForbiddenText + ", newUseSuccessfulText="
+				+ newUseSuccessfulText + ", enabling=" + enabling + " "
+				+ super.toString() + '}';
 	}
 
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder(super.getActionDescription());
+		if (enabling != Enabling.DO_NOT_CHANGE) {
+			builder.append(" ").append(enabling.description).append(" usage.");
+		}
+		if (newUseSuccessfulText != null) {
+			builder.append(" Setting use successful text to '")
+					.append(newUseSuccessfulText).append("'.");
+		}
+		if (newUseForbiddenText != null) {
+			builder.append(" Setting use forbidden text to '")
+					.append(newUseForbiddenText).append("'.");
+		}
+		return builder.toString();
+	}
 }

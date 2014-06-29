@@ -13,7 +13,7 @@ import data.NamedObject;
 
 /**
  * An action changing properties of a {@link NamedObject} .
- *
+ * 
  * @author Satia
  */
 @Entity
@@ -34,35 +34,38 @@ public class ChangeNamedObjectAction extends AbstractAction {
 
 	/**
 	 * The object to be changed.
-	 *
+	 * 
 	 * TODO This should be (nullable = false). This is impossible due to
 	 * circular dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn//(nullable = false)
+	@JoinColumn
+	// (nullable = false)
 	private NamedObject object;
 
 	/**
 	 * No-arg constructor for the database.
-	 *
-	 * @deprecated Use
-	 * {@link #ChangeNamedObjectAction(InspectableObject)}
-	 * instead.
+	 * 
+	 * @deprecated Use {@link #ChangeNamedObjectAction(InspectableObject)}
+	 *             instead.
 	 */
 	@Deprecated
 	public ChangeNamedObjectAction() {
 	}
 
 	/**
-	 * @param object the object to be changed
+	 * @param object
+	 *            the object to be changed
 	 */
 	public ChangeNamedObjectAction(NamedObject object) {
 		this.object = object;
 	}
 
 	/**
-	 * @param object the object to be changed
-	 * @param enabled if the action should be enabled
+	 * @param object
+	 *            the object to be changed
+	 * @param enabled
+	 *            if the action should be enabled
 	 */
 	public ChangeNamedObjectAction(NamedObject object, boolean enabled) {
 		super(enabled);
@@ -91,14 +94,16 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	}
 
 	/**
-	 * @param newDescription the newDescription to set
+	 * @param newDescription
+	 *            the newDescription to set
 	 */
 	public void setNewDescription(String newDescription) {
 		this.newDescription = newDescription;
 	}
 
 	/**
-	 * @param newName the newName to set
+	 * @param newName
+	 *            the newName to set
 	 */
 	public void setNewName(String newName) {
 		this.newName = newName;
@@ -118,6 +123,21 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	@Override
 	public String toString() {
 		return "ChangeNamedObjectAction{" + "newDescription=" + newDescription
-			+ ", newName=" + newName + ", objectID=" + object.getId() + " " + super.toString() + '}';
+				+ ", newName=" + newName + ", objectID=" + object.getId() + " "
+				+ super.toString() + '}';
+	}
+
+	@Override
+	public String getActionDescription() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Changing ").append(object.getName());
+		if (newName != null) {
+			builder.append(" Setting name to '").append(newName).append("'.");
+		}
+		if (newDescription != null) {
+			builder.append(" Setting description to '").append(newDescription)
+					.append("'.");
+		}
+		return builder.toString();
 	}
 }
