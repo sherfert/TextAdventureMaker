@@ -10,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
 import data.action.MoveAction;
@@ -21,11 +20,6 @@ import java.util.logging.Logger;
 
 /**
  * A one-way connection between two locations.
- * 
- * TODO hide access to move action, adapt changeWayAction
- * Have MoveAction only know the destination, not the way, and
- * such these is not a OneToOne mapping any more and users can use
- * MoveActions without ways.
  * 
  * @author Satia
  */
@@ -42,7 +36,7 @@ public class Way extends InspectableObject implements Travelable {
 	/**
 	 * The move action.
 	 */
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "way")
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private MoveAction moveAction;
 
 	/**
@@ -96,6 +90,7 @@ public class Way extends InspectableObject implements Travelable {
 			Location destination) {
 		super(name, description);
 		init();
+		moveAction = new MoveAction(destination);
 		setOrigin(origin);
 		setDestination(destination);
 	}
@@ -113,11 +108,6 @@ public class Way extends InspectableObject implements Travelable {
 	@Override
 	public Location getDestination() {
 		return destination;
-	}
-
-	@Override
-	public MoveAction getMoveAction() {
-		return moveAction;
 	}
 
 	@Override
@@ -145,14 +135,6 @@ public class Way extends InspectableObject implements Travelable {
 	@Override
 	public void removeAdditionalActionFromMove(AbstractAction action) {
 		additionalMoveActions.remove(action);
-	}
-
-	@Override
-	public void setMoveAction(MoveAction moveAction) {
-		this.moveAction = moveAction;
-		if (moveAction.getWay() != this) {
-			moveAction.setWay(this);
-		}
 	}
 
 	@Override
@@ -186,7 +168,7 @@ public class Way extends InspectableObject implements Travelable {
 
 	// final as called in constructor
 	/**
-	 * This also modifies the location.
+	 * This also modifies the location and the moveAction.
 	 * 
 	 * @param destination
 	 *            the destination to set
@@ -195,10 +177,9 @@ public class Way extends InspectableObject implements Travelable {
 		if (this.destination != null) {
 			this.destination.removeWayIn(this);
 		}
-		if (destination != null) {
-			destination.addWayIn(this);
-		}
+		destination.addWayIn(this);
 		this.destination = destination;
+		this.moveAction.setTarget(destination);
 	}
 
 	// final as called in constructor
@@ -212,9 +193,7 @@ public class Way extends InspectableObject implements Travelable {
 		if (this.origin != null) {
 			this.origin.removeWayOut(this);
 		}
-		if (origin != null) {
-			origin.addWayOut(this);
-		}
+		origin.addWayOut(this);
 		this.origin = origin;
 	}
 
@@ -222,7 +201,6 @@ public class Way extends InspectableObject implements Travelable {
 	 * Initializes the fields
 	 */
 	private void init() {
-		moveAction = new MoveAction(this);
 		additionalMoveActions = new ArrayList<>();
 	}
 

@@ -3,9 +3,10 @@ package data.action;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import persistence.PlayerManager;
+import data.Location;
 import data.Way;
 
 /**
@@ -17,11 +18,11 @@ import data.Way;
 public class MoveAction extends AbstractAction {
 
 	/**
-	 * The way where the player should move.
+	 * The target where to move.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
-	private Way way;
+	private Location target;
 
 	/**
 	 * No-arg constructor for the database.
@@ -33,67 +34,53 @@ public class MoveAction extends AbstractAction {
 	}
 
 	/**
-	 * Note: The way's {@link MoveAction} will be overwritten. You can also just
-	 * get and modify the current by {@link Way#getMoveAction()}.
-	 * 
-	 * @param way
-	 *            the way where the player should move
+	 * @param target
+	 *            the target where to move.
 	 */
-	public MoveAction(Way way) {
-		setWay(way);
+	public MoveAction(Location target) {
+		this.target = target;
 	}
 
 	/**
-	 * Note: The way's {@link MoveAction} will be overwritten. You can also just
-	 * get and modify the current by {@link Way#getMoveAction()}.
-	 * 
-	 * @param way
-	 *            the way where the player should move
+	 * @param target
+	 *            the target where to move.
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public MoveAction(Way way, boolean enabled) {
+	public MoveAction(Location target, boolean enabled) {
 		super(enabled);
-		setWay(way);
+		this.target = target;
 	}
 
 	/**
-	 * @return the way
+	 * @return the target
 	 */
-	public Way getWay() {
-		return way;
+	public Location getTarget() {
+		return target;
 	}
 
 	/**
-	 * Sets the way and sets {@code this} as the way's {@link MoveAction}.
-	 * 
-	 * @param way
-	 *            the way to set
+	 * @param target the target to set
 	 */
-	public final void setWay(Way way) {
-		this.way = way;
-		if (way.getMoveAction() != this) {
-			way.setMoveAction(this);
-		}
+	public void setTarget(Location target) {
+		this.target = target;
 	}
 
 	@Override
 	protected void doAction() {
-		PlayerManager.getPlayer().setLocation(way.getDestination());
+		PlayerManager.getPlayer().setLocation(target);
 	}
 
 	@Override
 	public String toString() {
-		return "MoveAction{" + "wayID=" + way.getId() + " " + super.toString()
-				+ '}';
+		return "MoveAction{" + "targetID=" + target.getId() + " "
+				+ super.toString() + '}';
 	}
 
 	@Override
 	public String getActionDescription() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Moving from ").append(way.getOrigin().getName())
-				.append(" to ").append(way.getDestination().getName())
-				.append(".");
+		builder.append("Moving to ").append(target.getName()).append(".");
 		return builder.toString();
 	}
 }

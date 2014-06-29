@@ -23,6 +23,7 @@ import data.action.ChangeConversationOptionAction;
 import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.ChangePersonAction;
+import data.action.ChangeWayAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 import data.action.ChangeItemAction;
@@ -245,8 +246,9 @@ public class Main {
 		chair.addPickUpItem(invChair);
 
 		// Only let him in if he has the chair
-		ChangeActionAction allowGettingInsideAction = new ChangeActionAction(
-				wayToFlat.getMoveAction(), Enabling.ENABLE);
+		ChangeWayAction allowGettingInsideAction = new ChangeWayAction(
+				wayToFlat);
+		allowGettingInsideAction.setEnabling(Enabling.ENABLE);
 		chair.addAdditionalActionToTake(allowGettingInsideAction);
 		chair.addAdditionalActionToTake(changeBalconyDescriptionAction);
 

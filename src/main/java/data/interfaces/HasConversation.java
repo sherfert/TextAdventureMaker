@@ -36,7 +36,7 @@ public interface HasConversation extends Identifiable {
 
 	/**
 	 * Sets the forbidden text for talking. If {@code null} passed, the default
-	 * text will be used. TODO default
+	 * text will be used.
 	 * 
 	 * @param text
 	 *            the forbiddenText to set

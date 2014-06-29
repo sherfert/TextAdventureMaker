@@ -31,17 +31,6 @@ public interface Travelable extends Identifiable {
 	public Location getDestination();
 
 	/**
-	 * @return the moveAction
-	 */
-	public MoveAction getMoveAction();
-
-	/**
-	 * @param moveAction
-	 *            the moveAction to set
-	 */
-	public void setMoveAction(MoveAction moveAction);
-
-	/**
 	 * @return the forbiddenText or {@code null}.
 	 */
 	public String getMoveForbiddenText();

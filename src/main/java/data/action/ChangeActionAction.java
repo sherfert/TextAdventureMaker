@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  * Another action can be changed with this action. Currently this means
@@ -23,7 +23,7 @@ public class ChangeActionAction extends AbstractAction {
 	/**
 	 * The action to change
 	 */
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
 	private AbstractAction action;
 

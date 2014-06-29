@@ -15,9 +15,6 @@ import data.interfaces.HasId;
 /**
  * A layer has a list of options to choose from.
  * 
- * TODO ensure that there is at least one enabled option, or end the
- * conversation immediately if not.
- * 
  * @author Satia
  */
 @Entity
