@@ -1,6 +1,7 @@
 package lanterna;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.googlecode.lanterna.input.Key;
@@ -237,6 +238,33 @@ public class LanternaScreenOptionChooser {
 
 		} else {
 			// TODO
+
+			// List to represent text before actually printing
+			List<String> linesToPrint = new LinkedList<>();
+			// Fill with empty lines
+			for (int i = 0; i < rows(); i++) {
+				linesToPrint.add("");
+			}
+
+			// Print chosen option in the middle
+			int lineIndex = rows() / 2;
+			int optionIndex = index;
+			for (int i = 0; i < optionsSplit.get(optionIndex).size(); i++, lineIndex++) {
+				linesToPrint.set(lineIndex, optionsSplit.get(optionIndex)
+						.get(i));
+			}
+
+			// while(optionsLeft)
+			// - fill lower part option per option
+			// - if there is not enough space to fit another option (last
+			// option)
+			// - or another option + "..." (not last option):
+			// --- print "..."
+
+			// while(emptyLinesBelow)
+			// - shift everything down
+
+			// - Same for upper part
 		}
 	}
 
