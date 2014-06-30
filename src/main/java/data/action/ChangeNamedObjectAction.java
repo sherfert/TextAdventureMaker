@@ -35,8 +35,8 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	/**
 	 * The object to be changed.
 	 * 
-	 * TODO This should be (nullable = false). This is impossible due to
-	 * circular dependencies.
+	 * XXX This should be (nullable = false). This is impossible due to circular
+	 * dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn
@@ -130,7 +130,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	@Override
 	public String getActionDescription() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Changing ").append(object.getName());
+		builder.append("Changing ").append(object.getName()).append(".");
 		if (newName != null) {
 			builder.append(" Setting name to '").append(newName).append("'.");
 		}

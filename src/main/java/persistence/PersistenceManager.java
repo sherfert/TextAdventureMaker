@@ -93,8 +93,6 @@ public class PersistenceManager {
 	/**
 	 * Updates any changes. Should be called after each change of persisted
 	 * data.
-	 * 
-	 * TODO call this in triggerAction or not?
 	 */
 	public static void updateChanges() {
 		entityManager.getTransaction().commit();

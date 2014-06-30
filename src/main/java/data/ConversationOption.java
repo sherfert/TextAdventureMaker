@@ -20,6 +20,9 @@ import data.interfaces.HasId;
  * An option in a conversation. The player can choose between options to say in
  * a certain {@link ConversationLayer}
  * 
+ * XXX A possible improvement would be to include removeOption /
+ * removeOptionPermanently options
+ * 
  * @author Satia
  */
 @Entity

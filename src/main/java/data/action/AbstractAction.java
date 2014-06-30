@@ -14,6 +14,8 @@ import persistence.PersistenceManager;
 /**
  * Any action that changes something in the game (if enabled).
  * 
+ * TODO ChangeInventoryItemAction
+ * 
  * @author Satia
  */
 @Entity

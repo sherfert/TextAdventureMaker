@@ -94,7 +94,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	}
 
 	/**
-	 * Called when the Terminal is resized. {@code syncronized} modifier added.
+	 * Called when the Terminal is resized. {@code synchronized} modifier added.
 	 * This will finish the initialization.
 	 */
 	@Override

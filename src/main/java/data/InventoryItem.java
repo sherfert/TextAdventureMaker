@@ -211,7 +211,7 @@ public class InventoryItem extends UsableObject implements
 	 * value, if it was not stored before. The other inventory item's map will
 	 * be synchronized, too.
 	 */
-	// TODO why Maps not unnullable?
+	// XXX why Maps not unnullable?
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn

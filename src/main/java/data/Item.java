@@ -58,7 +58,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * Note: This is NOT the Inverse connection of {@link ChangeItemAction#item}
 	 * .
 	 */
-	// TODO why not unnullable?
+	// XXX why not unnullable?
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	// (nullable = false)
