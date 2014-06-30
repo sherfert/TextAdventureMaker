@@ -355,12 +355,14 @@ public class Main {
 		game.setTakenText("You picked up the <name>.");
 		game.setUsedText("So you used the <name>. Nothing interesting happened.");
 		game.setUsedWithText("So you used the <name> with the <name2>. Nothing interesting happened.");
+		
 		game.setSuccessfullFgColor(Color.GREEN);
 		game.setNeutralFgColor(Color.YELLOW);
 		game.setFailedFgColor(Color.RED);
 		game.setSuccessfullBgColor(Color.DEFAULT);
 		game.setNeutralBgColor(Color.DEFAULT);
 		game.setFailedBgColor(Color.DEFAULT);
+		game.setNumberOfOptionLines(10);
 
 		game.setExitCommandHelpText("Exit the game");
 		game.setHelpHelpText("Display this help");

@@ -68,7 +68,7 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String helpHelpText;
-
+	
 	/**
 	 * The id.
 	 */
@@ -97,6 +97,7 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String inspectionDefaultText;
+
 	/**
 	 * All commands that let the player look into his inventory. Must be
 	 * lowercase.
@@ -116,7 +117,6 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String inventoryHelpText;
-
 	/**
 	 * The text introducing a look into the inventory. Valid placeholders:
 	 * {@literal <input>}
@@ -243,6 +243,13 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String notUsableWithText;
+
+	/**
+	 * The number of lines used to display options in dialogues.
+	 * Recommendation is ~10.
+	 */
+	@Column(nullable = false)
+	private int numberOfOptionLines;
 
 	/**
 	 * The player of this game.
@@ -682,6 +689,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the numberOfOptionLines
+	 */
+	public int getNumberOfOptionLines() {
+		return numberOfOptionLines;
+	}
+
+	/**
 	 * @return the player
 	 */
 	public Player getPlayer() {
@@ -1064,6 +1078,13 @@ public class Game implements HasId {
 	 */
 	public void setNotUsableWithText(String notUsableWithText) {
 		this.notUsableWithText = notUsableWithText;
+	}
+
+	/**
+	 * @param numberOfOptionLines the numberOfOptionLines to set
+	 */
+	public void setNumberOfOptionLines(int numberOfOptionLines) {
+		this.numberOfOptionLines = numberOfOptionLines;
 	}
 
 	/**

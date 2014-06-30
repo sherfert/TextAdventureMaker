@@ -35,11 +35,6 @@ import java.util.logging.Logger;
 public class InputOutput implements TextHandler, OptionHandler {
 
 	/**
-	 * The number of lines used to display options in dialogues.
-	 */
-	public static final int NUMBER_OF_OPTION_LINES = 6;
-
-	/**
 	 * The GamePlayer for this session
 	 */
 	private final GamePlayer gamePlayer;
@@ -85,7 +80,7 @@ public class InputOutput implements TextHandler, OptionHandler {
 				Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
 						.getTerminalSize().getColumns(), 0, screen
 						.getTerminalSize().getRows(), InputOutput.this);
-		
+
 		startInputReadingThread();
 
 		screen.getTerminal().addResizeListener(new ResizeListener() {
@@ -210,15 +205,17 @@ public class InputOutput implements TextHandler, OptionHandler {
 			List<String> options) {
 		this.conversationPlayer = conversationPlayer;
 
+		int numLines = gamePlayer.getGame().getNumberOfOptionLines();
+
 		// Resize text area by cutting the last lines
-		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize()
-				.getColumns(), 0, screen.getTerminalSize().getRows()
-				- NUMBER_OF_OPTION_LINES);
+		this.defaultTextArea
+				.setNewDimensions(0, screen.getTerminalSize().getColumns(), 0,
+						screen.getTerminalSize().getRows() - numLines);
 		// Use the last lines to display options
 		this.optionChoser = new LanternaScreenOptionChooser(screen, options,
 				this, 0, screen.getTerminalSize().getColumns(), screen
-						.getTerminalSize().getRows() - NUMBER_OF_OPTION_LINES,
-				screen.getTerminalSize().getRows());
+						.getTerminalSize().getRows() - numLines, screen
+						.getTerminalSize().getRows());
 
 		// Refresh
 		this.screen.refresh();
