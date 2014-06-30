@@ -41,7 +41,7 @@ public class LanternaScreenTextArea {
 	 * 
 	 * @author Satia Herfert
 	 */
-	private class ColoredText {
+	public static class ColoredText {
 		private final String text;
 		private final Color bgColor;
 		private final Color fgColor;
@@ -55,6 +55,27 @@ public class LanternaScreenTextArea {
 			this.text = text;
 			this.bgColor = bgColor;
 			this.fgColor = fgColor;
+		}
+
+		/**
+		 * @return the text
+		 */
+		public String getText() {
+			return text;
+		}
+
+		/**
+		 * @return the bgColor
+		 */
+		public Color getBgColor() {
+			return bgColor;
+		}
+
+		/**
+		 * @return the fgColor
+		 */
+		public Color getFgColor() {
+			return fgColor;
 		}
 
 		@Override

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import lanterna.LanternaScreenTextArea.ColoredText;
+
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.input.Key.Kind;
 import com.googlecode.lanterna.screen.Screen;
@@ -237,34 +239,145 @@ public class LanternaScreenOptionChooser {
 			}
 
 		} else {
-			// TODO
-
 			// List to represent text before actually printing
-			List<String> linesToPrint = new LinkedList<>();
+			List<ColoredText> linesToPrint = new LinkedList<>();
 			// Fill with empty lines
 			for (int i = 0; i < rows(); i++) {
-				linesToPrint.add("");
+				linesToPrint.add(new ColoredText("", Color.DEFAULT,
+						Color.DEFAULT));
 			}
 
 			// Print chosen option in the middle
-			int lineIndex = rows() / 2;
-			int optionIndex = index;
-			for (int i = 0; i < optionsSplit.get(optionIndex).size(); i++, lineIndex++) {
-				linesToPrint.set(lineIndex, optionsSplit.get(optionIndex)
-						.get(i));
+			int lineIndex = rows() / 2 - optionsSplit.get(index).size() / 2;
+			// The index used later to print upwards
+			int upLineIndex = lineIndex - 1;
+			for (int i = 0; i < optionsSplit.get(index).size(); i++, lineIndex++) {
+				// In case it does not fit
+				if (lineIndex < 0) {
+					continue;
+				}
+				if (lineIndex >= linesToPrint.size()) {
+					break;
+				}
+
+				// Black on white
+				linesToPrint.set(lineIndex,
+						new ColoredText(optionsSplit.get(index).get(i),
+								Color.WHITE, Color.BLACK));
 			}
 
-			// while(optionsLeft)
-			// - fill lower part option per option
-			// - if there is not enough space to fit another option (last
-			// option)
-			// - or another option + "..." (not last option):
-			// --- print "..."
+			int optionIndex = index;
+			// As long as options left below
+			while (++optionIndex < optionsSplit.size()) {
+				// If this is not the last option, we need space to at least
+				// print "..."
+				int additionLines = optionIndex == optionsSplit.size() - 1 ? 0
+						: 1;
+				if (lineIndex + optionsSplit.get(optionIndex).size()
+						+ additionLines <= rows()) {
+					// fits
+					for (int i = 0; i < optionsSplit.get(optionIndex).size(); i++, lineIndex++) {
+						linesToPrint.set(lineIndex, new ColoredText(
+								optionsSplit.get(optionIndex).get(i),
+								Color.DEFAULT, Color.DEFAULT));
+					}
+				} else {
+					// Does not fit, break
+					break;
+				}
+			}
 
-			// while(emptyLinesBelow)
-			// - shift everything down
+			{
+				// If there were no options left, but blank lines
+				// remain, we can shift everything down completely,
+				// otherwise we must leave one line free.
+				int additionLines = optionIndex == optionsSplit.size() ? 0 : 1;
+				for (; lineIndex + additionLines < rows(); lineIndex++) {
+					// shift down and increment to upLineIndex
+					linesToPrint.add(0, new ColoredText("", Color.DEFAULT,
+							Color.DEFAULT));
+					linesToPrint.remove(linesToPrint.size() - 1);
+					upLineIndex++;
+				}
+			}
 
-			// - Same for upper part
+			// The upper part...
+			int upOptionIndex = index;
+			// Start with optionIndex before the selected option
+			// As long as options left before
+			while (--upOptionIndex >= 0) {
+				// If this is not the first option, we need space to at least
+				// print "..."
+				int additionLines = upOptionIndex == 0 ? 0 : 1;
+				if (upLineIndex + 1 - optionsSplit.get(upOptionIndex).size()
+						- additionLines >= 0) {
+					// fits
+					for (int i = optionsSplit.get(upOptionIndex).size() - 1; i >= 0; i--, upLineIndex--) {
+						linesToPrint.set(upLineIndex, new ColoredText(
+								optionsSplit.get(upOptionIndex).get(i),
+								Color.DEFAULT, Color.DEFAULT));
+					}
+				} else {
+					// Does not fit, break
+					break;
+				}
+			}
+
+			{
+				// If there were no options left, but blank lines
+				// remain, we can shift everything up completely,
+				// otherwise we must leave one line free.
+				int additionLines = upOptionIndex == -1 ? 0 : 1;
+				for (; upLineIndex - additionLines >= 0; upLineIndex--) {
+					// shift up and decrement to lineIndex
+					linesToPrint.add(new ColoredText("", Color.DEFAULT,
+							Color.DEFAULT));
+					linesToPrint.remove(0);
+					lineIndex--;
+				}
+			}
+
+			// Now it can happen that below fit new options
+			optionIndex--;
+			// As long as options left below
+			while (++optionIndex < optionsSplit.size()) {
+				// If this is not the last option, we need space to at least
+				// print "..."
+				int additionLines = optionIndex == optionsSplit.size() - 1 ? 0
+						: 1;
+				if (lineIndex + optionsSplit.get(optionIndex).size()
+						+ additionLines <= rows()) {
+					// fits
+					for (int i = 0; i < optionsSplit.get(optionIndex).size(); i++, lineIndex++) {
+						linesToPrint.set(lineIndex, new ColoredText(
+								optionsSplit.get(optionIndex).get(i),
+								Color.DEFAULT, Color.DEFAULT));
+					}
+				} else {
+					// Does not fit, break
+					break;
+				}
+			}
+
+			// Print "..."s in first and/or last line, if there were options
+			// left
+			if (upOptionIndex >= 0) {
+				linesToPrint.set(0, new ColoredText("...", Color.DEFAULT,
+						Color.DEFAULT));
+			}
+			if (optionIndex < optionsSplit.size()) {
+				linesToPrint.set(linesToPrint.size() - 1, new ColoredText(
+						"...", Color.DEFAULT, Color.DEFAULT));
+			}
+
+			// Actually print lines
+			for (int i = 0; i < linesToPrint.size(); i++) {
+				String blanks = LanternaScreenTextArea.blankString(columns()
+						- linesToPrint.get(i).getText().length());
+				screen.putString(fromX, fromY + i, linesToPrint.get(i)
+						.getText() + blanks, linesToPrint.get(i).getFgColor(),
+						linesToPrint.get(i).getBgColor());
+			}
 		}
 	}
 

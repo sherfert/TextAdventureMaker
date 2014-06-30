@@ -156,6 +156,29 @@ public class Main {
 		csLayer.addOption(option42);
 		csLayer.addOption(new ConversationOption("Is Java also an island?",
 				"That's just a rumor.", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like Java?",
+				"Plenty", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like C#?",
+				"It's OK", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like C++?",
+				"I can accomodate", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like C?",
+				"Not really", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like Assembler?",
+				"It's cool, but I'm not crazy.", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like Python?",
+				"I recommend you a gif a made", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like this threeliner that had to come somewhere "
+				+ "in order to test the conversation option chosing mechasnism for a hell of a lot of options properly "
+				+ "and also with options that are way too long and nobody will ever read them? Assholes! "
+				+ "Still not long enough - need to add some more bullshit. That should do it!",
+				"What!?!", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like Whitespace?",
+				"I never find the code", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like Brainfuck?",
+				"I prefer to fuck other things", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like Perl?",
+				"Hell no", csLayer));
 		csLayer.addOption(new ConversationOption(
 				"Actually I don't like computer science so much.", "Well",
 				startLayer));
