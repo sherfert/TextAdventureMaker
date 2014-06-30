@@ -6,22 +6,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import data.InventoryItem;
-import data.Item;
+import data.Person;
 
 @Entity
-public class ChangeInventoryItemItemUsageAction extends
-		ChangeInventoryItemHasLocationUsageAction {
+public class ChangeInvItemPersonUsageAction extends
+		ChangeInvItemUsageAction {
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInventoryItemItemUsageChange(InventoryItem, Item)}
+	 *             {@link #ChangeInvItemPersonUsageAction(InventoryItem, Person)}
 	 *             instead.
 	 */
 	@Deprecated
-	public ChangeInventoryItemItemUsageAction() {
-		// TODO Auto-generated constructor stub
+	public ChangeInvItemPersonUsageAction() {
 	}
 
 	/**
@@ -30,8 +29,8 @@ public class ChangeInventoryItemItemUsageAction extends
 	 * @param object
 	 *            the item
 	 */
-	public ChangeInventoryItemItemUsageAction(InventoryItem inventoryItem,
-			Item object) {
+	public ChangeInvItemPersonUsageAction(InventoryItem inventoryItem,
+			Person object) {
 		super(inventoryItem, object);
 	}
 
@@ -43,26 +42,25 @@ public class ChangeInventoryItemItemUsageAction extends
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeInventoryItemItemUsageAction(InventoryItem inventoryItem,
-			Item object, boolean enabled) {
+	public ChangeInvItemPersonUsageAction(InventoryItem inventoryItem,
+			Person object, boolean enabled) {
 		super(inventoryItem, object, enabled);
 	}
 
 	/**
-	 * @return the item
+	 * @return the person
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
-	public Item getItem() {
-		return (Item) object;
+	public Person getPerson() {
+		return (Person) object;
 	}
 
 	/**
-	 * @param item
-	 *            the item to set
+	 * @param person
+	 *            the person to set
 	 */
-	public void setItem(Item item) {
-		object = item;
+	public void setPerson(Person person) {
+		object = person;
 	}
-
 }

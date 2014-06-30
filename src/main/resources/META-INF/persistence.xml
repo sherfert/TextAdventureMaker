@@ -12,7 +12,8 @@
 		<class>data.action.ChangeConversationAction</class>
 		<class>data.action.ChangeConversationOptionAction</class>
 		<class>data.action.ChangeInspectableObjectAction</class>
-		<class>data.action.ChangeInventoryItemItemUsageAction</class>
+		<class>data.action.ChangeInvItemItemUsageAction</class>
+		<class>data.action.ChangeInvItemPersonUsageAction</class>
 		<class>data.action.ChangeItemAction</class>
 		<class>data.action.ChangeNamedObjectAction</class>
 		<class>data.action.ChangePersonAction</class>

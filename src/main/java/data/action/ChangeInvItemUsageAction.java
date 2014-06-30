@@ -1,8 +1,12 @@
 package data.action;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
 import data.InventoryItem;
 import data.interfaces.HasLocation;
@@ -16,12 +20,15 @@ import data.interfaces.HasLocation;
  * @author Satia
  * 
  */
-public abstract class ChangeInventoryItemHasLocationUsageAction extends
+@MappedSuperclass
+public abstract class ChangeInvItemUsageAction extends
 		AbstractAction {
 
 	/**
 	 * The inventory item.
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false)
 	protected InventoryItem inventoryItem;
 
 	/**
@@ -54,11 +61,12 @@ public abstract class ChangeInventoryItemHasLocationUsageAction extends
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInventoryItemHasLocationUsageAction(InventoryItem, HasLocation)}
+	 *             {@link #ChangeInvItemUsageAction(InventoryItem, HasLocation)}
 	 *             instead.
 	 */
 	@Deprecated
-	public ChangeInventoryItemHasLocationUsageAction() {
+	public ChangeInvItemUsageAction() {
+		init();
 	}
 
 	/**
@@ -67,8 +75,9 @@ public abstract class ChangeInventoryItemHasLocationUsageAction extends
 	 * @param object
 	 *            the person or item
 	 */
-	public ChangeInventoryItemHasLocationUsageAction(
+	public ChangeInvItemUsageAction(
 			InventoryItem inventoryItem, HasLocation object) {
+		init();
 		this.inventoryItem = inventoryItem;
 		this.object = object;
 	}
@@ -81,11 +90,19 @@ public abstract class ChangeInventoryItemHasLocationUsageAction extends
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeInventoryItemHasLocationUsageAction(
+	public ChangeInvItemUsageAction(
 			InventoryItem inventoryItem, HasLocation object, boolean enabled) {
 		super(enabled);
+		init();
 		this.inventoryItem = inventoryItem;
 		this.object = object;
+	}
+	
+	/**
+	 * Initializes the fields.
+	 */
+	private void init() {
+		this.enabling = Enabling.DO_NOT_CHANGE;
 	}
 
 	/**
@@ -163,7 +180,7 @@ public abstract class ChangeInventoryItemHasLocationUsageAction extends
 
 	@Override
 	public String toString() {
-		return "ChangeInventoryItemHasLocationUsageAction{inventoryItemID="
+		return "ChangeInvItemUsageAction{inventoryItemID="
 				+ inventoryItem.getId() + ", objectID=" + object.getId()
 				+ ", newUseWithForbiddenText=" + newUseWithForbiddenText
 				+ ", newUseWithSuccessfulText=" + newUseWithSuccessfulText

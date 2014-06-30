@@ -16,6 +16,8 @@ import javax.persistence.InheritanceType;
  * Anything having a name and description.
  *
  * @author Satia
+ * 
+ * TODO rethink inheritance strategy. MappedSuperclass possible?
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

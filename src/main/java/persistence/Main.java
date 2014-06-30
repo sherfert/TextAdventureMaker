@@ -21,6 +21,8 @@ import data.action.ChangeActionAction;
 import data.action.ChangeConversationAction;
 import data.action.ChangeConversationOptionAction;
 import data.action.ChangeInspectableObjectAction;
+import data.action.ChangeInvItemItemUsageAction;
+import data.action.ChangeInvItemPersonUsageAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.ChangePersonAction;
 import data.action.ChangeWayAction;
@@ -151,15 +153,16 @@ public class Main {
 
 		ConversationOption option42 = new ConversationOption(
 				"What is the answer to the Ultimate Question of Life, the Universe, and Everything? "
-				+ "Additionally, here is some text to make it cover two lines.", "42", csLayer);
+						+ "Additionally, here is some text to make it cover two lines.",
+				"42", csLayer);
 		option42.addAdditionalAction(changeFlatDescriptionAction);
 		csLayer.addOption(option42);
 		csLayer.addOption(new ConversationOption("Is Java also an island?",
 				"That's just a rumor.", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like Java?",
-				"Plenty", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like C#?",
-				"It's OK", csLayer));
+		csLayer.addOption(new ConversationOption("Do you like Java?", "Plenty",
+				csLayer));
+		csLayer.addOption(new ConversationOption("Do you like C#?", "It's OK",
+				csLayer));
 		csLayer.addOption(new ConversationOption("Do you like C++?",
 				"I can accomodate", csLayer));
 		csLayer.addOption(new ConversationOption("Do you like C?",
@@ -168,10 +171,11 @@ public class Main {
 				"It's cool, but I'm not crazy.", csLayer));
 		csLayer.addOption(new ConversationOption("Do you like Python?",
 				"I recommend you a gif a made", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like this threeliner that had to come somewhere "
-				+ "in order to test the conversation option chosing mechasnism for a hell of a lot of options properly "
-				+ "and also with options that are way too long and nobody will ever read them? Assholes! "
-				+ "Still not long enough - need to add some more bullshit. That should do it!",
+		csLayer.addOption(new ConversationOption(
+				"Do you like this threeliner that had to come somewhere "
+						+ "in order to test the conversation option chosing mechasnism for a hell of a lot of options properly "
+						+ "and also with options that are way too long and nobody will ever read them? Assholes! "
+						+ "Still not long enough - need to add some more bullshit. That should do it!",
 				"What!?!", csLayer));
 		csLayer.addOption(new ConversationOption("Do you like Whitespace?",
 				"I never find the code", csLayer));
@@ -298,6 +302,18 @@ public class Main {
 				"You smash the chair into the television.");
 		invChair.setUsingEnabledWith(tv, true);
 
+		ChangeInvItemItemUsageAction changeChairTVaction = new ChangeInvItemItemUsageAction(
+				invChair, tv);
+		changeChairTVaction.setNewUseWithSuccessfulText("32\" wasted!");
+
+		ChangeInvItemPersonUsageAction changeSatiaMoneyAction = new ChangeInvItemPersonUsageAction(
+				money, satia);
+		changeSatiaMoneyAction
+				.setNewUseWithSuccessfulText("You feel guilty and put the money back. Although he has a big tv.");
+
+		tv.addAdditionalActionToInspect(changeChairTVaction);
+		tv.addAdditionalActionToInspect(changeSatiaMoneyAction);
+
 		/*
 		 * A pen that can be used to paint the banana peel. The pen can be used
 		 * for that when in the flat and when already taken.
@@ -355,7 +371,7 @@ public class Main {
 		game.setTakenText("You picked up the <name>.");
 		game.setUsedText("So you used the <name>. Nothing interesting happened.");
 		game.setUsedWithText("So you used the <name> with the <name2>. Nothing interesting happened.");
-		
+
 		game.setSuccessfullFgColor(Color.GREEN);
 		game.setNeutralFgColor(Color.YELLOW);
 		game.setFailedFgColor(Color.RED);
