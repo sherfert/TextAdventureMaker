@@ -27,12 +27,9 @@ import java.util.logging.Logger;
 /**
  * Providing means to print and read input while playing.
  * 
- * // TODO green Xs //
- * https://groups.google.com/forum/#!topic/lanterna-discuss/xWgK1xUBogg
- * 
  * @author Satia
  */
-public class InputOutput implements TextHandler, OptionHandler {
+public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 
 	/**
 	 * The GamePlayer for this session
@@ -62,6 +59,11 @@ public class InputOutput implements TextHandler, OptionHandler {
 	private LanternaScreenOptionChooser optionChoser;
 
 	/**
+	 * Signalizing whether the initialization is finished.
+	 */
+	private volatile boolean isFinished;
+
+	/**
 	 * @param gamePlayer
 	 *            the GamePlayer for this session
 	 */
@@ -69,29 +71,60 @@ public class InputOutput implements TextHandler, OptionHandler {
 		this.gamePlayer = gamePlayer;
 		this.screen = TerminalFacade.createScreen();
 		this.screen.startScreen();
+
+		// Add us as resize listener
+		screen.getTerminal().addResizeListener(this);
+
 		Terminal t = this.screen.getTerminal();
+		// Modify (which includes resize) the JFrame
 		if (t instanceof SwingTerminal) {
 			modifyJFrame(((SwingTerminal) t).getJFrame());
+		} else {
+			// If we're not waiting for a resize, call onResized
+			// manually to finish initialization.
+			onResized(screen.getTerminalSize());
 		}
 
-		// Rest of the initialization
-		defaultTextArea = new LanternaScreenTextArea(screen, true, true,
-				Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
-				Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
-						.getTerminalSize().getColumns(), 0, screen
-						.getTerminalSize().getRows(), InputOutput.this);
+		// Wait for the resize to be finished
+		while (!isFinished) {
+		}
 
+		// Start the thread reading input
 		startInputReadingThread();
+	}
 
-		screen.getTerminal().addResizeListener(new ResizeListener() {
-			@Override
-			public void onResized(TerminalSize newSize) {
-				defaultTextArea.setNewDimensions(0, newSize.getColumns(), 0,
-						newSize.getRows());
-				screen.refresh();
+	/**
+	 * Called when the Terminal is resized. {@code syncronized} modifier added.
+	 * This will finish the initialization.
+	 */
+	@Override
+	public synchronized void onResized(TerminalSize newSize) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Resized, new size: {0} vs old size {1}",
+				new Object[] { newSize, screen.getTerminalSize() });
+		// Refresh to adapt to new size
+		screen.refresh();
+
+		if (isFinished) {
+			// Resize rather than create the defaultTextArea
+			defaultTextArea.setNewDimensions(0, screen.getTerminalSize()
+					.getColumns(), 0, screen.getTerminalSize().getRows());
+		} else {
+			if (newSize.getColumns() == 101 && newSize.getRows() == 30) {
+				// XXX This is the default size, and we ignore this resize.
+				return;
 			}
-		});
 
+			// Then create the default text area
+			defaultTextArea = new LanternaScreenTextArea(screen, true, true,
+					Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
+					Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
+							.getTerminalSize().getColumns(), 0, screen
+							.getTerminalSize().getRows(), InputOutput.this);
+
+			// Tell the constructor we are finished.
+			isFinished = true;
+		}
 	}
 
 	/**
@@ -112,8 +145,6 @@ public class InputOutput implements TextHandler, OptionHandler {
 				(int) (fullScreen.height * 0.8)));
 		// Not resizable
 		frame.setResizable(false);
-
-		frame.revalidate();
 	}
 
 	/**
@@ -169,7 +200,7 @@ public class InputOutput implements TextHandler, OptionHandler {
 	 */
 	public void println(String output) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-				"Printing '{0}'", output);
+				"Printing \"{0}\"", output);
 
 		defaultTextArea.println(output);
 		this.screen.refresh();
@@ -187,7 +218,7 @@ public class InputOutput implements TextHandler, OptionHandler {
 	 */
 	public void println(String output, Color bgColor, Color fgColor) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-				"Printing '{0}'", output);
+				"Printing \"{0}\"", output);
 
 		defaultTextArea.println(output, bgColor, fgColor);
 		this.screen.refresh();
