@@ -1,10 +1,6 @@
 package persistence;
 
-import java.io.File;
-
 import com.googlecode.lanterna.terminal.Terminal.Color;
-
-import playing.GamePlayer;
 import data.Conversation;
 import data.ConversationLayer;
 import data.ConversationOption;
@@ -21,14 +17,15 @@ import data.action.ChangeActionAction;
 import data.action.ChangeConversationAction;
 import data.action.ChangeConversationOptionAction;
 import data.action.ChangeInspectableObjectAction;
-import data.action.ChangeInvItemItemUsageAction;
-import data.action.ChangeInvItemPersonUsageAction;
+import data.action.ChangeInvItemUsageAction;
+import data.action.ChangeItemAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.ChangePersonAction;
 import data.action.ChangeWayAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
-import data.action.ChangeItemAction;
+import java.io.File;
+import playing.GamePlayer;
 
 /**
  * Test class.
@@ -302,11 +299,11 @@ public class Main {
 				"You smash the chair into the television.");
 		invChair.setUsingEnabledWith(tv, true);
 
-		ChangeInvItemItemUsageAction changeChairTVaction = new ChangeInvItemItemUsageAction(
+		ChangeInvItemUsageAction changeChairTVaction = new ChangeInvItemUsageAction(
 				invChair, tv);
 		changeChairTVaction.setNewUseWithSuccessfulText("32\" wasted!");
 
-		ChangeInvItemPersonUsageAction changeSatiaMoneyAction = new ChangeInvItemPersonUsageAction(
+		ChangeInvItemUsageAction changeSatiaMoneyAction = new ChangeInvItemUsageAction(
 				money, satia);
 		changeSatiaMoneyAction
 				.setNewUseWithSuccessfulText("You feel guilty and put the money back. Although he has a big tv.");

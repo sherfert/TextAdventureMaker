@@ -1,27 +1,29 @@
 package data.action;
 
+import data.InspectableObject;
+import data.InventoryItem;
+import data.Item;
+import data.NamedObject;
+import data.interfaces.HasLocation;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-
-import data.InventoryItem;
-import data.interfaces.HasLocation;
 
 /**
  * This action modifies the usage behavior of an {@link InventoryItem} with a
  * {@link HasLocation}.
  * 
- * TODO Test if @Column is not @Entity supeclass is supported.
+ * TODO Annotate properly, although it already works...
  * 
  * @author Satia
  * 
  */
-@MappedSuperclass
-public abstract class ChangeInvItemUsageAction extends
+@Entity
+public class ChangeInvItemUsageAction extends
 		AbstractAction {
 
 	/**
@@ -31,9 +33,12 @@ public abstract class ChangeInvItemUsageAction extends
 	@JoinColumn(nullable = false)
 	protected InventoryItem inventoryItem;
 
+	// Specify the common supertype
 	/**
 	 * The person or item.
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedObject.class)
+	@JoinColumn(nullable = false)
 	protected HasLocation object;
 
 	/**
