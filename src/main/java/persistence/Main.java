@@ -34,6 +34,14 @@ import playing.GamePlayer;
 /**
  * Test class.
  * 
+ * General TODOs: 
+ * 
+ * TODO load/save functionality
+ * 
+ * TODO GUI
+ * 
+ * TODO sound support (optional)
+ * 
  * @author Satia
  */
 public class Main {
