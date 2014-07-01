@@ -1,6 +1,7 @@
 package persistence;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
+
 import data.Conversation;
 import data.ConversationLayer;
 import data.ConversationOption;
@@ -17,6 +18,7 @@ import data.action.ChangeActionAction;
 import data.action.ChangeConversationAction;
 import data.action.ChangeConversationOptionAction;
 import data.action.ChangeInspectableObjectAction;
+import data.action.ChangeInvItemCombinationAction;
 import data.action.ChangeInvItemUsageAction;
 import data.action.ChangeItemAction;
 import data.action.ChangeNamedObjectAction;
@@ -24,7 +26,9 @@ import data.action.ChangePersonAction;
 import data.action.ChangeWayAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
+
 import java.io.File;
+
 import playing.GamePlayer;
 
 /**
@@ -299,18 +303,6 @@ public class Main {
 				"You smash the chair into the television.");
 		invChair.setUsingEnabledWith(tv, true);
 
-		ChangeInvItemUsageAction changeChairTVaction = new ChangeInvItemUsageAction(
-				invChair, tv);
-		changeChairTVaction.setNewUseWithSuccessfulText("32\" wasted!");
-
-		ChangeInvItemUsageAction changeSatiaMoneyAction = new ChangeInvItemUsageAction(
-				money, satia);
-		changeSatiaMoneyAction
-				.setNewUseWithSuccessfulText("You feel guilty and put the money back. Although he has a big tv.");
-
-		tv.addAdditionalActionToInspect(changeChairTVaction);
-		tv.addAdditionalActionToInspect(changeSatiaMoneyAction);
-
 		/*
 		 * A pen that can be used to paint the banana peel. The pen can be used
 		 * for that when in the flat and when already taken.
@@ -344,6 +336,24 @@ public class Main {
 		peel.addAdditionalActionToUseWith(pen, addPaintedPeelAction);
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
+
+		ChangeInvItemUsageAction changeChairTVaction = new ChangeInvItemUsageAction(
+				invChair, tv);
+		changeChairTVaction.setNewUseWithSuccessfulText("32\" wasted!");
+
+		ChangeInvItemUsageAction changeSatiaMoneyAction = new ChangeInvItemUsageAction(
+				money, satia);
+		changeSatiaMoneyAction
+				.setNewUseWithSuccessfulText("You feel guilty and put the money back. Although he has a big tv.");
+
+		ChangeInvItemCombinationAction changePeelPenCombinationAction = new ChangeInvItemCombinationAction(
+				peel, invPen);
+		changePeelPenCombinationAction
+				.setNewCombineWithSuccessfulText("Absent-mindedly you paint the peel while staring at the huge tv screen - which is black.");
+
+		tv.addAdditionalActionToInspect(changeChairTVaction);
+		tv.addAdditionalActionToInspect(changeSatiaMoneyAction);
+		tv.addAdditionalActionToInspect(changePeelPenCombinationAction);
 
 		Player player = new Player();
 		// Game options

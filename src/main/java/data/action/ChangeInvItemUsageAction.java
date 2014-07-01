@@ -1,8 +1,6 @@
 package data.action;
 
-import data.InspectableObject;
 import data.InventoryItem;
-import data.Item;
 import data.NamedObject;
 import data.interfaces.HasLocation;
 import javax.persistence.CascadeType;
@@ -17,8 +15,6 @@ import javax.persistence.ManyToOne;
  * This action modifies the usage behavior of an {@link InventoryItem} with a
  * {@link HasLocation}.
  * 
- * TODO Annotate properly, although it already works...
- * 
  * @author Satia
  * 
  */
@@ -31,7 +27,7 @@ public class ChangeInvItemUsageAction extends
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
-	protected InventoryItem inventoryItem;
+	private InventoryItem inventoryItem;
 
 	// Specify the common supertype
 	/**
@@ -39,28 +35,28 @@ public class ChangeInvItemUsageAction extends
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedObject.class)
 	@JoinColumn(nullable = false)
-	protected HasLocation object;
+	private HasLocation object;
 
 	/**
 	 * The new useWithForbiddenText. If {@code null}, the old will not be
 	 * changed.
 	 */
 	@Column(nullable = true)
-	protected String newUseWithForbiddenText;
+	private String newUseWithForbiddenText;
 
 	/**
 	 * The new useWithSuccessfulText. If {@code null}, the old will not be
 	 * changed.
 	 */
 	@Column(nullable = true)
-	protected String newUseWithSuccessfulText;
+	private String newUseWithSuccessfulText;
 
 	/**
 	 * Enabling or disabling if this combination is actually usable.
 	 */
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	protected Enabling enabling;
+	private Enabling enabling;
 
 	/**
 	 * No-arg constructor for the database.
@@ -164,6 +160,20 @@ public class ChangeInvItemUsageAction extends
 	 */
 	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
+	}
+
+	/**
+	 * @return the object
+	 */
+	public HasLocation getObject() {
+		return object;
+	}
+
+	/**
+	 * @param object the object to set
+	 */
+	public void setObject(HasLocation object) {
+		this.object = object;
 	}
 
 	@Override

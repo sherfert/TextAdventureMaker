@@ -1,5 +1,6 @@
 package data.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -66,14 +67,14 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	private Enabling enablingTakeable;
 
 	/**
-	 * All pick up item to be added.
+	 * All pick up items to be added.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable
 	private List<InventoryItem> pickUpItemsToAdd;
 
 	/**
-	 * All pick up item to be removed.
+	 * All pick up items to be removed.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable
@@ -150,6 +151,8 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	private void init() {
 		this.enablingTakeable = Enabling.DO_NOT_CHANGE;
 		this.enablingRemoveItem = Enabling.DO_NOT_CHANGE;
+		this.pickUpItemsToAdd = new ArrayList<>();
+		this.pickUpItemsToRemove = new ArrayList<>();
 	}
 
 	@Override
@@ -219,6 +222,102 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 */
 	public void setNewTakeSuccessfulText(String newTakeSuccessfulText) {
 		this.newTakeSuccessfulText = newTakeSuccessfulText;
+	}
+
+	/**
+	 * @return the enablingTakeable
+	 */
+	public Enabling getEnablingTakeable() {
+		return enablingTakeable;
+	}
+
+	/**
+	 * @param enablingTakeable the enablingTakeable to set
+	 */
+	public void setEnablingTakeable(Enabling enablingTakeable) {
+		this.enablingTakeable = enablingTakeable;
+	}
+
+	/**
+	 * @return the pickUpItemsToAdd
+	 */
+	public List<InventoryItem> getPickUpItemsToAdd() {
+		return pickUpItemsToAdd;
+	}
+
+	/**
+	 * @param pickUpItemsToAdd the pickUpItemsToAdd to set
+	 */
+	public void setPickUpItemsToAdd(List<InventoryItem> pickUpItemsToAdd) {
+		this.pickUpItemsToAdd = pickUpItemsToAdd;
+	}
+
+	/**
+	 * @return the pickUpItemsToRemove
+	 */
+	public List<InventoryItem> getPickUpItemsToRemove() {
+		return pickUpItemsToRemove;
+	}
+
+	/**
+	 * @param pickUpItemsToRemove the pickUpItemsToRemove to set
+	 */
+	public void setPickUpItemsToRemove(List<InventoryItem> pickUpItemsToRemove) {
+		this.pickUpItemsToRemove = pickUpItemsToRemove;
+	}
+
+	/**
+	 * @return the enablingRemoveItem
+	 */
+	public Enabling getEnablingRemoveItem() {
+		return enablingRemoveItem;
+	}
+
+	/**
+	 * @param enablingRemoveItem the enablingRemoveItem to set
+	 */
+	public void setEnablingRemoveItem(Enabling enablingRemoveItem) {
+		this.enablingRemoveItem = enablingRemoveItem;
+	}
+	
+	/**
+	 * Adds a pick up item to be added.
+	 * 
+	 * @param item
+	 *            the item
+	 */
+	public void addPickUpItemToAdd(InventoryItem item) {
+		pickUpItemsToAdd.add(item);
+	}
+
+	/**
+	 * Adds a pick up item to be removed.
+	 * 
+	 * @param item
+	 *            the item
+	 */
+	public void addPickUpItemToRemove(InventoryItem item) {
+		pickUpItemsToAdd.add(item);
+	}
+	
+	/**
+	 * Removes a pick up item to be added.
+	 * 
+	 * @param item
+	 *            the item
+	 */
+	public void removePickUpItemToAdd(InventoryItem item) {
+		pickUpItemsToRemove.remove(item);
+	}
+
+	/**
+	 * Removes a pick up item to be removed.
+	 * 
+	 * @param item
+	 *            the item
+	 */
+	public void removePickUpItemToRemove(InventoryItem item) {
+		pickUpItemsToRemove.remove(item);
 	}
 
 	@Override
