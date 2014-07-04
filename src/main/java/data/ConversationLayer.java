@@ -2,7 +2,6 @@ package data;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -82,12 +81,28 @@ public class ConversationLayer implements HasId {
 	}
 
 	/**
-	 * @return a list of the texts of all options.
+	 * @return a list of the texts of all enabled options.
 	 */
 	public List<String> getOptionTexts() {
 		List<String> result = new ArrayList<>(options.size());
 		for (ConversationOption option : options) {
-			result.add(option.getText());
+			if (option.isEnabled()) {
+				result.add(option.getText());
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * @return a list of all enabled options.
+	 */
+	public List<ConversationOption> getEnabledOptions() {
+		List<ConversationOption> result = new ArrayList<>(options.size());
+		for (ConversationOption option : options) {
+			if (option.isEnabled()) {
+				result.add(option);
+			}
 		}
 
 		return result;

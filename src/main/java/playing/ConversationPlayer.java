@@ -74,7 +74,8 @@ public class ConversationPlayer {
 			return;
 		}
 
-		ConversationOption chosenOption = currentLayer.getOptions().get(index);
+		ConversationOption chosenOption = currentLayer.getEnabledOptions().get(
+				index);
 		// Trigger additional actions
 		chosenOption.choose();
 
@@ -83,19 +84,14 @@ public class ConversationPlayer {
 		personSays(chosenOption.getAnswer());
 		happens(chosenOption.getEvent());
 
-		// Save lastLayer
-		ConversationLayer lastLayer = currentLayer;
 		// Switch to target layer
 		currentLayer = chosenOption.getTarget();
 
 		if (hasEnded()) {
 			io.exitConversationMode();
 		} else {
-			// TODO options can also disappear!
-			// Display new options, only if layer changed
-			if (lastLayer != currentLayer) {
-				io.setOptions(currentLayer.getOptionTexts());
-			}
+			// Display new options
+			io.setOptions(currentLayer.getOptionTexts());
 		}
 	}
 
