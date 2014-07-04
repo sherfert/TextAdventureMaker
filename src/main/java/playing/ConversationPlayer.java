@@ -91,6 +91,7 @@ public class ConversationPlayer {
 		if (hasEnded()) {
 			io.exitConversationMode();
 		} else {
+			// TODO options can also disappear!
 			// Display new options, only if layer changed
 			if (lastLayer != currentLayer) {
 				io.setOptions(currentLayer.getOptionTexts());

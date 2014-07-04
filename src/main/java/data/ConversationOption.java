@@ -2,6 +2,8 @@ package data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,8 +14,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
+import data.action.AbstractAction.Enabling;
+import data.action.ChangeConversationOptionAction;
 import data.interfaces.HasId;
 
 /**
@@ -79,6 +84,19 @@ public class ConversationOption implements HasId {
 	private ConversationLayer target;
 
 	/**
+	 * The {@link ChangeConversationOptionAction} which would disable this
+	 * option.
+	 * 
+	 * Note: This is NOT the Inverse connection of
+	 * {@link ChangeConversationOptionAction#option}.
+	 */
+	// XXX why not unnullable?
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn
+	//(nullable = false)
+	private ChangeConversationOptionAction disableAction;
+
+	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
@@ -88,11 +106,14 @@ public class ConversationOption implements HasId {
 	@Deprecated
 	public ConversationOption() {
 		this.additionalActions = new ArrayList<>();
+		this.disableAction = new ChangeConversationOptionAction(this, false);
+		this.disableAction.setEnabling(Enabling.DISABLE);
 	}
 
 	/**
 	 * Create an enabled ConversationOption, with given text, answer and target.
-	 * No event text.
+	 * No event text. By default, the option will not disappear after being
+	 * chosen once.
 	 * 
 	 * @param text
 	 *            the text
@@ -113,7 +134,8 @@ public class ConversationOption implements HasId {
 
 	/**
 	 * Create an enabled ConversationOption, with given text, answer, event and
-	 * target.
+	 * target. By default, the option will not disappear after being
+	 * chosen once.
 	 * 
 	 * @param text
 	 *            the text
@@ -250,9 +272,31 @@ public class ConversationOption implements HasId {
 	}
 
 	/**
-	 * Choose this option. Simply triggers all additional actions.
+	 * Sets whether this action should be disabled (permanently) after being
+	 * chosen once.
+	 * 
+	 * @param disabling
+	 */
+	public void setDisablingOptionAfterChosen(boolean disabling) {
+		disableAction.setEnabled(disabling);
+	}
+
+	/**
+	 * @return whether this action should be disabled (permanently) after being
+	 *         chosen once.
+	 */
+	public boolean isDisablingOptionAfterChosen() {
+		return disableAction.isEnabled();
+	}
+
+	/**
+	 * Choose this option. Simply triggers all additional actions. Also disable
+	 * this option if specified.
 	 */
 	public void choose() {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+				"Choosing {0}", this);
+		disableAction.triggerAction();
 		// Trigger additional actions
 		for (AbstractAction abstractAction : additionalActions) {
 			abstractAction.triggerAction();
@@ -264,7 +308,8 @@ public class ConversationOption implements HasId {
 		return "ConversationOption{id=" + id + ", text=" + text + ", answer="
 				+ answer + ", event=" + event + ", additionalActionsIDs="
 				+ NamedObject.getIDList(additionalActions) + ", enabled="
-				+ enabled + ", target=" + target + "}";
+				+ enabled + ", targetID=" + target.getId() + ", disableActionID="
+						+ disableAction.getId() + "}";
 	}
 
 }

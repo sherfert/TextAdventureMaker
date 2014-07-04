@@ -21,9 +21,13 @@ public class ChangeConversationOptionAction extends AbstractAction {
 
 	/**
 	 * The option.
+	 * 
+	 * XXX This should be (nullable = false). This is impossible due to circular
+	 * dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn
+	// (nullable = false)
 	private ConversationOption option;
 
 	/**
@@ -32,6 +36,14 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Enabling enabling;
+
+	/**
+	 * Enabling or disabling whether this action should be disabled
+	 * (permanently) after being chosen once.
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Enabling enablingDisableOption;
 
 	/**
 	 * The new text. If {@code null}, the old will not be changed.
@@ -91,6 +103,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 */
 	private void init() {
 		this.enabling = Enabling.DO_NOT_CHANGE;
+		this.enablingDisableOption = Enabling.DO_NOT_CHANGE;
 	}
 
 	/**
@@ -106,6 +119,21 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 */
 	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
+	}
+
+	/**
+	 * @return the enablingDisableOption
+	 */
+	public Enabling getEnablingDisableOption() {
+		return enablingDisableOption;
+	}
+
+	/**
+	 * @param enablingDisableOption
+	 *            the enablingDisableOption to set
+	 */
+	public void setEnablingDisableOption(Enabling enablingDisableOption) {
+		this.enablingDisableOption = enablingDisableOption;
 	}
 
 	/**
@@ -185,12 +213,18 @@ public class ChangeConversationOptionAction extends AbstractAction {
 		} else if (enabling == Enabling.DISABLE) {
 			option.setEnabled(false);
 		}
+		if (enablingDisableOption == Enabling.ENABLE) {
+			option.setDisablingOptionAfterChosen(true);
+		} else if (enablingDisableOption == Enabling.DISABLE) {
+			option.setDisablingOptionAfterChosen(false);
+		}
 	}
 
 	@Override
 	public String toString() {
 		return "ChangeConversationOptionAction{optionID=" + option.getId()
-				+ ", enabling=" + enabling + ", newText=" + newText
+				+ ", enabling=" + enabling + ",enablingDisableOption="
+				+ enablingDisableOption + ", newText=" + newText
 				+ ", newAnswer=" + newAnswer + ", newEvent=" + newEvent + " "
 				+ super.toString() + "}";
 	}
@@ -201,6 +235,11 @@ public class ChangeConversationOptionAction extends AbstractAction {
 		builder.append("Changing conversation option ").append(option.getId());
 		if (enabling != Enabling.DO_NOT_CHANGE) {
 			builder.append(" ").append(enabling.description).append(" it.");
+		}
+		if (enablingDisableOption != Enabling.DO_NOT_CHANGE) {
+			builder.append(" ")
+					.append(enablingDisableOption.description)
+					.append(" that this action should be disabled (permanently) after being chosen once.");
 		}
 		if (newText != null) {
 			builder.append(" Setting text to '").append(newText).append("'.");

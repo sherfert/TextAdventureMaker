@@ -192,6 +192,10 @@ public class Main {
 				"I prefer to fuck other things", csLayer));
 		csLayer.addOption(new ConversationOption("Do you like Perl?",
 				"Hell no", csLayer));
+		ConversationOption disappearingOption = new ConversationOption("I am never gonna say this again.",
+				"What!?", csLayer);
+		disappearingOption.setDisablingOptionAfterChosen(true);
+		csLayer.addOption(disappearingOption);
 		csLayer.addOption(new ConversationOption(
 				"Actually I don't like computer science so much.", "Well",
 				startLayer));
