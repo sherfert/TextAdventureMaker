@@ -12,7 +12,6 @@ import playing.parser.GeneralParser;
 import playing.parser.GeneralParser.CommandRecExec;
 import data.Game;
 import data.InventoryItem;
-import data.Player;
 import data.interfaces.Combinable;
 import data.interfaces.HasConversation;
 import data.interfaces.HasLocation;
@@ -42,7 +41,7 @@ public class GamePlayer implements GeneralIOManager {
 	/**
 	 * The game that is being played.
 	 */
-	private final Game game;
+	private Game game;
 
 	/**
 	 * The IO object.
@@ -55,19 +54,11 @@ public class GamePlayer implements GeneralIOManager {
 	private final GeneralParser parser;
 
 	/**
-	 * The player object.
-	 */
-	private final Player player;
-
-	/**
 	 * @param game
 	 *            the game
-	 * @param player
-	 *            the player
 	 */
-	public GamePlayer(Game game, Player player) {
+	public GamePlayer(Game game) {
 		this.game = game;
-		this.player = player;
 		this.io = new InputOutput(this);
 		this.parser = new GeneralParser(this);
 		this.currentReplacer = new PlaceholderReplacer();
@@ -78,6 +69,14 @@ public class GamePlayer implements GeneralIOManager {
 	 */
 	public Game getGame() {
 		return game;
+	}
+
+	/**
+	 * @param game
+	 *            the game to set
+	 */
+	public void setGame(Game game) {
+		this.game = game;
 	}
 
 	/**
@@ -95,13 +94,6 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * @return the player
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/**
 	 * Tries to inspect an object with the given name. The player will look at
 	 * it if possible and if not, a meaningful message will be displayed.
 	 * 
@@ -112,7 +104,8 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Inspecting identifier {0}", identifier);
 
-		Inspectable object = PlayerManager.getInspectable(player, identifier);
+		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
+				identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -149,7 +142,7 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Displaying inventory");
 
-		List<InventoryItem> inventory = player.getInventory();
+		List<InventoryItem> inventory = game.getPlayer().getInventory();
 		if (inventory.isEmpty()) {
 			// The inventory is empty
 			io.println(currentReplacer.replacePlaceholders(game
@@ -183,9 +176,10 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Looking around");
 
-		io.println(currentReplacer.replacePlaceholders(player.getLocation()
-				.getEnteredText()), game.getNeutralBgColor(), game
-				.getNeutralFgColor());
+		io.println(
+				currentReplacer.replacePlaceholders(game.getPlayer()
+						.getLocation().getEnteredText()),
+				game.getNeutralBgColor(), game.getNeutralFgColor());
 	}
 
 	/**
@@ -234,8 +228,8 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Move identifier {0}", identifier);
 
-		Travelable way = WayManager.getWayOutFromLocation(player.getLocation(),
-				identifier);
+		Travelable way = WayManager.getWayOutFromLocation(game.getPlayer()
+				.getLocation(), identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -313,20 +307,23 @@ public class GamePlayer implements GeneralIOManager {
 	public void start() {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO,
 				"Starting the game");
+		// clear the screen
+		io.clear();
+		
 		// If the player has no location, this is a new game.
-		if (player.getLocation() == null) {
+		if (game.getPlayer().getLocation() == null) {
 			// Transfer him to the start location and start a new game.
-			player.setLocation(game.getStartLocation());
+			game.getPlayer().setLocation(game.getStartLocation());
 			io.println(game.getStartText(), game.getNeutralBgColor(),
 					game.getNeutralFgColor());
 		}
 		// Continue by printing the locations's text.
-		io.println(player.getLocation().getEnteredText(),
+		io.println(game.getPlayer().getLocation().getEnteredText(),
 				game.getNeutralBgColor(), game.getNeutralFgColor());
 	}
 
 	/**
-	 * Exits the game. TODO not exit io / db?
+	 * Exits the game.
 	 */
 	@Override
 	public void stop() {
@@ -334,6 +331,8 @@ public class GamePlayer implements GeneralIOManager {
 				"Stopping the game");
 		io.exitIO();
 		PersistenceManager.disconnect();
+		// FIXME at the moment close the vm
+		System.exit(0);
 	}
 
 	/**
@@ -348,8 +347,8 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Take identifier {0}", identifier);
 
-		Takeable item = ItemManager.getItemFromLocation(player.getLocation(),
-				identifier);
+		Takeable item = ItemManager.getItemFromLocation(game.getPlayer()
+				.getLocation(), identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -408,7 +407,7 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Use identifier {0}", identifier);
 
-		Usable object = PlayerManager.getUsable(player, identifier);
+		Usable object = PlayerManager.getUsable(game.getPlayer(), identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -473,9 +472,9 @@ public class GamePlayer implements GeneralIOManager {
 				new Object[] { identifier1, identifier2 });
 
 		UsableOrPassivelyUsable object1 = PlayerManager
-				.getUsableOrPassivelyUsable(player, identifier1);
+				.getUsableOrPassivelyUsable(game.getPlayer(), identifier1);
 		UsableOrPassivelyUsable object2 = PlayerManager
-				.getUsableOrPassivelyUsable(player, identifier2);
+				.getUsableOrPassivelyUsable(game.getPlayer(), identifier2);
 		// Save identifiers
 		currentReplacer.setIdentifier(identifier1);
 		currentReplacer.setIdentifier2(identifier2);
@@ -654,8 +653,8 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Talk to identifier {0}", identifier);
 
-		HasConversation person = PersonManager.getPersonFromLocation(
-				player.getLocation(), identifier);
+		HasConversation person = PersonManager.getPersonFromLocation(game
+				.getPlayer().getLocation(), identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 

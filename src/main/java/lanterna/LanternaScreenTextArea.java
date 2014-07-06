@@ -242,13 +242,6 @@ public class LanternaScreenTextArea {
 		this.currentText = new StringBuilder();
 		this.lastCommands = new Stack<>();
 
-		// Set printPointer
-		if (this.printTop) {
-			printPointer = 0;
-		} else {
-			printPointer = rows() - 1;
-		}
-
 		// Clear
 		clear();
 	}
@@ -328,6 +321,13 @@ public class LanternaScreenTextArea {
 	 * method is final, as called in the constructor.
 	 */
 	public final void clear() {
+		// Set printPointer
+		if (this.printTop) {
+			printPointer = 0;
+		} else {
+			printPointer = rows() - 1;
+		}
+
 		// clear lines
 		lines.clear();
 		// Fill lines with empty strings
@@ -357,7 +357,7 @@ public class LanternaScreenTextArea {
 			if (linesToPrint.get(i).length() > columns()) {
 				// Split after n chars or the blank before that
 				String before = linesToPrint.get(i);
-				int splitIndex = before.lastIndexOf(' ', columns()) + 1;
+				int splitIndex = before.lastIndexOf(' ', columns() - 1) + 1;
 				// Set to the end, if there is no space
 				if (splitIndex == -1) {
 					splitIndex = columns();

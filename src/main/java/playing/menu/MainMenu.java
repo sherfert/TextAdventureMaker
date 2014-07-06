@@ -58,8 +58,9 @@ public class MainMenu implements OptionIOManager {
 	}
 
 	private void newGame() {
-		// TODO Auto-generated method stub
-		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "New game");
+		LoadSaveManager.newGame();
+		// Exit menu
+		back();
 	}
 
 	@Override

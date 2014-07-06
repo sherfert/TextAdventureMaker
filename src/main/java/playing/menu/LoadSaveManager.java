@@ -1,11 +1,13 @@
 package playing.menu;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import persistence.GameManager;
 import persistence.PersistenceManager;
-import persistence.PlayerManager;
 import playing.GamePlayer;
 import configuration.PropertiesReader;
 
@@ -18,11 +20,31 @@ import configuration.PropertiesReader;
  * 
  */
 public class LoadSaveManager {
-	
+
+	/**
+	 * The ending of H2 databases.
+	 */
+	private static final String H2_ENDING = ".h2.db";
+
+	/**
+	 * The appendix for temp files.
+	 */
+	private static final String TEMP_APPENDIX = "-temp";
+
 	/**
 	 * The main menu
 	 */
 	private static MainMenu mainMenu;
+
+	/**
+	 * The game player
+	 */
+	private static GamePlayer gamePlayer;
+	
+	/**
+	 * The file name of the game. TODO replace with resource?
+	 */
+	private static String fileName;
 
 	// TODO also logging
 	public static void main(String[] args) {
@@ -41,14 +63,60 @@ public class LoadSaveManager {
 
 		// TODO atm just load the game
 		String gameName = args[0];
-		String fileName = PropertiesReader.DIRECTORY + gameName;
-		PersistenceManager.connect(fileName, false);
+		fileName = PropertiesReader.DIRECTORY + gameName;
+
+		// Copy file to a temp db
+		copyToTempDB(fileName);
+		// Connect
+		PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
 
 		// Start a game
-		GamePlayer gamePlayer = new GamePlayer(GameManager.getGame(), PlayerManager.getPlayer());
-		gamePlayer.start();
-		
+		gamePlayer = new GamePlayer(GameManager.getGame());
 		mainMenu = new MainMenu(gamePlayer.getIo());
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "New game");
+		gamePlayer.start();
+	}
+
+	/**
+	 * Tries to copy the db file to a temp file. Shuts the whole VM down, if
+	 * that fails.
+	 * 
+	 * @param fileName
+	 *            the original file name.
+	 */
+	private static void copyToTempDB(String fileName) {
+		// TODO consider if db file is in resources...
+
+		// Append ending
+		String actualName = fileName + H2_ENDING;
+		String tempName = fileName + TEMP_APPENDIX + H2_ENDING;
+		// Copy to temp file
+		try {
+			Files.copy(new File(actualName).toPath(),
+					new File(tempName).toPath(),
+					java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+					"Could not copy db file. Exiting now.", e);
+			System.exit(-1);
+		}
+	}
+
+	/**
+	 * Starts a new game.
+	 */
+	public static void newGame() {
+		// Disconnect from old db
+		PersistenceManager.disconnect();
+		// Copy file to a temp db
+		copyToTempDB(fileName);
+		// Connect
+		PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
+		// Set the game for the game player
+		gamePlayer.setGame(GameManager.getGame());
+		// Start a game
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "New game");
+		gamePlayer.start();
 	}
 
 	/**

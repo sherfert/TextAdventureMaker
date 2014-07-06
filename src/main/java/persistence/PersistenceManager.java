@@ -80,8 +80,6 @@ public class PersistenceManager {
 		// Close everything
 		entityManager.close();
 		entityManagerFactory.close();
-		// FIXME at the moment close the vm
-		System.exit(0);
 	}
 
 	/**
