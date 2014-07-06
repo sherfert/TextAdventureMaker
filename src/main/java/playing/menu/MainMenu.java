@@ -1,6 +1,7 @@
 package playing.menu;
 
 import java.util.Arrays;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,10 +16,24 @@ import playing.InputOutput.OptionIOManager;
 public class MainMenu implements OptionIOManager {
 
 	/**
+	 * The lines reserved for options.
+	 */
+	private static final int OPTION_LINES = 10;
+
+	/**
+	 * The state of the menu.
+	 * 
+	 * @author Satia
+	 */
+	private enum MenuState {
+		MAIN, MAIN_NO_GAME_RUNNING, LOAD, SAVE;
+	}
+
+	/**
 	 * The options shown in the game menu.
 	 */
 	private static String[] menuEntries = new String[] { "New game",
-			"Load game", "Save game", "Back" };
+			"Save game", "Load game", "Back" };
 
 	/**
 	 * The options shown in the game menu if no game is running yet.
@@ -32,11 +47,17 @@ public class MainMenu implements OptionIOManager {
 	private InputOutput io;
 
 	/**
+	 * The menu states.
+	 */
+	private Stack<MenuState> menuStates;
+
+	/**
 	 * @param io
 	 *            the IO object
 	 */
 	public MainMenu(InputOutput io) {
 		this.io = io;
+		this.menuStates = new Stack<>();
 	}
 
 	/**
@@ -50,39 +71,75 @@ public class MainMenu implements OptionIOManager {
 				"Showing main menu");
 		io.enterOptionMode(this, Arrays.asList(gameRunning ? menuEntries
 				: menuEntriesNoGameRunning));
+		menuStates.push(gameRunning ? MenuState.MAIN
+				: MenuState.MAIN_NO_GAME_RUNNING);
 	}
 
 	@Override
 	public void chooseOption(int index) {
-		switch (index) {
-		case 0:
-			newGame();
+		switch (menuStates.peek()) {
+		case MAIN:
+			switch (index) {
+			case 0:
+				newGame();
+				break;
+			case 1:
+				showSaveMenu();
+				break;
+			case 2:
+				showLoadMenu();
+				break;
+			case 3:
+				back();
+				break;
+			}
 			break;
-		case 1:
-			load();
+		case MAIN_NO_GAME_RUNNING:
+			switch (index) {
+			case 0:
+				newGame();
+				break;
+			case 1:
+				showLoadMenu();
+				break;
+			}
 			break;
-		case 2:
-			save();
-			break;
-		case 3:
+		case LOAD:
+			// TODO
 			back();
+			break;
+		case SAVE:
 			break;
 		}
 	}
 
 	/**
-	 * Exits the menu and continues the running game.
+	 * Exits the menu and continues the running game. TODO
 	 */
 	private void back() {
-		io.exitOptionMode();
+		// Discard last menu state
+		menuStates.pop();
+		if (menuStates.isEmpty()) {
+			// If no menu states left, exit
+			io.exitOptionMode();
+		} else {
+			// Otherwise go back to last menu (can only be MAIN or
+			// MAIN_NO_GAME_RUNNING)
+			MenuState state = menuStates.peek();
+			io.setOptions(Arrays.asList(state == MenuState.MAIN ? menuEntries
+					: menuEntriesNoGameRunning));
+		}
 	}
 
-	private void load() {
+	private void showLoadMenu() {
 		// TODO Auto-generated method stub
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Load");
+
+		io.setOptions(Arrays.asList("Back"));
+		menuStates.push(MenuState.LOAD);
 	}
 
-	private void save() {
+	private void showSaveMenu() {
 		// TODO Auto-generated method stub
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Save");
 	}
@@ -98,7 +155,7 @@ public class MainMenu implements OptionIOManager {
 
 	@Override
 	public int getNumberOfOptionLines() {
-		return menuEntries.length;
+		return OPTION_LINES;
 	}
 
 }
