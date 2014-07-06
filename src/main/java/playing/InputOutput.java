@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import playing.menu.LoadSaveManager;
 import lanterna.LanternaScreenOptionChooser;
 import lanterna.LanternaScreenOptionChooser.OptionHandler;
 import lanterna.LanternaScreenTextArea;
@@ -13,6 +14,7 @@ import lanterna.LanternaScreenTextArea.TextHandler;
 
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.input.Key;
+import com.googlecode.lanterna.input.Key.Kind;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.Terminal.Color;
@@ -27,8 +29,6 @@ import java.util.logging.Logger;
 /**
  * Providing means to print and read input while playing.
  * 
- * TODO stop method
- * 
  * @author Satia
  */
 public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
@@ -39,10 +39,6 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * @author Satia
 	 */
 	public interface GeneralIOManager {
-		/**
-		 * @return the number of options to display in option mode.
-		 */
-		int getNumberOfOptionLines();
 
 		/**
 		 * Handles the players input.
@@ -59,7 +55,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	}
 
 	/**
-	 * The class using this in option mode must provide this method.
+	 * The class using this in option mode must provide these methods.
 	 * 
 	 * @author Satia
 	 */
@@ -71,6 +67,11 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		 *            the index of the option to choose
 		 */
 		void chooseOption(int index);
+		
+		/**
+		 * @return the number of options to display in option mode.
+		 */
+		int getNumberOfOptionLines();
 	}
 
 	/**
@@ -210,14 +211,21 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * Reads a key and forwards them to the readInput methods of the lanterna
 	 * classes. This will also refresh the screen.
 	 * 
+	 * If ESC is typed (outside option mode) the menu will be shown.
+	 * 
 	 * @param key
 	 *            the typed key.
 	 */
 	private void readInput(Key key) {
 		if (optionIOManager == null) {
-			// If not in option mode, the default text area handles the
-			// key,
-			defaultTextArea.readInput(key);
+			if(key.getKind() == Kind.Escape) {
+				// If this is escape key: show menu
+				LoadSaveManager.showMenu();
+			} else {
+				// If not in option mode, the default text area handles the
+				// key,
+				defaultTextArea.readInput(key);
+			}
 		} else {
 			// otherwise the optionChoser
 			optionChoser.readInput(key);
@@ -277,7 +285,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 			List<String> options) {
 		this.optionIOManager = optionIOManager;
 
-		int numLines = ioManager.getNumberOfOptionLines();
+		int numLines = optionIOManager.getNumberOfOptionLines();
 
 		// Resize text area by cutting the last lines
 		this.defaultTextArea

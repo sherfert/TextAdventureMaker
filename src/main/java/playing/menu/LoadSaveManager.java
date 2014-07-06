@@ -1,8 +1,11 @@
-package persistence;
+package playing.menu;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import persistence.GameManager;
+import persistence.PersistenceManager;
+import persistence.PlayerManager;
 import playing.GamePlayer;
 import configuration.PropertiesReader;
 
@@ -15,6 +18,11 @@ import configuration.PropertiesReader;
  * 
  */
 public class LoadSaveManager {
+	
+	/**
+	 * The main menu
+	 */
+	private static MainMenu mainMenu;
 
 	// TODO also logging
 	public static void main(String[] args) {
@@ -37,10 +45,20 @@ public class LoadSaveManager {
 		PersistenceManager.connect(fileName, false);
 
 		// Start a game
-		new GamePlayer(GameManager.getGame(), PlayerManager.getPlayer())
-				.start();
+		GamePlayer gamePlayer = new GamePlayer(GameManager.getGame(), PlayerManager.getPlayer());
+		gamePlayer.start();
+		
+		mainMenu = new MainMenu(gamePlayer.getIo());
 	}
-	
-	// TODO save! also startOrLoad method called in PersistenceManager.disconnect.
+
+	/**
+	 * Shows the main menu.
+	 */
+	public static void showMenu() {
+		mainMenu.show();
+	}
+
+	// TODO save! also startOrLoad method called in
+	// PersistenceManager.disconnect.
 
 }

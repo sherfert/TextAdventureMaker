@@ -93,6 +93,11 @@ public class ConversationPlayer implements OptionIOManager {
 			io.setOptions(currentLayer.getOptionTexts());
 		}
 	}
+	
+	@Override
+	public int getNumberOfOptionLines() {
+		return game.getNumberOfOptionLines();
+	}
 
 	/**
 	 * Starts the conversation.

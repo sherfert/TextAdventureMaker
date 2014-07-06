@@ -326,7 +326,7 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * Exits the game.
+	 * Exits the game. TODO not exit io / db?
 	 */
 	@Override
 	public void stop() {
@@ -694,11 +694,6 @@ public class GamePlayer implements GeneralIOManager {
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getFailedBgColor(), game.getFailedFgColor());
 		}
-	}
-
-	@Override
-	public int getNumberOfOptionLines() {
-		return game.getNumberOfOptionLines();
 	}
 
 	/**
