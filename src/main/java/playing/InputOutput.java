@@ -27,16 +27,56 @@ import java.util.logging.Logger;
 /**
  * Providing means to print and read input while playing.
  * 
- * TODO independent of gamePlayer and conversationPlayer 
+ * TODO stop method
  * 
  * @author Satia
  */
 public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 
 	/**
-	 * The GamePlayer for this session
+	 * The class using this must provide these methods.
+	 * 
+	 * @author Satia
 	 */
-	private final GamePlayer gamePlayer;
+	public interface GeneralIOManager {
+		/**
+		 * @return the number of options to display in option mode.
+		 */
+		int getNumberOfOptionLines();
+
+		/**
+		 * Handles the players input.
+		 * 
+		 * @param text
+		 *            the typed text
+		 */
+		void handleText(String text);
+
+		/**
+		 * Stops the io manager.
+		 */
+		void stop();
+	}
+
+	/**
+	 * The class using this in option mode must provide this method.
+	 * 
+	 * @author Satia
+	 */
+	public interface OptionIOManager {
+		/**
+		 * Choose the option with the given index.
+		 * 
+		 * @param index
+		 *            the index of the option to choose
+		 */
+		void chooseOption(int index);
+	}
+
+	/**
+	 * The io manager for this session
+	 */
+	private final GeneralIOManager ioManager;
 
 	/**
 	 * The screen that is being used to display to game.
@@ -49,14 +89,13 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	private LanternaScreenTextArea defaultTextArea;
 
 	/**
-	 * The conversation player if currently in conversation mode, {@code null}
+	 * The option io manager if currently in option mode, {@code null}
 	 * otherwise.
 	 */
-	private ConversationPlayer conversationPlayer;
+	private OptionIOManager optionIOManager;
 
 	/**
-	 * The option choser if currently in conversation mode, {@code null}
-	 * otherwise.
+	 * The option choser if currently in option mode, {@code null} otherwise.
 	 */
 	private LanternaScreenOptionChooser optionChoser;
 
@@ -66,11 +105,11 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	private volatile boolean isFinished;
 
 	/**
-	 * @param gamePlayer
-	 *            the GamePlayer for this session
+	 * @param ioManager
+	 *            the ioManager for this session
 	 */
-	public InputOutput(GamePlayer gamePlayer) {
-		this.gamePlayer = gamePlayer;
+	public InputOutput(GeneralIOManager ioManager) {
+		this.ioManager = ioManager;
 		this.screen = TerminalFacade.createScreen();
 		this.screen.startScreen();
 
@@ -137,7 +176,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				frame.dispose();
-				gamePlayer.stop();
+				ioManager.stop();
 			}
 		});
 		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit()
@@ -175,8 +214,8 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 *            the typed key.
 	 */
 	private void readInput(Key key) {
-		if (conversationPlayer == null) {
-			// If not in conversation mode, the default text area handles the
+		if (optionIOManager == null) {
+			// If not in option mode, the default text area handles the
 			// key,
 			defaultTextArea.readInput(key);
 		} else {
@@ -227,18 +266,18 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	}
 
 	/**
-	 * Enters conversation mode. Now {@link #setOptions(List)} may be called.
+	 * Enters option mode. Now {@link #setOptions(List)} may be called.
 	 * 
-	 * @param conversationPlayer
-	 *            the conversation player
+	 * @param optionIOManager
+	 *            the optionIOManager
 	 * @param options
 	 *            the first options to display.
 	 */
-	public void enterConversationMode(ConversationPlayer conversationPlayer,
+	public void enterOptionMode(OptionIOManager optionIOManager,
 			List<String> options) {
-		this.conversationPlayer = conversationPlayer;
+		this.optionIOManager = optionIOManager;
 
-		int numLines = gamePlayer.getGame().getNumberOfOptionLines();
+		int numLines = ioManager.getNumberOfOptionLines();
 
 		// Resize text area by cutting the last lines
 		this.defaultTextArea
@@ -255,11 +294,11 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	}
 
 	/**
-	 * Exits conversation mode. Now {@link #setOptions(List)} must not be called
-	 * any more.
+	 * Exits option mode. Now {@link #setOptions(List)} must not be called any
+	 * more.
 	 */
-	public void exitConversationMode() {
-		this.conversationPlayer = null;
+	public void exitOptionMode() {
+		this.optionIOManager = null;
 		this.optionChoser = null;
 		// Resize text area by giving back the last lines
 		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize()
@@ -269,7 +308,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	}
 
 	/**
-	 * Sets the options to display. Must only be called in conversation mode.
+	 * Sets the options to display. Must only be called in option mode.
 	 * 
 	 * @param options
 	 *            the options to display
@@ -280,13 +319,11 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 
 	@Override
 	public void chooseOption(int index) {
-		conversationPlayer.chooseOption(index);
+		optionIOManager.chooseOption(index);
 	}
 
 	@Override
 	public void handleText(String text) {
-		if (!gamePlayer.getParser().parse(text)) {
-			gamePlayer.stop();
-		}
+		ioManager.handleText(text);
 	}
 }

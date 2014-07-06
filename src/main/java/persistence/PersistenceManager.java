@@ -56,9 +56,8 @@ public class PersistenceManager {
 				: "create-tables";
 		// Create objects for database access
 		Map<String, String> properties = new HashMap<>();
-		properties.put("eclipselink.ddl-generation", ddlGenerationValue);
-
 		properties.put("javax.persistence.jdbc.url", "jdbc:h2:" + filename);
+		properties.put("eclipselink.ddl-generation", ddlGenerationValue);
 
 		entityManagerFactory = Persistence.createEntityManagerFactory(
 				PERSISTENCE_UNIT_NAME, properties);

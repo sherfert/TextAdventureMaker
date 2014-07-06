@@ -1,5 +1,6 @@
 package playing;
 
+import playing.InputOutput.OptionIOManager;
 import data.Conversation;
 import data.ConversationLayer;
 import data.ConversationOption;
@@ -13,7 +14,7 @@ import data.Game;
  * @author Satia
  * 
  */
-public class ConversationPlayer {
+public class ConversationPlayer implements OptionIOManager {
 
 	/**
 	 * The IO object.
@@ -63,12 +64,10 @@ public class ConversationPlayer {
 	}
 
 	/**
-	 * Choose the option with the given index. It is being checked, that the
+	 * {@inheritDoc} It is being checked, that the
 	 * index is valid, otherwise nothing is done!
-	 * 
-	 * @param index
-	 *            the index of the option to choose
 	 */
+	@Override
 	public void chooseOption(int index) {
 		if (index >= currentLayer.getOptions().size()) {
 			return;
@@ -88,7 +87,7 @@ public class ConversationPlayer {
 		currentLayer = chosenOption.getTarget();
 
 		if (hasEnded()) {
-			io.exitConversationMode();
+			io.exitOptionMode();
 		} else {
 			// Display new options
 			io.setOptions(currentLayer.getOptionTexts());
@@ -106,7 +105,7 @@ public class ConversationPlayer {
 			happens(conversation.getEvent());
 		} else {
 			// Enter conversation mode, directly displaying the options
-			io.enterConversationMode(this, currentLayer.getOptionTexts());
+			io.enterOptionMode(this, currentLayer.getOptionTexts());
 			// Print the greeting after going into conversation mode
 			personSays(conversation.getGreeting());
 			happens(conversation.getEvent());

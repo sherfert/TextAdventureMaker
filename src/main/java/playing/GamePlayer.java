@@ -7,6 +7,7 @@ import persistence.PersistenceManager;
 import persistence.PersonManager;
 import persistence.PlayerManager;
 import persistence.WayManager;
+import playing.InputOutput.GeneralIOManager;
 import playing.parser.GeneralParser;
 import playing.parser.GeneralParser.CommandRecExec;
 import data.Game;
@@ -30,7 +31,7 @@ import java.util.logging.Logger;
  * 
  * @author Satia
  */
-public class GamePlayer {
+public class GamePlayer implements GeneralIOManager {
 	// TODO better error messages like "you cannot take persons"
 
 	/**
@@ -327,6 +328,7 @@ public class GamePlayer {
 	/**
 	 * Exits the game.
 	 */
+	@Override
 	public void stop() {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO,
 				"Stopping the game");
@@ -691,6 +693,21 @@ public class GamePlayer {
 			String message = game.getNoSuchPersonText();
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getFailedBgColor(), game.getFailedFgColor());
+		}
+	}
+
+	@Override
+	public int getNumberOfOptionLines() {
+		return game.getNumberOfOptionLines();
+	}
+
+	/**
+	 * {@inheritDoc} Parses the input. Stops the game if necessary.
+	 */
+	@Override
+	public void handleText(String text) {
+		if (!parser.parse(text)) {
+			stop();
 		}
 	}
 }
