@@ -24,7 +24,7 @@ public class LoadSaveManager {
 	/**
 	 * The ending of H2 databases.
 	 */
-	private static final String H2_ENDING = ".h2.db";
+	public static final String H2_ENDING = ".h2.db";
 
 	/**
 	 * The appendix for temp files.
@@ -46,6 +46,16 @@ public class LoadSaveManager {
 	 */
 	private static String fileName;
 
+	/**
+	 * The directory of the save games.
+	 */
+	private static String saveGamesDir;
+
+	/**
+	 * The name of the game.
+	 */
+	private static String gameName;
+
 	// TODO also logging
 	public static void main(String[] args) {
 		// Initialize the logging
@@ -62,8 +72,11 @@ public class LoadSaveManager {
 		}
 
 		// Save game file name
-		String gameName = args[0];
+		gameName = args[0];
 		fileName = PropertiesReader.DIRECTORY + gameName;
+		saveGamesDir = fileName + File.separator;
+		// Create the dir if necessary
+		new File(saveGamesDir).mkdirs();
 
 		// Create new gamePlayer
 		gamePlayer = new GamePlayer();
@@ -76,46 +89,36 @@ public class LoadSaveManager {
 	}
 
 	/**
+	 * @return the saveGamesDir
+	 */
+	public static String getSaveGamesDir() {
+		return saveGamesDir;
+	}
+
+	/**
 	 * Tries to copy the db file to a temp file. Shuts the whole VM down, if
 	 * that fails.
 	 * 
-	 * @param fileName
-	 *            the original file name.
+	 * @param file
+	 *            the original file.
 	 */
-	private static void copyToTempDB(String fileName) {
+	private static void copyToTempDB(File file) {
 		// TODO consider if db file is in resources...
 
 		// Append ending
-		String actualName = fileName + H2_ENDING;
-		String tempName = fileName + TEMP_APPENDIX + H2_ENDING;
+		// String actualName = fileName + H2_ENDING;
+		// String tempName = fileName + TEMP_APPENDIX + H2_ENDING;
+		File tempFile = new File(PropertiesReader.DIRECTORY + gameName
+				+ TEMP_APPENDIX + H2_ENDING);
 		// Copy to temp file
 		try {
-			Files.copy(new File(actualName).toPath(),
-					new File(tempName).toPath(),
+			Files.copy(file.toPath(), tempFile.toPath(),
 					java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
 					"Could not copy db file. Exiting now.", e);
 			System.exit(-1);
 		}
-	}
-
-	/**
-	 * Starts a new game.
-	 */
-	public static void newGame() {
-		// Disconnect from old db
-		PersistenceManager.disconnect();
-		// Copy file to a temp db
-		copyToTempDB(fileName);
-		// Connect
-		PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
-		// Set the game for the game player
-		gamePlayer.setGame(GameManager.getGame());
-		// Start a game
-		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
-				"New game");
-		gamePlayer.start();
 	}
 
 	/**
@@ -128,7 +131,28 @@ public class LoadSaveManager {
 		mainMenu.show(gameRunning);
 	}
 
-	// TODO save! also startOrLoad method called in
-	// PersistenceManager.disconnect.
+	/**
+	 * Starts a new game.
+	 */
+	public static void newGame() {
+		// "Load" the new file
+		load(new File(fileName + H2_ENDING));
+	}
 
+	public static void load(File file) {
+		// Disconnect from old db
+		PersistenceManager.disconnect();
+		// Copy file to a temp db
+		copyToTempDB(file);
+		// Connect
+		PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
+		// Set the game for the game player
+		gamePlayer.setGame(GameManager.getGame());
+		// Start a game
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
+				"New game/Load game");
+		gamePlayer.start();
+	}
+
+	// TODO save!
 }

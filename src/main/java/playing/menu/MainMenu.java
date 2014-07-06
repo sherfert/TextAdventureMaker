@@ -1,6 +1,9 @@
 package playing.menu;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +53,11 @@ public class MainMenu implements OptionIOManager {
 	 * The menu states.
 	 */
 	private Stack<MenuState> menuStates;
+
+	/**
+	 * The files in the save game dir
+	 */
+	private List<File> files;
 
 	/**
 	 * @param io
@@ -105,16 +113,21 @@ public class MainMenu implements OptionIOManager {
 			}
 			break;
 		case LOAD:
-			// TODO
-			back();
+			if (index >= files.size()) {
+				// Default: back
+				back();
+			} else {
+				load(files.get(index));
+			}
 			break;
 		case SAVE:
+			// TODO
 			break;
 		}
 	}
 
 	/**
-	 * Exits the menu and continues the running game. TODO
+	 * Exits the menu and continues the running game.
 	 */
 	private void back() {
 		// Discard last menu state
@@ -135,7 +148,23 @@ public class MainMenu implements OptionIOManager {
 		// TODO Auto-generated method stub
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Load");
 
-		io.setOptions(Arrays.asList("Back"));
+		List<String> options = new ArrayList<>();
+		this.files = new ArrayList<>();
+
+		for (File fileEntry : new File(LoadSaveManager.getSaveGamesDir())
+				.listFiles()) {
+			String name = fileEntry.getName();
+			if (!fileEntry.isDirectory()
+					&& name.endsWith(LoadSaveManager.H2_ENDING)) {
+				files.add(fileEntry);
+				options.add(name.substring(0, name.length()
+						- LoadSaveManager.H2_ENDING.length()));
+			}
+		}
+		// Back option
+		options.add("Back");
+
+		io.setOptions(options);
 		menuStates.push(MenuState.LOAD);
 	}
 
@@ -150,6 +179,19 @@ public class MainMenu implements OptionIOManager {
 	private void newGame() {
 		LoadSaveManager.newGame();
 		// Exit menu
+		back();
+	}
+
+	/**
+	 * Loads a file and also exits the menu.
+	 * 
+	 * @param file
+	 *            the file to load.
+	 */
+	private void load(File file) {
+		LoadSaveManager.load(file);
+		// Exit menu
+		back();
 		back();
 	}
 
