@@ -30,7 +30,7 @@ public class Game implements HasId {
 	 * 
 	 * Then, the "if(contains)" check can be removed.
 	 */
-
+	
 	/**
 	 * The help text being displayed for the exit command
 	 */
@@ -58,6 +58,13 @@ public class Game implements HasId {
 	private Color failedFgColor;
 
 	/**
+	 * The name of the game. Should be unique, as savegames are
+	 * ordered by this name, if there are multiple games used.
+	 */
+	@Column(nullable = false)
+	private String gameTitle;
+
+	/**
 	 * All commands that let the player see the help. Must be lowercase.
 	 */
 	@ElementCollection
@@ -68,7 +75,7 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String helpHelpText;
-	
+
 	/**
 	 * The id.
 	 */
@@ -83,7 +90,7 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> inspectCommands;
-
+	
 	/**
 	 * The help text being displayed for the inspect command
 	 */
@@ -117,6 +124,7 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String inventoryHelpText;
+
 	/**
 	 * The text introducing a look into the inventory. Valid placeholders:
 	 * {@literal <input>}
@@ -129,7 +137,6 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> lookAroundCommands;
-
 	/**
 	 * The help text being displayed for the look around command
 	 */
@@ -506,6 +513,13 @@ public class Game implements HasId {
 	 */
 	public Color getFailedFgColor() {
 		return failedFgColor;
+	}
+
+	/**
+	 * @return the gameTitle
+	 */
+	public String getGameTitle() {
+		return gameTitle;
 	}
 
 	/**
@@ -919,6 +933,13 @@ public class Game implements HasId {
 	 */
 	public void setFailedFgColor(Color failedFgColor) {
 		this.failedFgColor = failedFgColor;
+	}
+
+	/**
+	 * @param gameTitle the gameTitle to set
+	 */
+	public void setGameTitle(String gameTitle) {
+		this.gameTitle = gameTitle;
 	}
 
 	/**

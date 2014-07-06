@@ -29,12 +29,12 @@ import data.action.RemoveInventoryItemAction;
 
 import java.io.File;
 
-import playing.GamePlayer;
-
 /**
  * Test class.
  * 
- * General TODOs: 
+ * General TODOs:
+ * 
+ * TODO end game functionality
  * 
  * TODO load/save functionality
  * 
@@ -47,15 +47,12 @@ import playing.GamePlayer;
 public class Main {
 
 	/**
-	 * Test-main.
+	 * Test-main. Creates a test game db.
 	 * 
 	 * @param args
 	 * @throws java.lang.Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		// FIXME this must be put into a proper initialize method
-		Class.forName(logging.LogManager.class.getName());
-
 		// Create everything
 		Location flat = new Location("Flat", "Your little home.");
 		Location balcony = new Location("Balcony",
@@ -192,8 +189,8 @@ public class Main {
 				"I prefer to fuck other things", csLayer));
 		csLayer.addOption(new ConversationOption("Do you like Perl?",
 				"Hell no", csLayer));
-		ConversationOption disappearingOption = new ConversationOption("I am never gonna say this again.",
-				"What!?", csLayer);
+		ConversationOption disappearingOption = new ConversationOption(
+				"I am never gonna say this again.", "What!?", csLayer);
 		disappearingOption.setDisablingOptionAfterChosen(true);
 		csLayer.addOption(disappearingOption);
 		csLayer.addOption(new ConversationOption(
@@ -432,20 +429,19 @@ public class Main {
 		game.addTalkToCommand("talk to (.+)");
 		game.addTalkToCommand("speek with (.+)");
 
+		game.setGameTitle("Test-Adventure");
+
 		// Connect to database
 		PersistenceManager.connect(System.getProperty("user.home")
 				+ File.separator + ".textAdventureMaker" + File.separator
-				+ "test.db");
+				+ "Test-Adventure", true);
 
 		// Persist everything (Cascade.PERSIST persists the rest)
 		PersistenceManager.getEntityManager().persist(player);
 		PersistenceManager.getEntityManager().persist(game);
 
-		// Updates changes
+		// Updates changes and disconnect
 		PersistenceManager.updateChanges();
-
-		// Start a game
-		new GamePlayer(GameManager.getGame(), PlayerManager.getPlayer())
-				.start();
+		PersistenceManager.disconnect();
 	}
 }

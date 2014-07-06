@@ -37,22 +37,31 @@ public class PersistenceManager {
 	 * The entity manager factory.
 	 */
 	private static EntityManagerFactory entityManagerFactory;
-	
+
 	/**
-	 * Connects to the database.
+	 * Connects to the database. TODO save in ram first!?
 	 * 
-	 * @param filename the filename to connect to
+	 * @param filename
+	 *            the filename to connect to
+	 * @param dropTables
+	 *            if {@code true}, the database contents will be deleted
+	 *            entirely, all tables are dropped and recreated.
 	 */
-	public static void connect(String filename) {
+	public static void connect(String filename, boolean dropTables) {
 		Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
-			"Connecting to database {0}", filename);
-		
+				"Connecting to database {0}. Dropping tables: {1}",
+				new Object[] { filename, dropTables });
+
+		String ddlGenerationValue = dropTables ? "drop-and-create-tables"
+				: "create-tables";
 		// Create objects for database access
 		Map<String, String> properties = new HashMap<>();
+		properties.put("eclipselink.ddl-generation", ddlGenerationValue);
+
 		properties.put("javax.persistence.jdbc.url", "jdbc:h2:" + filename);
-		
-		entityManagerFactory = Persistence
-				.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
+
+		entityManagerFactory = Persistence.createEntityManagerFactory(
+				PERSISTENCE_UNIT_NAME, properties);
 
 		entityManager = entityManagerFactory.createEntityManager();
 		criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -66,8 +75,8 @@ public class PersistenceManager {
 	 */
 	public static void disconnect() {
 		Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
-			"Disconnecting from database");
-		
+				"Disconnecting from database");
+
 		entityManager.getTransaction().commit();
 		// Close everything
 		entityManager.close();
@@ -75,7 +84,7 @@ public class PersistenceManager {
 		// FIXME at the moment close the vm
 		System.exit(0);
 	}
-	
+
 	/**
 	 * @return the criteriaBuilder
 	 */
@@ -89,7 +98,7 @@ public class PersistenceManager {
 	public static EntityManager getEntityManager() {
 		return entityManager;
 	}
-	
+
 	/**
 	 * Updates any changes. Should be called after each change of persisted
 	 * data.

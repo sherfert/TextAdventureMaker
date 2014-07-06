@@ -117,7 +117,11 @@ public class MultiAction extends AbstractAction {
 	@Override
 	protected void doAction() {
 		for (AbstractAction action : actions) {
-			action.triggerAction();
+			// doAction instead of triggerAction:
+			// like this enabled/disabled does not matter and
+			// if the action IDs of triggered actions are saved
+			// there are no multiple entries
+			action.doAction();
 		}
 	}
 

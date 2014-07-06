@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 /**
  * Providing means to print and read input while playing.
  * 
+ * TODO independent of gamePlayer and conversationPlayer 
+ * 
  * @author Satia
  */
 public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
