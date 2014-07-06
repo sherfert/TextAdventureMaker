@@ -73,13 +73,15 @@ public class PersistenceManager {
 	 * Disconnects from the database.
 	 */
 	public static void disconnect() {
-		Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
-				"Disconnecting from database");
+		if(entityManagerFactory != null) {
+			Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
+					"Disconnecting from database");
 
-		entityManager.getTransaction().commit();
-		// Close everything
-		entityManager.close();
-		entityManagerFactory.close();
+			entityManager.getTransaction().commit();
+			// Close everything
+			entityManager.close();
+			entityManagerFactory.close();
+		}
 	}
 
 	/**

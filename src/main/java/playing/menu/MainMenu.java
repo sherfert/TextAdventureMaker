@@ -7,22 +7,49 @@ import java.util.logging.Logger;
 import playing.InputOutput;
 import playing.InputOutput.OptionIOManager;
 
+/**
+ * The main menu.
+ * 
+ * @author Satia
+ */
 public class MainMenu implements OptionIOManager {
 
 	/**
 	 * The options shown in the game menu.
 	 */
 	private static String[] menuEntries = new String[] { "New game",
-			"Save game", "Load game", "Back" };
+			"Load game", "Save game", "Back" };
 
+	/**
+	 * The options shown in the game menu if no game is running yet.
+	 */
+	private static String[] menuEntriesNoGameRunning = new String[] {
+			"New game", "Load game" };
+
+	/**
+	 * The IO object.
+	 */
 	private InputOutput io;
 
+	/**
+	 * @param io
+	 *            the IO object
+	 */
 	public MainMenu(InputOutput io) {
 		this.io = io;
 	}
 
-	public void show() {
-		io.enterOptionMode(this, Arrays.asList(menuEntries));
+	/**
+	 * Shows the main menu
+	 * 
+	 * @param gameRunning
+	 *            if there is a game running in the background
+	 */
+	public void show(boolean gameRunning) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+				"Showing main menu");
+		io.enterOptionMode(this, Arrays.asList(gameRunning ? menuEntries
+				: menuEntriesNoGameRunning));
 	}
 
 	@Override
@@ -32,10 +59,10 @@ public class MainMenu implements OptionIOManager {
 			newGame();
 			break;
 		case 1:
-			save();
+			load();
 			break;
 		case 2:
-			load();
+			save();
 			break;
 		case 3:
 			back();
@@ -43,6 +70,9 @@ public class MainMenu implements OptionIOManager {
 		}
 	}
 
+	/**
+	 * Exits the menu and continues the running game.
+	 */
 	private void back() {
 		io.exitOptionMode();
 	}
@@ -57,6 +87,9 @@ public class MainMenu implements OptionIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Save");
 	}
 
+	/**
+	 * Starts a new game and also exits the menu.
+	 */
 	private void newGame() {
 		LoadSaveManager.newGame();
 		// Exit menu

@@ -40,7 +40,7 @@ public class LoadSaveManager {
 	 * The game player
 	 */
 	private static GamePlayer gamePlayer;
-	
+
 	/**
 	 * The file name of the game. TODO replace with resource?
 	 */
@@ -61,20 +61,18 @@ public class LoadSaveManager {
 			return;
 		}
 
-		// TODO atm just load the game
+		// Save game file name
 		String gameName = args[0];
 		fileName = PropertiesReader.DIRECTORY + gameName;
 
-		// Copy file to a temp db
-		copyToTempDB(fileName);
-		// Connect
-		PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
+		// Create new gamePlayer
+		gamePlayer = new GamePlayer();
 
-		// Start a game
-		gamePlayer = new GamePlayer(GameManager.getGame());
+		// Create main menu
 		mainMenu = new MainMenu(gamePlayer.getIo());
-		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "New game");
-		gamePlayer.start();
+
+		// Show main menu without save and back
+		showMenu(false);
 	}
 
 	/**
@@ -115,15 +113,19 @@ public class LoadSaveManager {
 		// Set the game for the game player
 		gamePlayer.setGame(GameManager.getGame());
 		// Start a game
-		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "New game");
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
+				"New game");
 		gamePlayer.start();
 	}
 
 	/**
 	 * Shows the main menu.
+	 * 
+	 * @param gameRunning
+	 *            if there is a game running in the background
 	 */
-	public static void showMenu() {
-		mainMenu.show();
+	public static void showMenu(boolean gameRunning) {
+		mainMenu.show(gameRunning);
 	}
 
 	// TODO save! also startOrLoad method called in

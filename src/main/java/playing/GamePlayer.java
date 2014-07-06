@@ -51,16 +51,15 @@ public class GamePlayer implements GeneralIOManager {
 	/**
 	 * The parser
 	 */
-	private final GeneralParser parser;
+	private GeneralParser parser;
 
 	/**
-	 * @param game
-	 *            the game
+	 * Creates a new game player. Can only be used properly after
+	 * {@link #setGame(Game)} has been called.
 	 */
-	public GamePlayer(Game game) {
-		this.game = game;
+	public GamePlayer() {
 		this.io = new InputOutput(this);
-		this.parser = new GeneralParser(this);
+		
 		this.currentReplacer = new PlaceholderReplacer();
 	}
 
@@ -72,11 +71,14 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
+	 * Sets the game and the parser
+	 * 
 	 * @param game
 	 *            the game to set
 	 */
 	public void setGame(Game game) {
 		this.game = game;
+		this.parser = new GeneralParser(this);
 	}
 
 	/**
@@ -309,7 +311,7 @@ public class GamePlayer implements GeneralIOManager {
 				"Starting the game");
 		// clear the screen
 		io.clear();
-		
+
 		// If the player has no location, this is a new game.
 		if (game.getPlayer().getLocation() == null) {
 			// Transfer him to the start location and start a new game.

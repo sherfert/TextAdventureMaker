@@ -220,7 +220,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		if (optionIOManager == null) {
 			if(key.getKind() == Kind.Escape) {
 				// If this is escape key: show menu
-				LoadSaveManager.showMenu();
+				LoadSaveManager.showMenu(true);
 			} else {
 				// If not in option mode, the default text area handles the
 				// key,
