@@ -113,15 +113,20 @@ public class MainMenu implements OptionIOManager {
 			}
 			break;
 		case LOAD:
-			if (index >= files.size()) {
-				// Default: back
-				back();
-			} else {
+			if (index < files.size()) {
 				load(files.get(index));
+			} else {
+				back();
 			}
 			break;
 		case SAVE:
-			// TODO
+			if (index < files.size()) {
+				save(files.get(index));
+			} else if (index == files.size()) {
+				// TODO let the user enter a new filename and save there
+			} else {
+				back();
+			}
 			break;
 		}
 	}
@@ -144,10 +149,13 @@ public class MainMenu implements OptionIOManager {
 		}
 	}
 
-	private void showLoadMenu() {
-		// TODO Auto-generated method stub
-		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Load");
-
+	/**
+	 * Lists all filenames of the savegames. Also saves the files in
+	 * {@link #files}.
+	 * 
+	 * @return
+	 */
+	private List<String> listFiles() {
 		List<String> options = new ArrayList<>();
 		this.files = new ArrayList<>();
 
@@ -161,6 +169,14 @@ public class MainMenu implements OptionIOManager {
 						- LoadSaveManager.H2_ENDING.length()));
 			}
 		}
+		return options;
+	}
+
+	/**
+	 * Shows the load menu.
+	 */
+	private void showLoadMenu() {
+		List<String> options = listFiles();
 		// Back option
 		options.add("Back");
 
@@ -168,9 +184,18 @@ public class MainMenu implements OptionIOManager {
 		menuStates.push(MenuState.LOAD);
 	}
 
+	/**
+	 * Shows the save menu.
+	 */
 	private void showSaveMenu() {
-		// TODO Auto-generated method stub
-		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Save");
+		List<String> options = listFiles();
+		// New file option
+		options.add("New file");
+		// Back option
+		options.add("Back");
+
+		io.setOptions(options);
+		menuStates.push(MenuState.SAVE);
 	}
 
 	/**
@@ -193,6 +218,20 @@ public class MainMenu implements OptionIOManager {
 		// Exit menu
 		back();
 		back();
+	}
+
+	/**
+	 * Saves a file and also exits the menu.
+	 * 
+	 * @param file
+	 *            the file to load.
+	 */
+	private void save(File file) {
+		LoadSaveManager.save(file);
+		// Exit menu
+		back();
+		back();
+
 	}
 
 	@Override

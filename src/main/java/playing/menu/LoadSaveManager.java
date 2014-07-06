@@ -103,11 +103,6 @@ public class LoadSaveManager {
 	 *            the original file.
 	 */
 	private static void copyToTempDB(File file) {
-		// TODO consider if db file is in resources...
-
-		// Append ending
-		// String actualName = fileName + H2_ENDING;
-		// String tempName = fileName + TEMP_APPENDIX + H2_ENDING;
 		File tempFile = new File(PropertiesReader.DIRECTORY + gameName
 				+ TEMP_APPENDIX + H2_ENDING);
 		// Copy to temp file
@@ -118,6 +113,25 @@ public class LoadSaveManager {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
 					"Could not copy db file. Exiting now.", e);
 			System.exit(-1);
+		}
+	}
+
+	/**
+	 * Tries to copy the temp db file to a file. Only logs if that fails.
+	 * 
+	 * @param file
+	 *            the file to copy to.
+	 */
+	private static void copyFromTempDB(File file) {
+		File tempFile = new File(PropertiesReader.DIRECTORY + gameName
+				+ TEMP_APPENDIX + H2_ENDING);
+		// Copy to temp file
+		try {
+			Files.copy(tempFile.toPath(), file.toPath(),
+					java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+					"Could not copy db file when saving.", e);
 		}
 	}
 
@@ -139,6 +153,12 @@ public class LoadSaveManager {
 		load(new File(fileName + H2_ENDING));
 	}
 
+	/**
+	 * Loads a file.
+	 * 
+	 * @param file
+	 *            the file to load.
+	 */
 	public static void load(File file) {
 		// Disconnect from old db
 		PersistenceManager.disconnect();
@@ -154,5 +174,23 @@ public class LoadSaveManager {
 		gamePlayer.start();
 	}
 
-	// TODO save!
+	/**
+	 * Saves a file.
+	 * 
+	 * @param file
+	 *            the file to save to
+	 */
+	public static void save(File file) {
+		// If disconnting should become necessary, consider the following code
+		// PersistenceManager.disconnect();
+		// [...]
+		// Reconnect
+		// PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
+		// Set the game for the game player
+		// gamePlayer.setGame(GameManager.getGame());
+		// PersistenceManager.disconnect();
+
+		copyFromTempDB(file);
+
+	}
 }
