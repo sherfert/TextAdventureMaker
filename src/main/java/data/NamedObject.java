@@ -17,7 +17,7 @@ import javax.persistence.InheritanceType;
  *
  * @author Satia
  * 
- * TODO rethink inheritance strategy. MappedSuperclass possible?
+ * TODO rethink inheritance strategy.
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

@@ -8,6 +8,7 @@ import persistence.PersonManager;
 import persistence.PlayerManager;
 import persistence.WayManager;
 import playing.InputOutput.GeneralIOManager;
+import playing.menu.LoadSaveManager;
 import playing.parser.GeneralParser;
 import playing.parser.GeneralParser.CommandRecExec;
 import data.Game;
@@ -453,6 +454,16 @@ public class GamePlayer implements GeneralIOManager {
 					+ game.getNoSuchInventoryItemText();
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getFailedBgColor(), game.getFailedFgColor());
+		}
+	}
+
+	/**
+	 * Checks if the game has ended. If so, the main menu is shown, but one can
+	 * not continue the game.
+	 */
+	public void checkGameEnded() {
+		if (game.isHasEnded()) {
+			LoadSaveManager.showMenu(false);
 		}
 	}
 

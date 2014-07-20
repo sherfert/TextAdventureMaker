@@ -41,6 +41,8 @@ public class PersistenceManager {
 	/**
 	 * Connects to the database.
 	 * 
+	 * TODO database integrity check!
+	 * 
 	 * @param filename
 	 *            the filename to connect to
 	 * @param dropTables
@@ -65,7 +67,7 @@ public class PersistenceManager {
 		entityManager = entityManagerFactory.createEntityManager();
 		criteriaBuilder = entityManager.getCriteriaBuilder();
 
-		// Begin a transaction
+		// Begin a transaction TODO only do transactions in actions. This is a huge overhead!
 		entityManager.getTransaction().begin();
 	}
 

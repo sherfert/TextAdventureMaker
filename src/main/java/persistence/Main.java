@@ -24,6 +24,7 @@ import data.action.ChangeItemAction;
 import data.action.ChangeNamedObjectAction;
 import data.action.ChangePersonAction;
 import data.action.ChangeWayAction;
+import data.action.EndGameAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 
@@ -55,6 +56,10 @@ public class Main {
 		Location flat = new Location("Flat", "Your little home.");
 		Location balcony = new Location("Balcony",
 				"Your balcony. Sitting on the chair you can look at the sunset.");
+		Location voidLoc = new Location("Void",
+				"The void. The game has ended if as soon as "
+						+ "I implemented this stuff you should "
+						+ "not be able to do anything any more.");
 
 		ChangeNamedObjectAction changeBalconyDescriptionAction = new ChangeNamedObjectAction(
 				balcony);
@@ -83,6 +88,12 @@ public class Main {
 		wayToFlat
 				.setMoveForbiddenText("I feel like you need something from here before going back in.");
 		wayToFlat.setMovingEnabled(false);
+
+		// Going into the black hole ends the game
+		Way wayToVoid = new Way("Black hole",
+				"There is a big black hole where the front door "
+						+ "used to be.", flat, voidLoc);
+		wayToVoid.addAdditionalActionToMove(new EndGameAction());
 
 		/*
 		 * Inspecting satia will give you 5 bucks. You can "give them back" by

@@ -36,7 +36,7 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String exitCommandHelpText;
-
+	
 	/**
 	 * All commands that make the game exit. Must be lowercase.
 	 */
@@ -65,6 +65,12 @@ public class Game implements HasId {
 	private String gameTitle;
 
 	/**
+	 * If the game has ended.
+	 */
+	@Column(nullable = false)
+	private boolean hasEnded = false;
+
+	/**
 	 * All commands that let the player see the help. Must be lowercase.
 	 */
 	@ElementCollection
@@ -90,7 +96,7 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> inspectCommands;
-	
+
 	/**
 	 * The help text being displayed for the inspect command
 	 */
@@ -104,7 +110,7 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String inspectionDefaultText;
-
+	
 	/**
 	 * All commands that let the player look into his inventory. Must be
 	 * lowercase.
@@ -137,6 +143,7 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> lookAroundCommands;
+
 	/**
 	 * The help text being displayed for the look around command
 	 */
@@ -149,7 +156,6 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> moveCommands;
-
 	/**
 	 * The help text being displayed for the move command
 	 */
@@ -822,6 +828,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the hasEnded
+	 */
+	public boolean isHasEnded() {
+		return hasEnded;
+	}
+
+	/**
 	 * Removes an exit command.
 	 * 
 	 * @param cmd
@@ -940,6 +953,13 @@ public class Game implements HasId {
 	 */
 	public void setGameTitle(String gameTitle) {
 		this.gameTitle = gameTitle;
+	}
+
+	/**
+	 * @param hasEnded the hasEnded to set
+	 */
+	public void setHasEnded(boolean hasEnded) {
+		this.hasEnded = hasEnded;
 	}
 
 	/**

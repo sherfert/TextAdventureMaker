@@ -36,6 +36,8 @@ public class GeneralParser {
 	 *
 	 * Generally speaking, commands with more parameters should often come
 	 * first.
+	 * 
+	 * TODO use Java 8 function API.
 	 *
 	 * @author Satia
 	 */
@@ -303,6 +305,8 @@ public class GeneralParser {
 
 		for (CommandRecExec cmdRE : commandRecExecs) {
 			if (cmdRE.recognizeAndExecute(input)) {
+				// Let the gamePlayer check if the game has ended.
+				gamePlayer.checkGameEnded();
 				return true;
 			}
 		}
