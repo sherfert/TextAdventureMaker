@@ -1,6 +1,8 @@
 package playing.menu;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,9 +16,17 @@ import playing.InputOutput.OptionIOManager;
 /**
  * The main menu.
  * 
+ * XXX it would be nicer if people could enter a name for their savegames. This
+ * is difficult with the current Lanterna classes.
+ * 
  * @author Satia
  */
 public class MainMenu implements OptionIOManager {
+
+	/**
+	 * The format for naming savegames.
+	 */
+	public static final String SAVEGAME_TIME_FORMAT = "YYYY.MM.dd-HH.mm.ss";
 
 	/**
 	 * The lines reserved for options.
@@ -123,12 +133,22 @@ public class MainMenu implements OptionIOManager {
 			if (index < files.size()) {
 				save(files.get(index));
 			} else if (index == files.size()) {
-				// TODO let the user enter a new filename and save there
+				save(new File(LoadSaveManager.getSaveGamesDir()
+						+ getCurrentTimeString() + LoadSaveManager.H2_ENDING));
 			} else {
 				back();
 			}
 			break;
 		}
+	}
+
+	/**
+	 * @return the current date and time as a string to create a new savegame
+	 *         file.
+	 */
+	public static String getCurrentTimeString() {
+		return LocalDateTime.now().format(
+				DateTimeFormatter.ofPattern(SAVEGAME_TIME_FORMAT));
 	}
 
 	/**

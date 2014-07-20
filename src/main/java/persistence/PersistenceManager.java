@@ -39,7 +39,7 @@ public class PersistenceManager {
 	private static EntityManagerFactory entityManagerFactory;
 
 	/**
-	 * Connects to the database. TODO save in ram first!?
+	 * Connects to the database.
 	 * 
 	 * @param filename
 	 *            the filename to connect to
