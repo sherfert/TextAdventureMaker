@@ -181,7 +181,7 @@ public class LoadSaveManager {
 	 *            the file to save to
 	 */
 	public static void save(File file) {
-		// If disconnting should become necessary, consider the following code
+		// If disconnecting should become necessary, consider the following code
 		// PersistenceManager.disconnect();
 		// [...]
 		// Reconnect
