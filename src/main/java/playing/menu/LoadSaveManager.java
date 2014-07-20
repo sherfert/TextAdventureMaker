@@ -101,6 +101,8 @@ public class LoadSaveManager {
 		}
 
 		// Create new gamePlayer
+		// After that, the VM is kept alive with new threads. It must be closed with
+		// System.exit(...) or gamePlayer.stop() respectively.
 		gamePlayer = new GamePlayer();
 
 		// Create main menu
@@ -189,7 +191,15 @@ public class LoadSaveManager {
 		// Connect
 		PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
 		// Set the game for the game player
-		gamePlayer.setGame(GameManager.getGame());
+		try {
+			gamePlayer.setGame(GameManager.getGame());
+		} catch (Exception e) {
+			// This means the database is incompatible with the model.
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+					"Could not get the game. Database incompatible. Exiting.", e);
+			// This means we cannot continue in any sensible way
+			System.exit(-1);
+		}
 		// Start a game
 		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
 				"New game/Load game");

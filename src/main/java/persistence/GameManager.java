@@ -17,22 +17,24 @@ import data.Game;
 public class GameManager {
 
 	/**
-	 *
 	 * @return the game
+	 * 
+	 * @throws Exception
+	 *             (unchecked) if the database is not compatible with the model.
 	 */
 	public static Game getGame() {
 		// Find all games (hopefully only one)
 		CriteriaQuery<Game> criteriaQueryGame = PersistenceManager
-			.getCriteriaBuilder().createQuery(Game.class);
+				.getCriteriaBuilder().createQuery(Game.class);
 		Root<Game> gameRoot = criteriaQueryGame.from(Game.class);
 		criteriaQueryGame.select(gameRoot);
 		List<Game> resultListGame = PersistenceManager.getEntityManager()
-			.createQuery(criteriaQueryGame).getResultList();
+				.createQuery(criteriaQueryGame).getResultList();
 
 		// There should be exactly 1 game
 		if (resultListGame.size() != 1) {
 			Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE,
-				"There are {0} games.", resultListGame.size());
+					"There are {0} games.", resultListGame.size());
 		}
 
 		return resultListGame.get(0);

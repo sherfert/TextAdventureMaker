@@ -41,8 +41,6 @@ public class PersistenceManager {
 	/**
 	 * Connects to the database.
 	 * 
-	 * TODO database integrity check!
-	 * 
 	 * @param filename
 	 *            the filename to connect to
 	 * @param dropTables
