@@ -57,9 +57,7 @@ public class Main {
 		Location balcony = new Location("Balcony",
 				"Your balcony. Sitting on the chair you can look at the sunset.");
 		Location voidLoc = new Location("Void",
-				"The void. The game has ended if as soon as "
-						+ "I implemented this stuff you should "
-						+ "not be able to do anything any more.");
+				"You jump into the black hole and die. Well done!");
 
 		ChangeNamedObjectAction changeBalconyDescriptionAction = new ChangeNamedObjectAction(
 				balcony);

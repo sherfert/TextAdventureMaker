@@ -66,9 +66,6 @@ public class PersistenceManager {
 
 		entityManager = entityManagerFactory.createEntityManager();
 		criteriaBuilder = entityManager.getCriteriaBuilder();
-
-		// Begin a transaction TODO only do transactions in actions. This is a huge overhead!
-		entityManager.getTransaction().begin();
 	}
 
 	/**
@@ -79,7 +76,6 @@ public class PersistenceManager {
 			Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
 					"Disconnecting from database");
 
-			entityManager.getTransaction().commit();
 			// Close everything
 			entityManager.close();
 			entityManagerFactory.close();
@@ -105,8 +101,8 @@ public class PersistenceManager {
 	 * data.
 	 */
 	public static void updateChanges() {
-		entityManager.getTransaction().commit();
 		entityManager.getTransaction().begin();
+		entityManager.getTransaction().commit();
 	}
 
 }
