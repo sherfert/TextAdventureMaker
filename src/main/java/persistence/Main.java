@@ -36,8 +36,6 @@ import java.io.File;
  * 
  * TODO end game functionality
  * 
- * TODO load/save functionality
- * 
  * TODO GUI
  * 
  * TODO sound support (optional)

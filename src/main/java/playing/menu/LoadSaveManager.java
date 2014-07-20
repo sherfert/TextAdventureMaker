@@ -56,7 +56,15 @@ public class LoadSaveManager {
 	 */
 	private static String gameName;
 
-	// TODO also logging
+	/**
+	 * The main method to play a game. If there is an argument provided, it must
+	 * point to a valid game database file. If there is no argument provided, it
+	 * is assumed there is a file named "game"+H2_ENDING ("game.h2.db") in the
+	 * resources folder of this JAR file.
+	 * 
+	 * @param args
+	 *            either the game database file to load or nothing.
+	 */
 	public static void main(String[] args) {
 		// Initialize the logging
 		try {
@@ -75,8 +83,22 @@ public class LoadSaveManager {
 		gameName = args[0];
 		fileName = PropertiesReader.DIRECTORY + gameName;
 		saveGamesDir = fileName + File.separator;
+
+		File saveGamesDirFile = new File(saveGamesDir);
 		// Create the dir if necessary
-		new File(saveGamesDir).mkdirs();
+		if (!saveGamesDirFile.exists()) {
+			if (saveGamesDirFile.mkdirs()) {
+				Logger.getLogger(LoadSaveManager.class.getName()).log(
+						Level.FINE, "Created save game directory: {0}",
+						saveGamesDir);
+			} else {
+				Logger.getLogger(LoadSaveManager.class.getName()).log(
+						Level.SEVERE,
+						"Could not create save game directory: {0} Aborting.",
+						saveGamesDir);
+				return;
+			}
+		}
 
 		// Create new gamePlayer
 		gamePlayer = new GamePlayer();

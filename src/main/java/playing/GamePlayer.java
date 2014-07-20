@@ -59,7 +59,6 @@ public class GamePlayer implements GeneralIOManager {
 	 */
 	public GamePlayer() {
 		this.io = new InputOutput(this);
-		
 		this.currentReplacer = new PlaceholderReplacer();
 	}
 
