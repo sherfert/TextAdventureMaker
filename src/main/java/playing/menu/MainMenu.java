@@ -1,6 +1,8 @@
 package playing.menu;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -131,8 +133,20 @@ public class MainMenu implements OptionIOManager {
 			break;
 		case SAVE:
 			if (index < files.size()) {
-				save(files.get(index));
+				// Remove the old file
+				try {
+					Files.delete(files.get(index).toPath());
+				} catch (IOException e) {
+					Logger.getLogger(this.getClass().getName()).log(
+							Level.SEVERE,
+							"Could not remove old save file on override.", e);
+				}
+
+				// Save a file, with the current date and time
+				save(new File(LoadSaveManager.getSaveGamesDir()
+						+ getCurrentTimeString() + LoadSaveManager.H2_ENDING));
 			} else if (index == files.size()) {
+				// Save a file, with the current date and time
 				save(new File(LoadSaveManager.getSaveGamesDir()
 						+ getCurrentTimeString() + LoadSaveManager.H2_ENDING));
 			} else {
