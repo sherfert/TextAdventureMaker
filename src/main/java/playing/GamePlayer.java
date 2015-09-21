@@ -349,44 +349,14 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Take identifier {0}", identifier);
 
-		Takeable item = ItemManager.getItemFromLocation(game.getPlayer()
-				.getLocation(), identifier);
+		// Collect all objects, whether they are takeable or not.
+		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
+				identifier);
+
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
-
-		if (item != null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Take id {0}", item.getId());
-
-			// Save name
-			currentReplacer.setName(item.getName());
-			if (item.isTakingEnabled()) {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-						"Take id {0} enabled", item.getId());
-
-				// The item was taken
-				String message = item.getTakeSuccessfulText();
-				if (message == null) {
-					message = game.getTakenText();
-				}
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getSuccessfullBgColor(),
-						game.getSuccessfullFgColor());
-			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-						"Take id {0} disabled", item.getId());
-
-				// The item was not taken
-				String message = item.getTakeForbiddenText();
-				if (message == null) {
-					message = game.getNotTakeableText();
-				}
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
-			}
-			// Effect depends on enabled status and additional actions
-			item.take();
-		} else {
+		
+		if(object == null) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Take item not found {0}", identifier);
 
@@ -394,6 +364,51 @@ public class GamePlayer implements GeneralIOManager {
 			String message = game.getNoSuchItemText();
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getFailedBgColor(), game.getFailedFgColor());
+		} else {
+			// Save name
+			currentReplacer.setName(object.getName());
+			
+			if (object instanceof Takeable) {
+				Takeable item = (Takeable) object;
+
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+						"Take id {0}", item.getId());
+				
+				if (item.isTakingEnabled()) {
+					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+							"Take id {0} enabled", item.getId());
+
+					// The item was taken
+					String message = item.getTakeSuccessfulText();
+					if (message == null) {
+						message = game.getTakenText();
+					}
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getSuccessfullBgColor(),
+							game.getSuccessfullFgColor());
+				} else {
+					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+							"Take id {0} disabled", item.getId());
+
+					// The item was not taken
+					String message = item.getTakeForbiddenText();
+					if (message == null) {
+						message = game.getNotTakeableText();
+					}
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getFailedBgColor(), game.getFailedFgColor());
+				}
+				// Effect depends on enabled status and additional actions
+				item.take();
+			} else {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+						"Take item not of type Takeable {0}", identifier);
+				
+				// There is something (e.g. a person), but nothing you could take.
+				String message = game.getNotTakeableText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+			}
 		}
 	}
 
