@@ -322,7 +322,7 @@ public class Main {
 		 * for that when in the flat and when already taken.
 		 */
 		Item pen = new Item(flat, "Pen", "A pen lies on a table.");
-		pen.setInspectionText("An advertising gift.");
+		pen.setInspectionText("An advertising gift. Cheap.");
 		pen.setUseForbiddenText("You must use it with something else.");
 		pen.setTakingEnabled(true);
 		InventoryItem invPen = new InventoryItem(pen);
@@ -338,6 +338,7 @@ public class Main {
 
 		peel.setUsingEnabledWith(pen, true);
 		peel.setCombiningEnabledWith(invPen, true);
+		
 		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
 		peel.setCombineWithSuccessfulText(invPen,
 				"You painted the banana peel.");

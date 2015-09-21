@@ -215,6 +215,10 @@ public class InventoryItem extends UsableObject implements
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
+	// XXX This does not create a suitable table structure. The
+	// CombinableInventoryItem saves both this.id and key.id.
+	// Therefore, after disconnecting, the mapping only exists in one direction.
+	// A workaround has been installed to handle this.
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
 
 	/**
@@ -256,7 +260,7 @@ public class InventoryItem extends UsableObject implements
 	 * Copies name, inspection text, and identifiers from the Item.
 	 * 
 	 * Any additional inspect or use action have to converted and added
-	 * manually. Also the using enabled status, forbidden and successfull texts
+	 * manually. Also the using enabled status, forbidden and successful texts
 	 * have to be set manually.
 	 * 
 	 * @param item
@@ -549,11 +553,22 @@ public class InventoryItem extends UsableObject implements
 			CombinableInventoryItem result = combinableInventoryItems
 					.get((InventoryItem) item);
 			if (result == null) {
-				combinableInventoryItems.put((InventoryItem) item,
-						result = new CombinableInventoryItem());
-				// Synchronize other map
-				((InventoryItem) item).combinableInventoryItems.put(this,
-						result);
+				// XXX Because of the deficiency of @MapKeyJoinColumn, there can
+				// be still an entry in the other items map
+				result = ((InventoryItem) item).combinableInventoryItems
+						.get(this);
+				
+				if (result != null) {
+					// Synchronize our map
+					combinableInventoryItems.put((InventoryItem) item, result);
+				} else {
+					// Create a new mapping
+					combinableInventoryItems.put((InventoryItem) item,
+							result = new CombinableInventoryItem());
+					// And synchronize other map
+					((InventoryItem) item).combinableInventoryItems.put(this,
+							result);
+				}
 			}
 			return result;
 		} else {
