@@ -32,7 +32,8 @@ import java.util.logging.Logger;
  * @author Satia
  */
 public class GamePlayer implements GeneralIOManager {
-	// TODO better error messages like "you cannot take persons"
+	// TODO "You cannot talk to banana peel" += "the"
+	// "You cannot take the satia" -= "the"
 
 	/**
 	 * A placeholder replacer for the currently used command.
@@ -355,8 +356,8 @@ public class GamePlayer implements GeneralIOManager {
 
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
-		
-		if(object == null) {
+
+		if (object == null) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Take item not found {0}", identifier);
 
@@ -367,16 +368,16 @@ public class GamePlayer implements GeneralIOManager {
 		} else {
 			// Save name
 			currentReplacer.setName(object.getName());
-			
+
 			if (object instanceof Takeable) {
 				Takeable item = (Takeable) object;
 
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Take id {0}", item.getId());
-				
+
 				if (item.isTakingEnabled()) {
-					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-							"Take id {0} enabled", item.getId());
+					Logger.getLogger(this.getClass().getName()).log(
+							Level.FINEST, "Take id {0} enabled", item.getId());
 
 					// The item was taken
 					String message = item.getTakeSuccessfulText();
@@ -387,8 +388,8 @@ public class GamePlayer implements GeneralIOManager {
 							game.getSuccessfullBgColor(),
 							game.getSuccessfullFgColor());
 				} else {
-					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-							"Take id {0} disabled", item.getId());
+					Logger.getLogger(this.getClass().getName()).log(
+							Level.FINEST, "Take id {0} disabled", item.getId());
 
 					// The item was not taken
 					String message = item.getTakeForbiddenText();
@@ -403,8 +404,9 @@ public class GamePlayer implements GeneralIOManager {
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Take item not of type Takeable {0}", identifier);
-				
-				// There is something (e.g. a person), but nothing you could take.
+
+				// There is something (e.g. a person), but nothing you could
+				// take.
 				String message = game.getNotTakeableText();
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
@@ -424,43 +426,13 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Use identifier {0}", identifier);
 
-		Usable object = PlayerManager.getUsable(game.getPlayer(), identifier);
+		// Collect all objects, whether they are takeable or not.
+		Inspectable objectI = PlayerManager.getInspectable(game.getPlayer(),
+				identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
-		if (object != null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Use id {0}", object.getId());
-
-			// Save name
-			currentReplacer.setName(object.getName());
-			if (object.isUsingEnabled()) {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-						"Use id {0} enabled", object.getId());
-
-				// The object was used
-				String message = object.getUseSuccessfulText();
-				if (message == null) {
-					message = game.getUsedText();
-				}
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getSuccessfullBgColor(),
-						game.getSuccessfullFgColor());
-			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-						"Use id {0} disabled", object.getId());
-
-				// The object was not used
-				String message = object.getUseForbiddenText();
-				if (message == null) {
-					message = game.getNotUsableText();
-				}
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
-			}
-			// Effect depends on additional actions
-			object.use();
-		} else {
+		if (objectI == null) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Use item not found {0}", identifier);
 
@@ -469,6 +441,55 @@ public class GamePlayer implements GeneralIOManager {
 					+ game.getNoSuchInventoryItemText();
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getFailedBgColor(), game.getFailedFgColor());
+		} else {
+			// Save name
+			currentReplacer.setName(objectI.getName());
+
+			if (objectI instanceof Usable) {
+				Usable object = (Usable) objectI;
+
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+						"Use id {0}", object.getId());
+
+				// Save name
+				currentReplacer.setName(object.getName());
+				if (object.isUsingEnabled()) {
+					Logger.getLogger(this.getClass().getName()).log(
+							Level.FINEST, "Use id {0} enabled", object.getId());
+
+					// The object was used
+					String message = object.getUseSuccessfulText();
+					if (message == null) {
+						message = game.getUsedText();
+					}
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getSuccessfullBgColor(),
+							game.getSuccessfullFgColor());
+				} else {
+					Logger.getLogger(this.getClass().getName())
+							.log(Level.FINEST, "Use id {0} disabled",
+									object.getId());
+
+					// The object was not used
+					String message = object.getUseForbiddenText();
+					if (message == null) {
+						message = game.getNotUsableText();
+					}
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getFailedBgColor(), game.getFailedFgColor());
+				}
+				// Effect depends on additional actions
+				object.use();
+			} else {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+						"Use item not of type Useable {0}", identifier);
+
+				// There is something (e.g. a person), but nothing you could
+				// use.
+				String message = game.getNotUsableText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+			}
 		}
 	}
 
@@ -498,13 +519,22 @@ public class GamePlayer implements GeneralIOManager {
 				"Usewith/combine identifiers {0} / {1}",
 				new Object[] { identifier1, identifier2 });
 
-		UsableOrPassivelyUsable object1 = PlayerManager
-				.getUsableOrPassivelyUsable(game.getPlayer(), identifier1);
-		UsableOrPassivelyUsable object2 = PlayerManager
-				.getUsableOrPassivelyUsable(game.getPlayer(), identifier2);
+		Inspectable object1 = PlayerManager.getInspectable(game.getPlayer(),
+				identifier1);
+		// .getUsableOrPassivelyUsable(game.getPlayer(), identifier1);
+		Inspectable object2 = PlayerManager.getInspectable(game.getPlayer(),
+				identifier2);
+		// .getUsableOrPassivelyUsable(game.getPlayer(), identifier2);
 		// Save identifiers
 		currentReplacer.setIdentifier(identifier1);
 		currentReplacer.setIdentifier2(identifier2);
+
+		if (object1 != null) {
+			currentReplacer.setName(object1.getName());
+		}
+		if (object2 != null) {
+			currentReplacer.setName2(object2.getName());
+		}
 
 		// Check types of both objects (which can be null)
 		if (object1 instanceof UsableWithHasLocation
@@ -523,6 +553,17 @@ public class GamePlayer implements GeneralIOManager {
 					&& object2 instanceof HasLocation) {
 				// UseWith
 				useWith((UsableWithHasLocation) object1, (HasLocation) object2);
+			} else if (object2 != null) {
+				// Error: Object2 not of correct type
+				Logger.getLogger(this.getClass().getName())
+						.log(Level.FINER,
+								"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}",
+								identifier2);
+
+				String message = game.getNotUsableWithText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Usewith/combine object not found {0}", identifier2);
@@ -558,14 +599,28 @@ public class GamePlayer implements GeneralIOManager {
 			}
 		} else {
 			if (object2 instanceof UsableWithHasLocation) {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Usewith/combine object not found {0}", identifier1);
+				if (object1 != null) {
+					// Error: Object1 not of correct type
+					Logger.getLogger(this.getClass().getName())
+							.log(Level.FINER,
+									"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}",
+									identifier1);
 
-				// Error: Object1 neither in inventory nor in location
-				String message = game.getNoSuchItemText() + " "
-						+ game.getNoSuchInventoryItemText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+					String message = game.getNotUsableWithText();
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getFailedBgColor(), game.getFailedFgColor());
+				} else {
+					Logger.getLogger(this.getClass().getName())
+							.log(Level.FINER,
+									"Usewith/combine object not found {0}",
+									identifier1);
+
+					// Error: Object1 neither in inventory nor in location
+					String message = game.getNoSuchItemText() + " "
+							+ game.getNoSuchInventoryItemText();
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getFailedBgColor(), game.getFailedFgColor());
+				}
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Usewith/combine objects not found {0} / {1}",
@@ -592,10 +647,6 @@ public class GamePlayer implements GeneralIOManager {
 	 *            the second item
 	 */
 	private <E> void combine(Combinable<E> item1, Combinable<E> item2) {
-		// Save names
-		currentReplacer.setName(item1.getName());
-		currentReplacer.setName2(item2.getName());
-
 		if (item1.isCombiningEnabledWith(item2)) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
 					"Combine enabled id {0} with {1}",
@@ -634,10 +685,6 @@ public class GamePlayer implements GeneralIOManager {
 	 *            the object
 	 */
 	private void useWith(UsableWithHasLocation usable, HasLocation object) {
-		// Save names
-		currentReplacer.setName(usable.getName());
-		currentReplacer.setName2(object.getName());
-
 		if (usable.isUsingEnabledWith(object)) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
 					"Uswith enabled id {0} with {1}",
@@ -680,45 +727,61 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Talk to identifier {0}", identifier);
 
-		HasConversation person = PersonManager.getPersonFromLocation(game
-				.getPlayer().getLocation(), identifier);
+		
+		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
+				identifier);
+		//HasConversation person = PersonManager.getPersonFromLocation(game
+			//	.getPlayer().getLocation(), identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
-		if (person != null) {
+		if (object == null) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Talk to id {0}", person.getId());
-			// Save name
-			currentReplacer.setName(person.getName());
-			if (person.isTalkingEnabled()) {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-						"Talk to id {0} enabled", person.getId());
-
-				// Start the conversation
-				new ConversationPlayer(io, game, person.getConversation(),
-						person.getName());
-			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-						"Talk to {0} disabled", person.getId());
-
-				// Talking disabled
-				String message = person.getTalkingToForbiddenText();
-				if (message == null) {
-					message = game.getNotTalkingToEnabledText();
-				}
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
-			}
-			// Effect depends on additional actions
-			person.talkTo();
-		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Talk to not found {0}", identifier);
+					"Talk to person not found {0}", identifier);
 
 			// There is no such person
 			String message = game.getNoSuchPersonText();
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getFailedBgColor(), game.getFailedFgColor());
+		}else {
+			// Save name
+			currentReplacer.setName(object.getName());
+			
+			if (object instanceof HasConversation) {
+				HasConversation person = (HasConversation) object;
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+						"Talk to id {0}", person.getId());
+				if (person.isTalkingEnabled()) {
+					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+							"Talk to id {0} enabled", person.getId());
+
+					// Start the conversation
+					new ConversationPlayer(io, game, person.getConversation(),
+							person.getName());
+				} else {
+					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
+							"Talk to {0} disabled", person.getId());
+
+					// Talking disabled
+					String message = person.getTalkingToForbiddenText();
+					if (message == null) {
+						message = game.getNotTalkingToEnabledText();
+					}
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getFailedBgColor(), game.getFailedFgColor());
+				}
+				// Effect depends on additional actions
+				person.talkTo();
+			} else {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+						"Talk to person not of type HasConversation {0}", identifier);
+
+				// There is something (e.g. an item), but nothing you could
+				// talk to.
+				String message = game.getNotTalkingToEnabledText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+			}
 		}
 	}
 

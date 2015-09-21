@@ -45,6 +45,8 @@ public class PlayerManager {
 				identifier);
 	}
 
+	// XXX getUsable, getUsableOr... and ItemManager.getItemFromLocation, PersonManager.getPersonFromLocation, ...?
+	// probably not used any more?
 	/**
 	 * Gets the usable object in the location or in the inventory with the given
 	 * identifier or {@code null} , if there is none.

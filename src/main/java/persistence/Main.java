@@ -154,7 +154,7 @@ public class Main {
 		ConversationLayer csLayer = new ConversationLayer();
 
 		startLayer.addOption(new ConversationOption("Why so hostile?",
-				"Just TextAdventureMaker is harder to code than I though!",
+				"Just TextAdventureMaker is harder to code than I though!", "He looks really annoyed!",
 				startLayer));
 		startLayer.addOption(new ConversationOption(
 				"Let's talk about computer science.", "Ask me anything.",

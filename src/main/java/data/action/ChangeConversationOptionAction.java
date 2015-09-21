@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 import data.ConversationOption;
 
 /**
- * Changes a conversation. It can be dis- or enabled and the greeting can be
- * changed.
+ * Changes a conversation option. It can be en- or disabled temporarily or
+ * permanently, and the text, answer and event text can be changed.
  * 
  * @author Satia
  */
