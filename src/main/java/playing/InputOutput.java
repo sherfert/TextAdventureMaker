@@ -272,7 +272,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		defaultTextArea.println(output, bgColor, fgColor);
 		this.screen.refresh();
 	}
-	
+
 	/**
 	 * Clears the text area. (Not the options!)
 	 */

@@ -24,11 +24,12 @@ import javax.persistence.OneToOne;
 @Entity
 public class Game implements HasId {
 	/*
-	 * Big TODO: Use Sets instead of Lists, where useful. Therefore, if former
+	 * Thoughts on sets instead of lists:
+	 * Pro: Use Sets instead of Lists, where useful. Therefore, if former
 	 * Lists of own classes, let these (or better all) classes override equals,
 	 * hashCode, and toString.
-	 * 
 	 * Then, the "if(contains)" check can be removed.
+	 * Con: No ordering. Therefore, lists are kept.
 	 */
 	
 	/**

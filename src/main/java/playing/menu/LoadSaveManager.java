@@ -74,7 +74,12 @@ public class LoadSaveManager {
 					"Could not initialize logging:", e);
 		}
 
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
+				"Started LoadSaveManager with arguments: ", args);
+
 		if (args.length == 0) {
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+					"No arguments provided.");
 			// TODO if there is no arg, look if there is a game.db in resources
 			return;
 		}
@@ -101,7 +106,8 @@ public class LoadSaveManager {
 		}
 
 		// Create new gamePlayer
-		// After that, the VM is kept alive with new threads. It must be closed with
+		// After that, the VM is kept alive with new threads. It must be closed
+		// with
 		// System.exit(...) or gamePlayer.stop() respectively.
 		gamePlayer = new GamePlayer();
 
@@ -196,7 +202,8 @@ public class LoadSaveManager {
 		} catch (Exception e) {
 			// This means the database is incompatible with the model.
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"Could not get the game. Database incompatible. Exiting.", e);
+					"Could not get the game. Database incompatible. Exiting.",
+					e);
 			// This means we cannot continue in any sensible way
 			System.exit(-1);
 		}

@@ -36,8 +36,6 @@ public class GeneralParser {
 	 *
 	 * Generally speaking, commands with more parameters should often come
 	 * first.
-	 * 
-	 * TODO use Java 8 function API.
 	 *
 	 * @author Satia
 	 */
