@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -13,6 +14,7 @@ import javax.persistence.ManyToMany;
 
 import data.action.AbstractAction;
 import data.interfaces.Usable;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +34,12 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable
 	private List<AbstractAction> additionalUseActions;
+	
+	/**
+	 * All additional use commands.
+	 */
+	@ElementCollection
+	private List<String> additionalUseCommands;
 
 	/**
 	 * The text being displayed when not successfully used. The default
@@ -77,10 +85,20 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	public void addAdditionalActionToUse(AbstractAction action) {
 		additionalUseActions.add(action);
 	}
+	
+	@Override
+	public void addAdditionalUseCommand(String command) {
+		additionalUseCommands.add(command);
+	}
 
 	@Override
 	public List<AbstractAction> getAdditionalActionsFromUse() {
 		return additionalUseActions;
+	}
+	
+	@Override
+	public List<String> getAdditionalUseCommands() {
+		return additionalUseCommands;
 	}
 
 	@Override
@@ -101,6 +119,11 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	@Override
 	public void removeAdditionalActionFromUse(AbstractAction action) {
 		additionalUseActions.remove(action);
+	}
+	
+	@Override
+	public void removeAdditionalUseCommand(String command) {
+		additionalUseCommands.remove(command);
 	}
 
 	@Override

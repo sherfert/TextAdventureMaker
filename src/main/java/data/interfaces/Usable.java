@@ -17,11 +17,24 @@ public interface Usable extends Identifiable {
 	 *            the action
 	 */
 	public void addAdditionalActionToUse(AbstractAction action);
-	
+
+	/**
+	 * Adds an additional command that can be used to use the object.
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void addAdditionalUseCommand(String command);
+
 	/**
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromUse();
+	
+	/**
+	 * @return the additional use commands.
+	 */
+	public List<String> getAdditionalUseCommands();
 
 	/**
 	 * @return the forbiddenText or {@code null}.
@@ -45,6 +58,14 @@ public interface Usable extends Identifiable {
 	 *            the action
 	 */
 	public void removeAdditionalActionFromUse(AbstractAction action);
+	
+	/**
+	 * Removes an additional use command
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void removeAdditionalUseCommand(String command);
 
 	/**
 	 * Sets the forbidden text. If {@code null} passed, the default text will be

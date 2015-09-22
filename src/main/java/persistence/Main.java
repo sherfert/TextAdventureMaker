@@ -257,6 +257,8 @@ public class Main {
 		banana.setUsingEnabled(true);
 		banana.setTakeForbiddenText("It looks delicious, but I don't wanna carry that around.");
 		banana.setUseSuccessfulText("You ate the banana. The peel looks useful, so you kept it.");
+		banana.addAdditionalUseCommand("eat (.+)");
+		
 		/*
 		 * Inspecting the banana will "convert" it into a bananaphone.
 		 */
