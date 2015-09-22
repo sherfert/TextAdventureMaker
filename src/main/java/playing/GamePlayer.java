@@ -1,5 +1,6 @@
 package playing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import persistence.PersistenceManager;
@@ -721,7 +722,6 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Talk to identifier {0}", identifier);
 
-		
 		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
 				identifier);
 		// Save identifier
@@ -735,24 +735,26 @@ public class GamePlayer implements GeneralIOManager {
 			String message = game.getNoSuchPersonText();
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getFailedBgColor(), game.getFailedFgColor());
-		}else {
+		} else {
 			// Save name
 			currentReplacer.setName(object.getName());
-			
+
 			if (object instanceof HasConversation) {
 				HasConversation person = (HasConversation) object;
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Talk to id {0}", person.getId());
 				if (person.isTalkingEnabled()) {
-					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-							"Talk to id {0} enabled", person.getId());
+					Logger.getLogger(this.getClass().getName()).log(
+							Level.FINEST, "Talk to id {0} enabled",
+							person.getId());
 
 					// Start the conversation
 					new ConversationPlayer(io, game, person.getConversation(),
 							person.getName());
 				} else {
-					Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-							"Talk to {0} disabled", person.getId());
+					Logger.getLogger(this.getClass().getName()).log(
+							Level.FINEST, "Talk to {0} disabled",
+							person.getId());
 
 					// Talking disabled
 					String message = person.getTalkingToForbiddenText();
@@ -766,7 +768,8 @@ public class GamePlayer implements GeneralIOManager {
 				person.talkTo();
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Talk to person not of type HasConversation {0}", identifier);
+						"Talk to person not of type HasConversation {0}",
+						identifier);
 
 				// There is something (e.g. an item), but nothing you could
 				// talk to.
@@ -785,5 +788,17 @@ public class GamePlayer implements GeneralIOManager {
 		if (!parser.parse(text)) {
 			stop();
 		}
+	}
+
+	/**
+	 * @return all additional use commands from items in this location
+	 *         and in the inventory.
+	 */
+	public List<String> getAdditionalUseCommands() {
+		List<String> commands = new ArrayList<>();
+		for(Usable u : PlayerManager.getAllUsables(game.getPlayer())) {
+			commands.addAll(u.getAdditionalUseCommands());
+		}
+		return commands;
 	}
 }

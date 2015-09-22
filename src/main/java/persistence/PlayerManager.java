@@ -12,6 +12,9 @@ import data.interfaces.UsableOrPassivelyUsable;
 /**
  * Managing access to the player in a database.
  * 
+ * TODO Player as a parameter here unnecessary
+ * TODO methods should be in other classes!?
+ * 
  * @author Satia
  */
 public class PlayerManager {
@@ -58,14 +61,18 @@ public class PlayerManager {
 	 * @return the corresponding item or {@code null}.
 	 */
 	public static Usable getUsable(Player player, String identifier) {
-		List<UsableObject> usables = new ArrayList<>();
+		List<Usable> usables = getAllUsables(player);
+		return InspectableObjectManager.getIdentifiableWithIdentifier(usables,
+				identifier);
+	}
+	
+	public static List<Usable> getAllUsables(Player player) {
+		List<Usable> usables = new ArrayList<>();
 		// Items in the room
 		usables.addAll(player.getLocation().getItems());
 		// Anything in the inventory
 		usables.addAll(player.getInventory());
-
-		return InspectableObjectManager.getIdentifiableWithIdentifier(usables,
-				identifier);
+		return usables;
 	}
 
 	/**
