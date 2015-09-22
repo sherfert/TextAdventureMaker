@@ -13,8 +13,6 @@ import java.util.logging.SimpleFormatter;
  * configure the logger as needed.
  *
  * @author Satia Herfert
- * 
- * XXX strange logging behavior! check!
  */
 public class LogManager {
 	/**

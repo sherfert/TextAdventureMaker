@@ -1,9 +1,12 @@
 package data;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
+
 import data.interfaces.HasId;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -24,20 +27,19 @@ import javax.persistence.OneToOne;
 @Entity
 public class Game implements HasId {
 	/*
-	 * Thoughts on sets instead of lists:
-	 * Pro: Use Sets instead of Lists, where useful. Therefore, if former
-	 * Lists of own classes, let these (or better all) classes override equals,
-	 * hashCode, and toString.
-	 * Then, the "if(contains)" check can be removed.
-	 * Con: No ordering. Therefore, lists are kept.
+	 * Thoughts on sets instead of lists: Pro: Use Sets instead of Lists, where
+	 * useful. Therefore, if former Lists of own classes, let these (or better
+	 * all) classes override equals, hashCode, and toString. Then, the
+	 * "if(contains)" check can be removed. Con: No ordering. Therefore, lists
+	 * are kept.
 	 */
-	
+
 	/**
 	 * The help text being displayed for the exit command
 	 */
 	@Column(nullable = false)
 	private String exitCommandHelpText;
-	
+
 	/**
 	 * All commands that make the game exit. Must be lowercase.
 	 */
@@ -59,8 +61,8 @@ public class Game implements HasId {
 	private Color failedFgColor;
 
 	/**
-	 * The name of the game. Should be unique, as savegames are
-	 * ordered by this name, if there are multiple games used.
+	 * The name of the game. Should be unique, as savegames are ordered by this
+	 * name, if there are multiple games used.
 	 */
 	@Column(nullable = false)
 	private String gameTitle;
@@ -111,7 +113,15 @@ public class Game implements HasId {
 	 */
 	@Column(nullable = false)
 	private String inspectionDefaultText;
-	
+
+	/**
+	 * The text displayed when an invalid action is being performed (e.g.
+	 * talking to objects, taking persons, etc.). Valid placeholders:
+	 * {@literal <input>}
+	 */
+	@Column(nullable = false)
+	private String invalidCommandText;
+
 	/**
 	 * All commands that let the player look into his inventory. Must be
 	 * lowercase.
@@ -157,12 +167,12 @@ public class Game implements HasId {
 	 */
 	@ElementCollection
 	private final List<String> moveCommands;
+
 	/**
 	 * The help text being displayed for the move command
 	 */
 	@Column(nullable = false)
 	private String moveHelpText;
-
 	/**
 	 * The background color that is used for text printed after a neutral
 	 * action.
@@ -259,8 +269,8 @@ public class Game implements HasId {
 	private String notUsableWithText;
 
 	/**
-	 * The number of lines used to display options in dialogues.
-	 * Recommendation is ~10.
+	 * The number of lines used to display options in dialogues. Recommendation
+	 * is ~10.
 	 */
 	@Column(nullable = false)
 	private int numberOfOptionLines;
@@ -567,6 +577,13 @@ public class Game implements HasId {
 	 */
 	public String getInspectionDefaultText() {
 		return inspectionDefaultText;
+	}
+
+	/**
+	 * @return the invalidCommandText
+	 */
+	public String getInvalidCommandText() {
+		return invalidCommandText;
 	}
 
 	/**
@@ -950,14 +967,16 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @param gameTitle the gameTitle to set
+	 * @param gameTitle
+	 *            the gameTitle to set
 	 */
 	public void setGameTitle(String gameTitle) {
 		this.gameTitle = gameTitle;
 	}
 
 	/**
-	 * @param hasEnded the hasEnded to set
+	 * @param hasEnded
+	 *            the hasEnded to set
 	 */
 	public void setHasEnded(boolean hasEnded) {
 		this.hasEnded = hasEnded;
@@ -985,6 +1004,15 @@ public class Game implements HasId {
 	 */
 	public void setInspectionDefaultText(String inspectionDefaultText) {
 		this.inspectionDefaultText = inspectionDefaultText;
+	}
+
+	/**
+	 * 
+	 * @param invalidCommandText
+	 *            the invalidCommandText to set
+	 */
+	public void setInvalidCommandText(String invalidCommandText) {
+		this.invalidCommandText = invalidCommandText;
 	}
 
 	/**
@@ -1068,7 +1096,8 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @param noSuchPersonText the noSuchPersonText to set
+	 * @param noSuchPersonText
+	 *            the noSuchPersonText to set
 	 */
 	public void setNoSuchPersonText(String noSuchPersonText) {
 		this.noSuchPersonText = noSuchPersonText;
@@ -1123,7 +1152,8 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @param numberOfOptionLines the numberOfOptionLines to set
+	 * @param numberOfOptionLines
+	 *            the numberOfOptionLines to set
 	 */
 	public void setNumberOfOptionLines(int numberOfOptionLines) {
 		this.numberOfOptionLines = numberOfOptionLines;

@@ -381,6 +381,7 @@ public class Main {
 		game.setInventoryEmptyText("Your inventory is empty.");
 		game.setInventoryText("You are carrying the following things:");
 		game.setNoCommandText("I do not understand you.");
+		game.setInvalidCommandText("This doesn't make sense.");
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
 		game.setNoSuchItemText("There is no <identifier> here.");
 		game.setNoSuchPersonText("There is no <Identifier> here.");
@@ -388,8 +389,8 @@ public class Main {
 		game.setNotTakeableText("You cannot take the <name>.");
 		game.setNotTravelableText("You cannot <input>.");
 		game.setNotUsableText("You cannot use the <name>.");
-		game.setNotTalkingToEnabledText("You cannot talk to <name>.");
-		game.setNotUsableWithText("You cannot use the <name> with the <name2>.");
+		game.setNotTalkingToEnabledText("You cannot talk to <Name>.");
+		game.setNotUsableWithText("You cannot do that.");
 		game.setTakenText("You picked up the <name>.");
 		game.setUsedText("So you used the <name>. Nothing interesting happened.");
 		game.setUsedWithText("So you used the <name> with the <name2>. Nothing interesting happened.");

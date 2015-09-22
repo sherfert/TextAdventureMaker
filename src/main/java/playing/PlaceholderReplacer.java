@@ -14,15 +14,16 @@ public class PlaceholderReplacer {
 	 * The pattern used to convert first parameters into second parameters.
 	 */
 	public static final Pattern CONVERT_FIRST_TO_SECOND_PATTERN = Pattern
-		.compile("<(identifier|name)>", Pattern.CASE_INSENSITIVE);
+			.compile("<(identifier|name)>", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Converts all placeholders for the first parameter in a Sring to
 	 * placeholders for the second parameter.
 	 *
-	 * @param message the message
-	 * @return the message with placeholders for the first parameter
-	 * converted to placeholders for the second parameter.
+	 * @param message
+	 *            the message
+	 * @return the message with placeholders for the first parameter converted
+	 *         to placeholders for the second parameter.
 	 */
 	public static String convertFirstToSecondPlaceholders(String message) {
 		// Just if something goes terribly wrong
@@ -30,7 +31,32 @@ public class PlaceholderReplacer {
 			return "";
 		}
 		return CONVERT_FIRST_TO_SECOND_PATTERN.matcher(message).replaceAll(
-			"<$12>");
+				"<$12>");
+	}
+
+	/**
+	 * Converts a String consisting of one word into standard case (first letter
+	 * uppercase, rest lowercase).
+	 * 
+	 * @param inputVal
+	 *            the input
+	 * @return the input in stadard case
+	 */
+	public static String toStandardCase(String inputVal) {
+		// Empty strings should be returned as-is.
+
+		if (inputVal.length() == 0)
+			return "";
+
+		// Strings with only one character uppercased.
+
+		if (inputVal.length() == 1)
+			return inputVal.toUpperCase();
+
+		// Otherwise uppercase first letter, lowercase the rest.
+
+		return inputVal.substring(0, 1).toUpperCase()
+				+ inputVal.substring(1).toLowerCase();
 	}
 
 	/**
@@ -61,7 +87,8 @@ public class PlaceholderReplacer {
 	/**
 	 * Replaces placeholders in the given message with the required text.
 	 *
-	 * @param message the message
+	 * @param message
+	 *            the message
 	 * @return the message with replaced placeholders where possible.
 	 */
 	public String replacePlaceholders(String message) {
@@ -72,28 +99,30 @@ public class PlaceholderReplacer {
 
 		if (input != null) {
 			message = message.replaceAll("<INPUT>", input.toUpperCase())
-				.replaceAll("<Input>", input)
-				.replaceAll("<input>", input.toLowerCase());
+					.replaceAll("<Input>", input)
+					.replaceAll("<input>", input.toLowerCase());
 		}
 		if (identifier != null) {
-			message = message.replaceAll("<IDENTIFIER>", identifier.toUpperCase())
-				.replaceAll("<Identifier>", identifier)
-				.replaceAll("<identifier>", identifier.toLowerCase());
+			message = message
+					.replaceAll("<IDENTIFIER>", identifier.toUpperCase())
+					.replaceAll("<Identifier>", toStandardCase(identifier))
+					.replaceAll("<identifier>", identifier.toLowerCase());
 		}
 		if (identifier2 != null) {
-			message = message.replaceAll("<IDENTIFIER2>", identifier2.toUpperCase())
-				.replaceAll("<Identifier2>", identifier2)
-				.replaceAll("<identifier2>", identifier2.toLowerCase());
+			message = message
+					.replaceAll("<IDENTIFIER2>", identifier2.toUpperCase())
+					.replaceAll("<Identifier2>", toStandardCase(identifier2))
+					.replaceAll("<identifier2>", identifier2.toLowerCase());
 		}
 		if (name != null) {
 			message = message.replaceAll("<NAME>", name.toUpperCase())
-				.replaceAll("<Name>", name)
-				.replaceAll("<name>", name.toLowerCase());
+					.replaceAll("<Name>", toStandardCase(name))
+					.replaceAll("<name>", name.toLowerCase());
 		}
 		if (name2 != null) {
 			message = message.replaceAll("<NAME2>", name2.toUpperCase())
-				.replaceAll("<Name2>", name2)
-				.replaceAll("<name2>", name2.toLowerCase());
+					.replaceAll("<Name2>", toStandardCase(name2))
+					.replaceAll("<name2>", name2.toLowerCase());
 		}
 
 		return message;
@@ -111,35 +140,40 @@ public class PlaceholderReplacer {
 	}
 
 	/**
-	 * @param identifier the identifier to set
+	 * @param identifier
+	 *            the identifier to set
 	 */
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
 	/**
-	 * @param identifier2 the identifier2 to set
+	 * @param identifier2
+	 *            the identifier2 to set
 	 */
 	public void setIdentifier2(String identifier2) {
 		this.identifier2 = identifier2;
 	}
 
 	/**
-	 * @param input the input to set
+	 * @param input
+	 *            the input to set
 	 */
 	public void setInput(String input) {
 		this.input = input;
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @param name2 the name2 to set
+	 * @param name2
+	 *            the name2 to set
 	 */
 	public void setName2(String name2) {
 		this.name2 = name2;

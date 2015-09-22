@@ -288,7 +288,7 @@ public class GeneralParser {
 	 */
 	public boolean parse(String input) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-							"Parsing input '{0}'", input);
+							"Parsing input: {0}", input);
 		// Trimmed, lower case, no multiple spaces, no punctuation
 		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ")
 			.replaceAll("\\p{Punct}", "");

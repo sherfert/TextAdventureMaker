@@ -2,9 +2,7 @@ package playing;
 
 import java.util.List;
 
-import persistence.ItemManager;
 import persistence.PersistenceManager;
-import persistence.PersonManager;
 import persistence.PlayerManager;
 import persistence.WayManager;
 import playing.InputOutput.GeneralIOManager;
@@ -20,7 +18,6 @@ import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
 import data.interfaces.Travelable;
 import data.interfaces.Usable;
-import data.interfaces.UsableOrPassivelyUsable;
 import data.interfaces.UsableWithHasLocation;
 
 import java.util.logging.Level;
@@ -32,9 +29,6 @@ import java.util.logging.Logger;
  * @author Satia
  */
 public class GamePlayer implements GeneralIOManager {
-	// TODO "You cannot talk to banana peel" += "the"
-	// "You cannot take the satia" -= "the"
-
 	/**
 	 * A placeholder replacer for the currently used command.
 	 */
@@ -282,7 +276,7 @@ public class GamePlayer implements GeneralIOManager {
 
 	/**
 	 * Displays an error message to the player if his input was not
-	 * recognizeable.
+	 * recognizable.
 	 */
 	public void noCommand() {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
@@ -407,7 +401,7 @@ public class GamePlayer implements GeneralIOManager {
 
 				// There is something (e.g. a person), but nothing you could
 				// take.
-				String message = game.getNotTakeableText();
+				String message = game.getInvalidCommandText();
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
 			}
@@ -486,7 +480,7 @@ public class GamePlayer implements GeneralIOManager {
 
 				// There is something (e.g. a person), but nothing you could
 				// use.
-				String message = game.getNotUsableText();
+				String message = game.getInvalidCommandText();
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
 			}
@@ -560,7 +554,7 @@ public class GamePlayer implements GeneralIOManager {
 								"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}",
 								identifier2);
 
-				String message = game.getNotUsableWithText();
+				String message = game.getInvalidCommandText();
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
 
@@ -606,7 +600,7 @@ public class GamePlayer implements GeneralIOManager {
 									"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}",
 									identifier1);
 
-					String message = game.getNotUsableWithText();
+					String message = game.getInvalidCommandText();
 					io.println(currentReplacer.replacePlaceholders(message),
 							game.getFailedBgColor(), game.getFailedFgColor());
 				} else {
@@ -730,8 +724,6 @@ public class GamePlayer implements GeneralIOManager {
 		
 		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
 				identifier);
-		//HasConversation person = PersonManager.getPersonFromLocation(game
-			//	.getPlayer().getLocation(), identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -778,7 +770,7 @@ public class GamePlayer implements GeneralIOManager {
 
 				// There is something (e.g. an item), but nothing you could
 				// talk to.
-				String message = game.getNotTalkingToEnabledText();
+				String message = game.getInvalidCommandText();
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
 			}
