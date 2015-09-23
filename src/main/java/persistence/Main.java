@@ -240,6 +240,7 @@ public class Main {
 		tv.addIdentifier("tv");
 		tv.setTakeForbiddenText("This is a little heavy.");
 		tv.setUseForbiddenText("I am not in the mood.");
+		tv.addAdditionalTakeCommand("lift (.+)");
 		/*
 		 * Inspecting the tv will change its inspection text.
 		 */

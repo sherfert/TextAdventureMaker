@@ -20,6 +20,19 @@ public interface Takeable extends Identifiable {
 	 *            the action
 	 */
 	public void addAdditionalActionToTake(AbstractAction action);
+	
+	/**
+	 * Adds an additional command that can be used to take the object.
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void addAdditionalTakeCommand(String command);
+	
+	/**
+	 * @return the additional take commands.
+	 */
+	public List<String> getAdditionalTakeCommands();
 
 	/**
 	 * @param pickUpItems the pickUpItems to set
@@ -74,6 +87,14 @@ public interface Takeable extends Identifiable {
 	 *            the action
 	 */
 	public void removeAdditionalActionFromTake(AbstractAction action);
+	
+	/**
+	 * Removes an additional take command.
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void removeAdditionalTakeCommand(String command);
 
 	/**
 	 * @param removeItem

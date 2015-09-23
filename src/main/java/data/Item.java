@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -43,6 +44,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable
 	private List<AbstractAction> additionalTakeActions;
+	
+	/**
+	 * All additional take commands.
+	 */
+	@ElementCollection
+	private List<String> additionalTakeCommands;
 
 	/**
 	 * The current location of the item. May be {@code null}.
@@ -127,10 +134,20 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	public void addAdditionalActionToTake(AbstractAction action) {
 		additionalTakeActions.add(action);
 	}
+	
+	@Override
+	public void addAdditionalTakeCommand(String command) {
+		additionalTakeCommands.add(command);
+	}
 
 	@Override
 	public List<AbstractAction> getAdditionalActionsFromTake() {
 		return additionalTakeActions;
+	}
+	
+	@Override
+	public List<String> getAdditionalTakeCommands() {
+		return additionalTakeCommands;
 	}
 
 	@Override
@@ -161,6 +178,11 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public void removeAdditionalActionFromTake(AbstractAction action) {
 		additionalTakeActions.remove(action);
+	}
+	
+	@Override
+	public void removeAdditionalTakeCommand(String command) {
+		additionalTakeCommands.remove(command);
 	}
 
 	// final as called in constructor.
@@ -239,6 +261,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		this.removeAction = new ChangeItemAction(this);
 		this.removeAction.setNewLocation(null);
 		this.additionalTakeActions = new ArrayList<>();
+		this.additionalTakeCommands = new ArrayList<>();
 		setRemoveItem(true);
 	}
 

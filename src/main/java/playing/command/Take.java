@@ -1,15 +1,16 @@
 package playing.command;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import persistence.InspectableObjectManager;
+import persistence.ItemManager;
+import playing.GamePlayer;
+import playing.parser.PatternGenerator;
 import data.Game;
 import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
-import persistence.InspectableObjectManager;
-import playing.GamePlayer;
 
 /**
  * CommandType to take an item.
@@ -28,8 +29,7 @@ public class Take extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		// TODO Auto-generated method stub
-		return new HashSet<>();
+		return ItemManager.getAllAdditionaTakeCommands();
 	}
 
 	@Override
@@ -48,8 +48,8 @@ public class Take extends Command {
 	 * performed even if not). If not, a meaningful message will be displayed.
 	 * 
 	 * @param originalCommand
-	 *            TODO if the command was original (or else additional). Used to
-	 *            test if an additional command really belonged to the chosen
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
 	 *            identifier.
 	 * @param identifier
 	 *            an identifier of the object
@@ -57,7 +57,7 @@ public class Take extends Command {
 	private void take(boolean originalCommand, String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Take identifier {0}", identifier);
-		
+
 		Game game = gamePlayer.getGame();
 
 		// Collect all objects, whether they are takeable or not.
@@ -84,6 +84,22 @@ public class Take extends Command {
 
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Take id {0}", item.getId());
+
+				if (!originalCommand) {
+					// Check if the additional command belongs the the chosen
+					// usable
+					if (!PatternGenerator
+							.getPattern(item.getAdditionalTakeCommands())
+							.matcher(currentReplacer.getInput()).matches()) {
+						// no match
+						String message = game.getNotTakeableText();
+						io.println(
+								currentReplacer.replacePlaceholders(message),
+								game.getFailedBgColor(),
+								game.getFailedFgColor());
+						return;
+					}
+				}
 
 				if (item.isTakingEnabled()) {
 					Logger.getLogger(this.getClass().getName()).log(
