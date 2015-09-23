@@ -39,32 +39,32 @@ public class GeneralParser {
 	 *
 	 * @author Satia
 	 */
-	public enum Command {// TODO add bool param to all GamePlayer command methods
+	public enum Command {
 		/** Use one item with another or combine two items */
 		USEWITHCOMBINE("getUseWithCombineCommands",
 				"getUseWithCombineHelpText", "useWithOrCombine", null,
-				String.class, String.class), //
+				boolean.class, String.class, String.class), //
 		/** Move around */
-		MOVE("getMoveCommands", "getMoveHelpText", "move", null, String.class), //
+		MOVE("getMoveCommands", "getMoveHelpText", "move", null, boolean.class, String.class), //
 		/** Take something */
-		TAKE("getTakeCommands", "getTakeHelpText", "take", null, String.class), //
+		TAKE("getTakeCommands", "getTakeHelpText", "take", null, boolean.class, String.class), //
 		/** Use something */
 		USE("getUseCommands", "getUseHelpText", "use",
 				"getAdditionalUseCommands", boolean.class, String.class), //
 		/** Talk to someone */
 		TALKTO("getTalkToCommands", "getTalkToHelpText", "talkTo", null,
-				String.class), //
+				boolean.class, String.class), //
 		/** Look around */
 		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
-				"lookAround", null), //
+				"lookAround", null, boolean.class), //
 		/** Inspect something */
 		INSPECT("getInspectCommands", "getInspectHelpText", "inspect", null,
-				String.class), //
+				boolean.class, String.class), //
 		/** Look into the inventory */
 		INVENTORY("getInventoryCommands", "getInventoryHelpText", "inventory",
-				null), //
+				null, boolean.class), //
 		/** Get help */
-		HELP("getHelpCommands", "getHelpHelpText", "help", null);
+		HELP("getHelpCommands", "getHelpHelpText", "help", null, boolean.class);
 
 		/**
 		 * The name of the method that gets the valid commands. Must be a method
@@ -307,13 +307,13 @@ public class GeneralParser {
 		List<Object> parameters = new ArrayList<>(matcher.groupCount() + 1);
 		// Add the boolean in the beginning
 		parameters.add(originalCommand);
-		
+
 		for (int i = 1; i <= matcher.groupCount(); i++) {
 			if (matcher.group(i) != null) {
 				parameters.add(matcher.group(i));
 			}
 		}
-		
+
 		return parameters.toArray(new Object[0]);
 	}
 

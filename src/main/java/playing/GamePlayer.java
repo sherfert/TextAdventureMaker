@@ -96,10 +96,14 @@ public class GamePlayer implements GeneralIOManager {
 	 * Tries to inspect an object with the given name. The player will look at
 	 * it if possible and if not, a meaningful message will be displayed.
 	 * 
+	 * @param originalCommand TODO
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
+	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
-	public void inspect(String identifier) {
+	public void inspect(boolean originalCommand, String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Inspecting identifier {0}", identifier);
 
@@ -136,8 +140,11 @@ public class GamePlayer implements GeneralIOManager {
 
 	/**
 	 * Displays the inventory's content to the player.
+	 * 
+	 * @param originalCommand
+	 *            ignored in this method, since it has no parameters
 	 */
-	public void inventory() {
+	public void inventory(boolean originalCommand) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Displaying inventory");
 
@@ -170,8 +177,11 @@ public class GamePlayer implements GeneralIOManager {
 
 	/**
 	 * Displays the location entered text to the player.
+	 * 
+	 * @param originalCommand
+	 *            ignored in this method, since it has no parameters
 	 */
-	public void lookAround() {
+	public void lookAround(boolean originalCommand) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Looking around");
 
@@ -182,9 +192,12 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * Displays the help text to the player
+	 * Displays the help text to the player.
+	 * 
+	 * @param originalCommand
+	 *            ignored in this method, since it has no parameters
 	 */
-	public void help() {
+	public void help(boolean originalCommand) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Displaying help");
 
@@ -220,10 +233,14 @@ public class GamePlayer implements GeneralIOManager {
 	 * Tries to move to the target with the given name. The player will move
 	 * there if possible and if not, a meaningful message will be displayed.
 	 * 
+	 * @param originalCommand TODO
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
+	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
-	public void move(String identifier) {
+	public void move(boolean originalCommand, String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Move identifier {0}", identifier);
 
@@ -339,10 +356,14 @@ public class GamePlayer implements GeneralIOManager {
 	 * be performed if the item is takeable (additional actions will be
 	 * performed even if not). If not, a meaningful message will be displayed.
 	 * 
+	 * @param originalCommand TODO
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
+	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
-	public void take(String identifier) {
+	public void take(boolean originalCommand, String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Take identifier {0}", identifier);
 
@@ -528,13 +549,17 @@ public class GamePlayer implements GeneralIOManager {
 	 * actions will be performed. A message informing about success/failure will
 	 * be displayed.
 	 * 
+	 * @param originalCommand TODO
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
+	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
 	 * @param identifier1
 	 *            an identifier of the first object
 	 * @param identifier2
 	 *            an identifier of the second object
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void useWithOrCombine(String identifier1, String identifier2) {
+	public void useWithOrCombine(boolean originalCommand, String identifier1, String identifier2) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Usewith/combine identifiers {0} / {1}",
 				new Object[] { identifier1, identifier2 });
@@ -739,11 +764,14 @@ public class GamePlayer implements GeneralIOManager {
 	 * will be performed. Either the conversation will be started or a message
 	 * informing about failure will be displayed.
 	 * 
-	 * 
+	 * @param originalCommand TODO
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
+	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
 	 * @param identifier
 	 *            an identifier of the person
 	 */
-	public void talkTo(String identifier) {
+	public void talkTo(boolean originalCommand, String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Talk to identifier {0}", identifier);
 

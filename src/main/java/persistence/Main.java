@@ -427,6 +427,7 @@ public class Main {
 		game.addHelpCommand("help");
 		game.addLookAroundCommand("look around");
 		game.addMoveCommand("go(?: to)? (.+)");
+		// TODO go/move into
 		game.addMoveCommand("move(?: to)? (.+)");
 		game.addTakeCommand("take (.+)");
 		game.addTakeCommand("pick up (.+)");
