@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Managing access to the named objects in the database.
+ * Managing access to all objects in the database.
  *
  * @author Satia
  */

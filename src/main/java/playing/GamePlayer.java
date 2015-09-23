@@ -1,12 +1,12 @@
 package playing;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import persistence.InspectableObjectManager;
 import persistence.PersistenceManager;
-import persistence.PlayerManager;
+import persistence.UsableObjectManager;
 import persistence.WayManager;
 import playing.InputOutput.GeneralIOManager;
 import playing.menu.LoadSaveManager;
@@ -111,8 +111,7 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Inspecting identifier {0}", identifier);
 
-		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
-				identifier);
+		Inspectable object = InspectableObjectManager.getInspectable(identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -372,8 +371,7 @@ public class GamePlayer implements GeneralIOManager {
 				"Take identifier {0}", identifier);
 
 		// Collect all objects, whether they are takeable or not.
-		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
-				identifier);
+		Inspectable object = InspectableObjectManager.getInspectable(identifier);
 
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
@@ -452,8 +450,7 @@ public class GamePlayer implements GeneralIOManager {
 				"Use identifier {0}", identifier);
 
 		// Collect all objects, whether they are usable or not.
-		Inspectable objectI = PlayerManager.getInspectable(game.getPlayer(),
-				identifier);
+		Inspectable objectI = InspectableObjectManager.getInspectable(identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -563,11 +560,9 @@ public class GamePlayer implements GeneralIOManager {
 				"Usewith/combine identifiers {0} / {1}",
 				new Object[] { identifier1, identifier2 });
 
-		Inspectable object1 = PlayerManager.getInspectable(game.getPlayer(),
-				identifier1);
+		Inspectable object1 = InspectableObjectManager.getInspectable(identifier1);
 		// .getUsableOrPassivelyUsable(game.getPlayer(), identifier1);
-		Inspectable object2 = PlayerManager.getInspectable(game.getPlayer(),
-				identifier2);
+		Inspectable object2 = InspectableObjectManager.getInspectable(identifier2);
 		// .getUsableOrPassivelyUsable(game.getPlayer(), identifier2);
 		// Save identifiers
 		currentReplacer.setIdentifier(identifier1);
@@ -774,8 +769,7 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Talk to identifier {0}", identifier);
 
-		Inspectable object = PlayerManager.getInspectable(game.getPlayer(),
-				identifier);
+		Inspectable object = InspectableObjectManager.getInspectable(identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 
@@ -847,7 +841,7 @@ public class GamePlayer implements GeneralIOManager {
 	 *         the inventory.
 	 */
 	public Set<String> getAdditionalUseCommands() {
-		return PlayerManager.getAllAdditionalUseCommands();
+		return UsableObjectManager.getAllAdditionalUseCommands();
 	}
 
 	/**

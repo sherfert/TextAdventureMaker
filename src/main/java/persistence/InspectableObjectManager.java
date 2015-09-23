@@ -1,8 +1,10 @@
 package persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import data.interfaces.Identifiable;
+import data.Player;
+import data.interfaces.Inspectable;
 
 /**
  * Managing access to the inspectable objects in the database.
@@ -12,25 +14,25 @@ import data.interfaces.Identifiable;
 public class InspectableObjectManager {
 
 	/**
-	 * Gets the inspectable object that matches the given identifier-regexp or
-	 * {@code null} , if there is none.
+	 * Gets the Inspectable object in the location of the player or in the
+	 * inventory the given identifier or {@code null} , if there is none.
 	 * 
-	 * @param <E> the Identifiable subclass
-	 * @param identifiables
-	 *            the identifiables to search
 	 * @param identifier
 	 *            an identifier of the item
-	 * @return the corresponding object or {@code null}.
+	 * 
+	 * @return the corresponding item or {@code null}.
 	 */
-	public static <E extends Identifiable> E getIdentifiableWithIdentifier(
-			List<E> identifiables, String identifier) {
-		for (E object : identifiables) {
-			for (String itemIdentifier : object.getIdentifiers()) {
-				if (identifier.matches(itemIdentifier)) {
-					return object;
-				}
-			}
-		}
-		return null;
+	public static Inspectable getInspectable(String identifier) {
+		Player player = PlayerManager.getPlayer();
+
+		List<Inspectable> inspectables = new ArrayList<>();
+		// Anything in the room
+		inspectables.addAll(player.getLocation().getInspectables());
+		// Anything in the inventory
+		inspectables.addAll(player.getInventory());
+
+		return IdentifiableObjectManager.getIdentifiableWithIdentifier(
+				inspectables, identifier);
 	}
+
 }
