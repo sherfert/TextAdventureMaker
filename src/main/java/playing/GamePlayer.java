@@ -1,7 +1,9 @@
 package playing;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import persistence.PersistenceManager;
 import persistence.PlayerManager;
@@ -27,6 +29,8 @@ import java.util.logging.Logger;
 
 /**
  * Any methods for actually playing a game.
+ * 
+ * TODO one class per command.
  * 
  * @author Satia
  */
@@ -96,10 +100,10 @@ public class GamePlayer implements GeneralIOManager {
 	 * Tries to inspect an object with the given name. The player will look at
 	 * it if possible and if not, a meaningful message will be displayed.
 	 * 
-	 * @param originalCommand TODO
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
+	 * @param originalCommand
+	 *            TODO if the command was original (or else additional). Used to
+	 *            test if an additional command really belonged to the chosen
+	 *            identifier.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
@@ -233,10 +237,10 @@ public class GamePlayer implements GeneralIOManager {
 	 * Tries to move to the target with the given name. The player will move
 	 * there if possible and if not, a meaningful message will be displayed.
 	 * 
-	 * @param originalCommand TODO
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
+	 * @param originalCommand
+	 *            TODO if the command was original (or else additional). Used to
+	 *            test if an additional command really belonged to the chosen
+	 *            identifier.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
@@ -356,10 +360,10 @@ public class GamePlayer implements GeneralIOManager {
 	 * be performed if the item is takeable (additional actions will be
 	 * performed even if not). If not, a meaningful message will be displayed.
 	 * 
-	 * @param originalCommand TODO
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
+	 * @param originalCommand
+	 *            TODO if the command was original (or else additional). Used to
+	 *            test if an additional command really belonged to the chosen
+	 *            identifier.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
@@ -439,7 +443,7 @@ public class GamePlayer implements GeneralIOManager {
 	 * @param originalCommand
 	 *            if the command was original (or else additional). Used to test
 	 *            if an additional command really belonged to the chosen
-	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
+	 *            identifier.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
@@ -456,16 +460,12 @@ public class GamePlayer implements GeneralIOManager {
 		if (objectI == null) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Use item not found {0}", identifier);
+			// There is no such object and you have no such object
+			String message = game.getNoSuchItemText() + " "
+					+ game.getNoSuchInventoryItemText();
+			io.println(currentReplacer.replacePlaceholders(message),
+					game.getFailedBgColor(), game.getFailedFgColor());
 
-			if (!originalCommand) {
-				noCommand();
-			} else {
-				// There is no such object and you have no such object
-				String message = game.getNoSuchItemText() + " "
-						+ game.getNoSuchInventoryItemText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
-			}
 		} else {
 			// Save name
 			currentReplacer.setName(objectI.getName());
@@ -482,8 +482,10 @@ public class GamePlayer implements GeneralIOManager {
 					if (!PatternGenerator
 							.getPattern(object.getAdditionalUseCommands())
 							.matcher(currentReplacer.getInput()).matches()) {
-						// no match - invoke no command
-						noCommand();
+						// no match
+						String message = game.getNotUsableText();
+						io.println(currentReplacer.replacePlaceholders(message),
+								game.getFailedBgColor(), game.getFailedFgColor());
 						return;
 					}
 				}
@@ -520,16 +522,12 @@ public class GamePlayer implements GeneralIOManager {
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Use item not of type Useable {0}", identifier);
+				// There is something (e.g. a person), but nothing you could
+				// use.
+				String message = game.getInvalidCommandText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
 
-				if (!originalCommand) {
-					noCommand();
-				} else {
-					// There is something (e.g. a person), but nothing you could
-					// use.
-					String message = game.getInvalidCommandText();
-					io.println(currentReplacer.replacePlaceholders(message),
-							game.getFailedBgColor(), game.getFailedFgColor());
-				}
 			}
 		}
 	}
@@ -549,17 +547,18 @@ public class GamePlayer implements GeneralIOManager {
 	 * actions will be performed. A message informing about success/failure will
 	 * be displayed.
 	 * 
-	 * @param originalCommand TODO
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
+	 * @param originalCommand
+	 *            TODO if the command was original (or else additional). Used to
+	 *            test if an additional command really belonged to the chosen
+	 *            identifier.
 	 * @param identifier1
 	 *            an identifier of the first object
 	 * @param identifier2
 	 *            an identifier of the second object
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void useWithOrCombine(boolean originalCommand, String identifier1, String identifier2) {
+	public void useWithOrCombine(boolean originalCommand, String identifier1,
+			String identifier2) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Usewith/combine identifiers {0} / {1}",
 				new Object[] { identifier1, identifier2 });
@@ -764,10 +763,10 @@ public class GamePlayer implements GeneralIOManager {
 	 * will be performed. Either the conversation will be started or a message
 	 * informing about failure will be displayed.
 	 * 
-	 * @param originalCommand TODO
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
+	 * @param originalCommand
+	 *            TODO if the command was original (or else additional). Used to
+	 *            test if an additional command really belonged to the chosen
+	 *            identifier.
 	 * @param identifier
 	 *            an identifier of the person
 	 */
@@ -847,11 +846,14 @@ public class GamePlayer implements GeneralIOManager {
 	 * @return all additional use commands from items in this location and in
 	 *         the inventory.
 	 */
-	public List<String> getAdditionalUseCommands() {
-		List<String> commands = new ArrayList<>();
-		for (Usable u : PlayerManager.getAllUsables(game.getPlayer())) {
-			commands.addAll(u.getAdditionalUseCommands());
-		}
-		return commands;
+	public Set<String> getAdditionalUseCommands() {
+		return PlayerManager.getAllAdditionalUseCommands();
+	}
+
+	/**
+	 * TODO remove this method
+	 */
+	public Set<String> getNoAdditionalCommands() {
+		return new HashSet<>();
 	}
 }

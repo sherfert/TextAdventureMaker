@@ -1,8 +1,14 @@
 package persistence;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import data.Game;
 import data.Player;
 import data.UsableObject;
 import data.interfaces.Inspectable;
@@ -12,8 +18,8 @@ import data.interfaces.UsableOrPassivelyUsable;
 /**
  * Managing access to the player in a database.
  * 
- * TODO Player as a parameter here unnecessary
- * TODO methods should be in other classes!?
+ * TODO Player as a parameter here unnecessary TODO methods should be in other
+ * classes!?
  * 
  * @author Satia
  */
@@ -44,11 +50,12 @@ public class PlayerManager {
 		// Anything in the inventory
 		inspectables.addAll(player.getInventory());
 
-		return InspectableObjectManager.getIdentifiableWithIdentifier(inspectables,
-				identifier);
+		return InspectableObjectManager.getIdentifiableWithIdentifier(
+				inspectables, identifier);
 	}
 
-	// XXX getUsable, getUsableOr... and ItemManager.getItemFromLocation, PersonManager.getPersonFromLocation, ...?
+	// XXX getUsable, getUsableOr... and ItemManager.getItemFromLocation,
+	// PersonManager.getPersonFromLocation, ...?
 	// probably not used any more?
 	/**
 	 * Gets the usable object in the location or in the inventory with the given
@@ -65,7 +72,13 @@ public class PlayerManager {
 		return InspectableObjectManager.getIdentifiableWithIdentifier(usables,
 				identifier);
 	}
-	
+
+	/**
+	 * @param player
+	 *            the player
+	 * @return a list of all usable objects in the location the player is or in
+	 *         the inventory.
+	 */
 	public static List<Usable> getAllUsables(Player player) {
 		List<Usable> usables = new ArrayList<>();
 		// Items in the room
@@ -95,5 +108,16 @@ public class PlayerManager {
 
 		return InspectableObjectManager.getIdentifiableWithIdentifier(usables,
 				identifier);
+	}
+
+	// FIXME move into other class
+	public static Set<String> getAllAdditionalUseCommands() {
+
+		List<String> resultList = PersistenceManager
+				.getEntityManager()
+				.createNativeQuery(
+						"SELECT DISTINCT c.ADDITIONALUSECOMMANDS FROM UsableObject_ADDITIONALUSECOMMANDS c").getResultList();
+		
+		return new HashSet<>(resultList);
 	}
 }

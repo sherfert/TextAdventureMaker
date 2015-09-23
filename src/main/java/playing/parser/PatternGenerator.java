@@ -1,6 +1,6 @@
 package playing.parser;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 /**
@@ -17,7 +17,7 @@ public class PatternGenerator {
 	 *            the valid commands
 	 * @return a pattern for the commands
 	 */
-	public static Pattern getPattern(List<String> cmds) {
+	public static Pattern getPattern(Collection<String> cmds) {
 		if (cmds.isEmpty()) {
 			// Pattern matching nothing
 			return Pattern.compile("a^");

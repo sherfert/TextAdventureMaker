@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -36,35 +37,39 @@ public class GeneralParser {
 	 *
 	 * Generally speaking, commands with more parameters should often come
 	 * first.
+	 * 
+	 * TODO Use proper methods here.
 	 *
 	 * @author Satia
 	 */
 	public enum Command {
 		/** Use one item with another or combine two items */
 		USEWITHCOMBINE("getUseWithCombineCommands",
-				"getUseWithCombineHelpText", "useWithOrCombine", null,
+				"getUseWithCombineHelpText", "useWithOrCombine", "getNoAdditionalCommands",
 				boolean.class, String.class, String.class), //
 		/** Move around */
-		MOVE("getMoveCommands", "getMoveHelpText", "move", null, boolean.class, String.class), //
+		MOVE("getMoveCommands", "getMoveHelpText", "move", "getNoAdditionalCommands", boolean.class,
+				String.class), //
 		/** Take something */
-		TAKE("getTakeCommands", "getTakeHelpText", "take", null, boolean.class, String.class), //
+		TAKE("getTakeCommands", "getTakeHelpText", "take", "getNoAdditionalCommands", boolean.class,
+				String.class), //
 		/** Use something */
 		USE("getUseCommands", "getUseHelpText", "use",
 				"getAdditionalUseCommands", boolean.class, String.class), //
 		/** Talk to someone */
-		TALKTO("getTalkToCommands", "getTalkToHelpText", "talkTo", null,
+		TALKTO("getTalkToCommands", "getTalkToHelpText", "talkTo", "getNoAdditionalCommands",
 				boolean.class, String.class), //
 		/** Look around */
 		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
-				"lookAround", null, boolean.class), //
+				"lookAround", "getNoAdditionalCommands", boolean.class), //
 		/** Inspect something */
-		INSPECT("getInspectCommands", "getInspectHelpText", "inspect", null,
+		INSPECT("getInspectCommands", "getInspectHelpText", "inspect", "getNoAdditionalCommands",
 				boolean.class, String.class), //
 		/** Look into the inventory */
 		INVENTORY("getInventoryCommands", "getInventoryHelpText", "inventory",
-				null, boolean.class), //
+				"getNoAdditionalCommands", boolean.class), //
 		/** Get help */
-		HELP("getHelpCommands", "getHelpHelpText", "help", null, boolean.class);
+		HELP("getHelpCommands", "getHelpHelpText", "help", "getNoAdditionalCommands", boolean.class);
 
 		/**
 		 * The name of the method that gets the valid commands. Must be a method
@@ -88,9 +93,8 @@ public class GeneralParser {
 
 		/**
 		 * The name of the method that gets all additional commands. Must be a
-		 * method of the class {@link GamePlayer} with no parameters and List of
-		 * String as return type or {@code null} if this command does not
-		 * support additional commands.
+		 * method of the class {@link GamePlayer} with no parameters and Set of
+		 * String as return type.
 		 */
 		public final String additionalCommandsMethodName;
 
@@ -115,9 +119,7 @@ public class GeneralParser {
 		 * @param additionalCommandsMethodName
 		 *            the name of the method that gets all additional commands.
 		 *            Must be a method of the class {@link GamePlayer} with no
-		 *            parameters and List of String as return type or
-		 *            {@code null} if this command does not support additional
-		 *            commands.
+		 *            parameters and Set of String as return type.
 		 * @param parameterTypes
 		 *            the parameter types of the method denoted by methodName.
 		 */
@@ -143,6 +145,11 @@ public class GeneralParser {
 		 * The pattern for recognizing the command.
 		 */
 		private Pattern pattern;
+
+		/**
+		 * The pattern for recognizing with additional commands.
+		 */
+		private Pattern additionalCommandsPattern;
 
 		/**
 		 * The method being executed when the command was typed.
@@ -177,6 +184,15 @@ public class GeneralParser {
 								gamePlayer.getGame());
 				this.pattern = PatternGenerator
 						.getPattern(this.textualCommands);
+				
+				if (command.additionalCommandsMethodName != null) {
+					Set<String> commands = (Set<String>) GamePlayer.class
+							.getDeclaredMethod(
+									command.additionalCommandsMethodName)
+							.invoke(gamePlayer);
+					additionalCommandsPattern = PatternGenerator
+							.getPattern(commands);
+				}
 
 				commandHelpText = (String) Game.class.getDeclaredMethod(
 						command.helpTextMethodName)
@@ -188,7 +204,7 @@ public class GeneralParser {
 					| SecurityException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
 				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-						"Problems finding the executeMethod:", e);
+						"Problems finding one of the required methods:", e);
 			}
 		}
 
@@ -200,43 +216,16 @@ public class GeneralParser {
 		 *            the input
 		 * @return if the input matches the command's pattern.
 		 */
-		@SuppressWarnings("unchecked")
 		private boolean recognizeAndExecute(String input) {
 			Matcher matcher = pattern.matcher(input);
-
-			// Additional commands must be gotten every single time, since they
-			// can change
-			Matcher additionalCommandsMatcher = null;
-			// TODO not once per command, but once per input!!!
-			if (command.additionalCommandsMethodName != null) {
-				try {
-					List<String> commands = (List<String>) GamePlayer.class
-							.getDeclaredMethod(
-									command.additionalCommandsMethodName)
-							.invoke(gamePlayer);
-
-					Pattern additionalCommandsPattern = PatternGenerator
-							.getPattern(commands);
-					additionalCommandsMatcher = additionalCommandsPattern
-							.matcher(input);
-
-				} catch (IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | NoSuchMethodException
-						| SecurityException e) {
-					Logger.getLogger(this.getClass().getName())
-							.log(Level.SEVERE,
-									"Problems finding the additionalCommandsMethod:",
-									e);
-				}
-			}
-
+			Matcher additionalCommandsMatcher = additionalCommandsPattern
+					.matcher(input);
 			boolean matchFound = false;
 			Object[] params = null;
 			if (matcher.matches()) {
 				params = getParameters(matcher, true);
 				matchFound = true;
-			} else if (additionalCommandsMatcher != null
-					&& additionalCommandsMatcher.matches()) {
+			} else if (additionalCommandsMatcher.matches()) {
 				params = getParameters(additionalCommandsMatcher, false);
 				matchFound = true;
 			}

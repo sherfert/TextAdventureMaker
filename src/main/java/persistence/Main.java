@@ -390,7 +390,7 @@ public class Main {
 		game.setNoSuchWayText("You cannot <input>.");
 		game.setNotTakeableText("You cannot take the <name>.");
 		game.setNotTravelableText("You cannot <input>.");
-		game.setNotUsableText("You cannot use the <name>.");
+		game.setNotUsableText("You cannot do that.");
 		game.setNotTalkingToEnabledText("You cannot talk to <Name>.");
 		game.setNotUsableWithText("You cannot do that.");
 		game.setTakenText("You picked up the <name>.");
