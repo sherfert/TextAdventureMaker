@@ -128,7 +128,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	/**
 	 * Initializes the fields
 	 */
-	private void init() {
+	private final void init() {
 		additionalInspectActions = new ArrayList<>();
 		identifiers = new ArrayList<>();
 	}

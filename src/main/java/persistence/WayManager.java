@@ -1,5 +1,9 @@
 package persistence;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import data.Location;
 import data.Way;
 
@@ -23,5 +27,20 @@ public class WayManager {
 	public static Way getWayOutFromLocation(Location location, String identifier) {
 		return IdentifiableObjectManager.getIdentifiableWithIdentifier(
 				location.getWaysOut(), identifier);
+	}
+	
+	/**
+	 * @return a set of all additional travel commands defined anywhere in the
+	 *         game.
+	 */
+	public static Set<String> getAllAdditionalTravelCommands() {
+		@SuppressWarnings("unchecked")
+		List<String> resultList = PersistenceManager
+				.getEntityManager()
+				.createNativeQuery(
+						"SELECT DISTINCT c.ADDITIONALTRAVELCOMMANDS FROM WAY_ADDITIONALTRAVELCOMMANDS c")
+				.getResultList();
+	
+		return new HashSet<>(resultList);
 	}
 }

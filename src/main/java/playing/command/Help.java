@@ -11,7 +11,7 @@ import playing.GamePlayer;
 import playing.parser.GeneralParser.CommandRecExec;
 
 /**
- * CommandType displaying help information to the user.
+ * Command displaying help information to the user.
  * 
  * @author Satia
  */

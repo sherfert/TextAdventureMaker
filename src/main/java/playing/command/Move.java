@@ -1,6 +1,5 @@
 package playing.command;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,9 +8,10 @@ import data.Game;
 import data.interfaces.Travelable;
 import persistence.WayManager;
 import playing.GamePlayer;
+import playing.parser.PatternGenerator;
 
 /**
- * The command to move to another location.
+ * Command to move to another location.
  * 
  * @author Satia
  */
@@ -27,8 +27,7 @@ public class Move extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		// TODO Auto-generated method stub
-		return new HashSet<>();
+		return WayManager.getAllAdditionalTravelCommands();
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class Move extends Command {
 	 * there if possible and if not, a meaningful message will be displayed.
 	 * 
 	 * @param originalCommand
-	 *            TODO if the command was original (or else additional). Used to
+	 *            if the command was original (or else additional). Used to
 	 *            test if an additional command really belonged to the chosen
 	 *            identifier.
 	 * @param identifier
@@ -68,6 +67,23 @@ public class Move extends Command {
 					"Move id {0}", way.getId());
 			// Save name
 			currentReplacer.setName(way.getName());
+			
+			if (!originalCommand) {
+				// Check if the additional command belongs the the chosen
+				// usable
+				if (!PatternGenerator
+						.getPattern(way.getAdditionalTravelCommands())
+						.matcher(currentReplacer.getInput()).matches()) {
+					// no match
+					String message = game.getNotTravelableText();
+					io.println(
+							currentReplacer.replacePlaceholders(message),
+							game.getFailedBgColor(),
+							game.getFailedFgColor());
+					return;
+				}
+			}
+			
 			if (way.isMovingEnabled()) {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
 						"Move id {0} enabled", way.getId());

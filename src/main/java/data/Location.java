@@ -189,7 +189,7 @@ public class Location extends NamedObject {
 	/**
 	 * Initializes the fields
 	 */
-	private void init() {
+	private final void init() {
 		waysOut = new ArrayList<>();
 		waysIn = new ArrayList<>();
 		items = new ArrayList<>();

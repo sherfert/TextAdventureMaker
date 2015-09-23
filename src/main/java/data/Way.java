@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -32,6 +33,12 @@ public class Way extends InspectableObject implements Travelable {
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable
 	private List<AbstractAction> additionalMoveActions;
+	
+	/**
+	 * All additional take commands.
+	 */
+	@ElementCollection
+	private List<String> additionalTravelCommands;
 
 	/**
 	 * The move action.
@@ -99,10 +106,20 @@ public class Way extends InspectableObject implements Travelable {
 	public void addAdditionalActionToMove(AbstractAction action) {
 		additionalMoveActions.add(action);
 	}
+	
+	@Override
+	public void addAdditionalTravelCommand(String command) {
+		additionalTravelCommands.add(command);
+	}
 
 	@Override
 	public List<AbstractAction> getAdditionalActionsFromMove() {
 		return additionalMoveActions;
+	}
+	
+	@Override
+	public List<String> getAdditionalTravelCommands() {
+		return additionalTravelCommands;
 	}
 
 	@Override
@@ -136,17 +153,20 @@ public class Way extends InspectableObject implements Travelable {
 	public void removeAdditionalActionFromMove(AbstractAction action) {
 		additionalMoveActions.remove(action);
 	}
+	
+	@Override
+	public void removeAdditionalTravelCommand(String command) {
+		additionalTravelCommands.remove(command);
+	}
 
 	@Override
 	public void setMoveForbiddenText(String forbiddenText) {
 		moveForbiddenText = forbiddenText;
-		// moveAction.setForbiddenText(forbiddenText);
 	}
 
 	@Override
 	public void setMoveSuccessfulText(String successfulText) {
 		moveSuccessfulText = successfulText;
-		// moveAction.setSuccessfulText(successfulText);
 	}
 
 	@Override
@@ -200,8 +220,9 @@ public class Way extends InspectableObject implements Travelable {
 	/**
 	 * Initializes the fields
 	 */
-	private void init() {
-		additionalMoveActions = new ArrayList<>();
+	private final void init() {
+		this.additionalMoveActions = new ArrayList<>();
+		this.additionalTravelCommands = new ArrayList<>();
 	}
 
 	@Override

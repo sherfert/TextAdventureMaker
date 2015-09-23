@@ -102,7 +102,7 @@ public class ChangeInvItemUsageAction extends
 	/**
 	 * Initializes the fields.
 	 */
-	private void init() {
+	private final void init() {
 		this.enabling = Enabling.DO_NOT_CHANGE;
 	}
 

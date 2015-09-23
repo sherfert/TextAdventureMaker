@@ -13,7 +13,7 @@ import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
 
 /**
- * CommandType to take an item.
+ * Command to take an item.
  * 
  * @author Satia
  */

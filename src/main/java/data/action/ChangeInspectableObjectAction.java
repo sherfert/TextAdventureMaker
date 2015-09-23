@@ -184,7 +184,7 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	/**
 	 * Initializes the fields.
 	 */
-	private void init() {
+	private final void init() {
 		identifiersToAdd = new ArrayList<>();
 		identifiersToRemove = new ArrayList<>();
 	}

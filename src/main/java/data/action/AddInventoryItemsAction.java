@@ -90,7 +90,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 	/**
 	 * Initializes the fields
 	 */
-	private void init() {
+	private final void init() {
 		this.pickUpItems = new ArrayList<>();
 	}
 

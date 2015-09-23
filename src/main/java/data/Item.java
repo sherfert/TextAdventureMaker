@@ -256,7 +256,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * Initializes the fields.
 	 */
-	private void init() {
+	private final void init() {
 		this.addInventoryItemsAction = new AddInventoryItemsAction(false);
 		this.removeAction = new ChangeItemAction(this);
 		this.removeAction.setNewLocation(null);

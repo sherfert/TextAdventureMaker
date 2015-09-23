@@ -11,7 +11,7 @@ import data.InventoryItem;
 import playing.GamePlayer;
 
 /**
- * CommandType to list the contents of the inventory.
+ * Command to list the contents of the inventory.
  * 
  * @author Satia
  */

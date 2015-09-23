@@ -39,7 +39,10 @@ import java.io.File;
  * 
  * TODO sound support (optional)
  * 
- * TODO EndGame message not displayed?
+ * TODO EndGame message not displayed if all lines already full. The last line
+ * is cut off and replaced if going into option mode. The same effect can be
+ * observed when starting a conversation or pressing ESC while having already a
+ * full screen.
  * 
  * @author Satia
  */
@@ -91,6 +94,7 @@ public class Main {
 		Way wayToVoid = new Way("Black hole",
 				"There is a big black hole where the front door "
 						+ "used to be.", flat, voidLoc);
+		wayToVoid.addAdditionalTravelCommand("climb into (.+)");
 		wayToVoid.addAdditionalActionToMove(new EndGameAction());
 
 		/*
@@ -156,8 +160,8 @@ public class Main {
 		ConversationLayer csLayer = new ConversationLayer();
 
 		startLayer.addOption(new ConversationOption("Why so hostile?",
-				"Just TextAdventureMaker is harder to code than I though!", "He looks really annoyed!",
-				startLayer));
+				"Just TextAdventureMaker is harder to code than I though!",
+				"He looks really annoyed!", startLayer));
 		startLayer.addOption(new ConversationOption(
 				"Let's talk about computer science.", "Ask me anything.",
 				csLayer));
@@ -261,7 +265,7 @@ public class Main {
 		banana.setTakeForbiddenText("It looks delicious, but I don't wanna carry that around.");
 		banana.setUseSuccessfulText("You ate the banana. The peel looks useful, so you kept it.");
 		banana.addAdditionalUseCommand("eat (.+)");
-		
+
 		/*
 		 * Inspecting the banana will "convert" it into a bananaphone.
 		 */
@@ -343,7 +347,7 @@ public class Main {
 
 		peel.setUsingEnabledWith(pen, true);
 		peel.setCombiningEnabledWith(invPen, true);
-		
+
 		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
 		peel.setCombineWithSuccessfulText(invPen,
 				"You painted the banana peel.");

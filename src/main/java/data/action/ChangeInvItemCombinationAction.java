@@ -128,7 +128,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	/**
 	 * Initializes the fields.
 	 */
-	private void init() {
+	private final void init() {
 		this.enablingCombinable = Enabling.DO_NOT_CHANGE;
 		this.enablingRemoveCombinables = Enabling.DO_NOT_CHANGE;
 		this.combinablesToAdd = new ArrayList<>();

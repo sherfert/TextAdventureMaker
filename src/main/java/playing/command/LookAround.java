@@ -9,7 +9,7 @@ import data.Game;
 import playing.GamePlayer;
 
 /**
- * CommandType to look around.
+ * Command to look around.
  * 
  * @author Satia
  */

@@ -13,7 +13,7 @@ import playing.ConversationPlayer;
 import playing.GamePlayer;
 
 /**
- * CommandType to talk to a person.
+ * Command to talk to a person.
  * 
  * @author Satia
  */

@@ -614,7 +614,7 @@ public class InventoryItem extends UsableObject implements
 	/**
 	 * Initializes the fields.
 	 */
-	private void init() {
+	private final void init() {
 		usableItems = new HashMap<>();
 		usablePersons = new HashMap<>();
 		combinableInventoryItems = new HashMap<>();

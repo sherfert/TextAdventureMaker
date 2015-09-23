@@ -11,14 +11,20 @@ import persistence.InspectableObjectManager;
 import playing.GamePlayer;
 
 /**
- * CommandType to inspect something.
+ * Command to inspect something.
+ * 
+ * Although inspect has a parameter, no additional commands are allowed for
+ * this. There seems to be only one way in which something can be inspected and
+ * since inspecting is never forbidden, having aliases could yield strange
+ * results.
  * 
  * @author Satia
  */
 public class Inspect extends Command {
 
 	/**
-	 * @param gamePlayer the game player
+	 * @param gamePlayer
+	 *            the game player
 	 */
 	public Inspect(GamePlayer gamePlayer) {
 		super(gamePlayer);
@@ -26,7 +32,7 @@ public class Inspect extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		// TODO Auto-generated method stub
+		// There are no additional commands
 		return new HashSet<>();
 	}
 
@@ -37,27 +43,23 @@ public class Inspect extends Command {
 					"Execute: wrong number of identifiers");
 			return;
 		}
-		inspect(originalCommand, identifiers[0]);
+		inspect(identifiers[0]);
 	}
 
 	/**
 	 * Tries to inspect an object with the given name. The player will look at
 	 * it if possible and if not, a meaningful message will be displayed.
-	 * 
-	 * @param originalCommand
-	 *            TODO if the command was original (or else additional). Used to
-	 *            test if an additional command really belonged to the chosen
-	 *            identifier.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
-	private void inspect(boolean originalCommand, String identifier) {
+	private void inspect(String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Inspecting identifier {0}", identifier);
-		
+
 		Game game = gamePlayer.getGame();
 
-		Inspectable object = InspectableObjectManager.getInspectable(identifier);
+		Inspectable object = InspectableObjectManager
+				.getInspectable(identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 

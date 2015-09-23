@@ -148,7 +148,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * Initializes the fields.
 	 */
-	private void init() {
+	private final void init() {
 		this.enablingTakeable = Enabling.DO_NOT_CHANGE;
 		this.enablingRemoveItem = Enabling.DO_NOT_CHANGE;
 		this.pickUpItemsToAdd = new ArrayList<>();

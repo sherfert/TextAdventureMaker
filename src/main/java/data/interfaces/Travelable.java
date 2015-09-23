@@ -19,12 +19,25 @@ public interface Travelable extends Identifiable {
 	 *            the action
 	 */
 	public void addAdditionalActionToMove(AbstractAction action);
+	
+	/**
+	 * Adds an additional command that can be used to travel here.
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void addAdditionalTravelCommand(String command);
 
 	/**
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromMove();
-
+	
+	/**
+	 * @return the additional travel commands.
+	 */
+	public List<String> getAdditionalTravelCommands();
+	
 	/**
 	 * @return the destination
 	 */
@@ -52,6 +65,14 @@ public interface Travelable extends Identifiable {
 	 *            the action
 	 */
 	public void removeAdditionalActionFromMove(AbstractAction action);
+	
+	/**
+	 * Removes an additional travel command
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void removeAdditionalTravelCommand(String command);
 
 	/**
 	 * Sets the forbidden text. If {@code null} passed, the default text will be
