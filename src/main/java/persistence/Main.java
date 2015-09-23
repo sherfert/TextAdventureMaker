@@ -39,6 +39,8 @@ import java.io.File;
  * 
  * TODO sound support (optional)
  * 
+ * TODO EndGame message not displayed?
+ * 
  * @author Satia
  */
 public class Main {

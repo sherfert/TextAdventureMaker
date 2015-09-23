@@ -1,7 +1,6 @@
 package playing.parser;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +11,16 @@ import java.util.regex.Pattern;
 
 import data.Game;
 import playing.GamePlayer;
+import playing.command.Command;
+import playing.command.Help;
+import playing.command.Inspect;
+import playing.command.Inventory;
+import playing.command.LookAround;
+import playing.command.Move;
+import playing.command.Take;
+import playing.command.TalkTo;
+import playing.command.Use;
+import playing.command.UseWithCombine;
 
 /**
  * The parser for recognizing commands.
@@ -26,50 +35,42 @@ public class GeneralParser {
 	 * The ordering must be chosen carefully.
 	 *
 	 * E.g. should USEWITHCOMBINE come before USE, as USEWITHCOMBINE could have
-	 * "use X with Y" as a command and USE could have "use X". Changing that
+	 * "use X with Y" as a commandType and USE could have "use X". Changing that
 	 * order parsing "use A with b" would result in an answer like
 	 * "there is no A with B here".
 	 *
-	 * On the other hand, if "look around" is a LOOKAROUND command, it should
-	 * come before INSPECT if "look X" is an INSPECT command, otherwise you
-	 * would hear "there is no around here". The tradeoff is that no item can be
-	 * named "around".
+	 * On the other hand, if "look around" is a LOOKAROUND commandType, it
+	 * should come before INSPECT if "look X" is an INSPECT commandType,
+	 * otherwise you would hear "there is no around here". The tradeoff is that
+	 * no item can be named "around".
 	 *
 	 * Generally speaking, commands with more parameters should often come
 	 * first.
-	 * 
-	 * TODO Use proper methods here.
 	 *
 	 * @author Satia
 	 */
-	public enum Command {
+	public enum CommandType {
 		/** Use one item with another or combine two items */
 		USEWITHCOMBINE("getUseWithCombineCommands",
-				"getUseWithCombineHelpText", "useWithOrCombine", "getNoAdditionalCommands",
-				boolean.class, String.class, String.class), //
+				"getUseWithCombineHelpText", UseWithCombine.class), //
 		/** Move around */
-		MOVE("getMoveCommands", "getMoveHelpText", "move", "getNoAdditionalCommands", boolean.class,
-				String.class), //
+		MOVE("getMoveCommands", "getMoveHelpText", Move.class), //
 		/** Take something */
-		TAKE("getTakeCommands", "getTakeHelpText", "take", "getNoAdditionalCommands", boolean.class,
-				String.class), //
+		TAKE("getTakeCommands", "getTakeHelpText", Take.class), //
 		/** Use something */
-		USE("getUseCommands", "getUseHelpText", "use",
-				"getAdditionalUseCommands", boolean.class, String.class), //
+		USE("getUseCommands", "getUseHelpText", Use.class), //
 		/** Talk to someone */
-		TALKTO("getTalkToCommands", "getTalkToHelpText", "talkTo", "getNoAdditionalCommands",
-				boolean.class, String.class), //
+		TALKTO("getTalkToCommands", "getTalkToHelpText", TalkTo.class), //
 		/** Look around */
 		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
-				"lookAround", "getNoAdditionalCommands", boolean.class), //
+				LookAround.class), //
 		/** Inspect something */
-		INSPECT("getInspectCommands", "getInspectHelpText", "inspect", "getNoAdditionalCommands",
-				boolean.class, String.class), //
+		INSPECT("getInspectCommands", "getInspectHelpText", Inspect.class), //
 		/** Look into the inventory */
-		INVENTORY("getInventoryCommands", "getInventoryHelpText", "inventory",
-				"getNoAdditionalCommands", boolean.class), //
+		INVENTORY("getInventoryCommands", "getInventoryHelpText",
+				Inventory.class), //
 		/** Get help */
-		HELP("getHelpCommands", "getHelpHelpText", "help", "getNoAdditionalCommands", boolean.class);
+		HELP("getHelpCommands", "getHelpHelpText", Help.class);
 
 		/**
 		 * The name of the method that gets the valid commands. Must be a method
@@ -79,29 +80,17 @@ public class GeneralParser {
 		public final String commandMethodName;
 
 		/**
-		 * The name of the method that gets the help text for that command. Must
-		 * be a method of the class {@link Game} with no parameters and String
-		 * as return type.
+		 * The name of the method that gets the help text for that commandType.
+		 * Must be a method of the class {@link Game} with no parameters and
+		 * String as return type.
 		 */
 		public final String helpTextMethodName;
 
 		/**
-		 * The name of the method that should be invoked when this command was
-		 * recognized. Must be a method of the class {@link GamePlayer}.
+		 * The concrete class of the command implementing the functionality of
+		 * this command type.
 		 */
-		public final String methodName;
-
-		/**
-		 * The name of the method that gets all additional commands. Must be a
-		 * method of the class {@link GamePlayer} with no parameters and Set of
-		 * String as return type.
-		 */
-		public final String additionalCommandsMethodName;
-
-		/**
-		 * The parameter types of the method denoted by methodName.
-		 */
-		public final Class<?>[] parameterTypes;
+		public final Class<? extends Command> commandClass;
 
 		/**
 		 * @param commandMethodName
@@ -110,27 +99,17 @@ public class GeneralParser {
 		 *            and List of Strings as return type.
 		 * @param helpTextMethodName
 		 *            the name of the method that gets the help text for that
-		 *            command. Must be a method of the class {@link Game} with
-		 *            no parameters and String as return type.
-		 * @param methodName
-		 *            the name of the method that should be invoked when this
-		 *            command was recognized. Must be a method of the class
-		 *            {@link GamePlayer}.
-		 * @param additionalCommandsMethodName
-		 *            the name of the method that gets all additional commands.
-		 *            Must be a method of the class {@link GamePlayer} with no
-		 *            parameters and Set of String as return type.
-		 * @param parameterTypes
-		 *            the parameter types of the method denoted by methodName.
+		 *            commandType. Must be a method of the class {@link Game}
+		 *            with no parameters and String as return type.
+		 * @param commandClass
+		 *            the concrete class of the command implementing the
+		 *            functionality of this command type.
 		 */
-		private Command(String commandMethodName, String helpTextMethodName,
-				String methodName, String additionalCommandsMethodName,
-				Class<?>... parameterTypes) {
+		private CommandType(String commandMethodName,
+				String helpTextMethodName, Class<? extends Command> commandClass) {
 			this.commandMethodName = commandMethodName;
 			this.helpTextMethodName = helpTextMethodName;
-			this.methodName = methodName;
-			this.additionalCommandsMethodName = additionalCommandsMethodName;
-			this.parameterTypes = parameterTypes;
+			this.commandClass = commandClass;
 		}
 	}
 
@@ -142,7 +121,7 @@ public class GeneralParser {
 	public class CommandRecExec {
 
 		/**
-		 * The pattern for recognizing the command.
+		 * The pattern for recognizing the commandType.
 		 */
 		private Pattern pattern;
 
@@ -152,9 +131,9 @@ public class GeneralParser {
 		private Pattern additionalCommandsPattern;
 
 		/**
-		 * The method being executed when the command was typed.
+		 * The commandType.
 		 */
-		private Method executeMethod;
+		private final CommandType commandType;
 
 		/**
 		 * The command.
@@ -167,39 +146,33 @@ public class GeneralParser {
 		private List<String> textualCommands;
 
 		/**
-		 * The help text for this command.
+		 * The help text for this commandType.
 		 */
 		private String commandHelpText;
 
 		/**
-		 * @param command
-		 *            the command
+		 * @param commandType
+		 *            the commandType
 		 */
 		@SuppressWarnings("unchecked")
-		public CommandRecExec(Command command) {
-			this.command = command;
+		public CommandRecExec(CommandType commandType) {
+			this.commandType = commandType;
+			this.command = gamePlayer.getCommand(commandType.commandClass);
+			
 			try {
 				this.textualCommands = (List<String>) Game.class
-						.getDeclaredMethod(command.commandMethodName).invoke(
-								gamePlayer.getGame());
+						.getDeclaredMethod(commandType.commandMethodName)
+						.invoke(gamePlayer.getGame());
 				this.pattern = PatternGenerator
 						.getPattern(this.textualCommands);
-				
-				if (command.additionalCommandsMethodName != null) {
-					Set<String> commands = (Set<String>) GamePlayer.class
-							.getDeclaredMethod(
-									command.additionalCommandsMethodName)
-							.invoke(gamePlayer);
-					additionalCommandsPattern = PatternGenerator
-							.getPattern(commands);
-				}
+
+				Set<String> commands = command.getAdditionalCommands();
+				additionalCommandsPattern = PatternGenerator
+						.getPattern(commands);
 
 				commandHelpText = (String) Game.class.getDeclaredMethod(
-						command.helpTextMethodName)
-						.invoke(gamePlayer.getGame());
-
-				this.executeMethod = GamePlayer.class.getDeclaredMethod(
-						command.methodName, command.parameterTypes);
+						commandType.helpTextMethodName).invoke(
+						gamePlayer.getGame());
 			} catch (ClassCastException | NoSuchMethodException
 					| SecurityException | IllegalAccessException
 					| IllegalArgumentException | InvocationTargetException e) {
@@ -214,55 +187,41 @@ public class GeneralParser {
 		 *
 		 * @param input
 		 *            the input
-		 * @return if the input matches the command's pattern.
+		 * @return if the input matches the commandType's pattern.
 		 */
 		private boolean recognizeAndExecute(String input) {
 			Matcher matcher = pattern.matcher(input);
 			Matcher additionalCommandsMatcher = additionalCommandsPattern
 					.matcher(input);
+			
 			boolean matchFound = false;
-			Object[] params = null;
+			boolean originalCommand = false;
+			String[] params = null;
 			if (matcher.matches()) {
-				params = getParameters(matcher, true);
+				params = getParameters(matcher);
 				matchFound = true;
+				originalCommand = true;
 			} else if (additionalCommandsMatcher.matches()) {
-				params = getParameters(additionalCommandsMatcher, false);
+				params = getParameters(additionalCommandsMatcher);
 				matchFound = true;
+				originalCommand = false;
 			}
 
-			// Either a normal or an additional command matched
+			// Either a normal or an additional commandType matched
 			if (matchFound) {
-				try {
-					if (executeMethod.getParameterTypes().length == params.length) {
-						Logger.getLogger(this.getClass().getName()).log(
-								Level.FINE, "Invoking method {0}",
-								executeMethod);
-						executeMethod.invoke(gamePlayer, params);
-					} else {
-						Logger.getLogger(this.getClass().getName())
-								.log(Level.SEVERE,
-										"Number of parameters for method {0} is wrong.",
-										executeMethod);
-					}
-				} catch (IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException e) {
-					Logger.getLogger(this.getClass().getName())
-							.log(Level.SEVERE,
-									"Could not invoke method " + executeMethod
-											+ ":", e);
-				}
-				// This command matches
+				command.execute(originalCommand, params);
+				// This commandType matches
 				return true;
 			}
-			// This command did not match
+			// This commandType did not match
 			return false;
 		}
 
 		/**
-		 * @return the command
+		 * @return the commandType
 		 */
-		public Command getCommand() {
-			return command;
+		public CommandType getCommand() {
+			return commandType;
 		}
 
 		/**
@@ -285,25 +244,18 @@ public class GeneralParser {
 	 *
 	 * @param matcher
 	 *            the matcher that must have matched an input
-	 * @param originalCommand
-	 *            {@code true}, if an original command was used, {@code false}
-	 *            for an additional command
-	 * @return an array with {@literal originalCommand} in position 0 and the
-	 *         typed parameters in the remainder of the array.
+	 * @return an array with the
+	 *         typed parameters
 	 */
-	public static Object[] getParameters(Matcher matcher,
-			boolean originalCommand) {
-		List<Object> parameters = new ArrayList<>(matcher.groupCount() + 1);
-		// Add the boolean in the beginning
-		parameters.add(originalCommand);
-
+	public static String[] getParameters(Matcher matcher) {
+		List<String> parameters = new ArrayList<>(matcher.groupCount());
 		for (int i = 1; i <= matcher.groupCount(); i++) {
 			if (matcher.group(i) != null) {
 				parameters.add(matcher.group(i));
 			}
 		}
 
-		return parameters.toArray(new Object[0]);
+		return parameters.toArray(new String[0]);
 	}
 
 	/**
@@ -312,7 +264,7 @@ public class GeneralParser {
 	private final GamePlayer gamePlayer;
 
 	/**
-	 * A list of {@link CommandRecExec}s for each {@link Command}.
+	 * A list of {@link CommandRecExec}s for each {@link CommandType}.
 	 */
 	private final List<CommandRecExec> commandRecExecs;
 
@@ -333,21 +285,22 @@ public class GeneralParser {
 		exitPattern = PatternGenerator.getPattern(gamePlayer.getGame()
 				.getExitCommands());
 		// Build CommandRecExecs
-		Command[] commands = Command.values();
+		CommandType[] commands = CommandType.values();
 		this.commandRecExecs = new ArrayList<>(commands.length);
-		for (Command command : commands) {
-			this.commandRecExecs.add(new CommandRecExec(command));
+		for (CommandType commandType : commands) {
+			this.commandRecExecs.add(new CommandRecExec(commandType));
 		}
 	}
 
 	/**
-	 * Parses an input String and invokes the according method, if the command
-	 * had a valid syntax. Otherwise the player is told, that the command was
-	 * not valid. Returns whether an non-exit command has been entered
+	 * Parses an input String and invokes the according method, if the
+	 * commandType had a valid syntax. Otherwise the player is told, that the
+	 * commandType was not valid. Returns whether an non-exit commandType has
+	 * been entered
 	 *
 	 * @param input
 	 *            the input
-	 * @return {@code true} if the command was NOT an exit command,
+	 * @return {@code true} if the commandType was NOT an exit commandType,
 	 *         {@code false} otherwise.
 	 */
 	public boolean parse(String input) {
@@ -357,7 +310,7 @@ public class GeneralParser {
 		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ")
 				.replaceAll("\\p{Punct}", "");
 
-		// Is it an exit command?
+		// Is it an exit commandType?
 		if (exitPattern.matcher(input).matches()) {
 			return false;
 		}
@@ -372,7 +325,7 @@ public class GeneralParser {
 				return true;
 			}
 		}
-		// No command matched
+		// No commandType matched
 		gamePlayer.noCommand();
 		return true;
 	}
