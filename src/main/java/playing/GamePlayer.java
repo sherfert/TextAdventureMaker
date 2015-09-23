@@ -10,6 +10,7 @@ import playing.InputOutput.GeneralIOManager;
 import playing.menu.LoadSaveManager;
 import playing.parser.GeneralParser;
 import playing.parser.GeneralParser.CommandRecExec;
+import playing.parser.PatternGenerator;
 import data.Game;
 import data.InventoryItem;
 import data.interfaces.Combinable;
@@ -414,14 +415,18 @@ public class GamePlayer implements GeneralIOManager {
 	 * be performed. A message informing about success/failure will be
 	 * displayed.
 	 * 
+	 * @param originalCommand
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
+	 *            identifier and invoke {@link GamePlayer#noCommand} otherwise.
 	 * @param identifier
 	 *            an identifier of the object
 	 */
-	public void use(String identifier) {
+	public void use(boolean originalCommand, String identifier) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Use identifier {0}", identifier);
 
-		// Collect all objects, whether they are takeable or not.
+		// Collect all objects, whether they are usable or not.
 		Inspectable objectI = PlayerManager.getInspectable(game.getPlayer(),
 				identifier);
 		// Save identifier
@@ -431,11 +436,15 @@ public class GamePlayer implements GeneralIOManager {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Use item not found {0}", identifier);
 
-			// There is no such object and you have no such object
-			String message = game.getNoSuchItemText() + " "
-					+ game.getNoSuchInventoryItemText();
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getFailedBgColor(), game.getFailedFgColor());
+			if (!originalCommand) {
+				noCommand();
+			} else {
+				// There is no such object and you have no such object
+				String message = game.getNoSuchItemText() + " "
+						+ game.getNoSuchInventoryItemText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+			}
 		} else {
 			// Save name
 			currentReplacer.setName(objectI.getName());
@@ -445,6 +454,18 @@ public class GamePlayer implements GeneralIOManager {
 
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Use id {0}", object.getId());
+
+				if (!originalCommand) {
+					// Check if the additional command belongs the the chosen
+					// usable
+					if (!PatternGenerator
+							.getPattern(object.getAdditionalUseCommands())
+							.matcher(currentReplacer.getInput()).matches()) {
+						// no match - invoke no command
+						noCommand();
+						return;
+					}
+				}
 
 				// Save name
 				currentReplacer.setName(object.getName());
@@ -479,11 +500,15 @@ public class GamePlayer implements GeneralIOManager {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Use item not of type Useable {0}", identifier);
 
-				// There is something (e.g. a person), but nothing you could
-				// use.
-				String message = game.getInvalidCommandText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+				if (!originalCommand) {
+					noCommand();
+				} else {
+					// There is something (e.g. a person), but nothing you could
+					// use.
+					String message = game.getInvalidCommandText();
+					io.println(currentReplacer.replacePlaceholders(message),
+							game.getFailedBgColor(), game.getFailedFgColor());
+				}
 			}
 		}
 	}
@@ -791,12 +816,12 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * @return all additional use commands from items in this location
-	 *         and in the inventory.
+	 * @return all additional use commands from items in this location and in
+	 *         the inventory.
 	 */
 	public List<String> getAdditionalUseCommands() {
 		List<String> commands = new ArrayList<>();
-		for(Usable u : PlayerManager.getAllUsables(game.getPlayer())) {
+		for (Usable u : PlayerManager.getAllUsables(game.getPlayer())) {
 			commands.addAll(u.getAdditionalUseCommands());
 		}
 		return commands;

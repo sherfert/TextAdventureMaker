@@ -39,7 +39,7 @@ public class GeneralParser {
 	 *
 	 * @author Satia
 	 */
-	public enum Command {
+	public enum Command {// TODO add bool param to all GamePlayer command methods
 		/** Use one item with another or combine two items */
 		USEWITHCOMBINE("getUseWithCombineCommands",
 				"getUseWithCombineHelpText", "useWithOrCombine", null,
@@ -50,7 +50,7 @@ public class GeneralParser {
 		TAKE("getTakeCommands", "getTakeHelpText", "take", null, String.class), //
 		/** Use something */
 		USE("getUseCommands", "getUseHelpText", "use",
-				"getAdditionalUseCommands", String.class), //
+				"getAdditionalUseCommands", boolean.class, String.class), //
 		/** Talk to someone */
 		TALKTO("getTalkToCommands", "getTalkToHelpText", "talkTo", null,
 				String.class), //
@@ -203,12 +203,11 @@ public class GeneralParser {
 		@SuppressWarnings("unchecked")
 		private boolean recognizeAndExecute(String input) {
 			Matcher matcher = pattern.matcher(input);
-			
 
 			// Additional commands must be gotten every single time, since they
 			// can change
 			Matcher additionalCommandsMatcher = null;
-			// TODO
+			// TODO not once per command, but once per input!!!
 			if (command.additionalCommandsMethodName != null) {
 				try {
 					List<String> commands = (List<String>) GamePlayer.class
@@ -218,8 +217,9 @@ public class GeneralParser {
 
 					Pattern additionalCommandsPattern = PatternGenerator
 							.getPattern(commands);
-					additionalCommandsMatcher = additionalCommandsPattern.matcher(input);
-					
+					additionalCommandsMatcher = additionalCommandsPattern
+							.matcher(input);
+
 				} catch (IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException | NoSuchMethodException
 						| SecurityException e) {
@@ -230,17 +230,17 @@ public class GeneralParser {
 				}
 			}
 
-			
 			boolean matchFound = false;
-			String[] params = null;
-			if(matcher.matches()) {
-				params = getParameters(matcher);
+			Object[] params = null;
+			if (matcher.matches()) {
+				params = getParameters(matcher, true);
 				matchFound = true;
-			} else if(additionalCommandsMatcher != null && additionalCommandsMatcher.matches()) {
-				params = getParameters(additionalCommandsMatcher);
+			} else if (additionalCommandsMatcher != null
+					&& additionalCommandsMatcher.matches()) {
+				params = getParameters(additionalCommandsMatcher, false);
 				matchFound = true;
 			}
-			
+
 			// Either a normal or an additional command matched
 			if (matchFound) {
 				try {
@@ -248,7 +248,7 @@ public class GeneralParser {
 						Logger.getLogger(this.getClass().getName()).log(
 								Level.FINE, "Invoking method {0}",
 								executeMethod);
-						executeMethod.invoke(gamePlayer, (Object[]) params);
+						executeMethod.invoke(gamePlayer, params);
 					} else {
 						Logger.getLogger(this.getClass().getName())
 								.log(Level.SEVERE,
@@ -296,16 +296,25 @@ public class GeneralParser {
 	 *
 	 * @param matcher
 	 *            the matcher that must have matched an input
-	 * @return the typed parameters.
+	 * @param originalCommand
+	 *            {@code true}, if an original command was used, {@code false}
+	 *            for an additional command
+	 * @return an array with {@literal originalCommand} in position 0 and the
+	 *         typed parameters in the remainder of the array.
 	 */
-	public static String[] getParameters(Matcher matcher) {
-		List<String> parameters = new ArrayList<>(matcher.groupCount());
+	public static Object[] getParameters(Matcher matcher,
+			boolean originalCommand) {
+		List<Object> parameters = new ArrayList<>(matcher.groupCount() + 1);
+		// Add the boolean in the beginning
+		parameters.add(originalCommand);
+		
 		for (int i = 1; i <= matcher.groupCount(); i++) {
 			if (matcher.group(i) != null) {
 				parameters.add(matcher.group(i));
 			}
 		}
-		return parameters.toArray(new String[0]);
+		
+		return parameters.toArray(new Object[0]);
 	}
 
 	/**

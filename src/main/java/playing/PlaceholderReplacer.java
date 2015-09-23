@@ -164,6 +164,13 @@ public class PlaceholderReplacer {
 	}
 
 	/**
+	 * @return the input
+	 */
+	public String getInput() {
+		return input;
+	}
+
+	/**
 	 * @param name
 	 *            the name to set
 	 */
