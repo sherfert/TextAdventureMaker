@@ -22,6 +22,17 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 			AbstractAction action);
 
 	/**
+	 * Adds an additional command that can be used to use this with something
+	 * else.
+	 * 
+	 * @param object
+	 *            the object
+	 * @param command
+	 *            the command
+	 */
+	public void addAdditionalUseWithCommand(HasLocation object, String command);
+
+	/**
 	 * @param object
 	 *            the object
 	 * 
@@ -29,6 +40,14 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 */
 	public List<AbstractAction> getAdditionalActionsFromUseWith(
 			HasLocation object);
+	
+	/**
+	 * @param object
+	 *            the object
+	 * 
+	 * @return the additional use with commands.
+	 */
+	public List<String> getAdditionalUseWithCommands(HasLocation object);
 
 	/**
 	 * @param object
@@ -64,6 +83,17 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 */
 	public void removeAdditionalActionFromUseWith(HasLocation object,
 			AbstractAction action);
+	
+	/**
+	 * Removes an additional use with command.
+	 * 
+	 * @param object
+	 *            the object
+	 * @param command
+	 *            the command
+	 */
+	public void removeAdditionalUseWithCommand(HasLocation object,
+			String command);
 
 	/**
 	 * Sets the forbidden text for that object. If {@code null} passed, the

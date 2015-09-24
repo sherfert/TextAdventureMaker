@@ -3,7 +3,6 @@
  */
 package playing.command;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,8 +37,10 @@ public class UseWithCombine extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		// TODO union with the useWith commands
-		return InventoryItemManager.getAllAdditionaTakeCommands();
+		Set<String> result = InventoryItemManager
+				.getAllAdditionaCombineCommands();
+		result.addAll(InventoryItemManager.getAllAdditionaUseWithCommands());
+		return result;
 	}
 
 	@Override
@@ -61,8 +62,8 @@ public class UseWithCombine extends Command {
 	 * a HasLocation.
 	 * 
 	 * @param originalCommand
-	 *            TODO if the command was original (or else additional). Used to
-	 *            test if an additional command really belonged to the chosen
+	 *            if the command was original (or else additional). Used to test
+	 *            if an additional command really belonged to the chosen
 	 *            identifier.
 	 * @param parameter1
 	 *            the first parameter.
@@ -108,12 +109,13 @@ public class UseWithCombine extends Command {
 				// The rawtype can be used since we know they're the same type
 
 				// Combine
-				combine(originalCommand, (Combinable) object1, (Combinable) object2, game);
+				combine(originalCommand, (Combinable) object1,
+						(Combinable) object2, game);
 			} else if (object1 instanceof UsableWithHasLocation
 					&& object2 instanceof HasLocation) {
 				// UseWith
-				useWith((UsableWithHasLocation) object1, (HasLocation) object2,
-						game);
+				useWith(originalCommand, (UsableWithHasLocation) object1,
+						(HasLocation) object2, game);
 			} else if (object2 != null) {
 				// Error: Object2 not of correct type
 				Logger.getLogger(this.getClass().getName())
@@ -198,7 +200,8 @@ public class UseWithCombine extends Command {
 		if (!originalCommand) {
 			// Check if the additional command belongs the the chosen
 			// item1 with item2 (not vice versa!)
-			if (!PatternGenerator.getPattern(item1.getAdditionalCombineCommands(item2))
+			if (!PatternGenerator
+					.getPattern(item1.getAdditionalCombineCommands(item2))
 					.matcher(currentReplacer.getInput()).matches()) {
 				// no match
 				String message = game.getNotUsableWithText();
@@ -240,6 +243,8 @@ public class UseWithCombine extends Command {
 	/**
 	 * Uses an {@link UsableWithHasLocation} with an {@link HasLocation}.
 	 * 
+	 * @param originalCommand
+	 *            if the command was original (or else additional).
 	 * @param usable
 	 *            the {@link UsableWithHasLocation}
 	 * @param object
@@ -247,8 +252,22 @@ public class UseWithCombine extends Command {
 	 * @param game
 	 *            the game
 	 */
-	private void useWith(UsableWithHasLocation usable, HasLocation object,
-			Game game) {
+	private void useWith(boolean originalCommand, UsableWithHasLocation usable,
+			HasLocation object, Game game) {
+		if (!originalCommand) {
+			// Check if the additional command belongs the the chosen
+			// usable with object.
+			if (!PatternGenerator
+					.getPattern(usable.getAdditionalUseWithCommands(object))
+					.matcher(currentReplacer.getInput()).matches()) {
+				// no match
+				String message = game.getNotUsableWithText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+				return;
+			}
+		}
+
 		if (usable.isUsingEnabledWith(object)) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
 					"Uswith enabled id {0} with {1}",

@@ -74,7 +74,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param partner
 	 *            the partner
 	 * 
-	 * @return the additional use commands.
+	 * @return the additional combine commands.
 	 */
 	public List<String> getAdditionalCombineCommands(Combinable<E> partner);
 
@@ -141,7 +141,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param command
 	 *            the command
 	 */
-	public void removeAdditionalConbineCommand(Combinable<E> partner,
+	public void removeAdditionalCombineCommand(Combinable<E> partner,
 			String command);
 
 	/**

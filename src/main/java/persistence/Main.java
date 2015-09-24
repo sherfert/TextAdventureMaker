@@ -361,6 +361,10 @@ public class Main {
 		peel.setCombiningEnabledWith(invPen, true);
 		// Unidirectional additional combine command
 		peel.addAdditionalCombineCommand(invPen, "paint (?<o0>.+) with (?<o1>.+)");
+		// and additional use with command
+		peel.addAdditionalUseWithCommand(pen, "paint (?<o0>.+) with (?<o1>.+)");
+		// and another to test different ordering
+		peel.addAdditionalUseWithCommand(pen, "use (?<o1>.+) to paint (?<o0>.+)");
 
 		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
 		peel.setCombineWithSuccessfulText(invPen,
@@ -439,9 +443,6 @@ public class Main {
 		game.setUseWithCombineHelpText("Use one item with another or combine two items in your inventory");
 		game.setTalkToHelpText("Talk to someone");
 
-		// TODO special command identifiers like "eat banana" instead of
-		// "use banana"?
-
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
 		game.addInspectCommand("look( at)? (?<o0>.+)");
@@ -455,7 +456,6 @@ public class Main {
 		game.addTakeCommand("pick up (?<o0>.+)");
 		game.addTakeCommand("pick (?<o0>.+) up");
 		game.addUseCommand("use (?<o0>.+)");
-		// TODO asymmetrical useWith/combine commands!
 		game.addUseWithCombineCommand("use (?<o0>.+) with (?<o1>.+)");
 		game.addUseWithCombineCommand("combine (?<o0>.+) and (?<o1>.+)");
 		game.addUseWithCombineCommand("combine (?<o0>.+) with (?<o1>.+)");

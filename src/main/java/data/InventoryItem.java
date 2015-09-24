@@ -175,6 +175,12 @@ public class InventoryItem extends UsableObject implements
 		@ManyToMany(cascade = CascadeType.PERSIST)
 		@JoinTable
 		private final List<AbstractAction> additionalUseWithActions;
+		
+		/**
+		 * All additional useWith commands.
+		 */
+		@ElementCollection
+		private List<String> additionalUseWithCommands;
 
 		/**
 		 * Whether using of this {@link InventoryItem} with the mapped
@@ -211,6 +217,7 @@ public class InventoryItem extends UsableObject implements
 		 */
 		public UsableHasLocation() {
 			additionalUseWithActions = new ArrayList<>();
+			additionalUseWithCommands = new ArrayList<>();
 			enabled = false;
 		}
 
@@ -368,6 +375,11 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
+	public void addAdditionalUseWithCommand(HasLocation object, String command) {
+		getUsableHasLocation(object).additionalUseWithCommands.add(command);
+	}
+
+	@Override
 	public void combineWith(Combinable<InventoryItem> partner) {
 		CombinableInventoryItem combination = getCombinableInventoryItem(partner);
 		if (combination.enabled) {
@@ -436,6 +448,11 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
+	public List<String> getAdditionalUseWithCommands(HasLocation object) {
+		return getUsableHasLocation(object).additionalUseWithCommands;
+	}
+
+	@Override
 	public boolean getRemoveCombinablesWhenCombinedWith(
 			Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).removeCombinables;
@@ -475,9 +492,15 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void removeAdditionalConbineCommand(
+	public void removeAdditionalCombineCommand(
 			Combinable<InventoryItem> partner, String command) {
 		getCombineCommands(partner).commands.remove(command);
+	}
+
+	@Override
+	public void removeAdditionalUseWithCommand(HasLocation object,
+			String command) {
+		getUsableHasLocation(object).additionalUseWithCommands.remove(command);
 	}
 
 	@Override
