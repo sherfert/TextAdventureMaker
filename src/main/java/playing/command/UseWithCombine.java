@@ -55,23 +55,24 @@ public class UseWithCombine extends Command {
 	 * actions will be performed. A message informing about success/failure will
 	 * be displayed.
 	 * 
+	 * o0 has to denote a Combinable or UsableWithHasLocation, o1 can be that or
+	 * a HasLocation.
+	 * 
 	 * @param originalCommand
 	 *            TODO if the command was original (or else additional). Used to
 	 *            test if an additional command really belonged to the chosen
 	 *            identifier.
-	 * @param identifier1
-	 *            an identifier of the first object
-	 * @param identifier2
-	 *            an identifier of the second object
+	 * @param parameter1
+	 *            the first parameter.
+	 * @param parameter2
+	 *            the second parameter.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void useWithOrCombine(boolean originalCommand, Parameter parameter1,
-			Parameter parameter2) {
-		// TODO make something sensible with the parameters
+	private void useWithOrCombine(boolean originalCommand,
+			Parameter parameter1, Parameter parameter2) {
 		String identifier1 = parameter1.getIdentifier();
 		String identifier2 = parameter2.getIdentifier();
-		
-		
+
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Usewith/combine identifiers {0} / {1}",
 				new Object[] { identifier1, identifier2 });
@@ -137,25 +138,6 @@ public class UseWithCombine extends Command {
 				io.println(currentReplacer.replacePlaceholders(message),
 						game.getFailedBgColor(), game.getFailedFgColor());
 			}
-		} else if (object1 instanceof HasLocation) {
-			if (object2 instanceof UsableWithHasLocation) {
-				// UseWith
-				useWith((UsableWithHasLocation) object2, (HasLocation) object1,
-						game);
-			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Usewith/combine objects not found {0} / {1}",
-						new Object[] { identifier1, identifier2 });
-
-				// Error: Neither Object1 nor Object2 in inventory
-				String message = game.getNoSuchInventoryItemText()
-						+ " "
-						+ PlaceholderReplacer
-								.convertFirstToSecondPlaceholders(game
-										.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
-			}
 		} else {
 			if (object2 instanceof UsableWithHasLocation) {
 				if (object1 != null) {
@@ -174,7 +156,7 @@ public class UseWithCombine extends Command {
 									"Usewith/combine object not found {0}",
 									identifier1);
 
-					// Error: Object1 neither in inventory nor in location
+					// Error: Object1 not in inventory
 					String message = game.getNoSuchItemText() + " "
 							+ game.getNoSuchInventoryItemText();
 					io.println(currentReplacer.replacePlaceholders(message),
@@ -199,6 +181,8 @@ public class UseWithCombine extends Command {
 
 	/**
 	 * Combines two {@link InventoryItem}s.
+	 * 
+	 * TODO This method must be changed for asymmetric combine commands.
 	 * 
 	 * @param item1
 	 *            the first item

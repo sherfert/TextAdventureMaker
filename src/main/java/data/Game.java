@@ -2,7 +2,10 @@ package data;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
+import data.interfaces.Combinable;
 import data.interfaces.HasId;
+import data.interfaces.HasLocation;
+import data.interfaces.UsableWithHasLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,8 @@ import javax.persistence.OneToOne;
 /**
  * A game that can be played. Contains all configuration and (default) texts.
  * There should be only one game per database.
+ * 
+ * TODO update literals
  * 
  * @author Satia
  */
@@ -377,7 +382,12 @@ public class Game implements HasId {
 
 	/**
 	 * All useWith/combine commands. Must be lowercase. Must contain at least
-	 * one word and exactly two parameters for the objects: {@literal (.+)}
+	 * one word and exactly two parameters for the objects: {@literal (?<o0>.+)}
+	 * and {@literal (?<o1>.+)}
+	 * 
+	 * {@literal o0} has to denote a {@link Combinable} or a
+	 * {@link UsableWithHasLocation}. {@literal o1} can be that or a
+	 * {@link HasLocation}.
 	 */
 	@ElementCollection
 	private final List<String> useWithCombineCommands;
