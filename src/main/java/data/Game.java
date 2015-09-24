@@ -385,6 +385,8 @@ public class Game implements HasId {
 	 * one word and exactly two parameters for the objects: {@literal (?<o0>.+)}
 	 * and {@literal (?<o1>.+)}
 	 * 
+	 * UseWith commands are asymmetric, combine commands are symmetric.
+	 * 
 	 * {@literal o0} has to denote a {@link Combinable} or a
 	 * {@link UsableWithHasLocation}. {@literal o1} can be that or a
 	 * {@link HasLocation}.

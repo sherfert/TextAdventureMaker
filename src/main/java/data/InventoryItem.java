@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -131,6 +132,30 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	/**
+	 * Entity for grouping additional combine commands, as they are asymmetric
+	 * and not symmetric like the basic combine commands.
+	 * 
+	 * @author Satia
+	 */
+	@Entity
+	private static class CombineCommands {
+
+		/**
+		 * The id.
+		 */
+		@Id
+		@GeneratedValue
+		private int id;
+
+		/**
+		 * The commands.
+		 */
+		@ElementCollection
+		private List<String> commands = new ArrayList<>();
+
+	}
+
+	/**
 	 * Attributes of an {@link HasLocation} that can be used with an
 	 * {@link InventoryItem}.
 	 * 
@@ -211,7 +236,6 @@ public class InventoryItem extends UsableObject implements
 	 * value, if it was not stored before. The other inventory item's map will
 	 * be synchronized, too.
 	 */
-	// XXX why Maps not unnullable?
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
@@ -219,7 +243,18 @@ public class InventoryItem extends UsableObject implements
 	// CombinableInventoryItem saves both this.id and key.id.
 	// Therefore, after disconnecting, the mapping only exists in one direction.
 	// A workaround has been installed to handle this.
+	// TODO Test ManyToMany!?
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
+
+	/**
+	 * The additional combine commands for the mapped inventory item. Since the
+	 * additional combine commands are asymmetric, this is placed here as a map
+	 * and not in {@link CombinableInventoryItem} as a List.
+	 */
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
+	@MapKeyJoinColumn
+	private Map<InventoryItem, CombineCommands> additionalCombineCommands;
 
 	/**
 	 * An inventory item can be used with {@link Item}s. For each object there
@@ -327,6 +362,12 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
+	public void addAdditionalCombineCommand(Combinable<InventoryItem> partner,
+			String command) {
+		getCombineCommands(partner).commands.add(command);
+	}
+
+	@Override
 	public void combineWith(Combinable<InventoryItem> partner) {
 		CombinableInventoryItem combination = getCombinableInventoryItem(partner);
 		if (combination.enabled) {
@@ -389,6 +430,12 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
+	public List<String> getAdditionalCombineCommands(
+			Combinable<InventoryItem> partner) {
+		return getCombineCommands(partner).commands;
+	}
+
+	@Override
 	public boolean getRemoveCombinablesWhenCombinedWith(
 			Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).removeCombinables;
@@ -425,6 +472,12 @@ public class InventoryItem extends UsableObject implements
 	public void removeAdditionalActionFromUseWith(HasLocation object,
 			AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.remove(action);
+	}
+
+	@Override
+	public void removeAdditionalConbineCommand(
+			Combinable<InventoryItem> partner, String command) {
+		getCombineCommands(partner).commands.remove(command);
 	}
 
 	@Override
@@ -557,7 +610,7 @@ public class InventoryItem extends UsableObject implements
 				// be still an entry in the other items map
 				result = ((InventoryItem) item).combinableInventoryItems
 						.get(this);
-				
+
 				if (result != null) {
 					// Synchronize our map
 					combinableInventoryItems.put((InventoryItem) item, result);
@@ -569,6 +622,31 @@ public class InventoryItem extends UsableObject implements
 					((InventoryItem) item).combinableInventoryItems.put(this,
 							result);
 				}
+			}
+			return result;
+		} else {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Not supported Combinable subclass: {0}",
+					item.getClass().getName());
+			return null;
+		}
+	}
+
+	/**
+	 * Gets the {@link CombineCommands} associated with the given
+	 * {@link Combinable}.
+	 * 
+	 * @param item
+	 *            the item
+	 * @return the associated {@link CombineCommands}.
+	 */
+	private CombineCommands getCombineCommands(Combinable<InventoryItem> item) {
+		if (item instanceof InventoryItem) {
+			CombineCommands result = additionalCombineCommands.get(item);
+			if (result == null) {
+				// Create a new mapping
+				additionalCombineCommands.put((InventoryItem) item,
+						result = new CombineCommands());
 			}
 			return result;
 		} else {
@@ -618,6 +696,8 @@ public class InventoryItem extends UsableObject implements
 		usableItems = new HashMap<>();
 		usablePersons = new HashMap<>();
 		combinableInventoryItems = new HashMap<>();
+
+		additionalCombineCommands = new HashMap<>();
 	}
 
 	@Override
@@ -628,5 +708,4 @@ public class InventoryItem extends UsableObject implements
 				+ ", usablePersons=" + NamedObject.getIDMap(usablePersons)
 				+ " " + super.toString() + '}';
 	}
-
 }

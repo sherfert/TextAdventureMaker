@@ -5,7 +5,8 @@ import java.util.List;
 import data.action.AbstractAction;
 
 /**
- * Anything combineable with another class. Usually the same class. Namely {@link InventoryItem}.
+ * Anything combineable with another class. Usually the same class. Namely
+ * {@link InventoryItem}.
  * 
  * The InventoryItems may disappear and new ones can be added.
  * 
@@ -41,6 +42,17 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 			E newItem);
 
 	/**
+	 * Adds an additional command that can be used to combine with the partner.
+	 * 
+	 * @param partner
+	 *            the partner
+	 * @param command
+	 *            the command
+	 */
+	public void addAdditionalCombineCommand(Combinable<E> partner,
+			String command);
+
+	/**
 	 * Adds new combinables, removes both partners if removeCombinables is
 	 * enabled and triggers all additional actions for that item, if any.
 	 * 
@@ -62,6 +74,14 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param partner
 	 *            the partner
 	 * 
+	 * @return the additional use commands.
+	 */
+	public List<String> getAdditionalCombineCommands(Combinable<E> partner);
+
+	/**
+	 * @param partner
+	 *            the partner
+	 * 
 	 * @return the forbiddenText for that item or {@code null}.
 	 */
 	public String getCombineWithForbiddenText(Combinable<E> partner);
@@ -75,15 +95,14 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	public String getCombineWithSuccessfulText(Combinable<E> partner);
 
 	/**
-	 * The list of combinables that get added, when this Combinable
-	 * is combined with the given partner.
+	 * The list of combinables that get added, when this Combinable is combined
+	 * with the given partner.
 	 * 
 	 * @param partner
 	 *            the parter
 	 * @return the added combinables.
 	 */
-	public List<E> getNewCombinablesWhenCombinedWith(
-			Combinable<E> partner);
+	public List<E> getNewCombinablesWhenCombinedWith(Combinable<E> partner);
 
 	/**
 	 * Gets if the two Combinables should be removed when combined with the
@@ -113,6 +132,17 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 */
 	public void removeAdditionalActionFromCombineWith(Combinable<E> partner,
 			AbstractAction action);
+
+	/**
+	 * Removes an additional combine command
+	 * 
+	 * @param partner
+	 *            the partner
+	 * @param command
+	 *            the command
+	 */
+	public void removeAdditionalConbineCommand(Combinable<E> partner,
+			String command);
 
 	/**
 	 * Removes a new {@link Combinable} to be added when combined with the given

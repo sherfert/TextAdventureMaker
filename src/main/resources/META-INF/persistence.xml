@@ -31,6 +31,7 @@
 		<class>data.InspectableObject</class>
 		<class>data.InventoryItem</class>
 		<class>data.InventoryItem$CombinableInventoryItem</class>
+		<class>data.InventoryItem$CombineCommands</class>
 		<class>data.InventoryItem$UsableHasLocation</class>
 		<class>data.Item</class>
 		<class>data.Location</class>

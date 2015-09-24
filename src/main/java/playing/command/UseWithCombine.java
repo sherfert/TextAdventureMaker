@@ -15,9 +15,11 @@ import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 import data.interfaces.UsableWithHasLocation;
 import persistence.InspectableObjectManager;
+import persistence.InventoryItemManager;
 import playing.GamePlayer;
 import playing.PlaceholderReplacer;
 import playing.parser.Parameter;
+import playing.parser.PatternGenerator;
 
 /**
  * The command to use one object with something or to combine two objects.
@@ -36,8 +38,8 @@ public class UseWithCombine extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		// TODO Auto-generated method stub
-		return new HashSet<>();
+		// TODO union with the useWith commands
+		return InventoryItemManager.getAllAdditionaTakeCommands();
 	}
 
 	@Override
@@ -106,7 +108,7 @@ public class UseWithCombine extends Command {
 				// The rawtype can be used since we know they're the same type
 
 				// Combine
-				combine((Combinable) object1, (Combinable) object2, game);
+				combine(originalCommand, (Combinable) object1, (Combinable) object2, game);
 			} else if (object1 instanceof UsableWithHasLocation
 					&& object2 instanceof HasLocation) {
 				// UseWith
@@ -182,8 +184,8 @@ public class UseWithCombine extends Command {
 	/**
 	 * Combines two {@link InventoryItem}s.
 	 * 
-	 * TODO This method must be changed for asymmetric combine commands.
-	 * 
+	 * @param originalCommand
+	 *            if the command was original (or else additional).
 	 * @param item1
 	 *            the first item
 	 * @param item2
@@ -191,7 +193,21 @@ public class UseWithCombine extends Command {
 	 * @param game
 	 *            the game
 	 */
-	private <E> void combine(Combinable<E> item1, Combinable<E> item2, Game game) {
+	private <E> void combine(boolean originalCommand, Combinable<E> item1,
+			Combinable<E> item2, Game game) {
+		if (!originalCommand) {
+			// Check if the additional command belongs the the chosen
+			// item1 with item2 (not vice versa!)
+			if (!PatternGenerator.getPattern(item1.getAdditionalCombineCommands(item2))
+					.matcher(currentReplacer.getInput()).matches()) {
+				// no match
+				String message = game.getNotUsableWithText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+				return;
+			}
+		}
+
 		if (item1.isCombiningEnabledWith(item2)) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
 					"Combine enabled id {0} with {1}",

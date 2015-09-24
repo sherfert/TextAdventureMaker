@@ -46,6 +46,8 @@ import java.io.File;
  * 
  * TODO Help message unintelligible.
  * 
+ * TODO Test if items can be used with two different InvItems.
+ * 
  * @author Satia
  */
 public class Main {
@@ -357,6 +359,8 @@ public class Main {
 
 		peel.setUsingEnabledWith(pen, true);
 		peel.setCombiningEnabledWith(invPen, true);
+		// Unidirectional additional combine command
+		peel.addAdditionalCombineCommand(invPen, "paint (?<o0>.+) with (?<o1>.+)");
 
 		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
 		peel.setCombineWithSuccessfulText(invPen,
