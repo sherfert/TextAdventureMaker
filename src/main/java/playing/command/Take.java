@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import persistence.InspectableObjectManager;
 import persistence.ItemManager;
 import playing.GamePlayer;
+import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 import data.Game;
 import data.interfaces.Inspectable;
@@ -33,13 +34,13 @@ public class Take extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, String... identifiers) {
-		if (identifiers.length != 1) {
+	public void execute(boolean originalCommand, Parameter... parameters) {
+		if (parameters.length != 1) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of identifiers");
+					"Execute: wrong number of parameters");
 			return;
 		}
-		take(originalCommand, identifiers[0]);
+		take(originalCommand, parameters[0].getIdentifier());
 	}
 
 	/**

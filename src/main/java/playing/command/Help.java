@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import data.Game;
 import playing.GamePlayer;
 import playing.parser.GeneralParser.CommandRecExec;
+import playing.parser.Parameter;
 
 /**
  * Command displaying help information to the user.
@@ -32,10 +33,10 @@ public class Help extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, String... identifiers) {
-		if (identifiers.length != 0) {
+	public void execute(boolean originalCommand, Parameter... parameters) {
+		if (parameters.length != 0) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of identifiers");
+					"Execute: wrong number of parameters");
 		}
 		help();
 	}

@@ -5,6 +5,7 @@ import java.util.Set;
 import playing.GamePlayer;
 import playing.InputOutput;
 import playing.PlaceholderReplacer;
+import playing.parser.Parameter;
 
 /**
  * Abstract class for all commands.
@@ -57,9 +58,9 @@ public abstract class Command {
 	 *            if the command was original (or else additional). Used to test
 	 *            if an additional command really belonged to the chosen
 	 *            identifier.
-	 * @param identifiers
-	 *            the identifiers. Depending on the command this must be none,
+	 * @param parameters
+	 *            the parameters. Depending on the command this must be none,
 	 *            one, or more.
 	 */
-	public abstract void execute(boolean originalCommand, String... identifiers);
+	public abstract void execute(boolean originalCommand, Parameter... parameters);
 }

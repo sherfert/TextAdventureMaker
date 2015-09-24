@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import data.Game;
 import data.InventoryItem;
 import playing.GamePlayer;
+import playing.parser.Parameter;
 
 /**
  * Command to list the contents of the inventory.
@@ -32,10 +33,10 @@ public class Inventory extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, String... identifiers) {
-		if (identifiers.length != 0) {
+	public void execute(boolean originalCommand, Parameter... parameters) {
+		if (parameters.length != 0) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of identifiers");
+					"Execute: wrong number of parameters");
 			return;
 		}
 		inventory();

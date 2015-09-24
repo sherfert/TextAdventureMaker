@@ -8,6 +8,7 @@ import data.Game;
 import data.interfaces.Travelable;
 import persistence.WayManager;
 import playing.GamePlayer;
+import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 
 /**
@@ -31,13 +32,13 @@ public class Move extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, String... identifiers) {
-		if (identifiers.length != 1) {
+	public void execute(boolean originalCommand, Parameter... parameters) {
+		if (parameters.length != 1) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of identifiers");
+					"Execute: wrong number of parameters");
 			return;
 		}
-		move(originalCommand, identifiers[0]);
+		move(originalCommand, parameters[0].getIdentifier());
 	}
 	
 	/**

@@ -17,6 +17,7 @@ import data.interfaces.UsableWithHasLocation;
 import persistence.InspectableObjectManager;
 import playing.GamePlayer;
 import playing.PlaceholderReplacer;
+import playing.parser.Parameter;
 
 /**
  * The command to use one object with something or to combine two objects.
@@ -40,13 +41,13 @@ public class UseWithCombine extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, String... identifiers) {
-		if (identifiers.length != 2) {
+	public void execute(boolean originalCommand, Parameter... parameters) {
+		if (parameters.length != 2) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of identifiers");
+					"Execute: wrong number of parameters");
 			return;
 		}
-		useWithOrCombine(originalCommand, identifiers[0], identifiers[1]);
+		useWithOrCombine(originalCommand, parameters[0], parameters[1]);
 	}
 
 	/**
@@ -64,8 +65,13 @@ public class UseWithCombine extends Command {
 	 *            an identifier of the second object
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void useWithOrCombine(boolean originalCommand, String identifier1,
-			String identifier2) {
+	private void useWithOrCombine(boolean originalCommand, Parameter parameter1,
+			Parameter parameter2) {
+		// TODO make something sensible with the parameters
+		String identifier1 = parameter1.getIdentifier();
+		String identifier2 = parameter2.getIdentifier();
+		
+		
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Usewith/combine identifiers {0} / {1}",
 				new Object[] { identifier1, identifier2 });

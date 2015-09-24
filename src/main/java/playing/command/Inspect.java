@@ -9,6 +9,7 @@ import data.Game;
 import data.interfaces.Inspectable;
 import persistence.InspectableObjectManager;
 import playing.GamePlayer;
+import playing.parser.Parameter;
 
 /**
  * Command to inspect something.
@@ -37,13 +38,13 @@ public class Inspect extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, String... identifiers) {
-		if (identifiers.length != 1) {
+	public void execute(boolean originalCommand, Parameter... parameters) {
+		if (parameters.length != 1) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of identifiers");
+					"Execute: wrong number of parameters");
 			return;
 		}
-		inspect(identifiers[0]);
+		inspect(parameters[0].getIdentifier());
 	}
 
 	/**

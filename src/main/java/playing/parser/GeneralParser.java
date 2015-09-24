@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import data.Game;
 import playing.GamePlayer;
@@ -21,6 +20,7 @@ import playing.command.Take;
 import playing.command.TalkTo;
 import playing.command.Use;
 import playing.command.UseWithCombine;
+import playing.parser.PatternGenerator.MultiPattern;
 
 /**
  * The parser for recognizing commands.
@@ -52,25 +52,25 @@ public class GeneralParser {
 	public enum CommandType {
 		/** Use one item with another or combine two items */
 		USEWITHCOMBINE("getUseWithCombineCommands",
-				"getUseWithCombineHelpText", UseWithCombine.class), //
+				"getUseWithCombineHelpText", UseWithCombine.class, 2), //
 		/** Move around */
-		MOVE("getMoveCommands", "getMoveHelpText", Move.class), //
+		MOVE("getMoveCommands", "getMoveHelpText", Move.class, 1), //
 		/** Take something */
-		TAKE("getTakeCommands", "getTakeHelpText", Take.class), //
+		TAKE("getTakeCommands", "getTakeHelpText", Take.class, 1), //
 		/** Use something */
-		USE("getUseCommands", "getUseHelpText", Use.class), //
+		USE("getUseCommands", "getUseHelpText", Use.class, 1), //
 		/** Talk to someone */
-		TALKTO("getTalkToCommands", "getTalkToHelpText", TalkTo.class), //
+		TALKTO("getTalkToCommands", "getTalkToHelpText", TalkTo.class, 1), //
 		/** Look around */
 		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
-				LookAround.class), //
+				LookAround.class, 0), //
 		/** Inspect something */
-		INSPECT("getInspectCommands", "getInspectHelpText", Inspect.class), //
+		INSPECT("getInspectCommands", "getInspectHelpText", Inspect.class, 1), //
 		/** Look into the inventory */
 		INVENTORY("getInventoryCommands", "getInventoryHelpText",
-				Inventory.class), //
+				Inventory.class, 0), //
 		/** Get help */
-		HELP("getHelpCommands", "getHelpHelpText", Help.class);
+		HELP("getHelpCommands", "getHelpHelpText", Help.class, 0);
 
 		/**
 		 * The name of the method that gets the valid commands. Must be a method
@@ -91,6 +91,11 @@ public class GeneralParser {
 		 * this command type.
 		 */
 		public final Class<? extends Command> commandClass;
+		
+		/**
+		 * The number of parameters the command expects.
+		 */
+		public final int numberOfParameters;
 
 		/**
 		 * @param commandMethodName
@@ -104,12 +109,14 @@ public class GeneralParser {
 		 * @param commandClass
 		 *            the concrete class of the command implementing the
 		 *            functionality of this command type.
+		 * @param numberOfParameters the number of parameters the command expects.
 		 */
 		private CommandType(String commandMethodName,
-				String helpTextMethodName, Class<? extends Command> commandClass) {
+				String helpTextMethodName, Class<? extends Command> commandClass, int numberOfParameters) {
 			this.commandMethodName = commandMethodName;
 			this.helpTextMethodName = helpTextMethodName;
 			this.commandClass = commandClass;
+			this.numberOfParameters = numberOfParameters;
 		}
 	}
 
@@ -123,12 +130,12 @@ public class GeneralParser {
 		/**
 		 * The pattern for recognizing the commandType.
 		 */
-		private Pattern pattern;
+		private MultiPattern pattern;
 
 		/**
 		 * The pattern for recognizing with additional commands.
 		 */
-		private Pattern additionalCommandsPattern;
+		private MultiPattern additionalCommandsPattern;
 
 		/**
 		 * The commandType.
@@ -158,7 +165,7 @@ public class GeneralParser {
 		public CommandRecExec(CommandType commandType) {
 			this.commandType = commandType;
 			this.command = gamePlayer.getCommand(commandType.commandClass);
-			
+
 			try {
 				this.textualCommands = (List<String>) Game.class
 						.getDeclaredMethod(commandType.commandMethodName)
@@ -193,16 +200,16 @@ public class GeneralParser {
 			Matcher matcher = pattern.matcher(input);
 			Matcher additionalCommandsMatcher = additionalCommandsPattern
 					.matcher(input);
-			
+
 			boolean matchFound = false;
 			boolean originalCommand = false;
-			String[] params = null;
+			Parameter[] params = null;
 			if (matcher.matches()) {
-				params = getParameters(matcher);
+				params = getParameters(matcher, commandType.numberOfParameters);
 				matchFound = true;
 				originalCommand = true;
 			} else if (additionalCommandsMatcher.matches()) {
-				params = getParameters(additionalCommandsMatcher);
+				params = getParameters(additionalCommandsMatcher, commandType.numberOfParameters);
 				matchFound = true;
 				originalCommand = false;
 			}
@@ -244,18 +251,36 @@ public class GeneralParser {
 	 *
 	 * @param matcher
 	 *            the matcher that must have matched an input
-	 * @return an array with the
-	 *         typed parameters
+	 * @param numberOfParameters
+	 *            the expected number of parameters
+	 * @return an array with the typed parameters
 	 */
-	public static String[] getParameters(Matcher matcher) {
-		List<String> parameters = new ArrayList<>(matcher.groupCount());
-		for (int i = 1; i <= matcher.groupCount(); i++) {
-			if (matcher.group(i) != null) {
-				parameters.add(matcher.group(i));
+	public static Parameter[] getParameters(Matcher matcher,
+			int numberOfParameters) {
+		/*
+		 * By convention, all capturing groups that denote parameters must be
+		 * named with o0, o1, o2, and so on, without leaving gaps. This can be
+		 * used to pass the parameter to the command function together with its
+		 * capturing group title for further processing.
+		 */
+
+		List<Parameter> parameters = new ArrayList<>(2);
+		try {
+			for (int i = 0; i < numberOfParameters; i++) {
+				String groupName = "o" + i;
+				String identifier;
+				if ((identifier = matcher.group(groupName)) != null) {
+					parameters.add(new Parameter(identifier, groupName));
+				} else {
+					break;
+				}
 			}
+		} catch (IllegalArgumentException e) {
+			Logger.getLogger(GeneralParser.class.getName()).log(Level.SEVERE,
+					"Capturing group in the range of expected parameters not found.", e);
 		}
 
-		return parameters.toArray(new String[0]);
+		return parameters.toArray(new Parameter[0]);
 	}
 
 	/**
@@ -271,7 +296,7 @@ public class GeneralParser {
 	/**
 	 * The pattern for exit commands.
 	 */
-	private final Pattern exitPattern;
+	private final MultiPattern exitPattern;
 
 	/**
 	 * Initializes this parser.

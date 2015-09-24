@@ -1,6 +1,9 @@
 package playing.parser;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -10,25 +13,67 @@ import java.util.regex.Pattern;
  */
 public class PatternGenerator {
 	/**
-	 * Builds a pattern that will match any of the given commands. If the list
+	 * Builds a MultiPattern that will match any of the given commands. If the list
 	 * is empty the pattern will not match anything.
 	 * 
 	 * @param cmds
 	 *            the valid commands
-	 * @return a pattern for the commands
+	 * @return a MultiPattern for the commands.
 	 */
-	public static Pattern getPattern(Collection<String> cmds) {
-		if (cmds.isEmpty()) {
-			// Pattern matching nothing
-			return Pattern.compile("a^");
+	public static MultiPattern getPattern(Collection<String> cmds) {
+		List<Pattern> patterns = new ArrayList<>();
+		for(String cmd : cmds) {
+			patterns.add(Pattern.compile(cmd));
 		}
-		// Combine regular expressions with '|' (logical OR)
-		StringBuilder sb = new StringBuilder();
-		for (String cmd : cmds) {
-			sb.append(cmd).append('|');
+		return new MultiPattern(patterns);
+	}
+
+	/**
+	 * A class composing multiple patterns by logical OR. It offers exactly one
+	 * methods to get a Matcher.
+	 * 
+	 * @author Satia
+	 */
+	public static class MultiPattern {
+
+		/**
+		 * A pattern matching nothing.
+		 */
+		private static Pattern matchNothing = Pattern.compile("a^");
+
+		/**
+		 * The ORed patterns.
+		 */
+		private List<Pattern> patterns;
+
+		/**
+		 * @param patterns
+		 *            the patterns
+		 */
+		private MultiPattern(List<Pattern> patterns) {
+			this.patterns = patterns;
 		}
-		// Delete last '|'
-		sb.deleteCharAt(sb.length() - 1);
-		return Pattern.compile(sb.toString());
+
+		/**
+		 * Returns the matcher for the first patterns that matches, or a matcher
+		 * that doesn't match, if no pattern matches.
+		 * 
+		 * @param input
+		 *            the input to match.
+		 * @return s.a.
+		 */
+		public Matcher matcher(CharSequence input) {
+			if (patterns.isEmpty()) {
+				return matchNothing.matcher(input);
+			}
+			Matcher m;
+			for (Pattern p : patterns) {
+				m = p.matcher(input);
+				if (m.matches()) {
+					return m;
+				}
+			}
+			return matchNothing.matcher(input);
+		}
 	}
 }

@@ -11,6 +11,7 @@ import persistence.InspectableObjectManager;
 import persistence.PersonManager;
 import playing.ConversationPlayer;
 import playing.GamePlayer;
+import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 
 /**
@@ -33,13 +34,13 @@ public class TalkTo extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, String... identifiers) {
-		if (identifiers.length != 1) {
+	public void execute(boolean originalCommand, Parameter... parameters) {
+		if (parameters.length != 1) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of identifiers");
+					"Execute: wrong number of parameters");
 			return;
 		}
-		talkTo(originalCommand, identifiers[0]);
+		talkTo(originalCommand, parameters[0].getIdentifier());
 	}
 	
 	/**
