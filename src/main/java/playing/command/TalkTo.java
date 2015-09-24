@@ -1,6 +1,5 @@
 package playing.command;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,8 +8,10 @@ import data.Game;
 import data.interfaces.HasConversation;
 import data.interfaces.Inspectable;
 import persistence.InspectableObjectManager;
+import persistence.PersonManager;
 import playing.ConversationPlayer;
 import playing.GamePlayer;
+import playing.parser.PatternGenerator;
 
 /**
  * Command to talk to a person.
@@ -28,8 +29,7 @@ public class TalkTo extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		// TODO Auto-generated method stub
-		return new HashSet<>();
+		return PersonManager.getAllAdditionalTalkToCommands();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class TalkTo extends Command {
 	 * informing about failure will be displayed.
 	 * 
 	 * @param originalCommand
-	 *            TODO if the command was original (or else additional). Used to
+	 *            if the command was original (or else additional). Used to
 	 *            test if an additional command really belonged to the chosen
 	 *            identifier.
 	 * @param identifier
@@ -80,6 +80,23 @@ public class TalkTo extends Command {
 				HasConversation person = (HasConversation) object;
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Talk to id {0}", person.getId());
+				
+				if (!originalCommand) {
+					// Check if the additional command belongs the the chosen
+					// usable
+					if (!PatternGenerator
+							.getPattern(person.getAdditionalTalkToCommands())
+							.matcher(currentReplacer.getInput()).matches()) {
+						// no match
+						String message = game.getNotTalkingToEnabledText();
+						io.println(
+								currentReplacer.replacePlaceholders(message),
+								game.getFailedBgColor(),
+								game.getFailedFgColor());
+						return;
+					}
+				}
+				
 				if (person.isTalkingEnabled()) {
 					Logger.getLogger(this.getClass().getName()).log(
 							Level.FINEST, "Talk to id {0} enabled",

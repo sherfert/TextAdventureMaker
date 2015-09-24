@@ -232,6 +232,14 @@ public class Main {
 		satiaShortConversation.addAdditionalAction(changeSatiaOption42);
 		satiaShortConversation
 				.addAdditionalAction(disableChangeFlatDescriptionAction);
+		
+		// A hot chick
+		Person hotChick = new Person(flat, "Hot chick", "A hot chick is standing in the corner.");
+		hotChick.addIdentifier("chick");
+		hotChick.setInspectionText("Stunning.");
+		Conversation hotChickConversation = new Conversation("Sorry, you're not my type.");
+		hotChick.setConversation(hotChickConversation);
+		hotChick.addAdditionalTalkToCommand("flirt with (.+)");
 
 		money.setUsingEnabledWith(satia, true);
 		money.setUseWithSuccessfulText(satia,
@@ -386,6 +394,8 @@ public class Main {
 		game.setStartLocation(flat);
 		game.setStartText("This is a little text adventure.");
 
+		
+		// TODO Better error messages for additional commands like "you cannot lift pen"!
 		game.setInspectionDefaultText("Nothing interesting.");
 		game.setInventoryEmptyText("Your inventory is empty.");
 		game.setInventoryText("You are carrying the following things:");
@@ -434,12 +444,12 @@ public class Main {
 		game.addHelpCommand("help");
 		game.addLookAroundCommand("look around");
 		game.addMoveCommand("go(?: to)? (.+)");
-		// TODO go/move into
 		game.addMoveCommand("move(?: to)? (.+)");
 		game.addTakeCommand("take (.+)");
 		game.addTakeCommand("pick up (.+)");
 		game.addTakeCommand("pick (.+) up");
 		game.addUseCommand("use (.+)");
+		// TODO asymmetrical useWith/combine commands!
 		game.addUseWithCombineCommand("use (.+) with (.+)");
 		game.addUseWithCombineCommand("combine (.+) and (.+)");
 		game.addUseWithCombineCommand("combine (.+) with (.+)");

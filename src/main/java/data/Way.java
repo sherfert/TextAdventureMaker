@@ -35,7 +35,7 @@ public class Way extends InspectableObject implements Travelable {
 	private List<AbstractAction> additionalMoveActions;
 	
 	/**
-	 * All additional take commands.
+	 * All additional travel commands.
 	 */
 	@ElementCollection
 	private List<String> additionalTravelCommands;

@@ -74,10 +74,8 @@ public class UseWithCombine extends Command {
 
 		Inspectable object1 = InspectableObjectManager
 				.getInspectable(identifier1);
-		// .getUsableOrPassivelyUsable(game.getPlayer(), identifier1);
 		Inspectable object2 = InspectableObjectManager
 				.getInspectable(identifier2);
-		// .getUsableOrPassivelyUsable(game.getPlayer(), identifier2);
 		// Save identifiers
 		currentReplacer.setIdentifier(identifier1);
 		currentReplacer.setIdentifier2(identifier2);

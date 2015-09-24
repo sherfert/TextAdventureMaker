@@ -2,6 +2,7 @@ package data;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -10,6 +11,8 @@ import data.action.AbstractAction;
 import data.interfaces.HasConversation;
 import data.interfaces.HasLocation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +48,12 @@ public class Person extends InspectableObject implements HasLocation,
 	 */
 	@Column(nullable = true)
 	private String talkingToForbiddenText;
+	
+	/**
+	 * All additional talk to commands.
+	 */
+	@ElementCollection
+	private List<String> additionalTalkToCommands;
 
 	/**
 	 * No-arg constructor for the database.
@@ -54,6 +63,7 @@ public class Person extends InspectableObject implements HasLocation,
 	 */
 	@Deprecated
 	public Person() {
+		init();
 	}
 
 	/**
@@ -66,6 +76,7 @@ public class Person extends InspectableObject implements HasLocation,
 	 */
 	public Person(Location location, String name, String description) {
 		super(name, description);
+		init();
 		setLocation(location);
 	}
 
@@ -77,6 +88,29 @@ public class Person extends InspectableObject implements HasLocation,
 	 */
 	public Person(String name, String description) {
 		super(name, description);
+		init();
+	}
+	
+	/**
+	 * Initializes the fields.
+	 */
+	private final void init() {
+		this.additionalTalkToCommands = new ArrayList<>();
+	}
+	
+	@Override
+	public void addAdditionalTalkToCommand(String command) {
+		additionalTalkToCommands.add(command);
+	}
+	
+	@Override
+	public List<String> getAdditionalTalkToCommands() {
+		return additionalTalkToCommands;
+	}
+	
+	@Override
+	public void removeAdditionalTalkToCommand(String command) {
+		additionalTalkToCommands.remove(command);
 	}
 
 	@Override

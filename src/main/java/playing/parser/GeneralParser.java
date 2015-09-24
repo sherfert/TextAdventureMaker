@@ -281,7 +281,7 @@ public class GeneralParser {
 	 */
 	public GeneralParser(GamePlayer gamePlayer) {
 		this.gamePlayer = gamePlayer;
-		// Build exit patterm
+		// Build exit pattern
 		exitPattern = PatternGenerator.getPattern(gamePlayer.getGame()
 				.getExitCommands());
 		// Build CommandRecExecs

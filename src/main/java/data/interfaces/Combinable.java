@@ -5,8 +5,9 @@ import java.util.List;
 import data.action.AbstractAction;
 
 /**
- * Anything combineable with other InventoryItems. The InventoryItems may
- * disappear and new {@link InventoryItem}s can be added.
+ * Anything combineable with another class. Usually the same class. Namely {@link InventoryItem}.
+ * 
+ * The InventoryItems may disappear and new ones can be added.
  * 
  * @author Satia
  * 
@@ -34,13 +35,13 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param partner
 	 *            the partner
 	 * @param newItem
-	 *            the new inventory item to be added
+	 *            the new combinable to be added
 	 */
 	public void addNewCombinableWhenCombinedWith(Combinable<E> partner,
 			E newItem);
 
 	/**
-	 * Adds new inventory items, removes both partners if removeCombinables is
+	 * Adds new combinables, removes both partners if removeCombinables is
 	 * enabled and triggers all additional actions for that item, if any.
 	 * 
 	 * @param partner
@@ -74,12 +75,12 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	public String getCombineWithSuccessfulText(Combinable<E> partner);
 
 	/**
-	 * The list of {@link InventoryItem}s that get added, when this Combinable
+	 * The list of combinables that get added, when this Combinable
 	 * is combined with the given partner.
 	 * 
 	 * @param partner
 	 *            the parter
-	 * @return the added {@link InventoryItem}s.
+	 * @return the added combinables.
 	 */
 	public List<E> getNewCombinablesWhenCombinedWith(
 			Combinable<E> partner);
@@ -120,7 +121,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param partner
 	 *            the partner
 	 * @param newItem
-	 *            the new inventory item to be removed
+	 *            the new combinable to be removed
 	 */
 	public void removeNewCombinableWhenCombinedWith(Combinable<E> partner,
 			E newItem);

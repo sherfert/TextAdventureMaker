@@ -1,5 +1,7 @@
 package data.interfaces;
 
+import java.util.List;
+
 import data.Conversation;
 
 /**
@@ -23,6 +25,27 @@ public interface HasConversation extends Identifiable {
 	 *            the conversation to set.
 	 */
 	public void setConversation(Conversation conversation);
+	
+	/**
+	 * Adds an additional command that can be used to talk to the person.
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void addAdditionalTalkToCommand(String command);
+	
+	/**
+	 * @return the additional talk to commands.
+	 */
+	public List<String> getAdditionalTalkToCommands();
+	
+	/**
+	 * Removes an additional talk to command
+	 * 
+	 * @param command
+	 *            the command
+	 */
+	public void removeAdditionalTalkToCommand(String command);
 
 	/**
 	 * @return if talking is enabled.

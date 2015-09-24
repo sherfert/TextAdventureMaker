@@ -17,7 +17,7 @@ public class PlaceholderReplacer {
 			.compile("<(identifier|name)>", Pattern.CASE_INSENSITIVE);
 
 	/**
-	 * Converts all placeholders for the first parameter in a Sring to
+	 * Converts all placeholders for the first parameter in a String to
 	 * placeholders for the second parameter.
 	 *
 	 * @param message
