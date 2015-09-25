@@ -46,8 +46,6 @@ import java.io.File;
  * 
  * TODO Help message unintelligible.
  * 
- * TODO Test if items can be used with two different InvItems.
- * 
  * @author Satia
  */
 public class Main {
@@ -349,6 +347,12 @@ public class Main {
 		InventoryItem invPen = new InventoryItem(pen);
 		invPen.setDescription("A pen");
 		pen.addPickUpItem(invPen);
+		
+		// Make it possible to paint Satia and the chick
+		invPen.setUsingEnabledWith(satia, true);
+		invPen.setUseWithSuccessfulText(satia, "You drew a penis on Satia's arm. He didn't even notice.");
+		invPen.setUsingEnabledWith(hotChick, true);
+		invPen.setUseWithSuccessfulText(hotChick, "You drew a heart on the hot chick's arm. She looks at you as if you were a 5 year old that is very proud of achieving something competely useless.");
 
 		InventoryItem paintedPeel = new InventoryItem("Painted banana peel",
 				"The peel of the banana you ate.");

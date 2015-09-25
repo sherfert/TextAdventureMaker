@@ -28,8 +28,6 @@ import data.Game;
  * Manages the actual commands needed to play a game and access to any classes
  * that are connected to this.
  * 
- * TODO one class per command.
- * 
  * @author Satia
  */
 public class GamePlayer implements GeneralIOManager {

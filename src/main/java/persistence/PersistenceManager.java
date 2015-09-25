@@ -73,6 +73,9 @@ public class PersistenceManager {
 		if(entityManagerFactory != null) {
 			Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
 					"Disconnecting from database");
+			
+			// Reset the game manager, so that it will load the new game after connecting to a new DB
+			GameManager.reset();
 
 			// Close everything
 			entityManager.close();

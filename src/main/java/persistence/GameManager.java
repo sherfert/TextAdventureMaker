@@ -17,12 +17,33 @@ import data.Game;
 public class GameManager {
 
 	/**
+	 * The game. Is retrieved from the DB once and kept in memory until reset is
+	 * called.
+	 */
+	private static Game game;
+
+	/**
+	 * Resets the state of the GameManager by deleting its reference to the
+	 * Game.
+	 */
+	public static void reset() {
+		game = null;
+	}
+
+	/**
+	 * Retrieved the game. Uses the im-memory reference if not {@code null} or
+	 * retrieves the game from the DB otherwise.
+	 * 
 	 * @return the game
 	 * 
 	 * @throws Exception
 	 *             (unchecked) if the database is not compatible with the model.
 	 */
 	public static Game getGame() {
+		if(game != null) {
+			return game;
+		}
+		
 		// Find all games (hopefully only one)
 		CriteriaQuery<Game> criteriaQueryGame = PersistenceManager
 				.getCriteriaBuilder().createQuery(Game.class);
@@ -37,6 +58,6 @@ public class GameManager {
 					"There are {0} games.", resultListGame.size());
 		}
 
-		return resultListGame.get(0);
+		return game = resultListGame.get(0);
 	}
 }
