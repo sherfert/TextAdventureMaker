@@ -228,14 +228,21 @@ public class Main {
 		satiaShortConversation.addAdditionalAction(changeSatiaOption42);
 		satiaShortConversation
 				.addAdditionalAction(disableChangeFlatDescriptionAction);
-		
+
 		// A hot chick
-		Person hotChick = new Person(flat, "Hot chick", "A hot chick is standing in the corner.");
+		Person hotChick = new Person(flat, "Hot chick",
+				"A hot chick is standing in the corner.");
 		hotChick.addIdentifier("chick");
 		hotChick.setInspectionText("Stunning.");
-		Conversation hotChickConversation = new Conversation("Sorry, you're not my type.");
+		Conversation hotChickConversation = new Conversation(
+				"Sorry, you're not my type.");
 		hotChick.setConversation(hotChickConversation);
 		hotChick.addAdditionalTalkToCommand("flirt with (?<o0>.+?)");
+
+		// A gremlin
+		Person gremlin = new Person(flat, "Gremlin",
+				"A gremlin is sitting around and staring at the black tv screen.");
+		gremlin.setInspectionText("Do not feed after midnight!");
 
 		money.setUsingEnabledWith(satia, true);
 		money.setUseWithSuccessfulText(satia,
@@ -257,6 +264,12 @@ public class Main {
 		changeTVAction
 				.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
 		tv.addAdditionalActionToInspect(changeTVAction);
+		
+		// A useless button
+		Item button = new Item(flat, "Button", "There is a button the wall.");
+		button.setInspectionText("\"DANGER. SELF-DESTRUCTION\"");
+		button.setUsingEnabled(true);
+		button.addAdditionalUseCommand("push (?<o0>.+?)");
 
 		/*
 		 * A banana. If the banana is being used the item disappears and the
@@ -341,12 +354,15 @@ public class Main {
 		InventoryItem invPen = new InventoryItem(pen);
 		invPen.setDescription("A pen");
 		pen.addPickUpItem(invPen);
-		
+
 		// Make it possible to paint Satia and the chick
 		invPen.setUsingEnabledWith(satia, true);
-		invPen.setUseWithSuccessfulText(satia, "You drew a penis on Satia's arm. He didn't even notice.");
+		invPen.setUseWithSuccessfulText(satia,
+				"You drew a penis on Satia's arm. He didn't even notice.");
 		invPen.setUsingEnabledWith(hotChick, true);
-		invPen.setUseWithSuccessfulText(hotChick, "You drew a heart on the hot chick's arm. She looks at you as if you were a 5 year old that is very proud of achieving something competely useless.");
+		invPen.setUseWithSuccessfulText(
+				hotChick,
+				"You drew a heart on the hot chick's arm. She looks at you as if you were a 5 year old that is very proud of achieving something competely useless.");
 
 		InventoryItem paintedPeel = new InventoryItem("Painted banana peel",
 				"The peel of the banana you ate.");
@@ -358,11 +374,16 @@ public class Main {
 		peel.setUsingEnabledWith(pen, true);
 		peel.setCombiningEnabledWith(invPen, true);
 		// Unidirectional additional combine command
-		peel.addAdditionalCombineCommand(invPen, "paint (?<o0>.+?) with (?<o1>.+?)");
+		peel.addAdditionalCombineCommand(invPen,
+				"paint (?<o0>.+?) with (?<o1>.+?)");
 		// and additional use with command
-		peel.addAdditionalUseWithCommand(pen, "paint (?<o0>.+?) with (?<o1>.+?)");
+		peel.addAdditionalUseWithCommand(pen,
+				"paint (?<o0>.+?) with (?<o1>.+?)");
 		// and another to test different ordering
-		peel.addAdditionalUseWithCommand(pen, "use (?<o1>.+?) to paint (?<o0>.+?)");
+		peel.addAdditionalCombineCommand(invPen,
+				"use (?<o1>.+?) to paint (?<o0>.+?)");
+		peel.addAdditionalUseWithCommand(pen,
+				"use (?<o1>.+?) to paint (?<o0>.+?)");
 
 		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
 		peel.setCombineWithSuccessfulText(invPen,
@@ -402,25 +423,27 @@ public class Main {
 		game.setStartLocation(flat);
 		game.setStartText("This is a little text adventure.");
 
-		
-		// TODO Better error messages for additional commands like "you cannot lift pen"!
 		game.setInspectionDefaultText("Nothing interesting.");
 		game.setInventoryEmptyText("Your inventory is empty.");
 		game.setInventoryText("You are carrying the following things:");
-		game.setNoCommandText("I do not understand you.");
+		game.setNoCommandText("I don't understand you.");
 		game.setInvalidCommandText("This doesn't make sense.");
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
 		game.setNoSuchItemText("There is no <identifier> here.");
 		game.setNoSuchPersonText("There is no <Identifier> here.");
 		game.setNoSuchWayText("You cannot <input>.");
-		game.setNotTakeableText("You cannot take the <name>.");
-		game.setNotTravelableText("You cannot <input>.");
-		game.setNotUsableText("You cannot do that.");
-		game.setNotTalkingToEnabledText("You cannot talk to <Name>.");
-		game.setNotUsableWithText("You cannot do that.");
+		game.setNotTakeableText("You cannot <pattern|the <name>||>.");
+		game.setNotTravelableText("You cannot <pattern|the <name>||>.");
+		game.setNotUsableText("You cannot <pattern|the <name>||>.");
+		game.setNotTalkingToEnabledText("You cannot <pattern|<Name>||>.");
+		// game.setNotUsableWithText("You cannot <pattern|the <name>|the <name2>|>.");
+		// The above pattern is more verbose, but leads to strange output if
+		// used with persons. E.g. "You cannot use the peel with the satia."
+		game.setNotUsableWithText("You cannot do that");
 		game.setTakenText("You picked up the <name>.");
-		game.setUsedText("So you used the <name>. Nothing interesting happened.");
-		game.setUsedWithText("So you used the <name> with the <name2>. Nothing interesting happened.");
+		game.setUsedText("You <pattern|the <name>||>. Nothing interesting happens.");
+		// Same as above. // You use the <name> with the <name2>. 
+		game.setUsedWithText("Nothing interesting happens.");
 
 		game.setSuccessfullFgColor(Color.GREEN);
 		game.setNeutralFgColor(Color.YELLOW);

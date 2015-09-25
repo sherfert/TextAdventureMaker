@@ -2,6 +2,8 @@ package playing;
 
 import java.util.regex.Pattern;
 
+import utility.CommandRegExConverter;
+
 /**
  * Replaces placeholders used in game/item/etc. properties with the required
  * text.
@@ -60,6 +62,16 @@ public class PlaceholderReplacer {
 	}
 
 	/**
+	 * The input the user typed. Is already lowercase.
+	 */
+	private String input;
+
+	/**
+	 * The pattern that matched the user input.
+	 */
+	private String pattern;
+
+	/**
 	 * The identifier the user used. Is already lowercase.
 	 */
 	private String identifier;
@@ -68,11 +80,6 @@ public class PlaceholderReplacer {
 	 * The second identifier the user used. Is already lowercase.
 	 */
 	private String identifier2;
-
-	/**
-	 * The input the user typed. Is already lowercase.
-	 */
-	private String input;
 
 	/**
 	 * The name of the object the user addressed.
@@ -95,6 +102,17 @@ public class PlaceholderReplacer {
 		// Just if something goes terribly wrong
 		if (message == null) {
 			return "";
+		}
+
+		if (pattern != null) {
+			String replacement = CommandRegExConverter
+					.convertRegExToReplacementString(pattern, "\\$1", "\\$2");
+			/*
+			 * If the message contains a pattern replacement, that must be done
+			 * first, because it can create more replacement strings.
+			 */
+			message = message.replaceAll("<pattern\\|(.*?)\\|(.*?)\\|>",
+					replacement);
 		}
 
 		if (input != null) {
@@ -168,6 +186,14 @@ public class PlaceholderReplacer {
 	 */
 	public String getInput() {
 		return input;
+	}
+
+	/**
+	 * @param pattern
+	 *            the pattern to set
+	 */
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
 	}
 
 	/**

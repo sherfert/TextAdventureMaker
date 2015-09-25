@@ -2,6 +2,8 @@ package utility;
 
 import java.util.regex.Pattern;
 
+import playing.PlaceholderReplacer;
+
 /**
  * This class can be used to convert the regular expressions for matching
  * commands to better understandable Strings and vice versa.
@@ -55,6 +57,29 @@ public class CommandRegExConverter {
 				FIRST_PARAM_TEXT_REPLACEMENT);
 		result = SECOND_PARAM_PATTERN.matcher(result).replaceAll(
 				SECOND_PARAM_TEXT_REPLACEMENT);
+		return result;
+	}
+
+	/**
+	 * Converts a command consisting of a regular expression to a replacement
+	 * String for the class {@link PlaceholderReplacer}.
+	 * 
+	 * @param regex
+	 *            the regular expression
+	 * @param firstParamReplacement
+	 *            the substitution for the first parameter
+	 * @param secondParamReplacement
+	 *            the substitution for the second parameter
+	 * @return the transformed string.
+	 */
+	public static String convertRegExToReplacementString(String regex,
+			String firstParamReplacement, String secondParamReplacement) {
+		// Remove optional parts
+		String result = OPTIONAL_PATTERN.matcher(regex).replaceAll("");
+		result = FIRST_PARAM_PATTERN.matcher(result).replaceAll(
+				firstParamReplacement);
+		result = SECOND_PARAM_PATTERN.matcher(result).replaceAll(
+				secondParamReplacement);
 		return result;
 	}
 
