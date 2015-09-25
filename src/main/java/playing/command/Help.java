@@ -10,6 +10,7 @@ import data.Game;
 import playing.GamePlayer;
 import playing.parser.GeneralParser.CommandRecExec;
 import playing.parser.Parameter;
+import utility.CommandRegExConverter;
 
 /**
  * Command displaying help information to the user.
@@ -77,7 +78,9 @@ public class Help extends Command {
 		io.println(commandHelpText, game.getNeutralBgColor(),
 				game.getNeutralFgColor());
 		for (String textualCommand : textualCommands) {
-			io.println(" " + textualCommand, game.getNeutralBgColor(),
+			// Convert to a better understandable form
+			String cmd = CommandRegExConverter.convertRegExToString(textualCommand);
+			io.println(" " + cmd, game.getNeutralBgColor(),
 					game.getNeutralFgColor());
 		}
 	}

@@ -75,7 +75,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	}
 
 	/**
-	 * The io manager for this session
+	 * The io manager for this session.
 	 */
 	private final GeneralIOManager ioManager;
 
@@ -101,7 +101,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	private LanternaScreenOptionChooser optionChoser;
 
 	/**
-	 * Signalizing whether the initialization is finished.
+	 * Signaling whether the initialization is finished.
 	 */
 	private volatile boolean isFinished;
 
@@ -170,7 +170,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	}
 
 	/**
-	 * If the screen is a JFrame, modifications to it will be executed here
+	 * If the screen is a JFrame, modifications to it will be executed here.
 	 */
 	private void modifyJFrame(final JFrame frame) {
 		frame.addWindowListener(new WindowAdapter() {

@@ -39,8 +39,6 @@ import java.io.File;
  * 
  * TODO sound support (optional)
  * 
- * TODO Help message unintelligible.
- * 
  * @author Satia
  */
 public class Main {
@@ -91,8 +89,8 @@ public class Main {
 		Way wayToVoid = new Way("Black hole",
 				"There is a big black hole where the front door "
 						+ "used to be.", flat, voidLoc);
-		wayToVoid.addAdditionalTravelCommand("climb into (?<o0>.+)");
-		wayToVoid.addAdditionalTravelCommand("jump into (?<o0>.+)");
+		wayToVoid.addAdditionalTravelCommand("climb into (?<o0>.+?)");
+		wayToVoid.addAdditionalTravelCommand("jump into (?<o0>.+?)");
 		wayToVoid.addAdditionalActionToMove(new EndGameAction());
 
 		/*
@@ -237,7 +235,7 @@ public class Main {
 		hotChick.setInspectionText("Stunning.");
 		Conversation hotChickConversation = new Conversation("Sorry, you're not my type.");
 		hotChick.setConversation(hotChickConversation);
-		hotChick.addAdditionalTalkToCommand("flirt with (?<o0>.+)");
+		hotChick.addAdditionalTalkToCommand("flirt with (?<o0>.+?)");
 
 		money.setUsingEnabledWith(satia, true);
 		money.setUseWithSuccessfulText(satia,
@@ -250,7 +248,7 @@ public class Main {
 		tv.addIdentifier("tv");
 		tv.setTakeForbiddenText("This is a little heavy.");
 		tv.setUseForbiddenText("I am not in the mood.");
-		tv.addAdditionalTakeCommand("lift (?<o0>.+)");
+		tv.addAdditionalTakeCommand("lift (?<o0>.+?)");
 		/*
 		 * Inspecting the tv will change its inspection text.
 		 */
@@ -270,7 +268,7 @@ public class Main {
 		banana.setUsingEnabled(true);
 		banana.setTakeForbiddenText("It looks delicious, but I don't wanna carry that around.");
 		banana.setUseSuccessfulText("You ate the banana. The peel looks useful, so you kept it.");
-		banana.addAdditionalUseCommand("eat (?<o0>.+)");
+		banana.addAdditionalUseCommand("eat (?<o0>.+?)");
 
 		/*
 		 * Inspecting the banana will "convert" it into a bananaphone.
@@ -360,11 +358,11 @@ public class Main {
 		peel.setUsingEnabledWith(pen, true);
 		peel.setCombiningEnabledWith(invPen, true);
 		// Unidirectional additional combine command
-		peel.addAdditionalCombineCommand(invPen, "paint (?<o0>.+) with (?<o1>.+)");
+		peel.addAdditionalCombineCommand(invPen, "paint (?<o0>.+?) with (?<o1>.+?)");
 		// and additional use with command
-		peel.addAdditionalUseWithCommand(pen, "paint (?<o0>.+) with (?<o1>.+)");
+		peel.addAdditionalUseWithCommand(pen, "paint (?<o0>.+?) with (?<o1>.+?)");
 		// and another to test different ordering
-		peel.addAdditionalUseWithCommand(pen, "use (?<o1>.+) to paint (?<o0>.+)");
+		peel.addAdditionalUseWithCommand(pen, "use (?<o1>.+?) to paint (?<o0>.+?)");
 
 		peel.setUseWithSuccessfulText(pen, "You painted the banana peel.");
 		peel.setCombineWithSuccessfulText(invPen,
@@ -445,22 +443,22 @@ public class Main {
 
 		game.addExitCommand("exit");
 		game.addExitCommand("quit");
-		game.addInspectCommand("look( at)? (?<o0>.+)");
-		game.addInspectCommand("inspect (?<o0>.+)");
+		game.addInspectCommand("look( at)? (?<o0>.+?)");
+		game.addInspectCommand("inspect (?<o0>.+?)");
 		game.addInventoryCommand("inventory");
 		game.addHelpCommand("help");
 		game.addLookAroundCommand("look around");
-		game.addMoveCommand("go( to)? (?<o0>.+)");
-		game.addMoveCommand("move( to)? (?<o0>.+)");
-		game.addTakeCommand("take (?<o0>.+)");
-		game.addTakeCommand("pick up (?<o0>.+)");
-		game.addTakeCommand("pick (?<o0>.+) up");
-		game.addUseCommand("use (?<o0>.+)");
-		game.addUseWithCombineCommand("use (?<o0>.+) with (?<o1>.+)");
-		game.addUseWithCombineCommand("combine (?<o0>.+) and (?<o1>.+)");
-		game.addUseWithCombineCommand("combine (?<o0>.+) with (?<o1>.+)");
-		game.addTalkToCommand("talk to (?<o0>.+)");
-		game.addTalkToCommand("speek with (?<o0>.+)");
+		game.addMoveCommand("go( to)? (?<o0>.+?)");
+		game.addMoveCommand("move( to)? (?<o0>.+?)");
+		game.addTakeCommand("take (?<o0>.+?)");
+		game.addTakeCommand("pick up (?<o0>.+?)");
+		game.addTakeCommand("pick (?<o0>.+?) up");
+		game.addUseCommand("use (?<o0>.+?)");
+		game.addUseWithCombineCommand("use (?<o0>.+?) with (?<o1>.+?)");
+		game.addUseWithCombineCommand("combine (?<o0>.+?) and (?<o1>.+?)");
+		game.addUseWithCombineCommand("combine (?<o0>.+?) with (?<o1>.+?)");
+		game.addTalkToCommand("talk to (?<o0>.+?)");
+		game.addTalkToCommand("speek with (?<o0>.+?)");
 
 		game.setGameTitle("Test-Adventure");
 

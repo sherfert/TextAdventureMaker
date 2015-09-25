@@ -1,14 +1,11 @@
 package playing;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import persistence.PersistenceManager;
-import persistence.UsableObjectManager;
 import playing.InputOutput.GeneralIOManager;
 import playing.command.Command;
 import playing.command.Help;
@@ -181,7 +178,7 @@ public class GamePlayer implements GeneralIOManager {
 				"Stopping the game");
 		io.exitIO();
 		PersistenceManager.disconnect();
-		// FIXME at the moment close the vm
+		// TODO at the moment close the vm. Change this later.
 		System.exit(0);
 	}
 
