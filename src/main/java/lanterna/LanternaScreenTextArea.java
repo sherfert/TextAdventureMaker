@@ -277,9 +277,9 @@ public class LanternaScreenTextArea {
 		for (int i = rows(); i < lines.size();) {
 			if (printTop) {
 				// If the last lines are empty, remove these, otherwise remove
-				// the first line
-				if (lines.get(lines.size() - 1).text.isEmpty()) {
-					lines.remove(lines.size() - 1);
+				// the first line, but always keep the last line (input line) empty
+				if (lines.get(lines.size() - 2).text.isEmpty()) {
+					lines.remove(lines.size() - 2);
 				} else {
 					lines.remove(0);
 				}

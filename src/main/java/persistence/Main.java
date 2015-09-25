@@ -39,11 +39,6 @@ import java.io.File;
  * 
  * TODO sound support (optional)
  * 
- * FIXME EndGame message not displayed if all lines already full. The last line
- * is cut off and replaced if going into option mode. The same effect can be
- * observed when starting a conversation or pressing ESC while having already a
- * full screen.
- * 
  * TODO Help message unintelligible.
  * 
  * @author Satia
@@ -97,6 +92,7 @@ public class Main {
 				"There is a big black hole where the front door "
 						+ "used to be.", flat, voidLoc);
 		wayToVoid.addAdditionalTravelCommand("climb into (?<o0>.+)");
+		wayToVoid.addAdditionalTravelCommand("jump into (?<o0>.+)");
 		wayToVoid.addAdditionalActionToMove(new EndGameAction());
 
 		/*

@@ -204,21 +204,4 @@ public class GamePlayer implements GeneralIOManager {
 			stop();
 		}
 	}
-
-	/**
-	 * @return all additional use commands from items in this location and in
-	 *         the inventory.
-	 * 
-	 *         TODO remove
-	 */
-	public Set<String> getAdditionalUseCommands() {
-		return UsableObjectManager.getAllAdditionalUseCommands();
-	}
-
-	/**
-	 * TODO remove this method
-	 */
-	public Set<String> getNoAdditionalCommands() {
-		return new HashSet<>();
-	}
 }
