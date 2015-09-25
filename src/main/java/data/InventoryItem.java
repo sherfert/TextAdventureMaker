@@ -175,7 +175,7 @@ public class InventoryItem extends UsableObject implements
 		@ManyToMany(cascade = CascadeType.PERSIST)
 		@JoinTable
 		private final List<AbstractAction> additionalUseWithActions;
-		
+
 		/**
 		 * All additional useWith commands.
 		 */
@@ -242,21 +242,22 @@ public class InventoryItem extends UsableObject implements
 	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key and
 	 * value, if it was not stored before. The other inventory item's map will
 	 * be synchronized, too.
+	 * 
+	 * ManyToMany since exactly TWO InventoryItems store this
+	 * CombinableInventoryItem in their map.
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
-	// XXX This does not create a suitable table structure. The
-	// CombinableInventoryItem saves both this.id and key.id.
-	// Therefore, after disconnecting, the mapping only exists in one direction.
-	// A workaround has been installed to handle this.
-	// TODO Test ManyToMany!?
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
 
 	/**
 	 * The additional combine commands for the mapped inventory item. Since the
 	 * additional combine commands are asymmetric, this is placed here as a map
 	 * and not in {@link CombinableInventoryItem} as a List.
+	 * 
+	 * OneToMany since each InventoryItem has its own CombineCommands (they are
+	 * not shared).
 	 */
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
@@ -629,22 +630,12 @@ public class InventoryItem extends UsableObject implements
 			CombinableInventoryItem result = combinableInventoryItems
 					.get((InventoryItem) item);
 			if (result == null) {
-				// XXX Because of the deficiency of @MapKeyJoinColumn, there can
-				// be still an entry in the other items map
-				result = ((InventoryItem) item).combinableInventoryItems
-						.get(this);
-
-				if (result != null) {
-					// Synchronize our map
-					combinableInventoryItems.put((InventoryItem) item, result);
-				} else {
-					// Create a new mapping
-					combinableInventoryItems.put((InventoryItem) item,
-							result = new CombinableInventoryItem());
-					// And synchronize other map
-					((InventoryItem) item).combinableInventoryItems.put(this,
-							result);
-				}
+				// Create a new mapping
+				combinableInventoryItems.put((InventoryItem) item,
+						result = new CombinableInventoryItem());
+				// And synchronize other map
+				((InventoryItem) item).combinableInventoryItems.put(this,
+						result);
 			}
 			return result;
 		} else {
