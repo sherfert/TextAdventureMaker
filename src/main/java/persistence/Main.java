@@ -439,7 +439,7 @@ public class Main {
 		// game.setNotUsableWithText("You cannot <pattern|the <name>|the <name2>|>.");
 		// The above pattern is more verbose, but leads to strange output if
 		// used with persons. E.g. "You cannot use the peel with the satia."
-		game.setNotUsableWithText("You cannot do that");
+		game.setNotUsableWithText("You cannot do that.");
 		game.setTakenText("You picked up the <name>.");
 		game.setUsedText("You <pattern|the <name>||>. Nothing interesting happens.");
 		// Same as above. // You use the <name> with the <name2>. 

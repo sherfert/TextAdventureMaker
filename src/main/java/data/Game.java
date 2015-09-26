@@ -23,9 +23,29 @@ import javax.persistence.OneToOne;
 
 /**
  * A game that can be played. Contains all configuration and (default) texts.
- * There should be only one game per database.
- * 
- * TODO update literals
+ * There should be only one game per database. <br>
+ * <br>
+ * Parameters in commands must be exactly the following: {@literal "(?<o0>.+?)"}
+ * for the first parameter and {@literal "(?<o1>.+?)"} for the second parameter,
+ * if there are two. In additional, commands may contain optional parts, written
+ * as {@literal "(optional text)?"}. <br>
+ * <br>
+ * The default texts, etc. can have placeholders. Which ones are allowed is
+ * stated in the corresponding field. The following placeholders exist: <br>
+ * {@literal <input>}: The exact input the user typed. <br>
+ * {@literal <identifier>} (and {@literal <identifier2>}): The identifiers used
+ * for the first (and second) object. <br>
+ * {@literal <name>} (and {@literal <name2>}): The name of the first (and
+ * second) object. <br>
+ * {@literal <pattern|a|b|>}: The command pattern that matched the input.
+ * {@literal a} and {@literal b} are the substitutions for the first and second
+ * parameter in the pattern, may be empty and may also contain more
+ * placeholders, except the pattern placeholder itself. <br>
+ * <br>
+ * Except for the pattern placeholder, all placeholders come in three flavors:
+ * lowercase, e.g. {@literal <name>}, standard case (first word starts
+ * uppercase, rest lowercase), e.g. {@literal <Name>}, and uppercase, e.g.
+ * {@literal <NAME>}.
  * 
  * @author Satia
  */
@@ -99,8 +119,7 @@ public class Game implements HasId {
 
 	/**
 	 * All commands that let the player inspect something. Must be lowercase.
-	 * Must contain at least one word and exactly one parameter for the object:
-	 * {@literal (.+)}
+	 * Must contain at least one word and exactly one parameter for the object.
 	 */
 	@ElementCollection
 	private final List<String> inspectCommands;
@@ -113,16 +132,16 @@ public class Game implements HasId {
 
 	/**
 	 * The text being displayed when an object is inspected that does not have
-	 * an individual inspection text. Valid placeholders: {@literal <input>},
-	 * {@literal <name>}, {@literal <identifier>}
+	 * an individual inspection text. Valid placeholders: input, name,
+	 * identifier, pattern
 	 */
 	@Column(nullable = false)
 	private String inspectionDefaultText;
 
 	/**
 	 * The text displayed when an invalid action is being performed (e.g.
-	 * talking to objects, taking persons, etc.). Valid placeholders:
-	 * {@literal <input>}
+	 * talking to objects, taking persons, etc.). Valid placeholders: input,
+	 * pattern
 	 */
 	@Column(nullable = false)
 	private String invalidCommandText;
@@ -136,20 +155,20 @@ public class Game implements HasId {
 
 	/**
 	 * The text being displayed, when the player looks into his empty inventory.
-	 * Valid placeholders: {@literal <input>}
+	 * Valid placeholders: input, pattern
 	 */
 	@Column(nullable = false)
 	private String inventoryEmptyText;
 
 	/**
-	 * The help text being displayed for the inventory command
+	 * The help text being displayed for the inventory command.
 	 */
 	@Column(nullable = false)
 	private String inventoryHelpText;
 
 	/**
 	 * The text introducing a look into the inventory. Valid placeholders:
-	 * {@literal <input>}
+	 * input, pattern
 	 */
 	@Column(nullable = false)
 	private String inventoryText;
@@ -168,7 +187,7 @@ public class Game implements HasId {
 
 	/**
 	 * All move commands. Must be lowercase. Must contain at least one word and
-	 * exactly one parameter for the target: {@literal (.+)}
+	 * exactly one parameter for the target.
 	 */
 	@ElementCollection
 	private final List<String> moveCommands;
@@ -195,46 +214,44 @@ public class Game implements HasId {
 
 	/**
 	 * The text being displayed, when any entered text is not recognized as a
-	 * valid command. Valid placeholders: {@literal <input>}
+	 * valid command. Valid placeholders: input
 	 */
 	@Column(nullable = false)
 	private String noCommandText;
 
 	/**
 	 * The text being displayed, when the player tries to use, etc. a
-	 * non-existing inventory item. Valid placeholders: {@literal <input>},
-	 * {@literal <identifier>}
+	 * non-existing inventory item. Valid placeholders: input, pattern,
+	 * identifier
 	 */
 	@Column(nullable = false)
 	private String noSuchInventoryItemText;
 
 	/**
 	 * The text being displayed, when the player tries to use, take, etc. a
-	 * non-existing item. Valid placeholders: {@literal <input>},
-	 * {@literal <identifier>}
+	 * non-existing item. Valid placeholders: input, pattern, identifier
 	 */
 	@Column(nullable = false)
 	private String noSuchItemText;
 
 	/**
 	 * The text being displayed, when the player tries to talk to a non-existing
-	 * perosn. Valid placeholders: {@literal <input>}, {@literal <identifier>}
+	 * perosn. Valid placeholders: input, pattern, identifier
 	 */
 	@Column(nullable = false)
 	private String noSuchPersonText;
 
 	/**
 	 * The text being displayed, when the player tries to travel by a
-	 * non-existing way. Valid placeholders: {@literal <input>},
-	 * {@literal <identifier>}
+	 * non-existing way. Valid placeholders: input, pattern, identifier
 	 */
 	@Column(nullable = false)
 	private String noSuchWayText;
 
 	/**
 	 * The default text, when the player tries to take a non-takeable item. May
-	 * be overwritten for each individual item. Valid placeholders:
-	 * {@literal <input>}, {@literal <name>}, {@literal <identifier>}
+	 * be overwritten for each individual item. Valid placeholders: input,
+	 * pattern, name, identifier
 	 */
 	@Column(nullable = false)
 	private String notTakeableText;
@@ -242,8 +259,7 @@ public class Game implements HasId {
 	/**
 	 * The default text, when the player tries to talk to a person he cannot
 	 * talk to. way. May be overwritten for each individual person. Valid
-	 * placeholders: {@literal <input>}, {@literal <name>},
-	 * {@literal <identifier>}
+	 * placeholders: input, pattern, name, identifier
 	 */
 	@Column(nullable = false)
 	private String notTalkingToEnabledText;
@@ -251,15 +267,15 @@ public class Game implements HasId {
 	/**
 	 * The default text, when the player tries to travel by a non-travelable
 	 * way. May be overwritten for each individual way. Valid placeholders:
-	 * {@literal <input>}, {@literal <name>}, {@literal <identifier>}
+	 * input, pattern, name, identifier
 	 */
 	@Column(nullable = false)
 	private String notTravelableText;
 
 	/**
 	 * The default text, when the player tries to use a non-usable object. May
-	 * be overwritten for each individual object. Valid placeholders:
-	 * {@literal <input>}, {@literal <name>}, {@literal <identifier>}
+	 * be overwritten for each individual object. Valid placeholders: input,
+	 * pattern, name, identifier
 	 */
 	@Column(nullable = false)
 	private String notUsableText;
@@ -267,8 +283,7 @@ public class Game implements HasId {
 	/**
 	 * The default text, when the player tries to use two incompatible object
 	 * with one another. May be overwritten for each individual combination.
-	 * Valid placeholders: {@literal <input>}, {@literal <name>},
-	 * {@literal <identifier>}, {@literal <name2>}, {@literal <identifier2>}
+	 * Valid placeholders: input, pattern, name, identifier, name2, identifier2
 	 */
 	@Column(nullable = false)
 	private String notUsableWithText;
@@ -317,7 +332,7 @@ public class Game implements HasId {
 
 	/**
 	 * All take commands. Must be lowercase. Must contain at least one word and
-	 * exactly one parameter for the object: {@literal (.+)}
+	 * exactly one parameter for the object.
 	 */
 	@ElementCollection
 	private final List<String> takeCommands;
@@ -330,16 +345,15 @@ public class Game implements HasId {
 
 	/**
 	 * The default text, when the player takes an item. May be overwritten for
-	 * each individual item. Valid placeholders: {@literal <input>},
-	 * {@literal <name>}, {@literal <identifier>}
+	 * each individual item. Valid placeholders: input, pattern, name,
+	 * identifier
 	 */
 	@Column(nullable = false)
 	private String takenText;
 
 	/**
 	 * All commands that let the player talk to someone. Must be lowercase. Must
-	 * contain at least one word and exactly one parameter for the person:
-	 * {@literal (.+)}
+	 * contain at least one word and exactly one parameter for the person.
 	 */
 	@ElementCollection
 	private final List<String> talkToCommands;
@@ -352,15 +366,14 @@ public class Game implements HasId {
 
 	/**
 	 * All use commands. Must be lowercase. Must contain at least one word and
-	 * exactly one parameter for the object: {@literal (.+)}
+	 * exactly one parameter for the object.
 	 */
 	@ElementCollection
 	private final List<String> useCommands;
 
 	/**
 	 * The default text, when the player uses an object. May be overwritten for
-	 * each individual object. Valid placeholders: {@literal <input>},
-	 * {@literal <name>}, {@literal <identifier>}
+	 * each individual object. Valid placeholders: input, pattern, name, identifier
 	 */
 	@Column(nullable = false)
 	private String usedText;
@@ -368,22 +381,20 @@ public class Game implements HasId {
 	/**
 	 * The default text, when the player uses two compatible object with one
 	 * another. May be overwritten for each individual combination. Valid
-	 * placeholders: {@literal <input>}, {@literal <name>},
-	 * {@literal <identifier>}, {@literal <name2>}, {@literal <identifier2>}
+	 * placeholders: input, pattern, name, identifier, name2, identifier2
 	 */
 	@Column(nullable = false)
 	private String usedWithText;
 
 	/**
-	 * The help text being displayed for the use command
+	 * The help text being displayed for the use command.
 	 */
 	@Column(nullable = false)
 	private String useHelpText;
 
 	/**
 	 * All useWith/combine commands. Must be lowercase. Must contain at least
-	 * one word and exactly two parameters for the objects: {@literal (?<o0>.+)}
-	 * and {@literal (?<o1>.+)}
+	 * one word and exactly two parameters for the objects.
 	 * 
 	 * UseWith commands are asymmetric, combine commands are symmetric.
 	 * 
@@ -395,7 +406,7 @@ public class Game implements HasId {
 	private final List<String> useWithCombineCommands;
 
 	/**
-	 * The help text being displayed for the use with/combine command
+	 * The help text being displayed for the use with/combine command.
 	 */
 	@Column(nullable = false)
 	private String useWithCombineHelpText;
