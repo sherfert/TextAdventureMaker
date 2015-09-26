@@ -19,10 +19,12 @@ import java.util.logging.Logger;
  */
 public class PropertiesReader {
 
+	//********* PROPERTIES **************
 	/** The name of the LogLevel property */
 	public static final String LOG_LEVEL_PROPERTY = "LogLevel";
 	/** The default value of the LogLevel property */
 	public static final String LOG_LEVEL_DEFAULT = "CONFIG";
+	//***********************************
 
 	/**
 	 * The directory to store configuration and other stuff:

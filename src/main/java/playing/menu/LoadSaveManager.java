@@ -2,9 +2,14 @@ package playing.menu;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.io.FileUtils;
 
 import persistence.GameManager;
 import persistence.PersistenceManager;
@@ -42,9 +47,9 @@ public class LoadSaveManager {
 	private static GamePlayer gamePlayer;
 
 	/**
-	 * The file name of the game. TODO replace with resource?
+	 * The file of the game db.
 	 */
-	private static String fileName;
+	private static URL file;
 
 	/**
 	 * The directory of the save games.
@@ -74,20 +79,36 @@ public class LoadSaveManager {
 					"Could not initialize logging:", e);
 		}
 
-		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
-				"Started LoadSaveManager with arguments: ", args);
-
 		if (args.length == 0) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"No arguments provided.");
-			// TODO if there is no arg, look if there is a game.db in resources
-			return;
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
+					"No arguments provided, using game DB inside JAR.");
+			// FIXME if the jar is minimized, the persistence provider is not found.
+			ClassLoader classLoader = LoadSaveManager.class.getClassLoader();
+			file = classLoader.getResource("game" + H2_ENDING);
+			// FIXME game name as attribute in game
+			gameName = "Test-Adventure";
+		} else {
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
+					"Started LoadSaveManager with argument: {0}", args[0]);
+			
+			// Save game file name
+			gameName = args[0];
+			try {
+				file = new File(PropertiesReader.DIRECTORY + gameName + H2_ENDING).toURI().toURL();
+			} catch (MalformedURLException e) {
+				Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+						"Malformed file URL.", e);
+			}
 		}
 
-		// Save game file name
-		gameName = args[0];
-		fileName = PropertiesReader.DIRECTORY + gameName;
-		saveGamesDir = fileName + File.separator;
+		// TODO test for resource
+//		if (!file.exists()) {
+//			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+//					"Game DB does not exist. Exiting. File: {0}", file);
+//			return;
+//		}
+
+		saveGamesDir = PropertiesReader.DIRECTORY + gameName + File.separator;
 
 		File saveGamesDirFile = new File(saveGamesDir);
 		// Create the dir if necessary
@@ -131,18 +152,23 @@ public class LoadSaveManager {
 	 * 
 	 * @param file
 	 *            the original file.
+	 * @return the temp file.
 	 */
-	private static void copyToTempDB(File file) {
-		File tempFile = new File(PropertiesReader.DIRECTORY + gameName
-				+ TEMP_APPENDIX + H2_ENDING);
+	private static File copyToTempDB(URL file) {
 		// Copy to temp file
 		try {
-			Files.copy(file.toPath(), tempFile.toPath(),
-					java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			Path tempFile = Files.createTempFile("tam", H2_ENDING);
+
+			//Files.copy(file.toPath(), tempFile,
+			//		java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+			FileUtils.copyURLToFile(file, tempFile.toFile());
+			return tempFile.toFile();
 		} catch (IOException e) {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
 					"Could not copy db file. Exiting now.", e);
 			System.exit(-1);
+			return null;
 		}
 	}
 
@@ -180,7 +206,23 @@ public class LoadSaveManager {
 	 */
 	public static void newGame() {
 		// "Load" the new file
-		load(new File(fileName + H2_ENDING));
+		load(file);
+	}
+	
+	/**
+	 * Loads a file.
+	 * FIXME doesn't work! (initial state!)
+	 * 
+	 * @param file
+	 *            the file to load.
+	 */
+	public static void load(File file) {
+		try {
+			load(file.toURI().toURL());
+		} catch (MalformedURLException e) {
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+					"Malformed file URL.", e);
+		}
 	}
 
 	/**
@@ -189,13 +231,15 @@ public class LoadSaveManager {
 	 * @param file
 	 *            the file to load.
 	 */
-	public static void load(File file) {
+	public static void load(URL file) {
 		// Disconnect from old db
 		PersistenceManager.disconnect();
 		// Copy file to a temp db
-		copyToTempDB(file);
+		File tempFile = copyToTempDB(file);
 		// Connect
-		PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
+		String path = tempFile.getAbsolutePath();
+		PersistenceManager.connect(
+				path.substring(0, path.length() - H2_ENDING.length()), false);
 		// Set the game for the game player
 		try {
 			gamePlayer.setGame(GameManager.getGame());

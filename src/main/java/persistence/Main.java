@@ -2,6 +2,7 @@ package persistence;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
+import configuration.PropertiesReader;
 import data.Conversation;
 import data.ConversationLayer;
 import data.ConversationOption;
@@ -27,8 +28,6 @@ import data.action.ChangeWayAction;
 import data.action.EndGameAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
-
-import java.io.File;
 
 /**
  * Test class.
@@ -486,8 +485,7 @@ public class Main {
 		game.setGameTitle("Test-Adventure");
 
 		// Connect to database
-		PersistenceManager.connect(System.getProperty("user.home")
-				+ File.separator + ".textAdventureMaker" + File.separator
+		PersistenceManager.connect(PropertiesReader.DIRECTORY
 				+ "Test-Adventure", true);
 
 		// Persist everything (Cascade.PERSIST persists the rest)
