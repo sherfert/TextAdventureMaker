@@ -32,11 +32,6 @@ public class LoadSaveManager {
 	public static final String H2_ENDING = ".h2.db";
 
 	/**
-	 * The appendix for temp files.
-	 */
-	private static final String TEMP_APPENDIX = "-temp";
-
-	/**
 	 * The main menu
 	 */
 	private static MainMenu mainMenu;
@@ -50,6 +45,11 @@ public class LoadSaveManager {
 	 * The file of the game db.
 	 */
 	private static URL file;
+	
+	/**
+	 * The file temporarily used to play the game.
+	 */
+	private static File tempFile;
 
 	/**
 	 * The directory of the save games.
@@ -101,7 +101,7 @@ public class LoadSaveManager {
 			}
 		}
 
-		// TODO test for resource
+		// TODO test for URL
 //		if (!file.exists()) {
 //			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
 //					"Game DB does not exist. Exiting. File: {0}", file);
@@ -179,8 +179,6 @@ public class LoadSaveManager {
 	 *            the file to copy to.
 	 */
 	private static void copyFromTempDB(File file) {
-		File tempFile = new File(PropertiesReader.DIRECTORY + gameName
-				+ TEMP_APPENDIX + H2_ENDING);
 		// Copy to temp file
 		try {
 			Files.copy(tempFile.toPath(), file.toPath(),
@@ -211,7 +209,6 @@ public class LoadSaveManager {
 	
 	/**
 	 * Loads a file.
-	 * FIXME doesn't work! (initial state!)
 	 * 
 	 * @param file
 	 *            the file to load.
@@ -235,7 +232,7 @@ public class LoadSaveManager {
 		// Disconnect from old db
 		PersistenceManager.disconnect();
 		// Copy file to a temp db
-		File tempFile = copyToTempDB(file);
+		tempFile = copyToTempDB(file);
 		// Connect
 		String path = tempFile.getAbsolutePath();
 		PersistenceManager.connect(
