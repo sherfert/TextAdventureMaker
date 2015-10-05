@@ -82,6 +82,28 @@
 										<exclude>logic/*</exclude>
 									</excludes>
 								</filter>
+								<!-- 
+								<filter>
+									<artifact>org.eclipse.persistence:eclipselink</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+								
+								 
+								<filter>
+									<artifact>org.eclipse.persistence:javax.persistence</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+								<filter>
+									<artifact>com.h2database:h2</artifact>
+									<includes>
+										<include>**</include>
+									</includes>
+								</filter>
+								-->
 							</filters>
 							<transformers>
 								<transformer
@@ -89,7 +111,7 @@
 									<mainClass>playing.menu.LoadSaveManager</mainClass>
 								</transformer>
 							</transformers>
-							<!--  <minimizeJar>true</minimizeJar>-->
+							<minimizeJar>false</minimizeJar>
 							<dependencyReducedPomLocation>
 								${java.io.tmpdir}/dependency-reduced-pom.xml
 							</dependencyReducedPomLocation>

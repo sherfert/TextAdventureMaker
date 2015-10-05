@@ -25,6 +25,8 @@ import configuration.PropertiesReader;
  * 
  */
 public class LoadSaveManager {
+	// XXX if the jar is minimized, the persistence provider is not found. The current maven-shade-plugin allows for no better solution
+	// than not minimizing the jar or specifying ALL needed classes from the artifacts.
 
 	/**
 	 * The ending of H2 databases.
@@ -82,7 +84,6 @@ public class LoadSaveManager {
 		if (args.length == 0) {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
 					"No arguments provided, using game DB inside JAR.");
-			// FIXME if the jar is minimized, the persistence provider is not found.
 			ClassLoader classLoader = LoadSaveManager.class.getClassLoader();
 			file = classLoader.getResource("game" + H2_ENDING);
 			// FIXME game name as attribute in game

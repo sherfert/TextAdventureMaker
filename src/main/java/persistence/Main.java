@@ -480,7 +480,7 @@ public class Main {
 		game.addUseWithCombineCommand("combine (?<o0>.+?) and (?<o1>.+?)");
 		game.addUseWithCombineCommand("combine (?<o0>.+?) with (?<o1>.+?)");
 		game.addTalkToCommand("talk to (?<o0>.+?)");
-		game.addTalkToCommand("speek with (?<o0>.+?)");
+		game.addTalkToCommand("speak with (?<o0>.+?)");
 
 		game.setGameTitle("Test-Adventure");
 
