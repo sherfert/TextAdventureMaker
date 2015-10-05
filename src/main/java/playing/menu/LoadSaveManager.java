@@ -25,8 +25,10 @@ import configuration.PropertiesReader;
  * 
  */
 public class LoadSaveManager {
-	// XXX if the jar is minimized, the persistence provider is not found. The current maven-shade-plugin allows for no better solution
-	// than not minimizing the jar or specifying ALL needed classes from the artifacts.
+	// XXX if the jar is minimized, the persistence provider is not found. The
+	// current maven-shade-plugin allows for no better solution
+	// than not minimizing the jar or specifying ALL needed classes from the
+	// artifacts.
 
 	/**
 	 * The ending of H2 databases.
@@ -47,7 +49,7 @@ public class LoadSaveManager {
 	 * The file of the game db.
 	 */
 	private static URL file;
-	
+
 	/**
 	 * The file temporarily used to play the game.
 	 */
@@ -66,8 +68,8 @@ public class LoadSaveManager {
 	/**
 	 * The main method to play a game. If there is an argument provided, it must
 	 * point to a valid game database file. If there is no argument provided, it
-	 * is assumed there is a file named "game"+H2_ENDING ("game.h2.db") in the
-	 * resources folder of this JAR file.
+	 * is assumed there is a file named "game"+H2_ENDING ("game.h2.db") in this
+	 * JAR file.
 	 * 
 	 * @param args
 	 *            either the game database file to load or nothing.
@@ -86,29 +88,38 @@ public class LoadSaveManager {
 					"No arguments provided, using game DB inside JAR.");
 			ClassLoader classLoader = LoadSaveManager.class.getClassLoader();
 			file = classLoader.getResource("game" + H2_ENDING);
-			// FIXME game name as attribute in game
-			gameName = "Test-Adventure";
 		} else {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
 					"Started LoadSaveManager with argument: {0}", args[0]);
-			
-			// Save game file name
-			gameName = args[0];
+
 			try {
-				file = new File(PropertiesReader.DIRECTORY + gameName + H2_ENDING).toURI().toURL();
+				file = new File(PropertiesReader.DIRECTORY + args[0]
+						+ H2_ENDING).toURI().toURL();
 			} catch (MalformedURLException e) {
-				Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-						"Malformed file URL.", e);
+				Logger.getLogger(LoadSaveManager.class.getName()).log(
+						Level.SEVERE, "Malformed file URL.", e);
 			}
 		}
 
 		// TODO test for URL
-//		if (!file.exists()) {
-//			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-//					"Game DB does not exist. Exiting. File: {0}", file);
-//			return;
-//		}
+		// if (!file.exists()) {
+		// Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+		// "Game DB does not exist. Exiting. File: {0}", file);
+		// return;
+		// }
+		
+		// Obtain the name of the game
+		File tFile = copyToTempDB(file);
+		// Connect
+		String path = tFile.getAbsolutePath();
+		PersistenceManager.connect(
+				path.substring(0, path.length() - H2_ENDING.length()), false);
+		gameName = GameManager.getGameTitle();
+		// Do NOT disconnect from DB here, because loading a new game will already disconnect and
+		// otherwise there are exceptions.
+		
 
+		// Set the saves game directory path accordingly
 		saveGamesDir = PropertiesReader.DIRECTORY + gameName + File.separator;
 
 		File saveGamesDirFile = new File(saveGamesDir);
@@ -160,8 +171,8 @@ public class LoadSaveManager {
 		try {
 			Path tempFile = Files.createTempFile("tam", H2_ENDING);
 
-			//Files.copy(file.toPath(), tempFile,
-			//		java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			// Files.copy(file.toPath(), tempFile,
+			// java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
 			FileUtils.copyURLToFile(file, tempFile.toFile());
 			return tempFile.toFile();
@@ -207,7 +218,7 @@ public class LoadSaveManager {
 		// "Load" the new file
 		load(file);
 	}
-	
+
 	/**
 	 * Loads a file.
 	 * 

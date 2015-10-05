@@ -40,10 +40,10 @@ public class GameManager {
 	 *             (unchecked) if the database is not compatible with the model.
 	 */
 	public static Game getGame() {
-		if(game != null) {
+		if (game != null) {
 			return game;
 		}
-		
+
 		// Find all games (hopefully only one)
 		CriteriaQuery<Game> criteriaQueryGame = PersistenceManager
 				.getCriteriaBuilder().createQuery(Game.class);
@@ -59,5 +59,33 @@ public class GameManager {
 		}
 
 		return game = resultListGame.get(0);
+	}
+
+	/**
+	 * Retrieves the title of the game via a SQL select. Does not cache the
+	 * game.
+	 * 
+	 * @return the game title.
+	 */
+	public static String getGameTitle() {
+		if (game != null) {
+			return game.getGameTitle();
+		}
+
+		// Find all games (hopefully only one)
+		CriteriaQuery<String> criteriaQueryGame = PersistenceManager
+				.getCriteriaBuilder().createQuery(String.class);
+		Root<Game> gameRoot = criteriaQueryGame.from(Game.class);
+		criteriaQueryGame.select(gameRoot.get("gameTitle"));
+		List<String> resultList = PersistenceManager.getEntityManager()
+				.createQuery(criteriaQueryGame).getResultList();
+
+		// There should be exactly 1 game
+		if (resultList.size() != 1) {
+			Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE,
+					"There are {0} games.", resultList.size());
+		}
+
+		return resultList.get(0);
 	}
 }
