@@ -61,7 +61,7 @@ public class JARCreator {
 	}
 
 	/**
-	 * Creates a new jar file that contain everything from the source jar file
+	 * Creates a new jar file that contains everything from the source jar file
 	 * plus the given file as well.
 	 * 
 	 * @param toCopy

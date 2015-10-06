@@ -88,26 +88,38 @@ public class LoadSaveManager {
 					"No arguments provided, using game DB inside JAR.");
 			ClassLoader classLoader = LoadSaveManager.class.getClassLoader();
 			file = classLoader.getResource("game" + H2_ENDING);
+
+			// Test if resource exists
+			if (file == null) {
+				Logger.getLogger(LoadSaveManager.class.getName()).log(
+						Level.SEVERE,
+						"Game DB in JAR does not exist. Exiting. File: {0}",
+						file);
+				return;
+			}
 		} else {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
 					"Started LoadSaveManager with argument: {0}", args[0]);
 
+			File f = new File(PropertiesReader.DIRECTORY + args[0] + H2_ENDING);
+			// Test if file exists
+			if (!f.exists()) {
+				Logger.getLogger(LoadSaveManager.class.getName())
+						.log(Level.SEVERE,
+								"Game DB file does not exist. Exiting. File: {0}",
+								file);
+				return;
+			}
+
 			try {
-				file = new File(PropertiesReader.DIRECTORY + args[0]
-						+ H2_ENDING).toURI().toURL();
+				file = f.toURI().toURL();
 			} catch (MalformedURLException e) {
 				Logger.getLogger(LoadSaveManager.class.getName()).log(
 						Level.SEVERE, "Malformed file URL.", e);
 			}
+
 		}
 
-		// TODO test for URL
-		// if (!file.exists()) {
-		// Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-		// "Game DB does not exist. Exiting. File: {0}", file);
-		// return;
-		// }
-		
 		// Obtain the name of the game
 		File tFile = copyToTempDB(file);
 		// Connect
@@ -115,9 +127,9 @@ public class LoadSaveManager {
 		PersistenceManager.connect(
 				path.substring(0, path.length() - H2_ENDING.length()), false);
 		gameName = GameManager.getGameTitle();
-		// Do NOT disconnect from DB here, because loading a new game will already disconnect and
+		// Do NOT disconnect from DB here, because loading a new game will
+		// already disconnect and
 		// otherwise there are exceptions.
-		
 
 		// Set the saves game directory path accordingly
 		saveGamesDir = PropertiesReader.DIRECTORY + gameName + File.separator;
