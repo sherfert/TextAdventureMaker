@@ -29,7 +29,7 @@ public class JARCreator {
 	 * @param gameDB the path to the game database to copy
 	 */
 	public static void copyGameDBIntoGameJAR(String gameDB) {
-		// Copy game db into temo folder with name game.h2.db
+		// Copy game db into temp folder with name game.h2.db
 		File gameDBFile = new File(gameDB);
 		// create a temp file
 		File temp = new File("game.h2.db");

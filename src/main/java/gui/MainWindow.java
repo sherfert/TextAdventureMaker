@@ -18,7 +18,7 @@ public class MainWindow {
 	public static void main(String[] args) throws IOException {
 		String gameDB = PropertiesReader.DIRECTORY + "Test-Adventure"
 				+ ".h2.db";
-		// Copy our TestAdvanture into the Game_missing_db.jar
+		// Copy our TestAdventure into the Game_missing_db.jar
 		JARCreator.copyGameDBIntoGameJAR(gameDB);
 
 		JOptionPane.showMessageDialog(null, "That's all.");
