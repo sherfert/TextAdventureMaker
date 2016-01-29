@@ -6,12 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-
-import logic.JARCreator;
-
 import java.io.IOException;
 
-import configuration.PropertiesReader;
 import gui.view.MainWindowController;
 
 /**
@@ -48,11 +44,6 @@ public class MainWindow extends Application {
 	}
 
 	public static void main(String[] args) {
-		String gameDB = PropertiesReader.DIRECTORY + "Test-Adventure"
-				+ ".h2.db";
-		// Copy our TestAdventure into the Game_missing_db.jar
-		//JARCreator.copyGameDBIntoGameJAR(gameDB);
-		
 		launch(args);
 	}
 

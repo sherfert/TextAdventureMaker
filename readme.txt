@@ -14,5 +14,6 @@ playing.menu.LoadSaveManager:
 		Takes the game.db that is present in the JAR as the game.
 
 gui.MainWindow:
-	Copies the game database (hardcoded) into the file "Game_missing_db.jar" created by maven and creates a "Game.jar"
-	that can be executed with the LoadSaveManager as main class.
+	Shows the main window of the application. To create a runnable game JAR file:
+	- Open a game database
+	- Export to a JAR file of your choice

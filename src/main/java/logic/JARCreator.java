@@ -23,41 +23,43 @@ import java.util.logging.Logger;
 public class JARCreator {
 
 	/**
-	 * Copies the game database with the new filename game.h2.db into a new
-	 * Game.jar with the contents of Game_missing_db.jar.
+	 * Copies the game database with the new filename game.h2.db into a new file
+	 * with the contents of Game_missing_db.jar.
 	 * 
-	 * @param gameDB the path to the game database to copy
+	 * @param gameDB
+	 *            the file to the game database to copy
+	 * @param jarDest
+	 *            the file where to place the final jar
 	 */
-	public static void copyGameDBIntoGameJAR(String gameDB) {
+	public static void copyGameDBIntoGameJAR(File gameDB, File jarDest) throws IOException {
 		// Copy game db into temp folder with name game.h2.db
-		File gameDBFile = new File(gameDB);
 		// create a temp file
 		File temp = new File("game.h2.db");
 
 		try {
-			Files.copy(gameDBFile.toPath(), temp.toPath());
+			Files.copy(gameDB.toPath(), temp.toPath());
 		} catch (IOException e) {
 			Logger.getLogger(JARCreator.class.getName()).log(Level.SEVERE,
 					"Could not copy game db into temporary file. Aborting.", e);
 			return;
 		}
 
-		String jarSourceS = System.getProperty("user.dir") + File.separator
-				+ "Game_missing_db.jar";
-		String jarDestS = System.getProperty("user.dir") + File.separator
-				+ "Game.jar";
+		String jarSourceS = System.getProperty("user.dir") + File.separator + "Game_missing_db.jar";
 		if (!new File(jarSourceS).exists()) {
 			// Not running from JAR, use "target" subfolder
-			jarSourceS = System.getProperty("user.dir") + File.separator
-					+ "target" + File.separator + "Game_missing_db.jar";
-			jarDestS = System.getProperty("user.dir") + File.separator
-					+ "target" + File.separator + "Game.jar";
+			jarSourceS = System.getProperty("user.dir") + File.separator + "target" + File.separator
+					+ "Game_missing_db.jar";
 		}
 
-		copyFileIntoJar(temp.getAbsolutePath(), jarSourceS, jarDestS);
-
-		// Delete temp file again
-		temp.delete();
+		try {
+			copyFileIntoJar(temp.getAbsolutePath(), jarSourceS, jarDest.getAbsolutePath());
+		} catch(IOException e) {
+			Logger.getLogger(JARCreator.class.getName()).log(Level.WARNING, "Could not copy DB into JAR", e);
+			throw e;
+		} finally {
+			// Delete temp file again
+			temp.delete();
+		}
 	}
 
 	/**
@@ -71,14 +73,12 @@ public class JARCreator {
 	 * @param jarDest
 	 *            the dest jar
 	 */
-	public static void copyFileIntoJar(String toCopy, String jarSourceS,
-			String jarDest) {
-
+	public static void copyFileIntoJar(String toCopy, String jarSourceS, String jarDest) throws IOException {
+		Logger.getLogger(JARCreator.class.getName()).log(Level.INFO, "Copying {0} (temp DB) with contents of {1} into {2}",
+				new Object[] { toCopy, jarSourceS, jarDest });
 		// try with resources
-		try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(
-				jarDest));
-				JarInputStream jis = new JarInputStream(new FileInputStream(
-						jarSourceS));
+		try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(jarDest));
+				JarInputStream jis = new JarInputStream(new FileInputStream(jarSourceS));
 				JarFile jarSource = new JarFile(jarSourceS)) {
 
 			// Copy all elements from the source jar into the dest jar.
@@ -110,9 +110,6 @@ public class JARCreator {
 				}
 			}
 
-		} catch (IOException e) {
-			Logger.getLogger(JARCreator.class.getName()).log(Level.SEVERE,
-					"Problem copying the file into the JAR.", e);
 		}
 	}
 

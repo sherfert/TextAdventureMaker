@@ -43,4 +43,11 @@ public class CurrentGameManager {
 		openFile = null;
 	}
 
+	/**
+	 * @return the openFile
+	 */
+	public static File getOpenFile() {
+		return openFile;
+	}
+
 }
