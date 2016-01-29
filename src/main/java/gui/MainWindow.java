@@ -34,6 +34,8 @@ public class MainWindow extends Application {
             BorderPane rootLayout = (BorderPane) loader.load();
             
             MainWindowController controller = loader.getController();
+            controller.setWindow(primaryStage);
+            primaryStage.setOnCloseRequest(e -> controller.close());
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
