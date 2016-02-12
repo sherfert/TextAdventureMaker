@@ -90,7 +90,7 @@ public class ConversationOption implements HasId {
 	// XXX why not unnullable?
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
-	//(nullable = false)
+	// (nullable = false)
 	private ChangeConversationOptionAction disableAction;
 
 	/**
@@ -119,8 +119,7 @@ public class ConversationOption implements HasId {
 	 * @param target
 	 *            the target
 	 */
-	public ConversationOption(String text, String answer,
-			ConversationLayer target) {
+	public ConversationOption(String text, String answer, ConversationLayer target) {
 		this();
 		this.text = text;
 		this.answer = answer;
@@ -131,8 +130,8 @@ public class ConversationOption implements HasId {
 
 	/**
 	 * Create an enabled ConversationOption, with given text, answer, event and
-	 * target. By default, the option will not disappear after being
-	 * chosen once.
+	 * target. By default, the option will not disappear after being chosen
+	 * once.
 	 * 
 	 * @param text
 	 *            the text
@@ -143,8 +142,7 @@ public class ConversationOption implements HasId {
 	 * @param target
 	 *            the target
 	 */
-	public ConversationOption(String text, String answer, String event,
-			ConversationLayer target) {
+	public ConversationOption(String text, String answer, String event, ConversationLayer target) {
 		this();
 		this.text = text;
 		this.answer = answer;
@@ -289,24 +287,24 @@ public class ConversationOption implements HasId {
 	/**
 	 * Choose this option. Simply triggers all additional actions. Also disable
 	 * this option if specified.
+	 * 
+	 * @param game
+	 *            the game
 	 */
-	public void choose() {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Choosing {0}", this);
-		disableAction.triggerAction();
+	public void choose(Game game) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Choosing {0}", this);
+		disableAction.triggerAction(game);
 		// Trigger additional actions
 		for (AbstractAction abstractAction : additionalActions) {
-			abstractAction.triggerAction();
+			abstractAction.triggerAction(game);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "ConversationOption{id=" + id + ", text=" + text + ", answer="
-				+ answer + ", event=" + event + ", additionalActionsIDs="
-				+ NamedObject.getIDList(additionalActions) + ", enabled="
-				+ enabled + ", targetID=" + target.getId() + ", disableActionID="
-						+ disableAction.getId() + "}";
+		return "ConversationOption{id=" + id + ", text=" + text + ", answer=" + answer + ", event=" + event
+				+ ", additionalActionsIDs=" + NamedObject.getIDList(additionalActions) + ", enabled=" + enabled
+				+ ", targetID=" + target.getId() + ", disableActionID=" + disableAction.getId() + "}";
 	}
 
 }

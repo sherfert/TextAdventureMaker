@@ -2,6 +2,7 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.Game;
 import data.action.AbstractAction;
 
 /**
@@ -31,8 +32,11 @@ public interface Inspectable extends Identifiable {
 
 	/**
 	 * Triggers all additional actions.
+	 * 
+	 * @param game
+	 *            the game
 	 */
-	public void inspect();
+	public void inspect(Game game);
 
 	/**
 	 * Removes an additional action.

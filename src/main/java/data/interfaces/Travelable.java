@@ -2,6 +2,7 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.Game;
 import data.Location;
 import data.action.AbstractAction;
 import data.action.MoveAction;
@@ -19,7 +20,7 @@ public interface Travelable extends Identifiable {
 	 *            the action
 	 */
 	public void addAdditionalActionToMove(AbstractAction action);
-	
+
 	/**
 	 * Adds an additional command that can be used to travel here.
 	 * 
@@ -32,12 +33,12 @@ public interface Travelable extends Identifiable {
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromMove();
-	
+
 	/**
 	 * @return the additional travel commands.
 	 */
 	public List<String> getAdditionalTravelCommands();
-	
+
 	/**
 	 * @return the destination
 	 */
@@ -65,7 +66,7 @@ public interface Travelable extends Identifiable {
 	 *            the action
 	 */
 	public void removeAdditionalActionFromMove(AbstractAction action);
-	
+
 	/**
 	 * Removes an additional travel command
 	 * 
@@ -100,6 +101,9 @@ public interface Travelable extends Identifiable {
 
 	/**
 	 * Triggers the {@link MoveAction} and all additional actions.
+	 * 
+	 * @param game
+	 *            the game
 	 */
-	public void travel();
+	public void travel(Game game);
 }

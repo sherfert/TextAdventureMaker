@@ -8,12 +8,25 @@ import data.Player;
  * @author Satia
  */
 public class PlayerManager {
+	
+	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public PlayerManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
+	
 	/**
 	 * 
 	 * @return the player
 	 */
-	public static Player getPlayer() {
+	public Player getPlayer() {
 		// Return the game's player
-		return GameManager.getGame().getPlayer();
+		return persistenceManager.getGameManager().getGame().getPlayer();
 	}
 }

@@ -13,8 +13,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 /**
  * Manages connections to database files.
  * 
- * TODO Not static!
- * 
  * @author Satia
  */
 public class PersistenceManager {
@@ -28,41 +26,66 @@ public class PersistenceManager {
 	/**
 	 * The criteria builder.
 	 */
-	private static CriteriaBuilder criteriaBuilder;
+	private CriteriaBuilder criteriaBuilder;
 
 	/**
 	 * The entity manager.
 	 */
-	private static EntityManager entityManager;
+	private EntityManager entityManager;
 
 	/**
 	 * The entity manager factory.
 	 */
-	private static EntityManagerFactory entityManagerFactory;
+	private EntityManagerFactory entityManagerFactory;
+
+	// All sub-managers responsible for certain classes in the DB
+	private AllObjectsManager allObjectsManager;
+	private GameManager gameManager;
+	private IdentifiableObjectManager identifiableObjectManager;
+	private InspectableObjectManager inspectableObjectManager;
+	private InventoryItemManager inventoryItemManager;
+	private ItemManager itemManager;
+	private PersonManager personManager;
+	private PlayerManager playerManager;
+	private UsableObjectManager usableObjectManager;
+	private WayManager wayManager;
+
+	/**
+	 * Creates a persistence manager with all its subordinate managers.
+	 */
+	public PersistenceManager() {
+		this.allObjectsManager = new AllObjectsManager(this);
+		this.gameManager = new GameManager(this);
+		this.identifiableObjectManager = new IdentifiableObjectManager(this);
+		this.inspectableObjectManager = new InspectableObjectManager(this);
+		this.inventoryItemManager = new InventoryItemManager(this);
+		this.itemManager = new ItemManager(this);
+		this.personManager = new PersonManager(this);
+		this.playerManager = new PlayerManager(this);
+		this.usableObjectManager = new UsableObjectManager(this);
+		this.wayManager = new WayManager(this);
+	}
 
 	/**
 	 * Connects to the database.
 	 * 
-	 * @param filename
-	 *            the filename to connect to
 	 * @param dropTables
 	 *            if {@code true}, the database contents will be deleted
 	 *            entirely, all tables are dropped and recreated.
+	 * @param filename
+	 *            the file to connect to.
 	 */
-	public static void connect(String filename, boolean dropTables) {
+	public void connect(String filename, boolean dropTables) {
 		Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
-				"Connecting to database {0}. Dropping tables: {1}",
-				new Object[] { filename, dropTables });
+				"Connecting to database {0}. Dropping tables: {1}", new Object[] { filename, dropTables });
 
-		String ddlGenerationValue = dropTables ? "drop-and-create-tables"
-				: "create-tables";
+		String ddlGenerationValue = dropTables ? "drop-and-create-tables" : "create-tables";
 		// Create objects for database access
 		Map<String, String> properties = new HashMap<>();
 		properties.put("javax.persistence.jdbc.url", "jdbc:h2:" + filename);
 		properties.put("eclipselink.ddl-generation", ddlGenerationValue);
 
-		entityManagerFactory = Persistence.createEntityManagerFactory(
-				PERSISTENCE_UNIT_NAME, properties);
+		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
 
 		entityManager = entityManagerFactory.createEntityManager();
 		criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -71,13 +94,13 @@ public class PersistenceManager {
 	/**
 	 * Disconnects from the database.
 	 */
-	public static void disconnect() {
-		if(entityManagerFactory != null) {
-			Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
-					"Disconnecting from database");
-			
-			// Reset the game manager, so that it will load the new game after connecting to a new DB
-			GameManager.reset();
+	public void disconnect() {
+		if (entityManagerFactory != null) {
+			Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO, "Disconnecting from database");
+
+			// Reset the game manager, so that it will load the new game after
+			// connecting to a new DB
+			this.gameManager.reset();
 
 			// Close everything
 			entityManager.close();
@@ -86,26 +109,96 @@ public class PersistenceManager {
 	}
 
 	/**
+	 * Updates any changes. Should be called after each change of persisted
+	 * data.
+	 */
+	public void updateChanges() {
+		entityManager.getTransaction().begin();
+		entityManager.getTransaction().commit();
+	}
+
+	/**
 	 * @return the criteriaBuilder
 	 */
-	public static CriteriaBuilder getCriteriaBuilder() {
+	public CriteriaBuilder getCriteriaBuilder() {
 		return criteriaBuilder;
 	}
 
 	/**
 	 * @return the entityManager
 	 */
-	public static EntityManager getEntityManager() {
+	public EntityManager getEntityManager() {
 		return entityManager;
 	}
 
 	/**
-	 * Updates any changes. Should be called after each change of persisted
-	 * data.
+	 * @return the allObjectsManager
 	 */
-	public static void updateChanges() {
-		entityManager.getTransaction().begin();
-		entityManager.getTransaction().commit();
+	public AllObjectsManager getAllObjectsManager() {
+		return allObjectsManager;
+	}
+
+	/**
+	 * @return the gameManager
+	 */
+	public GameManager getGameManager() {
+		return gameManager;
+	}
+
+	/**
+	 * @return the identifiableObjectManager
+	 */
+	public IdentifiableObjectManager getIdentifiableObjectManager() {
+		return identifiableObjectManager;
+	}
+
+	/**
+	 * @return the inspectableObjectManager
+	 */
+	public InspectableObjectManager getInspectableObjectManager() {
+		return inspectableObjectManager;
+	}
+
+	/**
+	 * @return the inventoryItemManager
+	 */
+	public InventoryItemManager getInventoryItemManager() {
+		return inventoryItemManager;
+	}
+
+	/**
+	 * @return the itemManager
+	 */
+	public ItemManager getItemManager() {
+		return itemManager;
+	}
+
+	/**
+	 * @return the personManager
+	 */
+	public PersonManager getPersonManager() {
+		return personManager;
+	}
+
+	/**
+	 * @return the playerManager
+	 */
+	public PlayerManager getPlayerManager() {
+		return playerManager;
+	}
+
+	/**
+	 * @return the usableObjectManager
+	 */
+	public UsableObjectManager getUsableObjectManager() {
+		return usableObjectManager;
+	}
+
+	/**
+	 * @return the wayManager
+	 */
+	public WayManager getWayManager() {
+		return wayManager;
 	}
 
 }

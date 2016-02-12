@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
-import persistence.GameManager;
 import persistence.PersistenceManager;
 import playing.GamePlayer;
 import configuration.PropertiesReader;
@@ -20,6 +19,8 @@ import configuration.PropertiesReader;
  * This class handles starting new games, loading (and saving). Saving is done
  * automatically, but upon starting a new game, a name of the savegame has to be
  * entered.
+ * 
+ * TODO not static
  * 
  * @author Satia
  * 
@@ -64,6 +65,11 @@ public class LoadSaveManager {
 	 * The name of the game.
 	 */
 	private static String gameName;
+	
+	/**
+	 * A reference to the currently active persistenceManager
+	 */
+	private static PersistenceManager persistenceManager = new PersistenceManager();
 
 	/**
 	 * The main method to play a game. If there is an argument provided, it must
@@ -124,9 +130,9 @@ public class LoadSaveManager {
 		File tFile = copyToTempDB(file);
 		// Connect
 		String path = tFile.getAbsolutePath();
-		PersistenceManager.connect(
+		persistenceManager.connect(
 				path.substring(0, path.length() - H2_ENDING.length()), false);
-		gameName = GameManager.getGameTitle();
+		gameName = persistenceManager.getGameManager().getGameTitle();
 		// Do NOT disconnect from DB here, because loading a new game will
 		// already disconnect and
 		// otherwise there are exceptions.
@@ -154,7 +160,7 @@ public class LoadSaveManager {
 		// After that, the VM is kept alive with new threads. It must be closed
 		// with
 		// System.exit(...) or gamePlayer.stop() respectively.
-		gamePlayer = new GamePlayer();
+		gamePlayer = new GamePlayer(persistenceManager);
 
 		// Create main menu
 		mainMenu = new MainMenu(gamePlayer.getIo());
@@ -251,16 +257,16 @@ public class LoadSaveManager {
 	 */
 	public static void load(URL file) {
 		// Disconnect from old db
-		PersistenceManager.disconnect();
+		persistenceManager.disconnect();
 		// Copy file to a temp db
 		tempFile = copyToTempDB(file);
 		// Connect
 		String path = tempFile.getAbsolutePath();
-		PersistenceManager.connect(
+		persistenceManager.connect(
 				path.substring(0, path.length() - H2_ENDING.length()), false);
 		// Set the game for the game player
 		try {
-			gamePlayer.setGame(GameManager.getGame());
+			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
 		} catch (Exception e) {
 			// This means the database is incompatible with the model.
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,

@@ -8,6 +8,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import data.Game;
 import data.InspectableObject;
 import data.NamedObject;
 
@@ -110,7 +111,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Change fields
 		if (newName != null) {
 			object.setName(newName);

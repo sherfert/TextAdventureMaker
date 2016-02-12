@@ -2,6 +2,7 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.Game;
 import data.InventoryItem;
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
@@ -20,7 +21,7 @@ public interface Takeable extends Identifiable {
 	 *            the action
 	 */
 	public void addAdditionalActionToTake(AbstractAction action);
-	
+
 	/**
 	 * Adds an additional command that can be used to take the object.
 	 * 
@@ -28,30 +29,32 @@ public interface Takeable extends Identifiable {
 	 *            the command
 	 */
 	public void addAdditionalTakeCommand(String command);
-	
+
 	/**
 	 * @return the additional take commands.
 	 */
 	public List<String> getAdditionalTakeCommands();
 
 	/**
-	 * @param pickUpItems the pickUpItems to set
+	 * @param pickUpItems
+	 *            the pickUpItems to set
 	 */
 	public void setPickUpItems(List<InventoryItem> pickUpItems);
-	
+
 	/**
-	 * Adds an {@link InventoryItem} to the items to be added to the
-	 * inventory.
+	 * Adds an {@link InventoryItem} to the items to be added to the inventory.
 	 *
-	 * @param item the item
+	 * @param item
+	 *            the item
 	 */
 	public void addPickUpItem(InventoryItem item);
-	
+
 	/**
 	 * Removes an {@link InventoryItem} from the items to be added to the
 	 * inventory.
 	 *
-	 * @param item the item
+	 * @param item
+	 *            the item
 	 */
 	public void removePickUpItem(InventoryItem item);
 
@@ -87,7 +90,7 @@ public interface Takeable extends Identifiable {
 	 *            the action
 	 */
 	public void removeAdditionalActionFromTake(AbstractAction action);
-	
+
 	/**
 	 * Removes an additional take command.
 	 * 
@@ -130,6 +133,9 @@ public interface Takeable extends Identifiable {
 	 * Triggers all additional actions and, if enabled, the
 	 * {@link AddInventoryItemsAction} and, if also removeItem, the
 	 * {@link ChangeItemAction}.
+	 * 
+	 * @param game
+	 *            the game
 	 */
-	public void take();
+	public void take(Game game);
 }

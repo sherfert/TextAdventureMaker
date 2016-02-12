@@ -49,6 +49,9 @@ public class Main {
 	 * @throws java.lang.Exception
 	 */
 	public static void main(String[] args) throws Exception {
+		Player player = new Player();
+		Game game = new Game();
+		
 		// Create everything
 		Location flat = new Location("Flat", "Your little home.");
 		Location balcony = new Location("Balcony",
@@ -414,10 +417,8 @@ public class Main {
 		tv.addAdditionalActionToInspect(changeChairTVaction);
 		tv.addAdditionalActionToInspect(changeSatiaMoneyAction);
 		tv.addAdditionalActionToInspect(changePeelPenCombinationAction);
-
-		Player player = new Player();
+		
 		// Game options
-		Game game = new Game();
 		game.setPlayer(player);
 		game.setStartLocation(flat);
 		game.setStartText("This is a little text adventure.");
@@ -483,17 +484,19 @@ public class Main {
 		game.addTalkToCommand("speak with (?<o0>.+?)");
 
 		game.setGameTitle("Test-Adventure");
+		
+		PersistenceManager pm = new PersistenceManager();
 
 		// Connect to database
-		PersistenceManager.connect(PropertiesReader.DIRECTORY
+		pm.connect(PropertiesReader.DIRECTORY
 				+ "Test-Adventure", true);
 
 		// Persist everything (Cascade.PERSIST persists the rest)
-		PersistenceManager.getEntityManager().persist(player);
-		PersistenceManager.getEntityManager().persist(game);
+		pm.getEntityManager().persist(player);
+		pm.getEntityManager().persist(game);
 
 		// Updates changes and disconnect
-		PersistenceManager.updateChanges();
-		PersistenceManager.disconnect();
+		pm.updateChanges();
+		pm.disconnect();
 	}
 }

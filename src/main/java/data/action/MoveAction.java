@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import persistence.PlayerManager;
+import data.Game;
 import data.Location;
 import data.Way;
 
@@ -67,8 +67,8 @@ public class MoveAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
-		PlayerManager.getPlayer().setLocation(target);
+	protected void doAction(Game game) {
+		game.getPlayer().setLocation(target);
 	}
 
 	@Override

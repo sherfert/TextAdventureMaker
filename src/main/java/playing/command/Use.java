@@ -7,8 +7,6 @@ import java.util.logging.Logger;
 import data.Game;
 import data.interfaces.Inspectable;
 import data.interfaces.Usable;
-import persistence.InspectableObjectManager;
-import persistence.UsableObjectManager;
 import playing.GamePlayer;
 import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
@@ -30,7 +28,7 @@ public class Use extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		return UsableObjectManager.getAllAdditionalUseCommands();
+		return persistenceManager.getUsableObjectManager().getAllAdditionalUseCommands();
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class Use extends Command {
 		Game game = gamePlayer.getGame();
 
 		// Collect all objects, whether they are usable or not.
-		Inspectable objectI = InspectableObjectManager
+		Inspectable objectI = persistenceManager.getInspectableObjectManager()
 				.getInspectable(identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
@@ -130,7 +128,7 @@ public class Use extends Command {
 							game.getFailedBgColor(), game.getFailedFgColor());
 				}
 				// Effect depends on additional actions
-				object.use();
+				object.use(game);
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Use item not of type Useable {0}", identifier);

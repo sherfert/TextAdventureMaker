@@ -2,6 +2,7 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.Game;
 import data.action.AbstractAction;
 
 /**
@@ -30,7 +31,7 @@ public interface Usable extends Identifiable {
 	 * @return the additional actions.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromUse();
-	
+
 	/**
 	 * @return the additional use commands.
 	 */
@@ -58,7 +59,7 @@ public interface Usable extends Identifiable {
 	 *            the action
 	 */
 	public void removeAdditionalActionFromUse(AbstractAction action);
-	
+
 	/**
 	 * Removes an additional use command
 	 * 
@@ -93,6 +94,9 @@ public interface Usable extends Identifiable {
 
 	/**
 	 * Triggers all additional actions.
+	 * 
+	 * @param game
+	 *            the game
 	 */
-	public void use();
+	public void use(Game game);
 }

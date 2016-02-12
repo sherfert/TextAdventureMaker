@@ -3,6 +3,7 @@ package data.interfaces;
 import java.util.List;
 
 import data.Conversation;
+import data.Game;
 
 /**
  * Anything you can talk to, that has a {@link Conversation}.
@@ -25,7 +26,7 @@ public interface HasConversation extends Identifiable {
 	 *            the conversation to set.
 	 */
 	public void setConversation(Conversation conversation);
-	
+
 	/**
 	 * Adds an additional command that can be used to talk to the person.
 	 * 
@@ -33,12 +34,12 @@ public interface HasConversation extends Identifiable {
 	 *            the command
 	 */
 	public void addAdditionalTalkToCommand(String command);
-	
+
 	/**
 	 * @return the additional talk to commands.
 	 */
 	public List<String> getAdditionalTalkToCommands();
-	
+
 	/**
 	 * Removes an additional talk to command
 	 * 
@@ -69,6 +70,9 @@ public interface HasConversation extends Identifiable {
 	/**
 	 * Triggers all additional actions of the conversation and, if enabled, the
 	 * conversation will be started.
+	 * 
+	 * @param game
+	 *            the game
 	 */
-	public void talkTo();
+	public void talkTo(Game game);
 }

@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
+import data.Game;
 import data.InspectableObject;
 
 /**
@@ -164,9 +165,9 @@ public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Call the super method
-		super.doAction();
+		super.doAction(game);
 
 		// Change fields
 		if (newInspectionText != null) {

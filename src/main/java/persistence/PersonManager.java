@@ -10,14 +10,26 @@ import java.util.Set;
  * @author Satia
  */
 public class PersonManager {
+	
+	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public PersonManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
 
 	/**
 	 * @return a set of all additional talk to commands defined anywhere in the
 	 *         game.
 	 */
-	public static Set<String> getAllAdditionalTalkToCommands() {
+	public Set<String> getAllAdditionalTalkToCommands() {
 		@SuppressWarnings("unchecked")
-		List<String> resultList = PersistenceManager
+		List<String> resultList = persistenceManager
 				.getEntityManager()
 				.createNativeQuery(
 						"SELECT DISTINCT c.ADDITIONALTALKTOCOMMANDS FROM Person_ADDITIONALTALKTOCOMMANDS c")

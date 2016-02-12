@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import data.Conversation;
+import data.Game;
 
 /**
  * Changes a conversation. It can be dis- or enabled and the greeting can be
@@ -145,7 +146,7 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Change fields
 		if (newGreeting != null) {
 			conversation.setGreeting(newGreeting);

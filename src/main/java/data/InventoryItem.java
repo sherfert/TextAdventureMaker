@@ -22,10 +22,7 @@ import javax.persistence.OneToMany;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
-import data.action.ChangeInspectableObjectAction;
-import data.action.ChangeNamedObjectAction;
 import data.action.RemoveInventoryItemAction;
-import data.action.ChangeItemAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasId;
 import data.interfaces.HasLocation;
@@ -381,23 +378,23 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void combineWith(Combinable<InventoryItem> partner) {
+	public void combineWith(Combinable<InventoryItem> partner, Game game) {
 		CombinableInventoryItem combination = getCombinableInventoryItem(partner);
 		if (combination.enabled) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 					"Combining {0} with {1}", new Object[] { this, partner });
 
 			// Add new inventory items
-			combination.addInventoryItemsAction.triggerAction();
+			combination.addInventoryItemsAction.triggerAction(game);
 			if (combination.removeCombinables) {
 				/*
 				 * Remove both partners with temporary
 				 * RemoveInventoryItemActions.
 				 */
-				new RemoveInventoryItemAction(this).triggerAction();
+				new RemoveInventoryItemAction(this).triggerAction(game);
 				if (partner instanceof InventoryItem) {
 					new RemoveInventoryItemAction((InventoryItem) partner)
-							.triggerAction();
+							.triggerAction(game);
 				} else {
 					Logger.getLogger(this.getClass().getName())
 							.log(Level.WARNING,
@@ -409,7 +406,7 @@ public class InventoryItem extends UsableObject implements
 		}
 		// Trigger all additional actions
 		for (AbstractAction abstractAction : combination.additionalCombineWithActions) {
-			abstractAction.triggerAction();
+			abstractAction.triggerAction(game);
 		}
 	}
 
@@ -552,67 +549,15 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void useWith(HasLocation object) {
+	public void useWith(HasLocation object, Game game) {
 		// There is no "primary" action, so no "isEnabled" check
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Using {0} with {1}", new Object[] { this, object });
 
 		// Trigger all additional actions
 		for (AbstractAction abstractAction : getUsableHasLocation(object).additionalUseWithActions) {
-			abstractAction.triggerAction();
+			abstractAction.triggerAction(game);
 		}
-	}
-
-	/**
-	 * This is incomplete and should not be used.
-	 * 
-	 * Converts any action connected with the given {@link Item} into an
-	 * equivalent action connected to this InventoryItem.
-	 * 
-	 * @param item
-	 *            the {@link Item}
-	 * @param action
-	 *            the action to be converted
-	 * @return a converted action or the action itself.
-	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	private AbstractAction convertInventoryItemActionToItemAction(Item item,
-			AbstractAction action) {
-		if (action instanceof ChangeItemAction
-				&& ((ChangeItemAction) action).getObject() == item
-				&& ((ChangeItemAction) action).getNewLocation() == null) {
-			// This action "removes" the item
-			RemoveInventoryItemAction result = new RemoveInventoryItemAction(
-					this);
-			result.setEnabled(action.isEnabled());
-			return result;
-		} else if (action instanceof ChangeNamedObjectAction
-				&& ((ChangeNamedObjectAction) action).getObject() == item) {
-			ChangeNamedObjectAction result;
-			if (action instanceof ChangeInspectableObjectAction) {
-				result = new ChangeInspectableObjectAction(this);
-
-				((ChangeInspectableObjectAction) result)
-						.setIdentifiersToAdd(((ChangeInspectableObjectAction) action)
-								.getIdentifiersToAdd());
-				((ChangeInspectableObjectAction) result)
-						.setIdentifiersToRemove(((ChangeInspectableObjectAction) action)
-								.getIdentifiersToRemove());
-				((ChangeInspectableObjectAction) result)
-						.setNewInspectionText(((ChangeInspectableObjectAction) action)
-								.getNewInspectionText());
-			} else {
-				result = new ChangeNamedObjectAction(this);
-			}
-
-			result.setEnabled(action.isEnabled());
-			result.setNewDescription(((ChangeNamedObjectAction) action)
-					.getNewDescription());
-			result.setNewName(((ChangeNamedObjectAction) action).getNewName());
-			return result;
-		}
-		return action;
 	}
 
 	/**

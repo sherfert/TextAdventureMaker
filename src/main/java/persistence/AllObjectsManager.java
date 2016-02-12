@@ -14,11 +14,23 @@ import java.util.logging.Logger;
 public class AllObjectsManager {
 
 	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public AllObjectsManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
+
+	/**
 	 * Removes an object from the database.
 	 *
 	 * @param object the object
 	 */
-	public static void removeObject(HasId object) {
+	public void removeObject(HasId object) {
 		
 		// It is not permitted to delete Game or Player objects
 		if(object instanceof Player || object instanceof Game) {
@@ -30,6 +42,6 @@ public class AllObjectsManager {
 		Logger.getLogger(AllObjectsManager.class.getName()).log(Level.INFO,
 			"Deleting object with ID {0} type {1} from database",
 			new Object[]{object.getId(), object.getClass().getName()});
-		PersistenceManager.getEntityManager().remove(object);
+		persistenceManager.getEntityManager().remove(object);
 	}
 }

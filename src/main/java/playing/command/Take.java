@@ -4,8 +4,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import persistence.InspectableObjectManager;
-import persistence.ItemManager;
 import playing.GamePlayer;
 import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
@@ -30,7 +28,7 @@ public class Take extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		return ItemManager.getAllAdditionaTakeCommands();
+		return persistenceManager.getItemManager().getAllAdditionaTakeCommands();
 	}
 
 	@Override
@@ -62,7 +60,7 @@ public class Take extends Command {
 		Game game = gamePlayer.getGame();
 
 		// Collect all objects, whether they are takeable or not.
-		Inspectable object = InspectableObjectManager
+		Inspectable object = persistenceManager.getInspectableObjectManager()
 				.getInspectable(identifier);
 
 		// Save identifier
@@ -127,7 +125,7 @@ public class Take extends Command {
 							game.getFailedBgColor(), game.getFailedFgColor());
 				}
 				// Effect depends on enabled status and additional actions
-				item.take();
+				item.take(game);
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 						"Take item not of type Takeable {0}", identifier);

@@ -37,17 +37,17 @@ public class UseWithCombine extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		Set<String> result = InventoryItemManager
-				.getAllAdditionaCombineCommands();
-		result.addAll(InventoryItemManager.getAllAdditionaUseWithCommands());
+		InventoryItemManager iim = persistenceManager.getInventoryItemManager();
+
+		Set<String> result = iim.getAllAdditionaCombineCommands();
+		result.addAll(iim.getAllAdditionaUseWithCommands());
 		return result;
 	}
 
 	@Override
 	public void execute(boolean originalCommand, Parameter... parameters) {
 		if (parameters.length != 2) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of parameters");
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Execute: wrong number of parameters");
 			return;
 		}
 		useWithOrCombine(originalCommand, parameters[0], parameters[1]);
@@ -71,21 +71,19 @@ public class UseWithCombine extends Command {
 	 *            the second parameter.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void useWithOrCombine(boolean originalCommand,
-			Parameter parameter1, Parameter parameter2) {
+	private void useWithOrCombine(boolean originalCommand, Parameter parameter1, Parameter parameter2) {
 		String identifier1 = parameter1.getIdentifier();
 		String identifier2 = parameter2.getIdentifier();
 
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Usewith/combine identifiers {0} / {1}",
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Usewith/combine identifiers {0} / {1}",
 				new Object[] { identifier1, identifier2 });
 
 		Game game = gamePlayer.getGame();
 
-		Inspectable object1 = InspectableObjectManager
-				.getInspectable(identifier1);
-		Inspectable object2 = InspectableObjectManager
-				.getInspectable(identifier2);
+		InspectableObjectManager iom = persistenceManager.getInspectableObjectManager();
+		
+		Inspectable object1 = iom.getInspectable(identifier1);
+		Inspectable object2 = iom.getInspectable(identifier2);
 		// Save identifiers
 		currentReplacer.setIdentifier(identifier1);
 		currentReplacer.setIdentifier2(identifier2);
@@ -98,8 +96,7 @@ public class UseWithCombine extends Command {
 		}
 
 		// Check types of both objects (which can be null)
-		if (object1 instanceof UsableWithHasLocation
-				|| object1 instanceof Combinable) {
+		if (object1 instanceof UsableWithHasLocation || object1 instanceof Combinable) {
 			/*
 			 * The classes must be the same, since the generic type information
 			 * cannot be inferred at runtime.
@@ -109,76 +106,57 @@ public class UseWithCombine extends Command {
 				// The rawtype can be used since we know they're the same type
 
 				// Combine
-				combine(originalCommand, (Combinable) object1,
-						(Combinable) object2, game);
-			} else if (object1 instanceof UsableWithHasLocation
-					&& object2 instanceof HasLocation) {
+				combine(originalCommand, (Combinable) object1, (Combinable) object2, game);
+			} else if (object1 instanceof UsableWithHasLocation && object2 instanceof HasLocation) {
 				// UseWith
-				useWith(originalCommand, (UsableWithHasLocation) object1,
-						(HasLocation) object2, game);
+				useWith(originalCommand, (UsableWithHasLocation) object1, (HasLocation) object2, game);
 			} else if (object2 != null) {
 				// Error: Object2 not of correct type
-				Logger.getLogger(this.getClass().getName())
-						.log(Level.FINER,
-								"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}",
-								identifier2);
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+						"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}", identifier2);
 
 				String message = game.getInvalidCommandText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+						game.getFailedFgColor());
 
 			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Usewith/combine object not found {0}", identifier2);
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Usewith/combine object not found {0}",
+						identifier2);
 
 				// Error: Object2 neither in inventory nor in location
-				String message = PlaceholderReplacer
-						.convertFirstToSecondPlaceholders(game
-								.getNoSuchItemText())
-						+ " "
-						+ PlaceholderReplacer
-								.convertFirstToSecondPlaceholders(game
-										.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+				String message = PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchItemText()) + " "
+						+ PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchInventoryItemText());
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+						game.getFailedFgColor());
 			}
 		} else {
 			if (object2 instanceof UsableWithHasLocation) {
 				if (object1 != null) {
 					// Error: Object1 not of correct type
-					Logger.getLogger(this.getClass().getName())
-							.log(Level.FINER,
-									"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}",
-									identifier1);
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+							"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}", identifier1);
 
 					String message = game.getInvalidCommandText();
-					io.println(currentReplacer.replacePlaceholders(message),
-							game.getFailedBgColor(), game.getFailedFgColor());
+					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+							game.getFailedFgColor());
 				} else {
-					Logger.getLogger(this.getClass().getName())
-							.log(Level.FINER,
-									"Usewith/combine object not found {0}",
-									identifier1);
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Usewith/combine object not found {0}",
+							identifier1);
 
 					// Error: Object1 not in inventory
-					String message = game.getNoSuchItemText() + " "
-							+ game.getNoSuchInventoryItemText();
-					io.println(currentReplacer.replacePlaceholders(message),
-							game.getFailedBgColor(), game.getFailedFgColor());
+					String message = game.getNoSuchItemText() + " " + game.getNoSuchInventoryItemText();
+					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+							game.getFailedFgColor());
 				}
 			} else {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Usewith/combine objects not found {0} / {1}",
-						new Object[] { identifier1, identifier2 });
+						"Usewith/combine objects not found {0} / {1}", new Object[] { identifier1, identifier2 });
 
 				// Error: Neither Object1 nor Object2 in inventory
-				String message = game.getNoSuchInventoryItemText()
-						+ " "
-						+ PlaceholderReplacer
-								.convertFirstToSecondPlaceholders(game
-										.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+				String message = game.getNoSuchInventoryItemText() + " "
+						+ PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchInventoryItemText());
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+						game.getFailedFgColor());
 			}
 		}
 	}
@@ -195,25 +173,22 @@ public class UseWithCombine extends Command {
 	 * @param game
 	 *            the game
 	 */
-	private <E> void combine(boolean originalCommand, Combinable<E> item1,
-			Combinable<E> item2, Game game) {
+	private <E> void combine(boolean originalCommand, Combinable<E> item1, Combinable<E> item2, Game game) {
 		if (!originalCommand) {
 			// Check if the additional command belongs the the chosen
 			// item1 with item2 (not vice versa!)
-			if (!PatternGenerator
-					.getPattern(item1.getAdditionalCombineCommands(item2))
+			if (!PatternGenerator.getPattern(item1.getAdditionalCombineCommands(item2))
 					.matcher(currentReplacer.getInput()).matches()) {
 				// no match
 				String message = game.getNotUsableWithText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+						game.getFailedFgColor());
 				return;
 			}
 		}
 
 		if (item1.isCombiningEnabledWith(item2)) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-					"Combine enabled id {0} with {1}",
+			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Combine enabled id {0} with {1}",
 					new Object[] { item1.getId(), item2.getId() });
 
 			// Combining was successful
@@ -221,11 +196,10 @@ public class UseWithCombine extends Command {
 			if (message == null) {
 				message = game.getUsedWithText();
 			}
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getSuccessfullBgColor(), game.getSuccessfullFgColor());
+			io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
+					game.getSuccessfullFgColor());
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-					"Combine disabled id {0} with {1}",
+			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Combine disabled id {0} with {1}",
 					new Object[] { item1.getId(), item2.getId() });
 
 			// Combining was not successful
@@ -233,11 +207,10 @@ public class UseWithCombine extends Command {
 			if (message == null) {
 				message = game.getNotUsableWithText();
 			}
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getFailedBgColor(), game.getFailedFgColor());
+			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
 		}
 		// Effect depends on enabled status and additional actions
-		item1.combineWith(item2);
+		item1.combineWith(item2, game);
 	}
 
 	/**
@@ -252,25 +225,22 @@ public class UseWithCombine extends Command {
 	 * @param game
 	 *            the game
 	 */
-	private void useWith(boolean originalCommand, UsableWithHasLocation usable,
-			HasLocation object, Game game) {
+	private void useWith(boolean originalCommand, UsableWithHasLocation usable, HasLocation object, Game game) {
 		if (!originalCommand) {
 			// Check if the additional command belongs the the chosen
 			// usable with object.
-			if (!PatternGenerator
-					.getPattern(usable.getAdditionalUseWithCommands(object))
+			if (!PatternGenerator.getPattern(usable.getAdditionalUseWithCommands(object))
 					.matcher(currentReplacer.getInput()).matches()) {
 				// no match
 				String message = game.getNotUsableWithText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+						game.getFailedFgColor());
 				return;
 			}
 		}
 
 		if (usable.isUsingEnabledWith(object)) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-					"Uswith enabled id {0} with {1}",
+			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Uswith enabled id {0} with {1}",
 					new Object[] { usable.getId(), object.getId() });
 
 			// Using was successful
@@ -278,11 +248,10 @@ public class UseWithCombine extends Command {
 			if (message == null) {
 				message = game.getUsedWithText();
 			}
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getSuccessfullBgColor(), game.getSuccessfullFgColor());
+			io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
+					game.getSuccessfullFgColor());
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-					"Uswith disabled id {0} with {1}",
+			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Uswith disabled id {0} with {1}",
 					new Object[] { usable.getId(), object.getId() });
 
 			// Using was not successful
@@ -290,10 +259,9 @@ public class UseWithCombine extends Command {
 			if (message == null) {
 				message = game.getNotUsableWithText();
 			}
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getFailedBgColor(), game.getFailedFgColor());
+			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
 		}
 		// Effect depends on additional actions
-		usable.useWith(object);
+		usable.useWith(object, game);
 	}
 }

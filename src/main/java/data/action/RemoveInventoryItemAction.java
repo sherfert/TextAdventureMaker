@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import persistence.PlayerManager;
+import data.Game;
 import data.InventoryItem;
 import data.Item;
 
@@ -62,9 +62,9 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Remove the item from the inventory
-		PlayerManager.getPlayer().removeInventoryItem(item);
+		game.getPlayer().removeInventoryItem(item);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import data.Game;
 import data.InventoryItem;
 import data.Item;
 import data.Location;
@@ -321,9 +322,9 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Call the super method
-		super.doAction();
+		super.doAction(game);
 
 		if (changeLocation) {
 			getObject().setLocation(newLocation);

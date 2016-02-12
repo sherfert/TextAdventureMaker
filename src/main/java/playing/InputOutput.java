@@ -45,13 +45,20 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		 * 
 		 * @param text
 		 *            the typed text
+		 * @return if the game continues.
 		 */
-		void handleText(String text);
+		boolean handleText(String text);
 
 		/**
 		 * Stops the io manager.
 		 */
 		void stop();
+
+		/**
+		 * Notifies the general io manager, that the state of the game might
+		 * have changed.
+		 */
+		void updateState();
 	}
 
 	/**
@@ -67,7 +74,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		 *            the index of the option to choose
 		 */
 		void chooseOption(int index);
-		
+
 		/**
 		 * @return the number of options to display in option mode.
 		 */
@@ -104,7 +111,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * Signaling whether the initialization is finished.
 	 */
 	private volatile boolean isFinished;
-	
+
 	/**
 	 * The thread that reads the input.
 	 */
@@ -146,16 +153,15 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 */
 	@Override
 	public synchronized void onResized(TerminalSize newSize) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Resized, new size: {0} vs old size {1}",
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Resized, new size: {0} vs old size {1}",
 				new Object[] { newSize, screen.getTerminalSize() });
 		// Refresh to adapt to new size
 		screen.refresh();
 
 		if (isFinished) {
 			// Resize rather than create the defaultTextArea
-			defaultTextArea.setNewDimensions(0, screen.getTerminalSize()
-					.getColumns(), 0, screen.getTerminalSize().getRows());
+			defaultTextArea.setNewDimensions(0, screen.getTerminalSize().getColumns(), 0,
+					screen.getTerminalSize().getRows());
 		} else {
 			if (newSize.getColumns() == 101 && newSize.getRows() == 30) {
 				// XXX This is the default size, and we ignore this resize.
@@ -163,11 +169,9 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 			}
 
 			// Then create the default text area
-			defaultTextArea = new LanternaScreenTextArea(screen, true, true,
-					Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
-					Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen
-							.getTerminalSize().getColumns(), 0, screen
-							.getTerminalSize().getRows(), InputOutput.this);
+			defaultTextArea = new LanternaScreenTextArea(screen, true, true, Terminal.Color.DEFAULT,
+					Terminal.Color.DEFAULT, Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0,
+					screen.getTerminalSize().getColumns(), 0, screen.getTerminalSize().getRows(), InputOutput.this);
 
 			// Tell the constructor we are finished.
 			isFinished = true;
@@ -185,14 +189,12 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 				ioManager.stop();
 			}
 		});
-		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit()
-				.getScreenSize();
+		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		// Let the screen cover 80 % of the real screen in each dimension
-		frame.setPreferredSize(new Dimension((int) (fullScreen.width * 0.8),
-				(int) (fullScreen.height * 0.8)));
+		frame.setPreferredSize(new Dimension((int) (fullScreen.width * 0.8), (int) (fullScreen.height * 0.8)));
 		// Not resizable
 		frame.setResizable(false);
-		
+
 		// TODO Icon
 		frame.setTitle("Text-Adventure");
 	}
@@ -210,10 +212,10 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 			public void run() {
 				while (true) {
 					// Check for interruptions
-					if(Thread.interrupted()) {
+					if (Thread.interrupted()) {
 						break;
 					}
-					
+
 					Key key = screen.readInput();
 					if (key == null) {
 						continue;
@@ -223,7 +225,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 			}
 		});
 		t.start();
-		
+
 		return t;
 	}
 
@@ -238,7 +240,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 */
 	private void readInput(Key key) {
 		if (optionIOManager == null) {
-			if(key.getKind() == Kind.Escape) {
+			if (key.getKind() == Kind.Escape) {
 				// If this is escape key: show menu
 				LoadSaveManager.showMenu(true);
 			} else {
@@ -269,8 +271,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 *            the text to be printed
 	 */
 	public void println(String output) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-				"Printing \"{0}\"", output);
+		Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Printing \"{0}\"", output);
 
 		defaultTextArea.println(output);
 		this.screen.refresh();
@@ -287,8 +288,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 *            the foreground color
 	 */
 	public void println(String output, Color bgColor, Color fgColor) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINEST,
-				"Printing \"{0}\"", output);
+		Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Printing \"{0}\"", output);
 
 		defaultTextArea.println(output, bgColor, fgColor);
 		this.screen.refresh();
@@ -309,21 +309,18 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * @param options
 	 *            the first options to display.
 	 */
-	public void enterOptionMode(OptionIOManager optionIOManager,
-			List<String> options) {
+	public void enterOptionMode(OptionIOManager optionIOManager, List<String> options) {
 		this.optionIOManager = optionIOManager;
 
 		int numLines = optionIOManager.getNumberOfOptionLines();
 
 		// Resize text area by cutting the last lines
-		this.defaultTextArea
-				.setNewDimensions(0, screen.getTerminalSize().getColumns(), 0,
-						screen.getTerminalSize().getRows() - numLines);
+		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize().getColumns(), 0,
+				screen.getTerminalSize().getRows() - numLines);
 		// Use the last lines to display options
-		this.optionChoser = new LanternaScreenOptionChooser(screen, options,
-				this, 0, screen.getTerminalSize().getColumns(), screen
-						.getTerminalSize().getRows() - numLines, screen
-						.getTerminalSize().getRows());
+		this.optionChoser = new LanternaScreenOptionChooser(screen, options, this, 0,
+				screen.getTerminalSize().getColumns(), screen.getTerminalSize().getRows() - numLines,
+				screen.getTerminalSize().getRows());
 
 		// Refresh
 		this.screen.refresh();
@@ -337,8 +334,8 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		this.optionIOManager = null;
 		this.optionChoser = null;
 		// Resize text area by giving back the last lines
-		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize()
-				.getColumns(), 0, screen.getTerminalSize().getRows());
+		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize().getColumns(), 0,
+				screen.getTerminalSize().getRows());
 		// Refresh
 		this.screen.refresh();
 	}
@@ -353,13 +350,17 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		optionChoser.setOptions(options);
 	}
 
+	// FIXME Is it possible to end the game by choosing some conversation option?
 	@Override
 	public void chooseOption(int index) {
 		optionIOManager.chooseOption(index);
+		ioManager.updateState();
 	}
 
 	@Override
 	public void handleText(String text) {
-		ioManager.handleText(text);
+		if(ioManager.handleText(text)) {
+			ioManager.updateState();
+		}
 	}
 }

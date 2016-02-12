@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import data.ConversationOption;
+import data.Game;
 
 /**
  * Changes a conversation option. It can be en- or disabled temporarily or
@@ -197,7 +198,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Change fields
 		if (newText != null) {
 			option.setText(newText);

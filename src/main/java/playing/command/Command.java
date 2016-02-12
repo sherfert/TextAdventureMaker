@@ -2,6 +2,7 @@ package playing.command;
 
 import java.util.Set;
 
+import persistence.PersistenceManager;
 import playing.GamePlayer;
 import playing.InputOutput;
 import playing.PlaceholderReplacer;
@@ -29,6 +30,11 @@ public abstract class Command {
 	 * A reference to the IO.
 	 */
 	protected InputOutput io;
+	
+	/**
+	 * A reference to the PM.
+	 */
+	protected PersistenceManager persistenceManager;
 
 	/**
 	 * Constructs a command and saves references to all important thing
@@ -41,6 +47,7 @@ public abstract class Command {
 		this.gamePlayer = gamePlayer;
 		this.currentReplacer = gamePlayer.getCurrentReplacer();
 		this.io = gamePlayer.getIo();
+		this.persistenceManager = gamePlayer.getPersistenceManager();
 	}
 
 	/**

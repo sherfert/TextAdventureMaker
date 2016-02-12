@@ -10,14 +10,26 @@ import java.util.Set;
  * @author Satia
  */
 public class UsableObjectManager {
+	
+	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public UsableObjectManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
 
 	/**
 	 * @return a set of all additional use commands defined anywhere in the
 	 *         game.
 	 */
-	public static Set<String> getAllAdditionalUseCommands() {
+	public Set<String> getAllAdditionalUseCommands() {
 		@SuppressWarnings("unchecked")
-		List<String> resultList = PersistenceManager
+		List<String> resultList = persistenceManager
 				.getEntityManager()
 				.createNativeQuery(
 						"SELECT DISTINCT c.ADDITIONALUSECOMMANDS FROM UsableObject_ADDITIONALUSECOMMANDS c")

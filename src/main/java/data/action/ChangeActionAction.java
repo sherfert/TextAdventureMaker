@@ -11,6 +11,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import data.Game;
+
 /**
  * Another action can be changed with this action. Currently this means
  * disabling or enabling it.
@@ -77,7 +79,7 @@ public class ChangeActionAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		if (enabling == Enabling.ENABLE) {
 			action.setEnabled(true);
 		} else if (enabling == Enabling.DISABLE) {

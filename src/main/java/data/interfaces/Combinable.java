@@ -2,6 +2,7 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.Game;
 import data.action.AbstractAction;
 
 /**
@@ -26,8 +27,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToCombineWith(Combinable<E> partner,
-			AbstractAction action);
+	public void addAdditionalActionToCombineWith(Combinable<E> partner, AbstractAction action);
 
 	/**
 	 * Adds a new {@link Combinable} to be added when combined with the given
@@ -38,8 +38,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param newItem
 	 *            the new combinable to be added
 	 */
-	public void addNewCombinableWhenCombinedWith(Combinable<E> partner,
-			E newItem);
+	public void addNewCombinableWhenCombinedWith(Combinable<E> partner, E newItem);
 
 	/**
 	 * Adds an additional command that can be used to combine with the partner.
@@ -49,8 +48,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param command
 	 *            the command
 	 */
-	public void addAdditionalCombineCommand(Combinable<E> partner,
-			String command);
+	public void addAdditionalCombineCommand(Combinable<E> partner, String command);
 
 	/**
 	 * Adds new combinables, removes both partners if removeCombinables is
@@ -58,8 +56,10 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * 
 	 * @param partner
 	 *            the partner
+	 * @param game
+	 *            the game
 	 */
-	public void combineWith(Combinable<E> partner);
+	public void combineWith(Combinable<E> partner, Game game);
 
 	/**
 	 * @param partner
@@ -67,8 +67,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the additional actions for that item.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromCombineWith(
-			Combinable<E> partner);
+	public List<AbstractAction> getAdditionalActionsFromCombineWith(Combinable<E> partner);
 
 	/**
 	 * @param partner
@@ -130,8 +129,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromCombineWith(Combinable<E> partner,
-			AbstractAction action);
+	public void removeAdditionalActionFromCombineWith(Combinable<E> partner, AbstractAction action);
 
 	/**
 	 * Removes an additional combine command
@@ -141,8 +139,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param command
 	 *            the command
 	 */
-	public void removeAdditionalCombineCommand(Combinable<E> partner,
-			String command);
+	public void removeAdditionalCombineCommand(Combinable<E> partner, String command);
 
 	/**
 	 * Removes a new {@link Combinable} to be added when combined with the given
@@ -153,8 +150,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param newItem
 	 *            the new combinable to be removed
 	 */
-	public void removeNewCombinableWhenCombinedWith(Combinable<E> partner,
-			E newItem);
+	public void removeNewCombinableWhenCombinedWith(Combinable<E> partner, E newItem);
 
 	/**
 	 * Sets the forbidden text for that item. If {@code null} passed, the
@@ -165,8 +161,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param forbiddenText
 	 *            the forbiddenText to set
 	 */
-	public void setCombineWithForbiddenText(Combinable<E> partner,
-			String forbiddenText);
+	public void setCombineWithForbiddenText(Combinable<E> partner, String forbiddenText);
 
 	/**
 	 * Sets the successful text for that item. If {@code null} passed, the
@@ -177,8 +172,7 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param successfulText
 	 *            the successfulText to set
 	 */
-	public void setCombineWithSuccessfulText(Combinable<E> partner,
-			String successfulText);
+	public void setCombineWithSuccessfulText(Combinable<E> partner, String successfulText);
 
 	/**
 	 * @param partner
@@ -197,6 +191,5 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 * @param remove
 	 *            whether it should be removed
 	 */
-	public void setRemoveCombinablesWhenCombinedWith(Combinable<E> partner,
-			boolean remove);
+	public void setRemoveCombinablesWhenCombinedWith(Combinable<E> partner, boolean remove);
 }

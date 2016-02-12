@@ -240,16 +240,16 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	public void take() {
+	public void take(Game game) {
 		if (isTakingEnabled()) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 					"Taking {0}", this);
 
-			addInventoryItemsAction.triggerAction();
-			removeAction.triggerAction();
+			addInventoryItemsAction.triggerAction(game);
+			removeAction.triggerAction(game);
 		}
 		for (AbstractAction abstractAction : additionalTakeActions) {
-			abstractAction.triggerAction();
+			abstractAction.triggerAction(game);
 		}
 	}
 

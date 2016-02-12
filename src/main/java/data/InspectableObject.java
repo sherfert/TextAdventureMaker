@@ -101,12 +101,12 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	}
 
 	@Override
-	public void inspect() {
+	public void inspect(Game game) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 			"Inspecting {0}", this);
 		
 		for (AbstractAction abstractAction : additionalInspectActions) {
-			abstractAction.triggerAction();
+			abstractAction.triggerAction(game);
 		}
 	}
 

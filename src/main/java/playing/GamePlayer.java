@@ -52,13 +52,19 @@ public class GamePlayer implements GeneralIOManager {
 	 * All commands mapped to their class type for easy retrieval.
 	 */
 	private Map<Class<? extends Command>, Command> commands;
+	
+	/**
+	 * A reference to the currently active persistenceManager
+	 */
+	private PersistenceManager persistenceManager;
 
 	/**
 	 * Creates a new game player. Can only be used properly after
 	 * {@link #setGame(Game)} has been called.
 	 */
-	public GamePlayer() {
+	public GamePlayer(PersistenceManager pm) {
 		this.io = new InputOutput(this);
+		this.persistenceManager = pm;
 		this.currentReplacer = new PlaceholderReplacer();
 
 		// Create all commands
@@ -104,6 +110,13 @@ public class GamePlayer implements GeneralIOManager {
 	 */
 	public GeneralParser getParser() {
 		return parser;
+	}
+
+	/**
+	 * @return the persistenceManager
+	 */
+	public PersistenceManager getPersistenceManager() {
+		return persistenceManager;
 	}
 
 	/**
@@ -188,7 +201,7 @@ public class GamePlayer implements GeneralIOManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO,
 				"Stopping the game");
 		io.exitIO();
-		PersistenceManager.disconnect();
+		persistenceManager.disconnect();
 	}
 
 	/**
@@ -205,9 +218,18 @@ public class GamePlayer implements GeneralIOManager {
 	 * {@inheritDoc} Parses the input. Stops the game if necessary.
 	 */
 	@Override
-	public void handleText(String text) {
-		if (!parser.parse(text)) {
+	public boolean handleText(String text) {
+		boolean cont = parser.parse(text);
+		
+		if (!cont) {
 			stop();
 		}
+		
+		return cont;
+	}
+	
+	@Override
+	public void updateState() {
+		persistenceManager.updateChanges();
 	}
 }

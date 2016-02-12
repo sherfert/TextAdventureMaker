@@ -148,7 +148,7 @@ public class GeneralParser {
 		private final Command command;
 
 		/**
-		 * The texual commands.
+		 * The textual commands.
 		 */
 		private List<String> textualCommands;
 

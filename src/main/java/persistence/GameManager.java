@@ -15,18 +15,30 @@ import data.Game;
  * @author Satia
  */
 public class GameManager {
-
+	
+	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+	
 	/**
 	 * The game. Is retrieved from the DB once and kept in memory until reset is
 	 * called.
 	 */
-	private static Game game;
+	private Game game;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public GameManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
 
 	/**
 	 * Resets the state of the GameManager by deleting its reference to the
 	 * Game.
 	 */
-	public static void reset() {
+	public void reset() {
 		game = null;
 	}
 
@@ -39,17 +51,17 @@ public class GameManager {
 	 * @throws Exception
 	 *             (unchecked) if the database is not compatible with the model.
 	 */
-	public static Game getGame() {
+	public Game getGame() {
 		if (game != null) {
 			return game;
 		}
 
 		// Find all games (hopefully only one)
-		CriteriaQuery<Game> criteriaQueryGame = PersistenceManager
+		CriteriaQuery<Game> criteriaQueryGame = persistenceManager
 				.getCriteriaBuilder().createQuery(Game.class);
 		Root<Game> gameRoot = criteriaQueryGame.from(Game.class);
 		criteriaQueryGame.select(gameRoot);
-		List<Game> resultListGame = PersistenceManager.getEntityManager()
+		List<Game> resultListGame = persistenceManager.getEntityManager()
 				.createQuery(criteriaQueryGame).getResultList();
 
 		// There should be exactly 1 game
@@ -67,17 +79,17 @@ public class GameManager {
 	 * 
 	 * @return the game title.
 	 */
-	public static String getGameTitle() {
+	public String getGameTitle() {
 		if (game != null) {
 			return game.getGameTitle();
 		}
 
 		// Find all games (hopefully only one)
-		CriteriaQuery<String> criteriaQueryGame = PersistenceManager
+		CriteriaQuery<String> criteriaQueryGame = persistenceManager
 				.getCriteriaBuilder().createQuery(String.class);
 		Root<Game> gameRoot = criteriaQueryGame.from(Game.class);
 		criteriaQueryGame.select(gameRoot.get("gameTitle"));
-		List<String> resultList = PersistenceManager.getEntityManager()
+		List<String> resultList = persistenceManager.getEntityManager()
 				.createQuery(criteriaQueryGame).getResultList();
 
 		// There should be exactly 1 game

@@ -142,13 +142,13 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	}
 
 	@Override
-	public void use() {
+	public void use(Game game) {
 		// There is no "primary" action, so no "isEnabled" check
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Using {0}", this);
 		
 		for (AbstractAction abstractAction : additionalUseActions) {
-			abstractAction.triggerAction();
+			abstractAction.triggerAction(game);
 		}
 	}
 

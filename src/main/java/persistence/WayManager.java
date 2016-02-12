@@ -15,6 +15,18 @@ import data.Way;
 public class WayManager {
 
 	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public WayManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
+
+	/**
 	 * Gets the way out from the given location with the given identifier or
 	 * {@code null} , if there is none.
 	 * 
@@ -24,23 +36,20 @@ public class WayManager {
 	 *            an identifier of the item
 	 * @return the corresponding item or {@code null}.
 	 */
-	public static Way getWayOutFromLocation(Location location, String identifier) {
-		return IdentifiableObjectManager.getIdentifiableWithIdentifier(
-				location.getWaysOut(), identifier);
+	public Way getWayOutFromLocation(Location location, String identifier) {
+		return IdentifiableObjectManager.getIdentifiableWithIdentifier(location.getWaysOut(), identifier);
 	}
-	
+
 	/**
 	 * @return a set of all additional travel commands defined anywhere in the
 	 *         game.
 	 */
-	public static Set<String> getAllAdditionalTravelCommands() {
+	public Set<String> getAllAdditionalTravelCommands() {
 		@SuppressWarnings("unchecked")
-		List<String> resultList = PersistenceManager
-				.getEntityManager()
-				.createNativeQuery(
-						"SELECT DISTINCT c.ADDITIONALTRAVELCOMMANDS FROM WAY_ADDITIONALTRAVELCOMMANDS c")
+		List<String> resultList = persistenceManager.getEntityManager()
+				.createNativeQuery("SELECT DISTINCT c.ADDITIONALTRAVELCOMMANDS FROM WAY_ADDITIONALTRAVELCOMMANDS c")
 				.getResultList();
-	
+
 		return new HashSet<>(resultList);
 	}
 }

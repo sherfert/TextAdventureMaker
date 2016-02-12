@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
+import data.Game;
 import data.InspectableObject;
 import data.UsableObject;
 
@@ -128,9 +129,9 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Call the super method
-		super.doAction();
+		super.doAction(game);
 
 		// Change fields
 		if (newUseForbiddenText != null) {

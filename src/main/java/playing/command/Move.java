@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import data.Game;
 import data.interfaces.Travelable;
-import persistence.WayManager;
 import playing.GamePlayer;
 import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
@@ -28,7 +27,7 @@ public class Move extends Command {
 
 	@Override
 	public Set<String> getAdditionalCommands() {
-		return WayManager.getAllAdditionalTravelCommands();
+		return persistenceManager.getWayManager().getAllAdditionalTravelCommands();
 	}
 
 	@Override
@@ -58,7 +57,7 @@ public class Move extends Command {
 		
 		Game game = gamePlayer.getGame();
 
-		Travelable way = WayManager.getWayOutFromLocation(game.getPlayer()
+		Travelable way =  persistenceManager.getWayManager().getWayOutFromLocation(game.getPlayer()
 				.getLocation(), identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
@@ -112,7 +111,7 @@ public class Move extends Command {
 						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 			// Effect depends on enabled status and additional actions
-			way.travel();
+			way.travel(game);
 		} else {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Move way not found {0}", identifier);

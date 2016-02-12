@@ -12,6 +12,18 @@ import data.interfaces.Inspectable;
  * @author Satia
  */
 public class InspectableObjectManager {
+	
+	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public InspectableObjectManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
 
 	/**
 	 * Gets the Inspectable object in the location of the player or in the
@@ -22,8 +34,8 @@ public class InspectableObjectManager {
 	 * 
 	 * @return the corresponding item or {@code null}.
 	 */
-	public static Inspectable getInspectable(String identifier) {
-		Player player = PlayerManager.getPlayer();
+	public Inspectable getInspectable(String identifier) {
+		Player player = persistenceManager.getPlayerManager().getPlayer();
 
 		List<Inspectable> inspectables = new ArrayList<>();
 		// Anything in the room

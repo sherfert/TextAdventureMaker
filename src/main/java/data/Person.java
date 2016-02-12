@@ -151,7 +151,7 @@ public class Person extends InspectableObject implements HasLocation,
 	}
 
 	@Override
-	public void talkTo() {
+	public void talkTo(Game game) {
 		if (isTalkingEnabled()) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 					"Talking to {0}", this);
@@ -160,7 +160,7 @@ public class Person extends InspectableObject implements HasLocation,
 			// Trigger additional actions
 			for (AbstractAction abstractAction : conversation
 					.getAdditionalActions()) {
-				abstractAction.triggerAction();
+				abstractAction.triggerAction(game);
 			}
 		}
 	}

@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import data.Game;
 import data.interfaces.Inspectable;
-import persistence.InspectableObjectManager;
 import playing.GamePlayer;
 import playing.parser.Parameter;
 
@@ -59,7 +58,7 @@ public class Inspect extends Command {
 
 		Game game = gamePlayer.getGame();
 
-		Inspectable object = InspectableObjectManager
+		Inspectable object = persistenceManager.getInspectableObjectManager()
 				.getInspectable(identifier);
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
@@ -78,7 +77,7 @@ public class Inspect extends Command {
 			io.println(currentReplacer.replacePlaceholders(message),
 					game.getNeutralBgColor(), game.getNeutralFgColor());
 			// Effect depends on additional actions
-			object.inspect();
+			object.inspect(game);
 		} else {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
 					"Inspect object not found {0}", identifier);

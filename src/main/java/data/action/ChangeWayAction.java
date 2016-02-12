@@ -2,6 +2,7 @@ package data.action;
 
 import javax.persistence.Entity;
 
+import data.Game;
 import data.Location;
 import data.Way;
 
@@ -170,9 +171,9 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		// Call the super method
-		super.doAction();
+		super.doAction(game);
 
 		// Change fields
 		if (enabling == Enabling.ENABLE) {

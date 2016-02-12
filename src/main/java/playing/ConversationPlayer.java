@@ -76,7 +76,7 @@ public class ConversationPlayer implements OptionIOManager {
 		ConversationOption chosenOption = currentLayer.getEnabledOptions().get(
 				index);
 		// Trigger additional actions
-		chosenOption.choose();
+		chosenOption.choose(game);
 
 		// Print text and answer
 		playerSays(chosenOption.getText());

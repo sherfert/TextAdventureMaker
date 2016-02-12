@@ -2,6 +2,7 @@ package data.interfaces;
 
 import java.util.List;
 
+import data.Game;
 import data.action.AbstractAction;
 
 /**
@@ -18,8 +19,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToUseWith(HasLocation object,
-			AbstractAction action);
+	public void addAdditionalActionToUseWith(HasLocation object, AbstractAction action);
 
 	/**
 	 * Adds an additional command that can be used to use this with something
@@ -38,9 +38,8 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the additional actions for that object.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromUseWith(
-			HasLocation object);
-	
+	public List<AbstractAction> getAdditionalActionsFromUseWith(HasLocation object);
+
 	/**
 	 * @param object
 	 *            the object
@@ -81,9 +80,8 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromUseWith(HasLocation object,
-			AbstractAction action);
-	
+	public void removeAdditionalActionFromUseWith(HasLocation object, AbstractAction action);
+
 	/**
 	 * Removes an additional use with command.
 	 * 
@@ -92,8 +90,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param command
 	 *            the command
 	 */
-	public void removeAdditionalUseWithCommand(HasLocation object,
-			String command);
+	public void removeAdditionalUseWithCommand(HasLocation object, String command);
 
 	/**
 	 * Sets the forbidden text for that object. If {@code null} passed, the
@@ -115,8 +112,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param successfulText
 	 *            the successfulText to set
 	 */
-	public void setUseWithSuccessfulText(HasLocation object,
-			String successfulText);
+	public void setUseWithSuccessfulText(HasLocation object, String successfulText);
 
 	/**
 	 * @param object
@@ -131,6 +127,8 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * 
 	 * @param object
 	 *            the object
+	 * @param game
+	 *            the game
 	 */
-	public void useWith(HasLocation object);
+	public void useWith(HasLocation object, Game game);
 }

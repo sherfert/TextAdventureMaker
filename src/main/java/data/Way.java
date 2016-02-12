@@ -175,14 +175,14 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	@Override
-	public void travel() {
+	public void travel(Game game) {
 		// MoveAction is either enabled or not, no need to check here
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
 				"Travelling (if enabled) over {0}", this);
 
-		moveAction.triggerAction();
+		moveAction.triggerAction(game);
 		for (AbstractAction abstractAction : additionalMoveActions) {
-			abstractAction.triggerAction();
+			abstractAction.triggerAction(game);
 		}
 	}
 

@@ -3,6 +3,7 @@ package data.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.Game;
 import data.InventoryItem;
 import data.NamedObject;
 import data.interfaces.HasLocation;
@@ -298,7 +299,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		if (newCombineWithSuccessfulText != null) {
 			inventoryItem1.setCombineWithSuccessfulText(inventoryItem2,
 					newCombineWithSuccessfulText);

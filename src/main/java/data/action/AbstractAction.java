@@ -1,5 +1,6 @@
 package data.action;
 
+import data.Game;
 import data.interfaces.HasId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import persistence.PersistenceManager;
 
 /**
  * Any action that changes something in the game (if enabled).
@@ -111,21 +111,24 @@ public abstract class AbstractAction implements HasId {
 	/**
 	 * Triggers the associated action. This logs, calls doAction if enabled, and
 	 * updates changes.
+	 * 
+	 * @param game
+	 *            a reference to the game, needed for some actions.
 	 */
-	public final void triggerAction() {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Triggering action {0}", this);
+	public final void triggerAction(Game game) {
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Triggering action {0}", this);
 
 		if (enabled) {
-			doAction();
+			doAction(game);
 		}
-		PersistenceManager.updateChanges();
 	}
 
 	/**
 	 * Actually perform the action.
+	 * @param game
+	 *            a reference to the game, needed for some actions.
 	 */
-	protected abstract void doAction();
+	protected abstract void doAction(Game game);
 
 	/**
 	 * Constructs a string explaining the action. This is for the GUI, whereas

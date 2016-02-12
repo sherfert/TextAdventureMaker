@@ -2,7 +2,6 @@ package data.action;
 
 import javax.persistence.Entity;
 
-import persistence.GameManager;
 import data.Game;
 
 /**
@@ -31,8 +30,8 @@ public class EndGameAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
-		GameManager.getGame().setHasEnded(true);
+	protected void doAction(Game game) {
+		game.setHasEnded(true);
 	}
 
 	@Override

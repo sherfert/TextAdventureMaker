@@ -1,5 +1,6 @@
 package data.action;
 
+import data.Game;
 import data.InventoryItem;
 import data.NamedObject;
 import data.interfaces.HasLocation;
@@ -177,7 +178,7 @@ public class ChangeInvItemUsageAction extends
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		if (newUseWithForbiddenText != null) {
 			inventoryItem.setUseWithForbiddenText(object,
 					newUseWithForbiddenText);

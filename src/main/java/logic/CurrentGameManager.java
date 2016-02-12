@@ -9,9 +9,16 @@ import playing.menu.LoadSaveManager;
  * This class maintains the state of the currently opened game file and forwards
  * corresponding calls to the persistence.
  * 
+ * TODO not static
+ * 
  * @author Satia
  */
 public class CurrentGameManager {
+	
+	/**
+	 * A reference to the currently active persistenceManager
+	 */
+	private static PersistenceManager persistenceManager = new PersistenceManager();
 
 	/**
 	 * The file that points to the currently open game database.
@@ -40,7 +47,7 @@ public class CurrentGameManager {
 		System.out.println(gameName);
 
 		String fileName = openFile.getAbsolutePath();
-		PersistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
+		persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
 				false);
 	}
 	
@@ -48,7 +55,7 @@ public class CurrentGameManager {
 	 * Closes the file by disconnecting from the DB.
 	 */
 	public static void close() {
-		PersistenceManager.disconnect();
+		persistenceManager.disconnect();
 		openFile = null;
 	}
 

@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import data.Game;
 import data.NamedObject;
 
 /**
@@ -115,13 +116,13 @@ public class MultiAction extends AbstractAction {
 	}
 
 	@Override
-	protected void doAction() {
+	protected void doAction(Game game) {
 		for (AbstractAction action : actions) {
 			// doAction instead of triggerAction:
 			// like this enabled/disabled does not matter and
 			// if the action IDs of triggered actions are saved
 			// there are no multiple entries
-			action.doAction();
+			action.doAction(null);
 		}
 	}
 

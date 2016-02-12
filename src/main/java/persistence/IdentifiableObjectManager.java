@@ -10,6 +10,18 @@ import data.interfaces.Identifiable;
  * @author Satia
  */
 public class IdentifiableObjectManager {
+	
+	/**
+	 * A reference to the overall manager of the persistence.
+	 */
+	private PersistenceManager persistenceManager;
+
+	/**
+	 * @param persistenceManager
+	 */
+	public IdentifiableObjectManager(PersistenceManager persistenceManager) {
+		this.persistenceManager = persistenceManager;
+	}
 
 	/**
 	 * Gets the identifiable object that matches the given identifier-regexp or
