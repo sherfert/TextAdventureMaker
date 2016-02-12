@@ -18,6 +18,9 @@ public class MainWindowController {
 
 	/** The window of this controller. */
 	private Window window;
+	
+	/** The current game manager. */
+	private CurrentGameManager currentGameManager;
 
 	@FXML
 	private MenuItem newMenuItem;
@@ -41,6 +44,7 @@ public class MainWindowController {
 	 * The constructor is called before the initialize() method.
 	 */
 	public MainWindowController() {
+		currentGameManager = new CurrentGameManager();
 	}
 
 	@FXML
@@ -87,7 +91,7 @@ public class MainWindowController {
 
 		// Open the file, if one was chosen
 		if (file != null) {
-			CurrentGameManager.open(file);
+			currentGameManager.open(file);
 			// Enable the menu items that need a loaded game
 			exportMenuItem.setDisable(false);
 			gameMenu.setDisable(false);
@@ -109,7 +113,7 @@ public class MainWindowController {
 		// Ensure JARCReator does not crash if the Game-missing-db file is not present.
 		
 		try {
-			JARCreator.copyGameDBIntoGameJAR(CurrentGameManager.getOpenFile(), file);
+			JARCreator.copyGameDBIntoGameJAR(currentGameManager.getOpenFile(), file);
 		} catch (IOException e) {
 			// This very probably means that the "Game_missing_db.jar" was removed
 			
@@ -131,7 +135,7 @@ public class MainWindowController {
 	 * Called when the main window is closed. Cleans up and then exits.
 	 */
 	public void close() {
-		CurrentGameManager.close();
+		currentGameManager.close();
 		Platform.exit();
 	}
 	
@@ -139,6 +143,6 @@ public class MainWindowController {
 	 * Starts the loaded game.
 	 */
 	public void play() {
-		CurrentGameManager.playGame();
+		currentGameManager.playGame();
 	}
 }
