@@ -180,7 +180,8 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * Exits the game.
+	 * Exits the game. Exiting from the IO and disconnecting from the DB will shut down
+	 * the VM, if no other Window is open.
 	 */
 	@Override
 	public void stop() {
@@ -188,8 +189,6 @@ public class GamePlayer implements GeneralIOManager {
 				"Stopping the game");
 		io.exitIO();
 		PersistenceManager.disconnect();
-		// TODO at the moment close the vm. Change this later.
-		System.exit(0);
 	}
 
 	/**

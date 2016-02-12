@@ -107,7 +107,7 @@ public class LoadSaveManager {
 				Logger.getLogger(LoadSaveManager.class.getName())
 						.log(Level.SEVERE,
 								"Game DB file does not exist. Exiting. File: {0}",
-								file);
+								f);
 				return;
 			}
 
@@ -182,9 +182,6 @@ public class LoadSaveManager {
 		// Copy to temp file
 		try {
 			Path tempFile = Files.createTempFile("tam", H2_ENDING);
-
-			// Files.copy(file.toPath(), tempFile,
-			// java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
 			FileUtils.copyURLToFile(file, tempFile.toFile());
 			return tempFile.toFile();

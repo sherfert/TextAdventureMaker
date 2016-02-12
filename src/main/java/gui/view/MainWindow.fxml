@@ -17,6 +17,11 @@
               <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
+            <Menu fx:id="gameMenu" mnemonicParsing="false" text="Game">
+              <items>
+                <MenuItem fx:id="playMenuItem" mnemonicParsing="false" text="Play game" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />

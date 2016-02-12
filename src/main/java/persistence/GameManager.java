@@ -31,7 +31,7 @@ public class GameManager {
 	}
 
 	/**
-	 * Retrieved the game. Uses the im-memory reference if not {@code null} or
+	 * Retrieved the game. Uses the in-memory reference if not {@code null} or
 	 * retrieves the game from the DB otherwise.
 	 * 
 	 * @return the game

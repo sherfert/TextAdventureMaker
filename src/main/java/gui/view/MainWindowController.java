@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Menu;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import logic.CurrentGameManager;
@@ -25,10 +26,16 @@ public class MainWindowController {
 	private MenuItem openMenuItem;
 
 	@FXML
-	private MenuItem exportMenuItem;
-
-	@FXML
 	private MenuItem closeMenuItem;
+	
+	@FXML
+	private MenuItem exportMenuItem;
+	
+	@FXML
+	private Menu gameMenu;
+	
+	@FXML
+	private MenuItem playMenuItem;
 
 	/**
 	 * The constructor is called before the initialize() method.
@@ -40,10 +47,12 @@ public class MainWindowController {
 	private void initialize() {
 		newMenuItem.setOnAction((e) -> this.newOrOpenMenuItemClicked(true));
 		openMenuItem.setOnAction((e) -> this.newOrOpenMenuItemClicked(false));
-		// TODO actually put the export menu item in a Game menu
+		closeMenuItem.setOnAction((e) -> this.close());
 		exportMenuItem.setOnAction((e) -> this.exportMenuItemClicked());
 		exportMenuItem.setDisable(true);
-		closeMenuItem.setOnAction((e) -> this.close());
+		
+		gameMenu.setDisable(true);
+		playMenuItem.setOnAction((e) -> this.play());
 	}
 
 	/**
@@ -79,8 +88,9 @@ public class MainWindowController {
 		// Open the file, if one was chosen
 		if (file != null) {
 			CurrentGameManager.open(file);
-			// Enable the export menu item
+			// Enable the menu items that need a loaded game
 			exportMenuItem.setDisable(false);
+			gameMenu.setDisable(false);
 		}
 	}
 	
@@ -88,7 +98,7 @@ public class MainWindowController {
 	 * Called when the export menu item is clicked.
 	 */
 	private void exportMenuItemClicked() {
-		// TODO a file chooser to choose destination
+		// A file chooser to choose destination
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Choose where to save the new executable game");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -96,7 +106,7 @@ public class MainWindowController {
 				new FileChooser.ExtensionFilter("All Files", "*.*"));
 		
 		File file = fileChooser.showSaveDialog(window);
-		// TODO Ensure JARCReator does not crash if the Game-missing-db file is not present.
+		// Ensure JARCReator does not crash if the Game-missing-db file is not present.
 		
 		try {
 			JARCreator.copyGameDBIntoGameJAR(CurrentGameManager.getOpenFile(), file);
@@ -109,6 +119,12 @@ public class MainWindowController {
 			alert.setContentText("Make sure that the file \"Game_missing_db.jar\" is present in the same folder as the executable of TextAdventureMaker.");
 			alert.showAndWait();
 		}
+		// Show a success message.
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Export Successful");
+		alert.setHeaderText("The game file was exported!");
+		alert.setContentText("To execute the game, double click it or run 'java -jar <name-of-the-file>' in a command line.");
+		alert.showAndWait();
 	}
 	
 	/**
@@ -117,5 +133,12 @@ public class MainWindowController {
 	public void close() {
 		CurrentGameManager.close();
 		Platform.exit();
+	}
+	
+	/**
+	 * Starts the loaded game.
+	 */
+	public void play() {
+		CurrentGameManager.playGame();
 	}
 }

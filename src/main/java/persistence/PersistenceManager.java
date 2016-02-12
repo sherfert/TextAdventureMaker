@@ -13,6 +13,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 /**
  * Manages connections to database files.
  * 
+ * TODO Not static!
+ * 
  * @author Satia
  */
 public class PersistenceManager {

@@ -104,6 +104,11 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * Signaling whether the initialization is finished.
 	 */
 	private volatile boolean isFinished;
+	
+	/**
+	 * The thread that reads the input.
+	 */
+	private Thread inputReader;
 
 	/**
 	 * @param ioManager
@@ -132,7 +137,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		}
 
 		// Start the thread reading input
-		startInputReadingThread();
+		this.inputReader = startInputReadingThread();
 	}
 
 	/**
@@ -187,16 +192,28 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 				(int) (fullScreen.height * 0.8)));
 		// Not resizable
 		frame.setResizable(false);
+		
+		// TODO Icon
+		frame.setTitle("Text-Adventure");
 	}
 
 	/**
 	 * Starts a thread that reads the input in an infinite loop.
+	 * 
+	 * XXX is this possible without busy waiting?
+	 * 
+	 * @return the thread.
 	 */
-	private void startInputReadingThread() {
-		new Thread(new Runnable() {
+	private Thread startInputReadingThread() {
+		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
+					// Check for interruptions
+					if(Thread.interrupted()) {
+						break;
+					}
+					
 					Key key = screen.readInput();
 					if (key == null) {
 						continue;
@@ -204,7 +221,10 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 					readInput(key);
 				}
 			}
-		}).start();
+		});
+		t.start();
+		
+		return t;
 	}
 
 	/**
@@ -239,6 +259,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 */
 	public void exitIO() {
 		screen.stopScreen();
+		inputReader.interrupt();
 	}
 
 	/**

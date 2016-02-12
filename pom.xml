@@ -133,7 +133,7 @@
 									<mainClass>gui.MainWindow</mainClass>
 								</transformer>
 							</transformers>
-							<minimizeJar>true</minimizeJar>
+							<minimizeJar>false</minimizeJar>
 							<dependencyReducedPomLocation>
 								${java.io.tmpdir}/dependency-reduced-pom.xml
 							</dependencyReducedPomLocation>

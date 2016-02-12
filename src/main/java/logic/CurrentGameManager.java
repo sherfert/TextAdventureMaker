@@ -17,6 +17,11 @@ public class CurrentGameManager {
 	 * The file that points to the currently open game database.
 	 */
 	private static File openFile;
+	
+	/**
+	 * The name of the game file (without its ending)
+	 */
+	private static String gameName;
 
 	/**
 	 * Open a file and connect to it using the Persistence unit.
@@ -29,6 +34,10 @@ public class CurrentGameManager {
 			close();
 		}
 		openFile = file;
+		
+		String name = openFile.getName();
+		gameName = name.substring(0, name.length() - LoadSaveManager.H2_ENDING.length());
+		System.out.println(gameName);
 
 		String fileName = openFile.getAbsolutePath();
 		PersistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
@@ -48,6 +57,13 @@ public class CurrentGameManager {
 	 */
 	public static File getOpenFile() {
 		return openFile;
+	}
+	
+	/**
+	 * Starts the game from within the TextAdventureMaker
+	 */
+	public static void playGame() {
+		LoadSaveManager.main(new String[] { gameName });
 	}
 
 }
