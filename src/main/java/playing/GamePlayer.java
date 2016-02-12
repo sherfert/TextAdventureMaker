@@ -17,7 +17,7 @@ import playing.command.Take;
 import playing.command.TalkTo;
 import playing.command.Use;
 import playing.command.UseWithCombine;
-import playing.menu.LoadSaveManager;
+import playing.menu.MenuShower;
 import playing.parser.GeneralParser;
 import data.Game;
 
@@ -44,6 +44,11 @@ public class GamePlayer implements GeneralIOManager {
 	private final InputOutput io;
 
 	/**
+	 * the menu shower
+	 */
+	private MenuShower ms;
+
+	/**
 	 * The parser
 	 */
 	private GeneralParser parser;
@@ -52,7 +57,7 @@ public class GamePlayer implements GeneralIOManager {
 	 * All commands mapped to their class type for easy retrieval.
 	 */
 	private Map<Class<? extends Command>, Command> commands;
-	
+
 	/**
 	 * A reference to the currently active persistenceManager
 	 */
@@ -61,10 +66,16 @@ public class GamePlayer implements GeneralIOManager {
 	/**
 	 * Creates a new game player. Can only be used properly after
 	 * {@link #setGame(Game)} has been called.
+	 * 
+	 * @param pm
+	 *            the PersistenceManager
+	 * @param ms
+	 *            menu shower
 	 */
-	public GamePlayer(PersistenceManager pm) {
-		this.io = new InputOutput(this);
+	public GamePlayer(PersistenceManager pm, MenuShower ms) {
+		this.io = new InputOutput(this, ms);
 		this.persistenceManager = pm;
+		this.ms = ms;
 		this.currentReplacer = new PlaceholderReplacer();
 
 		// Create all commands
@@ -142,12 +153,10 @@ public class GamePlayer implements GeneralIOManager {
 	 * recognizable.
 	 */
 	public void noCommand() {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"CommandType not identifiable");
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "CommandType not identifiable");
 
-		io.println(
-				currentReplacer.replacePlaceholders(game.getNoCommandText()),
-				game.getFailedBgColor(), game.getFailedFgColor());
+		io.println(currentReplacer.replacePlaceholders(game.getNoCommandText()), game.getFailedBgColor(),
+				game.getFailedFgColor());
 	}
 
 	/**
@@ -175,8 +184,7 @@ public class GamePlayer implements GeneralIOManager {
 	 * Starts playing the game. Returns immediately.
 	 */
 	public void start() {
-		Logger.getLogger(this.getClass().getName()).log(Level.INFO,
-				"Starting the game");
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Starting the game");
 		// clear the screen
 		io.clear();
 
@@ -184,22 +192,19 @@ public class GamePlayer implements GeneralIOManager {
 		if (game.getPlayer().getLocation() == null) {
 			// Transfer him to the start location and start a new game.
 			game.getPlayer().setLocation(game.getStartLocation());
-			io.println(game.getStartText(), game.getNeutralBgColor(),
-					game.getNeutralFgColor());
+			io.println(game.getStartText(), game.getNeutralBgColor(), game.getNeutralFgColor());
 		}
 		// Continue by printing the locations's text.
-		io.println(game.getPlayer().getLocation().getEnteredText(),
-				game.getNeutralBgColor(), game.getNeutralFgColor());
+		io.println(game.getPlayer().getLocation().getEnteredText(), game.getNeutralBgColor(), game.getNeutralFgColor());
 	}
 
 	/**
-	 * Exits the game. Exiting from the IO and disconnecting from the DB will shut down
-	 * the VM, if no other Window is open.
+	 * Exits the game. Exiting from the IO and disconnecting from the DB will
+	 * shut down the VM, if no other Window is open.
 	 */
 	@Override
 	public void stop() {
-		Logger.getLogger(this.getClass().getName()).log(Level.INFO,
-				"Stopping the game");
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Stopping the game");
 		io.exitIO();
 		persistenceManager.disconnect();
 	}
@@ -210,7 +215,7 @@ public class GamePlayer implements GeneralIOManager {
 	 */
 	public void checkGameEnded() {
 		if (game.isHasEnded()) {
-			LoadSaveManager.showMenu(false);
+			ms.showMenu(false);
 		}
 	}
 
@@ -220,14 +225,14 @@ public class GamePlayer implements GeneralIOManager {
 	@Override
 	public boolean handleText(String text) {
 		boolean cont = parser.parse(text);
-		
+
 		if (!cont) {
 			stop();
 		}
-		
+
 		return cont;
 	}
-	
+
 	@Override
 	public void updateState() {
 		persistenceManager.updateChanges();

@@ -47,19 +47,22 @@ public class MainMenu implements OptionIOManager {
 	/**
 	 * The options shown in the game menu.
 	 */
-	private static String[] menuEntries = new String[] { "New game",
-			"Save game", "Load game", "Back" };
+	private static String[] menuEntries = new String[] { "New game", "Save game", "Load game", "Back" };
 
 	/**
 	 * The options shown in the game menu if no game is running yet.
 	 */
-	private static String[] menuEntriesNoGameRunning = new String[] {
-			"New game", "Load game" };
+	private static String[] menuEntriesNoGameRunning = new String[] { "New game", "Load game" };
 
 	/**
 	 * The IO object.
 	 */
 	private InputOutput io;
+
+	/**
+	 * the LoadSaveManager
+	 */
+	private LoaderSaver ls;
 
 	/**
 	 * The menu states.
@@ -74,9 +77,12 @@ public class MainMenu implements OptionIOManager {
 	/**
 	 * @param io
 	 *            the IO object
+	 * @param ls
+	 *            the LoadSaveManager
 	 */
-	public MainMenu(InputOutput io) {
+	public MainMenu(InputOutput io, LoaderSaver ls) {
 		this.io = io;
+		this.ls = ls;
 		this.menuStates = new Stack<>();
 	}
 
@@ -87,12 +93,9 @@ public class MainMenu implements OptionIOManager {
 	 *            if there is a game running in the background
 	 */
 	public void show(boolean gameRunning) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-				"Showing main menu");
-		io.enterOptionMode(this, Arrays.asList(gameRunning ? menuEntries
-				: menuEntriesNoGameRunning));
-		menuStates.push(gameRunning ? MenuState.MAIN
-				: MenuState.MAIN_NO_GAME_RUNNING);
+		Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Showing main menu");
+		io.enterOptionMode(this, Arrays.asList(gameRunning ? menuEntries : menuEntriesNoGameRunning));
+		menuStates.push(gameRunning ? MenuState.MAIN : MenuState.MAIN_NO_GAME_RUNNING);
 	}
 
 	@Override
@@ -137,18 +140,15 @@ public class MainMenu implements OptionIOManager {
 				try {
 					Files.delete(files.get(index).toPath());
 				} catch (IOException e) {
-					Logger.getLogger(this.getClass().getName()).log(
-							Level.SEVERE,
+					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 							"Could not remove old save file on override.", e);
 				}
 
 				// Save a file, with the current date and time
-				save(new File(LoadSaveManager.getSaveGamesDir()
-						+ getCurrentTimeString() + LoadSaveManager.H2_ENDING));
+				save(new File(ls.getSaveGamesDir() + getCurrentTimeString() + LoadSaveManager.H2_ENDING));
 			} else if (index == files.size()) {
 				// Save a file, with the current date and time
-				save(new File(LoadSaveManager.getSaveGamesDir()
-						+ getCurrentTimeString() + LoadSaveManager.H2_ENDING));
+				save(new File(ls.getSaveGamesDir() + getCurrentTimeString() + LoadSaveManager.H2_ENDING));
 			} else {
 				back();
 			}
@@ -161,8 +161,7 @@ public class MainMenu implements OptionIOManager {
 	 *         file.
 	 */
 	public static String getCurrentTimeString() {
-		return LocalDateTime.now().format(
-				DateTimeFormatter.ofPattern(SAVEGAME_TIME_FORMAT));
+		return LocalDateTime.now().format(DateTimeFormatter.ofPattern(SAVEGAME_TIME_FORMAT));
 	}
 
 	/**
@@ -178,8 +177,7 @@ public class MainMenu implements OptionIOManager {
 			// Otherwise go back to last menu (can only be MAIN or
 			// MAIN_NO_GAME_RUNNING)
 			MenuState state = menuStates.peek();
-			io.setOptions(Arrays.asList(state == MenuState.MAIN ? menuEntries
-					: menuEntriesNoGameRunning));
+			io.setOptions(Arrays.asList(state == MenuState.MAIN ? menuEntries : menuEntriesNoGameRunning));
 		}
 	}
 
@@ -193,14 +191,11 @@ public class MainMenu implements OptionIOManager {
 		List<String> options = new ArrayList<>();
 		this.files = new ArrayList<>();
 
-		for (File fileEntry : new File(LoadSaveManager.getSaveGamesDir())
-				.listFiles()) {
+		for (File fileEntry : new File(ls.getSaveGamesDir()).listFiles()) {
 			String name = fileEntry.getName();
-			if (!fileEntry.isDirectory()
-					&& name.endsWith(LoadSaveManager.H2_ENDING)) {
+			if (!fileEntry.isDirectory() && name.endsWith(LoadSaveManager.H2_ENDING)) {
 				files.add(fileEntry);
-				options.add(name.substring(0, name.length()
-						- LoadSaveManager.H2_ENDING.length()));
+				options.add(name.substring(0, name.length() - LoadSaveManager.H2_ENDING.length()));
 			}
 		}
 		return options;
@@ -236,7 +231,7 @@ public class MainMenu implements OptionIOManager {
 	 * Starts a new game and also exits the menu.
 	 */
 	private void newGame() {
-		LoadSaveManager.newGame();
+		ls.newGame();
 		// Exit menu
 		back();
 	}
@@ -248,7 +243,7 @@ public class MainMenu implements OptionIOManager {
 	 *            the file to load.
 	 */
 	private void load(File file) {
-		LoadSaveManager.load(file);
+		ls.load(file);
 		// Exit menu
 		back();
 		back();
@@ -261,7 +256,7 @@ public class MainMenu implements OptionIOManager {
 	 *            the file to load.
 	 */
 	private void save(File file) {
-		LoadSaveManager.save(file);
+		ls.save(file);
 		// Exit menu
 		back();
 		back();

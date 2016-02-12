@@ -1,6 +1,7 @@
 package playing.menu;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,12 +21,10 @@ import configuration.PropertiesReader;
  * automatically, but upon starting a new game, a name of the savegame has to be
  * entered.
  * 
- * TODO not static
- * 
  * @author Satia
  * 
  */
-public class LoadSaveManager {
+public class LoadSaveManager implements MenuShower, LoaderSaver {
 	// XXX if the jar is minimized, the persistence provider is not found. The
 	// current maven-shade-plugin allows for no better solution
 	// than not minimizing the jar or specifying ALL needed classes from the
@@ -39,37 +38,108 @@ public class LoadSaveManager {
 	/**
 	 * The main menu
 	 */
-	private static MainMenu mainMenu;
+	private MainMenu mainMenu;
 
 	/**
 	 * The game player
 	 */
-	private static GamePlayer gamePlayer;
+	private GamePlayer gamePlayer;
 
 	/**
 	 * The file of the game db.
 	 */
-	private static URL file;
+	private URL file;
 
 	/**
 	 * The file temporarily used to play the game.
 	 */
-	private static File tempFile;
+	private File tempFile;
 
 	/**
 	 * The directory of the save games.
 	 */
-	private static String saveGamesDir;
+	private String saveGamesDir;
 
 	/**
 	 * The name of the game.
 	 */
-	private static String gameName;
-	
+	private String gameName;
+
 	/**
-	 * A reference to the currently active persistenceManager
+	 * A reference to the currently active persistenceManager.
 	 */
-	private static PersistenceManager persistenceManager = new PersistenceManager();
+	private PersistenceManager persistenceManager = new PersistenceManager();
+
+	public LoadSaveManager() throws IOException {
+		// Retrieve the DB File inside the JAR
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
+				"No arguments provided, using game DB inside JAR.");
+		ClassLoader classLoader = LoadSaveManager.class.getClassLoader();
+		this.file = classLoader.getResource("game" + H2_ENDING);
+
+		// Test if resource exists
+		if (this.file == null) {
+			throw new FileNotFoundException("Game DB in JAR does not exist. File: " + this.file);
+		}
+
+		init();
+	}
+
+	public LoadSaveManager(String gameName) throws IOException {
+		// Use game with the provided title
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "Started LoadSaveManager with argument: {0}",
+				gameName);
+
+		File f = new File(PropertiesReader.DIRECTORY + gameName + H2_ENDING);
+		// Test if file exists
+		if (!f.exists()) {
+			throw new FileNotFoundException("Game DB does not exist. File: " + f);
+		}
+
+		this.file = f.toURI().toURL();
+
+		init();
+	}
+
+	private void init() {
+		// Obtain the name of the game
+		File tFile = copyToTempDB(file);
+		// Connect
+		String path = tFile.getAbsolutePath();
+		this.persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
+		this.gameName = persistenceManager.getGameManager().getGameTitle();
+		// Do NOT disconnect from DB here, because loading a new game will
+		// already disconnect and
+		// otherwise there are exceptions.
+
+		// Set the saves game directory path accordingly
+		this.saveGamesDir = PropertiesReader.DIRECTORY + gameName + File.separator;
+
+		File saveGamesDirFile = new File(saveGamesDir);
+		// Create the dir if necessary
+		if (!saveGamesDirFile.exists()) {
+			if (saveGamesDirFile.mkdirs()) {
+				Logger.getLogger(LoadSaveManager.class.getName()).log(Level.FINE, "Created save game directory: {0}",
+						saveGamesDir);
+			} else {
+				Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+						"Could not create save game directory: {0} Aborting.", saveGamesDir);
+				return;
+			}
+		}
+
+		// Create new gamePlayer
+		// After that, the VM is kept alive with new threads. It must be closed
+		// with
+		// System.exit(...) or gamePlayer.stop() respectively.
+		this.gamePlayer = new GamePlayer(persistenceManager, this);
+
+		// Create main menu
+		this.mainMenu = new MainMenu(gamePlayer.getIo(), this);
+
+		// Show main menu without save and back
+		showMenu(false);
+	}
 
 	/**
 	 * The main method to play a game. If there is an argument provided, it must
@@ -85,95 +155,20 @@ public class LoadSaveManager {
 		try {
 			Class.forName(logging.LogManager.class.getName());
 		} catch (ClassNotFoundException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"Could not initialize logging:", e);
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not initialize logging:", e);
 		}
 
-		if (args.length == 0) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
-					"No arguments provided, using game DB inside JAR.");
-			ClassLoader classLoader = LoadSaveManager.class.getClassLoader();
-			file = classLoader.getResource("game" + H2_ENDING);
-
-			// Test if resource exists
-			if (file == null) {
-				Logger.getLogger(LoadSaveManager.class.getName()).log(
-						Level.SEVERE,
-						"Game DB in JAR does not exist. Exiting. File: {0}",
-						file);
-				return;
-			}
-		} else {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
-					"Started LoadSaveManager with argument: {0}", args[0]);
-
-			File f = new File(PropertiesReader.DIRECTORY + args[0] + H2_ENDING);
-			// Test if file exists
-			if (!f.exists()) {
-				Logger.getLogger(LoadSaveManager.class.getName())
-						.log(Level.SEVERE,
-								"Game DB file does not exist. Exiting. File: {0}",
-								f);
-				return;
-			}
-
-			try {
-				file = f.toURI().toURL();
-			} catch (MalformedURLException e) {
-				Logger.getLogger(LoadSaveManager.class.getName()).log(
-						Level.SEVERE, "Malformed file URL.", e);
-			}
-
-		}
-
-		// Obtain the name of the game
-		File tFile = copyToTempDB(file);
-		// Connect
-		String path = tFile.getAbsolutePath();
-		persistenceManager.connect(
-				path.substring(0, path.length() - H2_ENDING.length()), false);
-		gameName = persistenceManager.getGameManager().getGameTitle();
-		// Do NOT disconnect from DB here, because loading a new game will
-		// already disconnect and
-		// otherwise there are exceptions.
-
-		// Set the saves game directory path accordingly
-		saveGamesDir = PropertiesReader.DIRECTORY + gameName + File.separator;
-
-		File saveGamesDirFile = new File(saveGamesDir);
-		// Create the dir if necessary
-		if (!saveGamesDirFile.exists()) {
-			if (saveGamesDirFile.mkdirs()) {
-				Logger.getLogger(LoadSaveManager.class.getName()).log(
-						Level.FINE, "Created save game directory: {0}",
-						saveGamesDir);
+		try {
+			if (args.length == 0) {
+				new LoadSaveManager();
 			} else {
-				Logger.getLogger(LoadSaveManager.class.getName()).log(
-						Level.SEVERE,
-						"Could not create save game directory: {0} Aborting.",
-						saveGamesDir);
-				return;
+				new LoadSaveManager(args[0]);
 			}
+		} catch (IOException e) {
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+					"Could not initialize the LoadSaveManager.", e);
 		}
 
-		// Create new gamePlayer
-		// After that, the VM is kept alive with new threads. It must be closed
-		// with
-		// System.exit(...) or gamePlayer.stop() respectively.
-		gamePlayer = new GamePlayer(persistenceManager);
-
-		// Create main menu
-		mainMenu = new MainMenu(gamePlayer.getIo());
-
-		// Show main menu without save and back
-		showMenu(false);
-	}
-
-	/**
-	 * @return the saveGamesDir
-	 */
-	public static String getSaveGamesDir() {
-		return saveGamesDir;
 	}
 
 	/**
@@ -192,8 +187,8 @@ public class LoadSaveManager {
 			FileUtils.copyURLToFile(file, tempFile.toFile());
 			return tempFile.toFile();
 		} catch (IOException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"Could not copy db file. Exiting now.", e);
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not copy db file. Exiting now.",
+					e);
 			System.exit(-1);
 			return null;
 		}
@@ -205,47 +200,40 @@ public class LoadSaveManager {
 	 * @param file
 	 *            the file to copy to.
 	 */
-	private static void copyFromTempDB(File file) {
+	private void copyFromTempDB(File file) {
 		// Copy to temp file
 		try {
-			Files.copy(tempFile.toPath(), file.toPath(),
-					java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(tempFile.toPath(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"Could not copy db file when saving.", e);
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not copy db file when saving.",
+					e);
 		}
 	}
 
-	/**
-	 * Shows the main menu.
-	 * 
-	 * @param gameRunning
-	 *            if there is a game running in the background
-	 */
-	public static void showMenu(boolean gameRunning) {
+	@Override
+	public void showMenu(boolean gameRunning) {
 		mainMenu.show(gameRunning);
 	}
+	
+	@Override
+	public String getSaveGamesDir() {
+		return saveGamesDir;
+	}
 
-	/**
-	 * Starts a new game.
-	 */
-	public static void newGame() {
+	
+	@Override
+	public void newGame() {
 		// "Load" the new file
 		load(file);
 	}
 
-	/**
-	 * Loads a file.
-	 * 
-	 * @param file
-	 *            the file to load.
-	 */
-	public static void load(File file) {
+	
+	@Override
+	public void load(File file) {
 		try {
 			load(file.toURI().toURL());
 		} catch (MalformedURLException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"Malformed file URL.", e);
+			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Malformed file URL.", e);
 		}
 	}
 
@@ -255,39 +243,32 @@ public class LoadSaveManager {
 	 * @param file
 	 *            the file to load.
 	 */
-	public static void load(URL file) {
+	private void load(URL file) {
 		// Disconnect from old db
 		persistenceManager.disconnect();
 		// Copy file to a temp db
 		tempFile = copyToTempDB(file);
 		// Connect
 		String path = tempFile.getAbsolutePath();
-		persistenceManager.connect(
-				path.substring(0, path.length() - H2_ENDING.length()), false);
+		persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
 		// Set the game for the game player
 		try {
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
 		} catch (Exception e) {
 			// This means the database is incompatible with the model.
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"Could not get the game. Database incompatible. Exiting.",
-					e);
+					"Could not get the game. Database incompatible. Exiting.", e);
 			// This means we cannot continue in any sensible way
 			System.exit(-1);
 		}
 		// Start a game
-		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO,
-				"New game/Load game");
+		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "New game/Load game");
 		gamePlayer.start();
 	}
 
-	/**
-	 * Saves a file.
-	 * 
-	 * @param file
-	 *            the file to save to
-	 */
-	public static void save(File file) {
+	
+	@Override
+	public void save(File file) {
 		// If disconnecting should become necessary, consider the following code
 		// PersistenceManager.disconnect();
 		// [...]

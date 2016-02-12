@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
-import playing.menu.LoadSaveManager;
+import playing.menu.MenuShower;
 import lanterna.LanternaScreenOptionChooser;
 import lanterna.LanternaScreenOptionChooser.OptionHandler;
 import lanterna.LanternaScreenTextArea;
@@ -103,6 +103,11 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	private OptionIOManager optionIOManager;
 
 	/**
+	 * The menu shower.
+	 */
+	private MenuShower ms;
+
+	/**
 	 * The option choser if currently in option mode, {@code null} otherwise.
 	 */
 	private LanternaScreenOptionChooser optionChoser;
@@ -120,9 +125,12 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	/**
 	 * @param ioManager
 	 *            the ioManager for this session
+	 * @param ms
+	 *            menu shower
 	 */
-	public InputOutput(GeneralIOManager ioManager) {
+	public InputOutput(GeneralIOManager ioManager, MenuShower ms) {
 		this.ioManager = ioManager;
+		this.ms = ms;
 		this.screen = TerminalFacade.createScreen();
 		this.screen.startScreen();
 
@@ -242,7 +250,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		if (optionIOManager == null) {
 			if (key.getKind() == Kind.Escape) {
 				// If this is escape key: show menu
-				LoadSaveManager.showMenu(true);
+				ms.showMenu(true);
 			} else {
 				// If not in option mode, the default text area handles the
 				// key,
@@ -350,7 +358,8 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		optionChoser.setOptions(options);
 	}
 
-	// FIXME Is it possible to end the game by choosing some conversation option?
+	// FIXME Is it possible to end the game by choosing some conversation
+	// option?
 	@Override
 	public void chooseOption(int index) {
 		optionIOManager.chooseOption(index);
@@ -359,7 +368,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 
 	@Override
 	public void handleText(String text) {
-		if(ioManager.handleText(text)) {
+		if (ioManager.handleText(text)) {
 			ioManager.updateState();
 		}
 	}
