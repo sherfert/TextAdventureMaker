@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+
+<Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.view.GameDetailsController">
+  <panes>
+    <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Basic Properties">
+      <content>
+            <VBox>
+               <children>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Game title" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Starting text" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Starting location" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+      </content>
+    </TitledPane>
+    <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Help Texts">
+      <content>
+            <VBox>
+               <children>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Move somewhere" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Talk to someone" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Look around" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Inspect something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Inventory" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Display help" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Exit game" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+      </content>
+    </TitledPane>
+      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Success Default Texts">
+         <content>
+            <VBox>
+               <children>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Inspect something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="20.0" prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Empty inventory" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Non-empty inventory" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
+      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Failure Default Texts">
+         <content>
+            <VBox>
+               <children>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Move somewhere" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Talk to someone" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="20.0" prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="No such item" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="No such inventory item" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="No such person" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="No such way" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="20.0" prefWidth="200.0">
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="No valid command" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Not sensible command" />
+                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
+      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Commands">
+         <content>
+            <VBox>
+               <children>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Move somewhere" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Talk to someone" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Look around" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Inspect something" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Inventory" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Display help" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Exit game" />
+                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
+      <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" text="Console Properties">
+         <content>
+            <VBox>
+               <children>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="250.0" text="Number of option lines" />
+                        <Spinner HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Successful foreground color" />
+                        <ComboBox prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Successful background color" />
+                        <ComboBox prefWidth="150.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Neutral foreground color" />
+                        <ComboBox prefWidth="150.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Neutral background color" />
+                        <ComboBox prefWidth="150.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Failure foreground color" />
+                        <ComboBox prefWidth="150.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefWidth="200.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="250.0" text="Failure background color" />
+                        <ComboBox prefWidth="150.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
+  </panes>
+</Accordion>

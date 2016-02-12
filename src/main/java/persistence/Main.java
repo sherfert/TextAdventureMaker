@@ -428,9 +428,6 @@ public class Main {
 		game.setStartLocation(flat);
 		game.setStartText("This is a little text adventure.");
 
-		game.setInspectionDefaultText("Nothing interesting.");
-		game.setInventoryEmptyText("Your inventory is empty.");
-		game.setInventoryText("You are carrying the following things:");
 		game.setNoCommandText("I don't understand you.");
 		game.setInvalidCommandText("This doesn't make sense.");
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");
@@ -445,6 +442,10 @@ public class Main {
 		// The above pattern is more verbose, but leads to strange output if
 		// used with persons. E.g. "You cannot use the peel with the satia."
 		game.setNotUsableWithText("You cannot do that.");
+		
+		game.setInspectionDefaultText("Nothing interesting.");
+		game.setInventoryEmptyText("Your inventory is empty.");
+		game.setInventoryText("You are carrying the following things:");
 		game.setTakenText("You picked up the <name>.");
 		game.setUsedText("You <pattern|the <name>||>. Nothing interesting happens.");
 		// Same as above. // You use the <name> with the <name2>. 

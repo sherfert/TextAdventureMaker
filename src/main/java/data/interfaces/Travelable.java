@@ -85,8 +85,7 @@ public interface Travelable extends Identifiable {
 	public void setMoveForbiddenText(String forbiddenText);
 
 	/**
-	 * Sets the successful text. If {@code null} passed, the default text will
-	 * be used when the action is triggered.
+	 * Sets the successful text. If {@code null} passed, no text will be displayed.
 	 * 
 	 * @param successfulText
 	 *            the successfulText to set

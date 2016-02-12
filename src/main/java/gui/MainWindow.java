@@ -17,34 +17,37 @@ import gui.view.MainWindowController;
  *
  */
 public class MainWindow extends Application {
-	
+
 	public static void main(String[] args) {
 		Application.launch(args);
 	}
-	
+
+	private BorderPane rootLayout;
+
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("TextAdventureMaker");
-		
-        try {
-            // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainWindow.class.getResource("view/MainWindow.fxml"));
 
-            BorderPane rootLayout = (BorderPane) loader.load();
-            
-            MainWindowController controller = loader.getController();
-            controller.setWindow(primaryStage);
-            primaryStage.setOnCloseRequest(e -> controller.close());
+		try {
+			// Load root layout from fxml file.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainWindow.class.getResource("view/MainWindow.fxml"));
 
-            // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
+			rootLayout = (BorderPane) loader.load();
+
+			MainWindowController controller = loader.getController();
+			controller.setWindow(primaryStage);
+			primaryStage.setOnCloseRequest(e -> controller.close());
+
+			// Show the scene containing the root layout.
+			Scene scene = new Scene(rootLayout);
 			scene.getStylesheets().add(getClass().getResource("view/application.css").toExternalForm());
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+			
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
