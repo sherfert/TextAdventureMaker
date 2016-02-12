@@ -94,7 +94,8 @@ public class TalkTo extends Command {
 							person.getId());
 
 					// Start the conversation
-					new ConversationPlayer(io, game, person.getConversation(), person.getName());
+					new ConversationPlayer(io, game, person.getConversation(), person.getName(),
+							gamePlayer.getMenuShower());
 				} else {
 					Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Talk to {0} disabled",
 							person.getId());

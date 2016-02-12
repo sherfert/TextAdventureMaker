@@ -124,6 +124,13 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
+	 * @return the menu shower
+	 */
+	public MenuShower getMenuShower() {
+		return ms;
+	}
+
+	/**
 	 * @return the persistenceManager
 	 */
 	public PersistenceManager getPersistenceManager() {
@@ -210,21 +217,17 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * Checks if the game has ended. If so, the main menu is shown, but one can
-	 * not continue the game.
-	 */
-	public void checkGameEnded() {
-		if (game.isHasEnded()) {
-			ms.showMenu(false);
-		}
-	}
-
-	/**
 	 * {@inheritDoc} Parses the input. Stops the game if necessary.
 	 */
 	@Override
 	public boolean handleText(String text) {
 		boolean cont = parser.parse(text);
+
+		// Checks if the game has ended. If so, the main menu is shown, but one
+		// can not continue the game.
+		if (game.isHasEnded()) {
+			ms.showMenu(false);
+		}
 
 		if (!cont) {
 			stop();

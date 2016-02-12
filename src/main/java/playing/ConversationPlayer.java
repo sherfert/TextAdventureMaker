@@ -1,6 +1,7 @@
 package playing;
 
 import playing.InputOutput.OptionIOManager;
+import playing.menu.MenuShower;
 import data.Conversation;
 import data.ConversationLayer;
 import data.ConversationOption;
@@ -40,9 +41,14 @@ public class ConversationPlayer implements OptionIOManager {
 	 * The current layer of the conversation.
 	 */
 	private ConversationLayer currentLayer;
+	
+	/**
+	 * To show the menu if the conversation ended the whole game.
+	 */
+	private MenuShower ms;
 
 	/**
-	 * Construct a conversation player and start the conversation.
+	 * Construct a conversation player and starts the conversation.
 	 * 
 	 * @param io
 	 *            the io
@@ -53,9 +59,9 @@ public class ConversationPlayer implements OptionIOManager {
 	 * @param personName
 	 *            the name of the person
 	 */
-	public ConversationPlayer(InputOutput io, Game game,
-			Conversation conversation, String personName) {
+	public ConversationPlayer(InputOutput io, Game game, Conversation conversation, String personName, MenuShower ms) {
 		this.io = io;
+		this.ms = ms;
 		this.game = game;
 		this.conversation = conversation;
 		this.personName = personName;
@@ -64,8 +70,8 @@ public class ConversationPlayer implements OptionIOManager {
 	}
 
 	/**
-	 * {@inheritDoc} It is being checked, that the
-	 * index is valid, otherwise nothing is done!
+	 * {@inheritDoc} It is being checked, that the index is valid, otherwise
+	 * nothing is done!
 	 */
 	@Override
 	public void chooseOption(int index) {
@@ -73,8 +79,7 @@ public class ConversationPlayer implements OptionIOManager {
 			return;
 		}
 
-		ConversationOption chosenOption = currentLayer.getEnabledOptions().get(
-				index);
+		ConversationOption chosenOption = currentLayer.getEnabledOptions().get(index);
 		// Trigger additional actions
 		chosenOption.choose(game);
 
@@ -92,8 +97,14 @@ public class ConversationPlayer implements OptionIOManager {
 			// Display new options
 			io.setOptions(currentLayer.getOptionTexts());
 		}
+
+		// Checks if the game has ended. If so, the main menu is shown, but one
+		// can not continue the game.
+		if (game.isHasEnded()) {
+			ms.showMenu(false);
+		}
 	}
-	
+
 	@Override
 	public int getNumberOfOptionLines() {
 		return game.getNumberOfOptionLines();
@@ -124,8 +135,7 @@ public class ConversationPlayer implements OptionIOManager {
 	 *            the text
 	 */
 	private void personSays(String text) {
-		io.println(personName + ": " + text, game.getSuccessfullBgColor(),
-				game.getSuccessfullFgColor());
+		io.println(personName + ": " + text, game.getSuccessfullBgColor(), game.getSuccessfullFgColor());
 	}
 
 	/**

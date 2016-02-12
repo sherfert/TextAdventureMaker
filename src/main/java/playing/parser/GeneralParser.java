@@ -351,8 +351,6 @@ public class GeneralParser {
 
 		for (CommandRecExec cmdRE : commandRecExecs) {
 			if (cmdRE.recognizeAndExecute(input)) {
-				// Let the gamePlayer check if the game has ended.
-				gamePlayer.checkGameEnded();
 				return true;
 			}
 		}

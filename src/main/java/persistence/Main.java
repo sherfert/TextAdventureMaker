@@ -165,6 +165,11 @@ public class Main {
 				csLayer));
 		startLayer.addOption(new ConversationOption("I'm gonne leave you now.",
 				"Finally.", null));
+		// An option that finishes the game
+		ConversationOption endGameOption = new ConversationOption("Fuck this. Ima quit!",
+				"Quit what? Don't tell me I ended up in a game! Please not!", null);
+		endGameOption.addAdditionalAction(new EndGameAction());
+		startLayer.addOption(endGameOption);
 
 		ConversationOption option42 = new ConversationOption(
 				"What is the answer to the Ultimate Question of Life, the Universe, and Everything? "

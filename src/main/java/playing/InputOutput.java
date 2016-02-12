@@ -45,7 +45,8 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		 * 
 		 * @param text
 		 *            the typed text
-		 * @return if the game continues.
+		 * @return {@code false} if exit (or similar) was typed, {@code true}
+		 *         otherwise.
 		 */
 		boolean handleText(String text);
 
@@ -358,8 +359,6 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		optionChoser.setOptions(options);
 	}
 
-	// FIXME Is it possible to end the game by choosing some conversation
-	// option?
 	@Override
 	public void chooseOption(int index) {
 		optionIOManager.chooseOption(index);
