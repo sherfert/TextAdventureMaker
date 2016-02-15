@@ -122,6 +122,13 @@ public class Conversation implements HasId {
 	}
 
 	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	 * @return the greeting
 	 */
 	public String getGreeting() {

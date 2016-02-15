@@ -46,6 +46,13 @@ public class ConversationLayer implements HasId {
 	}
 
 	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	 * @return the options
 	 */
 	public List<ConversationOption> getOptions() {

@@ -17,12 +17,12 @@ public interface Inspectable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToInspect(AbstractAction action);
+	public void addAdditionalInspectAction(AbstractAction action);
 
 	/**
 	 * @return the additional actions.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromInspect();
+	public List<AbstractAction> getAdditionalInspectActions();
 
 	/**
 	 * @return the text being displayed when inspected or {@code null} if the
@@ -44,7 +44,7 @@ public interface Inspectable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromInspect(AbstractAction action);
+	public void removeAdditionalInspectAction(AbstractAction action);
 
 	/**
 	 * Sets the inspection text. If {@code null} passed, the default text will

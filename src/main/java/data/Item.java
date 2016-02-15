@@ -167,12 +167,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 
 	@Override
 	public boolean isRemoveItem() {
-		return removeAction.isEnabled();
+		return removeAction.getEnabled();
 	}
 
 	@Override
 	public boolean isTakingEnabled() {
-		return addInventoryItemsAction.isEnabled();
+		return addInventoryItemsAction.getEnabled();
 	}
 
 	@Override

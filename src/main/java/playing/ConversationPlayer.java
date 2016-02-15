@@ -100,7 +100,7 @@ public class ConversationPlayer implements OptionIOManager {
 
 		// Checks if the game has ended. If so, the main menu is shown, but one
 		// can not continue the game.
-		if (game.isHasEnded()) {
+		if (game.getHasEnded()) {
 			ms.showMenu(false);
 		}
 	}

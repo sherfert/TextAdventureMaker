@@ -157,6 +157,13 @@ public class ConversationOption implements HasId {
 	}
 
 	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	 * @return the text
 	 */
 	public String getText() {
@@ -281,7 +288,7 @@ public class ConversationOption implements HasId {
 	 *         chosen once.
 	 */
 	public boolean isDisablingOptionAfterChosen() {
-		return disableAction.isEnabled();
+		return disableAction.getEnabled();
 	}
 
 	/**

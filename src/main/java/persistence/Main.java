@@ -142,14 +142,14 @@ public class Main {
 		}
 
 		// The order here is critical!
-		satia.addAdditionalActionToInspect(stealMoneyAction);
+		satia.addAdditionalInspectAction(stealMoneyAction);
 
 		ChangePersonAction changeSatiaAction1 = new ChangePersonAction(satia);
 		changeSatiaAction1
 				.setNewInspectionText("He looks pretty busy programming nonsense stuff. You stole the poor guy his last 5 bucks.");
 		changeSatiaAction1.setNewConversation(satiaShortConversation);
 
-		satia.addAdditionalActionToInspect(changeSatiaAction1);
+		satia.addAdditionalInspectAction(changeSatiaAction1);
 
 		/*
 		 * The normal conversation with Satia.
@@ -270,7 +270,7 @@ public class Main {
 				tv);
 		changeTVAction
 				.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
-		tv.addAdditionalActionToInspect(changeTVAction);
+		tv.addAdditionalInspectAction(changeTVAction);
 		
 		// A useless button
 		Item button = new Item(flat, "Button", "There is a button the wall.");
@@ -299,7 +299,7 @@ public class Main {
 		changeBananaAction
 				.setNewInspectionText("Ring ring ring ring ring ring ring - banana phone.");
 		changeBananaAction.addIdentifierToAdd("banana phone");
-		banana.addAdditionalActionToInspect(changeBananaAction);
+		banana.addAdditionalInspectAction(changeBananaAction);
 
 		InventoryItem peel = new InventoryItem("Banana peel",
 				"The peel of the banana you ate.");
@@ -419,9 +419,9 @@ public class Main {
 		changePeelPenCombinationAction
 				.setNewCombineWithSuccessfulText("Absent-mindedly you paint the peel while staring at the huge tv screen - which is black.");
 
-		tv.addAdditionalActionToInspect(changeChairTVaction);
-		tv.addAdditionalActionToInspect(changeSatiaMoneyAction);
-		tv.addAdditionalActionToInspect(changePeelPenCombinationAction);
+		tv.addAdditionalInspectAction(changeChairTVaction);
+		tv.addAdditionalInspectAction(changeSatiaMoneyAction);
+		tv.addAdditionalInspectAction(changePeelPenCombinationAction);
 		
 		// Game options
 		game.setPlayer(player);

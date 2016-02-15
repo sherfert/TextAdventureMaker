@@ -582,6 +582,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	 * @return the inspectCommands
 	 */
 	public List<String> getInspectCommands() {
@@ -871,7 +878,7 @@ public class Game implements HasId {
 	/**
 	 * @return the hasEnded
 	 */
-	public boolean isHasEnded() {
+	public boolean getHasEnded() {
 		return hasEnded;
 	}
 

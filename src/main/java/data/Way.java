@@ -146,7 +146,7 @@ public class Way extends InspectableObject implements Travelable {
 
 	@Override
 	public boolean isMovingEnabled() {
-		return moveAction.isEnabled();
+		return moveAction.getEnabled();
 	}
 
 	@Override

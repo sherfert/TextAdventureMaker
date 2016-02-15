@@ -71,10 +71,39 @@ public class ChangeActionAction extends AbstractAction {
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeActionAction(AbstractAction action, Enabling enabling,
-			boolean enabled) {
+	public ChangeActionAction(AbstractAction action, Enabling enabling, boolean enabled) {
 		super(enabled);
 		this.action = action;
+		this.enabling = enabling;
+	}
+
+	/**
+	 * @return the action
+	 */
+	public AbstractAction getAction() {
+		return action;
+	}
+
+	/**
+	 * @param action
+	 *            the action to set
+	 */
+	public void setAction(AbstractAction action) {
+		this.action = action;
+	}
+
+	/**
+	 * @return the enabling
+	 */
+	public Enabling getEnabling() {
+		return enabling;
+	}
+
+	/**
+	 * @param enabling
+	 *            the enabling to set
+	 */
+	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
 	}
 
@@ -89,8 +118,8 @@ public class ChangeActionAction extends AbstractAction {
 
 	@Override
 	public String toString() {
-		return "ChangeActionAction{" + "actionID=" + action.getId()
-				+ ", enabling=" + enabling + " " + super.toString() + '}';
+		return "ChangeActionAction{" + "actionID=" + action.getId() + ", enabling=" + enabling + " " + super.toString()
+				+ '}';
 	}
 
 	@Override

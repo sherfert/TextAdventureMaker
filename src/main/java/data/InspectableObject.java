@@ -69,11 +69,9 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 		init();
 		addIdentifier(name);
 	}
-	
-	
 
 	@Override
-	public void addAdditionalActionToInspect(AbstractAction action) {
+	public void addAdditionalInspectAction(AbstractAction action) {
 		additionalInspectActions.add(action);
 	}
 
@@ -86,13 +84,29 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	}
 
 	@Override
-	public List<AbstractAction> getAdditionalActionsFromInspect() {
+	public List<AbstractAction> getAdditionalInspectActions() {
 		return additionalInspectActions;
+	}
+
+	/**
+	 * @param additionalInspectActions
+	 *            the additionalInspectActions to set
+	 */
+	public void setAdditionalInspectActions(List<AbstractAction> additionalInspectActions) {
+		this.additionalInspectActions = additionalInspectActions;
 	}
 
 	@Override
 	public List<String> getIdentifiers() {
 		return identifiers;
+	}
+
+	/**
+	 * @param identifiers
+	 *            the identifiers to set
+	 */
+	public void setIdentifiers(List<String> identifiers) {
+		this.identifiers = identifiers;
 	}
 
 	@Override
@@ -102,16 +116,15 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 
 	@Override
 	public void inspect(Game game) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-			"Inspecting {0}", this);
-		
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Inspecting {0}", this);
+
 		for (AbstractAction abstractAction : additionalInspectActions) {
 			abstractAction.triggerAction(game);
 		}
 	}
 
 	@Override
-	public void removeAdditionalActionFromInspect(AbstractAction action) {
+	public void removeAdditionalInspectAction(AbstractAction action) {
 		additionalInspectActions.remove(action);
 	}
 
@@ -124,7 +137,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	public void setInspectionText(String inspectionText) {
 		this.inspectionText = inspectionText;
 	}
-	
+
 	/**
 	 * Initializes the fields
 	 */
@@ -135,9 +148,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 
 	@Override
 	public String toString() {
-		return "InspectableObject{" + "additionalInspectActionsIDs=" +
-			NamedObject.getIDList(additionalInspectActions) +
-			", identifiers=" + identifiers + ", inspectionText=" +
-			inspectionText + " " + super.toString() + '}';
+		return "InspectableObject{" + "additionalInspectActionsIDs=" + NamedObject.getIDList(additionalInspectActions)
+				+ ", identifiers=" + identifiers + ", inspectionText=" + inspectionText + " " + super.toString() + '}';
 	}
 }

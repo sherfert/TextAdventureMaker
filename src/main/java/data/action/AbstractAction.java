@@ -84,9 +84,16 @@ public abstract class AbstractAction implements HasId {
 	}
 
 	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	 * @return the enabled
 	 */
-	public boolean isEnabled() {
+	public boolean getEnabled() {
 		return enabled;
 	}
 

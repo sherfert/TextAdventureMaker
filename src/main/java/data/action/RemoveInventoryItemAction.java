@@ -61,6 +61,13 @@ public class RemoveInventoryItemAction extends AbstractAction {
 		return item;
 	}
 
+	/**
+	 * @param item the item to set
+	 */
+	public void setItem(InventoryItem item) {
+		this.item = item;
+	}
+
 	@Override
 	protected void doAction(Game game) {
 		// Remove the item from the inventory
