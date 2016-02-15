@@ -122,7 +122,7 @@ public class MultiAction extends AbstractAction {
 			// like this enabled/disabled does not matter and
 			// if the action IDs of triggered actions are saved
 			// there are no multiple entries
-			action.doAction(null);
+			action.doAction(game);
 		}
 	}
 
