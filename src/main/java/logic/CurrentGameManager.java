@@ -9,6 +9,8 @@ import playing.menu.LoadSaveManager;
  * This class maintains the state of the currently opened game file and forwards
  * corresponding calls to the persistence.
  * 
+ * TODO autosave every X minutes, where X is a configurable property
+ * 
  * @author Satia
  */
 public class CurrentGameManager {
@@ -49,7 +51,6 @@ public class CurrentGameManager {
 
 		String name = openFile.getName();
 		gameName = name.substring(0, name.length() - LoadSaveManager.H2_ENDING.length());
-		System.out.println(gameName);
 
 		String fileName = openFile.getAbsolutePath();
 		persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
@@ -60,6 +61,9 @@ public class CurrentGameManager {
 	 * Closes the file by disconnecting from the DB.
 	 */
 	public void close() {
+		// Be sure to commit any remaining changed data
+		persistenceManager.updateChanges();
+
 		persistenceManager.disconnect();
 		openFile = null;
 	}
@@ -72,9 +76,19 @@ public class CurrentGameManager {
 	}
 
 	/**
+	 * @return the persistenceManager
+	 */
+	public PersistenceManager getPersistenceManager() {
+		return persistenceManager;
+	}
+
+	/**
 	 * Starts the game from within the TextAdventureMaker
 	 */
 	public void playGame() {
+		// Be sure to commit the latest changes
+		persistenceManager.updateChanges();
+
 		LoadSaveManager.main(new String[] { gameName });
 	}
 

@@ -3,17 +3,16 @@ package gui.view;
 import java.io.File;
 import java.io.IOException;
 
-import gui.MainWindow;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import logic.CurrentGameManager;
@@ -47,7 +46,7 @@ public class MainWindowController {
 
 	@FXML
 	private VBox centerPane;
-	
+
 	@FXML
 	private BorderPane borderPane;
 
@@ -80,16 +79,33 @@ public class MainWindowController {
 		this.window = window;
 	}
 
+	/**
+	 * Load the view given by the fxml into the center of the main windo's
+	 * border pane. With that fxml must be associated a controller implementing
+	 * {@link GameDataController}.
+	 * 
+	 * @param fxml
+	 *            The fxml file to load
+	 */
 	public void setCenterContent(String fxml) {
-		System.out.println(borderPane);
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainWindowController.class.getResource(fxml));
+			
 
-			//centerPane.getChildren().clear();
-			//centerPane.getChildren().add(loader.load());
-			borderPane.setCenter(loader.load());
+			GameDataController controller = new GameDetailsController();
+			// Pass the currentGameManager to the controller
+			controller.setCurrentGameManager(currentGameManager);
+			
+			// Set the controller for the fxml
+			loader.setController(controller);
+			
+			// Load the view
+			Node node = loader.load();
+			
+
+			borderPane.setCenter(node);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
