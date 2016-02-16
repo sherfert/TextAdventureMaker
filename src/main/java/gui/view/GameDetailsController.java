@@ -4,6 +4,8 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
 import gui.utility.StringVerification;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
@@ -20,7 +22,7 @@ public class GameDetailsController extends GameDataController {
 
 	public static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty";
 	public static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters";
-	
+
 	public static final int MIN_OPTION_LINES = 3;
 	public static final int MAX_OPTION_LINES = 3;
 
@@ -119,7 +121,7 @@ public class GameDetailsController extends GameDataController {
 		inventoryHelpTextField.setText(game.getInventoryHelpText());
 		helpHelpTextField.setText(game.getHelpHelpText());
 		exitHelpTextField.setText(game.getExitCommandHelpText());
-		
+
 		useWithSuccessTextField.setText(game.getUsedWithText());
 		takeSuccessTextField.setText(game.getTakenText());
 		useSuccessTextField.setText(game.getUsedText());
@@ -139,15 +141,25 @@ public class GameDetailsController extends GameDataController {
 		noValidCommandTextField.setText(game.getNoCommandText());
 		notSensibleCommandTextField.setText(game.getInvalidCommandText());
 		
-		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES, MAX_OPTION_LINES, game.getNumberOfOptionLines());
+		// TODO commands
+
+		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES,
+				MAX_OPTION_LINES, game.getNumberOfOptionLines());
 		optionLinesSpinner.setValueFactory(svf);
-//		successfulFGColorPicker
-//		successfulBGColorPicker
-//		neutralFGColorPicker
-//		neutralBGColorPicker
-//		failureFGColorPicker
-//		failureBGColorPicker
-		// TODO Console properties
+		
+		ObservableList<Color> colors = FXCollections.observableArrayList(Color.values());
+		successfulFGColorPicker.setItems(colors);
+		successfulFGColorPicker.setValue(game.getSuccessfullFgColor());
+		successfulBGColorPicker.setItems(colors);
+		successfulBGColorPicker.setValue(game.getSuccessfullBgColor());
+		neutralFGColorPicker.setItems(colors);
+		neutralFGColorPicker.setValue(game.getNeutralFgColor());
+		neutralBGColorPicker.setItems(colors);
+		neutralBGColorPicker.setValue(game.getNeutralBgColor());
+		failureFGColorPicker.setItems(colors);
+		failureFGColorPicker.setValue(game.getFailedFgColor());
+		failureBGColorPicker.setItems(colors);
+		failureBGColorPicker.setValue(game.getFailedBgColor());
 
 		// Register change listeners on the fields that update the game
 		// accordingly
@@ -165,7 +177,7 @@ public class GameDetailsController extends GameDataController {
 		inventoryHelpTextField.textProperty().addListener((f, o, n) -> game.setInventoryHelpText(n));
 		helpHelpTextField.textProperty().addListener((f, o, n) -> game.setHelpHelpText(n));
 		exitHelpTextField.textProperty().addListener((f, o, n) -> game.setExitCommandHelpText(n));
-		
+
 		// XXX placeholder checking
 		useWithSuccessTextField.textProperty().addListener((f, o, n) -> game.setUsedWithText(n));
 		takeSuccessTextField.textProperty().addListener((f, o, n) -> game.setTakenText(n));
@@ -185,8 +197,14 @@ public class GameDetailsController extends GameDataController {
 		noSuchWayTextField.textProperty().addListener((f, o, n) -> game.setNoSuchWayText(n));
 		noValidCommandTextField.textProperty().addListener((f, o, n) -> game.setNoCommandText(n));
 		notSensibleCommandTextField.textProperty().addListener((f, o, n) -> game.setInvalidCommandText(n));
-		
+
 		optionLinesSpinner.valueProperty().addListener((f, o, n) -> game.setNumberOfOptionLines(n));
+		successfulFGColorPicker.valueProperty().addListener((f, o, n) -> game.setSuccessfullFgColor(n));
+		successfulBGColorPicker.valueProperty().addListener((f, o, n) -> game.setSuccessfullBgColor(n));
+		neutralFGColorPicker.valueProperty().addListener((f, o, n) -> game.setNeutralFgColor(n));
+		neutralBGColorPicker.valueProperty().addListener((f, o, n) -> game.setNeutralBgColor(n));
+		failureFGColorPicker.valueProperty().addListener((f, o, n) -> game.setFailedFgColor(n));
+		failureBGColorPicker.valueProperty().addListener((f, o, n) -> game.setFailedBgColor(n));
 	}
 
 	/**
