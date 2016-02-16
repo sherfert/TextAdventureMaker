@@ -224,7 +224,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="useWithFailureTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -236,7 +236,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Move somewhere" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="moveFailureTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -245,7 +245,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="takeFailureTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -254,7 +254,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="useFailureTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -263,7 +263,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Talk to someone" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="talkFailureTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -277,7 +277,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="No such item" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="noSuchItemTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -286,7 +286,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="No such inventory item" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="noSuchInventoryItemTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -295,7 +295,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="No such person" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="noSuchPersonTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -304,7 +304,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="No such way" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="noSuchWayTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -318,7 +318,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="No valid command" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="noValidCommandTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -327,7 +327,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Not sensible command" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="notSensibleCommandTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -445,7 +445,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="25.0" prefWidth="250.0" text="Number of option lines" />
-                        <Spinner HBox.hgrow="ALWAYS" />
+                        <Spinner fx:id="optionLinesSpinner" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -457,7 +457,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Successful foreground color" />
-                        <ComboBox prefWidth="150.0" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="successfulFGColorPicker" prefWidth="150.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -466,7 +466,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Successful background color" />
-                        <ComboBox prefWidth="150.0" />
+                        <ComboBox fx:id="successfulBGColorPicker" prefWidth="150.0" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -475,7 +475,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Neutral foreground color" />
-                        <ComboBox prefWidth="150.0" />
+                        <ComboBox fx:id="neutralFGColorPicker" prefWidth="150.0" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -484,7 +484,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Neutral background color" />
-                        <ComboBox prefWidth="150.0" />
+                        <ComboBox fx:id="neutralBGColorPicker" prefWidth="150.0" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -493,7 +493,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Failure foreground color" />
-                        <ComboBox prefWidth="150.0" />
+                        <ComboBox fx:id="failureFGColorPicker" prefWidth="150.0" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -502,7 +502,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Failure background color" />
-                        <ComboBox prefWidth="150.0" />
+                        <ComboBox fx:id="failureBGColorPicker" prefWidth="150.0" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />

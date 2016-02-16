@@ -39,6 +39,8 @@ import data.action.RemoveInventoryItemAction;
  * 
  * TODO Default new game
  * 
+ * TODO no logging to console
+ * 
  * TODO sound support (optional)
  * 
  * @author Satia

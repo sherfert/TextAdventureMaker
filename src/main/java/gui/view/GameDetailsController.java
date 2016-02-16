@@ -1,8 +1,13 @@
 package gui.view;
 
+import com.googlecode.lanterna.terminal.Terminal.Color;
+
 import data.Game;
 import gui.utility.StringVerification;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -15,6 +20,9 @@ public class GameDetailsController extends GameDataController {
 
 	public static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty";
 	public static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters";
+	
+	public static final int MIN_OPTION_LINES = 3;
+	public static final int MAX_OPTION_LINES = 3;
 
 	/** The Game **/
 	private Game game;
@@ -55,6 +63,42 @@ public class GameDetailsController extends GameDataController {
 	private TextField emptyInvSuccessTextField;
 	@FXML
 	private TextField invSuccessTextField;
+	@FXML
+	private TextField useWithFailureTextField;
+	@FXML
+	private TextField moveFailureTextField;
+	@FXML
+	private TextField takeFailureTextField;
+	@FXML
+	private TextField useFailureTextField;
+	@FXML
+	private TextField talkFailureTextField;
+	@FXML
+	private TextField noSuchItemTextField;
+	@FXML
+	private TextField noSuchInventoryItemTextField;
+	@FXML
+	private TextField noSuchPersonTextField;
+	@FXML
+	private TextField noSuchWayTextField;
+	@FXML
+	private TextField noValidCommandTextField;
+	@FXML
+	private TextField notSensibleCommandTextField;
+	@FXML
+	private Spinner<Integer> optionLinesSpinner;
+	@FXML
+	private ComboBox<Color> successfulFGColorPicker;
+	@FXML
+	private ComboBox<Color> successfulBGColorPicker;
+	@FXML
+	private ComboBox<Color> neutralFGColorPicker;
+	@FXML
+	private ComboBox<Color> neutralBGColorPicker;
+	@FXML
+	private ComboBox<Color> failureFGColorPicker;
+	@FXML
+	private ComboBox<Color> failureBGColorPicker;
 
 	@FXML
 	private void initialize() {
@@ -82,8 +126,28 @@ public class GameDetailsController extends GameDataController {
 		inspectSuccessTextField.setText(game.getInspectionDefaultText());
 		emptyInvSuccessTextField.setText(game.getInventoryEmptyText());
 		invSuccessTextField.setText(game.getInventoryText());
+
+		useWithFailureTextField.setText(game.getNotUsableWithText());
+		moveFailureTextField.setText(game.getNotTravelableText());
+		takeFailureTextField.setText(game.getNotTakeableText());
+		useFailureTextField.setText(game.getNotUsableText());
+		talkFailureTextField.setText(game.getNotTalkingToEnabledText());
+		noSuchItemTextField.setText(game.getNoSuchItemText());
+		noSuchInventoryItemTextField.setText(game.getNoSuchInventoryItemText());
+		noSuchPersonTextField.setText(game.getNoSuchPersonText());
+		noSuchWayTextField.setText(game.getNoSuchWayText());
+		noValidCommandTextField.setText(game.getNoCommandText());
+		notSensibleCommandTextField.setText(game.getInvalidCommandText());
 		
-		// TODO Rest
+		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES, MAX_OPTION_LINES, game.getNumberOfOptionLines());
+		optionLinesSpinner.setValueFactory(svf);
+//		successfulFGColorPicker
+//		successfulBGColorPicker
+//		neutralFGColorPicker
+//		neutralBGColorPicker
+//		failureFGColorPicker
+//		failureBGColorPicker
+		// TODO Console properties
 
 		// Register change listeners on the fields that update the game
 		// accordingly
@@ -109,6 +173,20 @@ public class GameDetailsController extends GameDataController {
 		inspectSuccessTextField.textProperty().addListener((f, o, n) -> game.setInspectionDefaultText(n));
 		emptyInvSuccessTextField.textProperty().addListener((f, o, n) -> game.setInventoryEmptyText(n));
 		invSuccessTextField.textProperty().addListener((f, o, n) -> game.setInventoryText(n));
+
+		useWithFailureTextField.textProperty().addListener((f, o, n) -> game.setNotUsableWithText(n));
+		moveFailureTextField.textProperty().addListener((f, o, n) -> game.setNotTravelableText(n));
+		takeFailureTextField.textProperty().addListener((f, o, n) -> game.setNotTakeableText(n));
+		useFailureTextField.textProperty().addListener((f, o, n) -> game.setNotUsableText(n));
+		talkFailureTextField.textProperty().addListener((f, o, n) -> game.setNotTalkingToEnabledText(n));
+		noSuchItemTextField.textProperty().addListener((f, o, n) -> game.setNoSuchItemText(n));
+		noSuchInventoryItemTextField.textProperty().addListener((f, o, n) -> game.setNoSuchInventoryItemText(n));
+		noSuchPersonTextField.textProperty().addListener((f, o, n) -> game.setNoSuchPersonText(n));
+		noSuchWayTextField.textProperty().addListener((f, o, n) -> game.setNoSuchWayText(n));
+		noValidCommandTextField.textProperty().addListener((f, o, n) -> game.setNoCommandText(n));
+		notSensibleCommandTextField.textProperty().addListener((f, o, n) -> game.setInvalidCommandText(n));
+		
+		optionLinesSpinner.valueProperty().addListener((f, o, n) -> game.setNumberOfOptionLines(n));
 	}
 
 	/**

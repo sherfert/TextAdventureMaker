@@ -321,15 +321,18 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	public void enterOptionMode(OptionIOManager optionIOManager, List<String> options) {
 		this.optionIOManager = optionIOManager;
 
-		int numLines = optionIOManager.getNumberOfOptionLines();
+
+		int cols = screen.getTerminalSize().getColumns();
+		int rows = screen.getTerminalSize().getRows();
+
+		// The options should never cover more than half the screen!
+		int numLines = Math.min(optionIOManager.getNumberOfOptionLines(), rows / 2);
 
 		// Resize text area by cutting the last lines
 		this.defaultTextArea.setNewDimensions(0, screen.getTerminalSize().getColumns(), 0,
 				screen.getTerminalSize().getRows() - numLines);
 		// Use the last lines to display options
-		this.optionChoser = new LanternaScreenOptionChooser(screen, options, this, 0,
-				screen.getTerminalSize().getColumns(), screen.getTerminalSize().getRows() - numLines,
-				screen.getTerminalSize().getRows());
+		this.optionChoser = new LanternaScreenOptionChooser(screen, options, this, 0, cols, rows - numLines, rows);
 
 		// Refresh
 		this.screen.refresh();
