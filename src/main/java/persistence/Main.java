@@ -35,6 +35,9 @@ import data.action.RemoveInventoryItemAction;
  * General TODOs:
  * 
  * TODO GUI
+ * TODO Tooltips everywhere!
+ * 
+ * TODO Default new game
  * 
  * TODO sound support (optional)
  * 

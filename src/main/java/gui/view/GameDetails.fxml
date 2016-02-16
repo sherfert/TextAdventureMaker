@@ -53,7 +53,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="useWithHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets />
@@ -65,7 +65,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Move somewhere" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="moveHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -74,7 +74,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="takeHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -83,7 +83,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="useHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -92,7 +92,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Talk to someone" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="talkHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -101,7 +101,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Look around" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="lookAroundHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -110,7 +110,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Inspect something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="inspectHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -119,7 +119,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Inventory" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="inventoryHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -128,7 +128,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Display help" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="helpHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -137,7 +137,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Exit game" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="exitHelpTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -154,7 +154,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="useWithSuccessTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -166,7 +166,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="takeSuccessTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -175,7 +175,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="useSuccessTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -184,7 +184,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Inspect something" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="inspectSuccessTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -198,7 +198,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Empty inventory" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="emptyInvSuccessTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -207,7 +207,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Non-empty inventory" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="invSuccessTextField" prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />

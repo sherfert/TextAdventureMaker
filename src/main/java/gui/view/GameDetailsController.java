@@ -21,28 +21,94 @@ public class GameDetailsController extends GameDataController {
 
 	@FXML
 	private TextField gameTitleField;
-
 	@FXML
 	private TextArea startingTextField;
+	@FXML
+	private TextField useWithHelpTextField;
+	@FXML
+	private TextField moveHelpTextField;
+	@FXML
+	private TextField takeHelpTextField;
+	@FXML
+	private TextField useHelpTextField;
+	@FXML
+	private TextField talkHelpTextField;
+	@FXML
+	private TextField lookAroundHelpTextField;
+	@FXML
+	private TextField inspectHelpTextField;
+	@FXML
+	private TextField inventoryHelpTextField;
+	@FXML
+	private TextField helpHelpTextField;
+	@FXML
+	private TextField exitHelpTextField;
+	@FXML
+	private TextField useWithSuccessTextField;
+	@FXML
+	private TextField takeSuccessTextField;
+	@FXML
+	private TextField useSuccessTextField;
+	@FXML
+	private TextField inspectSuccessTextField;
+	@FXML
+	private TextField emptyInvSuccessTextField;
+	@FXML
+	private TextField invSuccessTextField;
 
 	@FXML
 	private void initialize() {
 		// Obtain the game
-		this.game = currentGameManager.getPersistenceManager().getGameManager().getGame();
+		game = currentGameManager.getPersistenceManager().getGameManager().getGame();
 		// Set all GUI fields accordingly
-		this.gameTitleField.setText(game.getGameTitle());
-		this.startingTextField.setText(game.getStartText());
-		// TODO the others
+		gameTitleField.setText(game.getGameTitle());
+		startingTextField.setText(game.getStartText());
+		// TODO the starting location
+
+		useWithHelpTextField.setText(game.getUseWithCombineHelpText());
+		moveHelpTextField.setText(game.getMoveHelpText());
+		takeHelpTextField.setText(game.getTakeHelpText());
+		useHelpTextField.setText(game.getUseHelpText());
+		talkHelpTextField.setText(game.getTalkToHelpText());
+		lookAroundHelpTextField.setText(game.getLookAroundHelpText());
+		inspectHelpTextField.setText(game.getInspectHelpText());
+		inventoryHelpTextField.setText(game.getInventoryHelpText());
+		helpHelpTextField.setText(game.getHelpHelpText());
+		exitHelpTextField.setText(game.getExitCommandHelpText());
+		
+		useWithSuccessTextField.setText(game.getUsedWithText());
+		takeSuccessTextField.setText(game.getTakenText());
+		useSuccessTextField.setText(game.getUsedText());
+		inspectSuccessTextField.setText(game.getInspectionDefaultText());
+		emptyInvSuccessTextField.setText(game.getInventoryEmptyText());
+		invSuccessTextField.setText(game.getInventoryText());
+		
+		// TODO Rest
 
 		// Register change listeners on the fields that update the game
 		// accordingly
-		this.gameTitleField.textProperty().addListener((observable, oldValue, newValue) -> {
-			updateGameTitle(newValue);
-		});
+		gameTitleField.textProperty().addListener((f, o, n) -> updateGameTitle(n));
+		startingTextField.textProperty().addListener((f, o, n) -> game.setStartText(n));
 
-		this.startingTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-			this.game.setStartText(newValue);
-		});
+		// XXX Warnings for empty fields
+		useWithHelpTextField.textProperty().addListener((f, o, n) -> game.setUseWithCombineHelpText(n));
+		moveHelpTextField.textProperty().addListener((f, o, n) -> game.setMoveHelpText(n));
+		takeHelpTextField.textProperty().addListener((f, o, n) -> game.setTakeHelpText(n));
+		useHelpTextField.textProperty().addListener((f, o, n) -> game.setUseHelpText(n));
+		talkHelpTextField.textProperty().addListener((f, o, n) -> game.setTalkToHelpText(n));
+		lookAroundHelpTextField.textProperty().addListener((f, o, n) -> game.setLookAroundHelpText(n));
+		inspectHelpTextField.textProperty().addListener((f, o, n) -> game.setInspectHelpText(n));
+		inventoryHelpTextField.textProperty().addListener((f, o, n) -> game.setInventoryHelpText(n));
+		helpHelpTextField.textProperty().addListener((f, o, n) -> game.setHelpHelpText(n));
+		exitHelpTextField.textProperty().addListener((f, o, n) -> game.setExitCommandHelpText(n));
+		
+		// XXX placeholder checking
+		useWithSuccessTextField.textProperty().addListener((f, o, n) -> game.setUsedWithText(n));
+		takeSuccessTextField.textProperty().addListener((f, o, n) -> game.setTakenText(n));
+		useSuccessTextField.textProperty().addListener((f, o, n) -> game.setUsedText(n));
+		inspectSuccessTextField.textProperty().addListener((f, o, n) -> game.setInspectionDefaultText(n));
+		emptyInvSuccessTextField.textProperty().addListener((f, o, n) -> game.setInventoryEmptyText(n));
+		invSuccessTextField.textProperty().addListener((f, o, n) -> game.setInventoryText(n));
 	}
 
 	/**
