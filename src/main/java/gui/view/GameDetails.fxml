@@ -344,7 +344,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something with something else" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="useWithCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -356,7 +356,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Move somewhere" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="moveCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -365,7 +365,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Take something" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="takeCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -374,7 +374,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Use something" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="useCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -383,7 +383,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Talk to someone" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="talkCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -392,7 +392,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Look around" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="lookAroundCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -401,7 +401,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Inspect something" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="inspectCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -410,7 +410,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Inventory" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="inventoryCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -419,7 +419,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Display help" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="helpCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />
@@ -428,7 +428,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Exit game" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="exitCommandsTextField" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />

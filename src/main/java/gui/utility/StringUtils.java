@@ -3,12 +3,12 @@ package gui.utility;
 import java.util.regex.Pattern;
 
 /**
- * This class can be used to verify certain properties of Strings.
+ * This class can be used to work with Strings
  * 
  * @author Satia
  *
  */
-public class StringVerification {
+public class StringUtils {
 
 	/**
 	 * A pattern matching any characters illegal in filenames

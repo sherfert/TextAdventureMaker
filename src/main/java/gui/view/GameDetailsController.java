@@ -1,9 +1,13 @@
 package gui.view;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
-import gui.utility.StringVerification;
+import gui.utility.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +16,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import utility.CommandRegExConverter;
 
 /**
  * Controller for the game details view.
@@ -88,6 +93,26 @@ public class GameDetailsController extends GameDataController {
 	@FXML
 	private TextField notSensibleCommandTextField;
 	@FXML
+	private TextArea useWithCommandsTextField;
+	@FXML
+	private TextArea moveCommandsTextField;
+	@FXML
+	private TextArea takeCommandsTextField;
+	@FXML
+	private TextArea useCommandsTextField;
+	@FXML
+	private TextArea talkCommandsTextField;
+	@FXML
+	private TextArea lookAroundCommandsTextField;
+	@FXML
+	private TextArea inspectCommandsTextField;
+	@FXML
+	private TextArea inventoryCommandsTextField;
+	@FXML
+	private TextArea helpCommandsTextField;
+	@FXML
+	private TextArea exitCommandsTextField;
+	@FXML
 	private Spinner<Integer> optionLinesSpinner;
 	@FXML
 	private ComboBox<Color> successfulFGColorPicker;
@@ -140,13 +165,22 @@ public class GameDetailsController extends GameDataController {
 		noSuchWayTextField.setText(game.getNoSuchWayText());
 		noValidCommandTextField.setText(game.getNoCommandText());
 		notSensibleCommandTextField.setText(game.getInvalidCommandText());
-		
-		// TODO commands
+
+		useWithCommandsTextField.setText(getCommandString(game.getUseWithCombineCommands()));
+		moveCommandsTextField.setText(getCommandString(game.getMoveCommands()));
+		takeCommandsTextField.setText(getCommandString(game.getTakeCommands()));
+		useCommandsTextField.setText(getCommandString(game.getUseCommands()));
+		talkCommandsTextField.setText(getCommandString(game.getTalkToCommands()));
+		lookAroundCommandsTextField.setText(getCommandString(game.getLookAroundCommands()));
+		inspectCommandsTextField.setText(getCommandString(game.getInspectCommands()));
+		inventoryCommandsTextField.setText(getCommandString(game.getInventoryCommands()));
+		helpCommandsTextField.setText(getCommandString(game.getHelpCommands()));
+		exitCommandsTextField.setText(getCommandString(game.getExitCommands()));
 
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES,
 				MAX_OPTION_LINES, game.getNumberOfOptionLines());
 		optionLinesSpinner.setValueFactory(svf);
-		
+
 		ObservableList<Color> colors = FXCollections.observableArrayList(Color.values());
 		successfulFGColorPicker.setItems(colors);
 		successfulFGColorPicker.setValue(game.getSuccessfullFgColor());
@@ -197,6 +231,8 @@ public class GameDetailsController extends GameDataController {
 		noSuchWayTextField.textProperty().addListener((f, o, n) -> game.setNoSuchWayText(n));
 		noValidCommandTextField.textProperty().addListener((f, o, n) -> game.setNoCommandText(n));
 		notSensibleCommandTextField.textProperty().addListener((f, o, n) -> game.setInvalidCommandText(n));
+		
+		// TODO commands
 
 		optionLinesSpinner.valueProperty().addListener((f, o, n) -> game.setNumberOfOptionLines(n));
 		successfulFGColorPicker.valueProperty().addListener((f, o, n) -> game.setSuccessfullFgColor(n));
@@ -214,16 +250,26 @@ public class GameDetailsController extends GameDataController {
 	 * @param newTitle
 	 *            the new title
 	 */
-	public void updateGameTitle(String newTitle) {
+	private void updateGameTitle(String newTitle) {
 		if (newTitle.isEmpty()) {
 			showError(gameTitleField, GAME_TITLE_EMPTY_TOOLTIP);
-		} else if (StringVerification.isUnsafeFileName(newTitle)) {
+		} else if (StringUtils.isUnsafeFileName(newTitle)) {
 			showError(gameTitleField, GAME_TITLE_CHARS_TOOLTIP);
 		} else {
 			hideError(gameTitleField);
 			// Set the value in the game
 			game.setGameTitle(newTitle);
 		}
+	}
+
+	private static String getCommandString(List<String> commands) {
+		// Assure no lazy loading DB list is used, therefore copy to a new list
+		// The DB lists are incompatible with streams
+		
+		// Iterate through the list and
+		// convert the RegEx to a more readable form
+		return new ArrayList<String>(commands).stream().map(CommandRegExConverter::convertRegExToString)
+				.collect(Collectors.joining("\n"));
 	}
 
 }
