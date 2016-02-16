@@ -18,6 +18,11 @@ import javafx.stage.Window;
 import logic.CurrentGameManager;
 import logic.JARCreator;
 
+/**
+ * Controller for the main window.
+ * 
+ * @author Satia
+ */
 public class MainWindowController {
 
 	/** The window of this controller. */
@@ -92,23 +97,32 @@ public class MainWindowController {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainWindowController.class.getResource(fxml));
-			
 
+			// FIXME fixed controller class
 			GameDataController controller = new GameDetailsController();
-			// Pass the currentGameManager to the controller
-			controller.setCurrentGameManager(currentGameManager);
-			
+			initializeGamaDataController(controller);
+
 			// Set the controller for the fxml
 			loader.setController(controller);
-			
+
 			// Load the view
 			Node node = loader.load();
-			
 
 			borderPane.setCenter(node);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Initializes a {@link GameDataContoller} with the current game manager.
+	 * 
+	 * @param controller
+	 *            the controller
+	 */
+	private void initializeGamaDataController(GameDataController controller) {
+		// Pass the currentGameManager to the controller
+		controller.setCurrentGameManager(currentGameManager);
 	}
 
 	/**

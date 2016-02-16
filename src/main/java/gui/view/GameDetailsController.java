@@ -1,18 +1,20 @@
 package gui.view;
 
 import data.Game;
+import gui.utility.StringVerification;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import logic.CurrentGameManager;
 
-public class GameDetailsController implements GameDataController {
-	
+/**
+ * Controller for the game details view.
+ * 
+ * @author Satia
+ */
+public class GameDetailsController extends GameDataController {
+
 	public static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty";
-
-	/** The current game manager. */
-	private CurrentGameManager currentGameManager;
+	public static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters";
 
 	/** The Game **/
 	private Game game;
@@ -22,9 +24,6 @@ public class GameDetailsController implements GameDataController {
 
 	@FXML
 	private TextArea startingTextField;
-
-	public GameDetailsController() {
-	}
 
 	@FXML
 	private void initialize() {
@@ -46,31 +45,23 @@ public class GameDetailsController implements GameDataController {
 		});
 	}
 
-	@Override
-	public void setCurrentGameManager(CurrentGameManager currentGameManager) {
-		this.currentGameManager = currentGameManager;
-	}
-
 	/**
 	 * Validates the game title before actually propagating it to the game. Must
 	 * not be empty, must not contain any characters forbidden in filenames.
 	 * 
 	 * @param newTitle
+	 *            the new title
 	 */
 	public void updateGameTitle(String newTitle) {
-		// TODO forbidden characters
-		if(newTitle.isEmpty()) {
-			// TODO apply some css to the text field for light red BG
-			// Add tooltip to the text field
-			Tooltip tooltip = new Tooltip(GAME_TITLE_EMPTY_TOOLTIP);
-			// TODO show tooltip immediately
-			gameTitleField.setTooltip(tooltip);
+		if (newTitle.isEmpty()) {
+			showError(gameTitleField, GAME_TITLE_EMPTY_TOOLTIP);
+		} else if (StringVerification.isUnsafeFileName(newTitle)) {
+			showError(gameTitleField, GAME_TITLE_CHARS_TOOLTIP);
 		} else {
-			// Unset any tooltip message
-			gameTitleField.setTooltip(null);  
-			
+			hideError(gameTitleField);
 			// Set the value in the game
 			game.setGameTitle(newTitle);
 		}
 	}
+
 }

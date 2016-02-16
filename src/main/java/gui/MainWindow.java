@@ -41,6 +41,7 @@ public class MainWindow extends Application {
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
+			// Apply application wide css to the whole scene
 			scene.getStylesheets().add(getClass().getResource("view/application.css").toExternalForm());
 			
 			primaryStage.setScene(scene);
