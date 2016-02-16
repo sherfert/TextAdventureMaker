@@ -2,6 +2,8 @@ package gui.view;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -85,21 +87,21 @@ public class MainWindowController {
 	}
 
 	/**
-	 * Load the view given by the fxml into the center of the main windo's
+	 * Load the view given by the fxml into the center of the main window's
 	 * border pane. With that fxml must be associated a controller implementing
 	 * {@link GameDataController}.
 	 * 
 	 * @param fxml
 	 *            The fxml file to load
+	 * @param the
+	 *            controller
 	 */
-	public void setCenterContent(String fxml) {
+	public void setCenterContent(String fxml, GameDataController controller) {
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainWindowController.class.getResource(fxml));
 
-			// FIXME fixed controller class
-			GameDataController controller = new GameDetailsController();
 			initializeGamaDataController(controller);
 
 			// Set the controller for the fxml
@@ -110,7 +112,8 @@ public class MainWindowController {
 
 			borderPane.setCenter(node);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Could not set the main window's center content.", e);
 		}
 	}
 
@@ -154,7 +157,7 @@ public class MainWindowController {
 			gameMenu.setDisable(false);
 
 			// Load the game details in the center of the window
-			setCenterContent("GameDetails.fxml");
+			setCenterContent("GameDetails.fxml", new GameDetailsController());
 		}
 	}
 

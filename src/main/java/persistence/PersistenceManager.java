@@ -113,8 +113,10 @@ public class PersistenceManager {
 	 * data.
 	 */
 	public void updateChanges() {
-		entityManager.getTransaction().begin();
-		entityManager.getTransaction().commit();
+		if (entityManager != null) {
+			entityManager.getTransaction().begin();
+			entityManager.getTransaction().commit();
+		}
 	}
 
 	/**
