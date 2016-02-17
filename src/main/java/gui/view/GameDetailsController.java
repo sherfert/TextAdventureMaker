@@ -1,12 +1,5 @@
 package gui.view;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
@@ -19,7 +12,6 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import utility.CommandRegExConverter;
 
 /**
  * Controller for the game details view.
@@ -28,19 +20,10 @@ import utility.CommandRegExConverter;
  */
 public class GameDetailsController extends GameDataController {
 
-	public static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty";
-	public static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters";
-	public static final String COMMAND_MULTI_WHITESPACE = "A command must not have mutiple white spaces";
-	public static final String COMMAND_WHITESPACE_BEGINNING_END = "A command must not have white space in the beginning or end";
-	public static final String COMMAND_INVALID_CHAR = "Only lowercase letters a-z and the space character are allowed.\n"
-			+ "(Except for the characters '[' and ']' and the sequences '<A>' and '<B>')";
-	public static final String COMMAND_NO_WORD = "A command must contain at least one word";
-	public static final String COMMAND_UNMATCHING_BRACKETS = "Brackets must be matching and only contain a-z or space characters";
-	public static final String COMMAND_PARAM_WRONG_NOT_ONE = "The parameter %s is expected to occur exactly once";
-	public static final String COMMAND_PARAM_WRONG_NOT_ZERO = "The parameter %s is notsupported for this command";
-
-	public static final int MIN_OPTION_LINES = 3;
-	public static final int MAX_OPTION_LINES = 3;
+	private static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty";
+	private static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters";
+	private static final int MIN_OPTION_LINES = 3;
+	private static final int MAX_OPTION_LINES = 3;
 
 	/** The Game **/
 	private Game game;
@@ -243,8 +226,26 @@ public class GameDetailsController extends GameDataController {
 		noValidCommandTextField.textProperty().addListener((f, o, n) -> game.setNoCommandText(n));
 		notSensibleCommandTextField.textProperty().addListener((f, o, n) -> game.setInvalidCommandText(n));
 
-		// TODO commands
-		useWithCommandsTextField.textProperty().addListener((f, o, n) -> updateGameCommands(n));
+		useWithCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 2, useWithCommandsTextField, game::setUseWithCombineCommands));
+		moveCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, moveCommandsTextField, game::setMoveCommands));
+		takeCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, takeCommandsTextField, game::setTakeCommands));
+		useCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, useCommandsTextField, game::setUseCommands));
+		talkCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, talkCommandsTextField, game::setTalkToCommands));
+		lookAroundCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 0, lookAroundCommandsTextField, game::setLookAroundCommands));
+		inspectCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, inspectCommandsTextField, game::setInspectCommands));
+		inventoryCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 0, inventoryCommandsTextField, game::setInventoryCommands));
+		helpCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 0, helpCommandsTextField, game::setHelpCommands));
+		exitCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 0, exitCommandsTextField, game::setExitCommands));
 
 		optionLinesSpinner.valueProperty().addListener((f, o, n) -> game.setNumberOfOptionLines(n));
 		successfulFGColorPicker.valueProperty().addListener((f, o, n) -> game.setSuccessfullFgColor(n));
@@ -273,109 +274,4 @@ public class GameDetailsController extends GameDataController {
 			game.setGameTitle(newTitle);
 		}
 	}
-
-	private static String getCommandString(List<String> commands) {
-		// Assure no lazy loading DB list is used, therefore copy to a new list
-		// The DB lists are incompatible with streams
-
-		// Iterate through the list and
-		// convert the RegEx to a more readable form
-		return new ArrayList<String>(commands).stream().map(CommandRegExConverter::convertRegExToString)
-				.collect(Collectors.joining("\n"));
-	}
-
-	// TODO Flexible
-	private void updateGameCommands(String commandsText) {
-		Pattern MULTIPLE_BLANKS = Pattern.compile("\\p{Blank}{2,}");
-		Pattern BLANKS_BEGINNING_END = Pattern.compile("(^\\p{Blank})|(\\p{Blank}$)");
-		Pattern VALID_SEQS = Pattern.compile("(([a-z])|[\\[\\] ]|(<(A|B)>))*");
-		Pattern CHAR = Pattern.compile("([a-z])");
-		
-		int paramNum = 2;
-
-		String[] lines = commandsText.split("\\n");
-		if (Arrays.stream(lines).anyMatch((s) -> MULTIPLE_BLANKS.matcher(s).find())) {
-			showError(useWithCommandsTextField, COMMAND_MULTI_WHITESPACE);
-		} else if (Arrays.stream(lines).anyMatch((s) -> BLANKS_BEGINNING_END.matcher(s).find())) {
-			showError(useWithCommandsTextField, COMMAND_WHITESPACE_BEGINNING_END);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !VALID_SEQS.matcher(s).matches())) {
-			showError(useWithCommandsTextField, COMMAND_INVALID_CHAR);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !CHAR.matcher(s).find())) {
-			showError(useWithCommandsTextField, COMMAND_NO_WORD);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
-			showError(useWithCommandsTextField, COMMAND_UNMATCHING_BRACKETS);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
-			showError(useWithCommandsTextField, COMMAND_UNMATCHING_BRACKETS);
-		} else {
-			boolean errorFound = false;
-			//For each param, check if it has the right number of occurrences
-			for(int i = 0; i < 2; i++) {
-				int num = i;
-				int expectedCount = i < paramNum ? 1 : 0;
-				if (Arrays.stream(lines).anyMatch((s) -> !checkParamOccurrences(s, num, expectedCount))) {
-					errorFound = true;
-					String param = i == 0 ? "<A>" : "<B>";
-					String err = expectedCount == 0 ? COMMAND_PARAM_WRONG_NOT_ZERO : COMMAND_PARAM_WRONG_NOT_ONE;
-					showError(useWithCommandsTextField, String.format(err, param));
-					break;
-				}
-			}
-			
-			if(!errorFound) {
-				hideError(useWithCommandsTextField);
-				List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
-						.collect(Collectors.toList());
-				System.out.println(newCommands);
-
-				game.setUseWithCombineCommands(newCommands);
-			}
-		}
-	}
-	
-	private boolean checkParamOccurrences(String text, int paramNum, int expectedCount) {
-		Pattern PARAM_A = Pattern.compile("(<A>)");
-		Pattern PARAM_B = Pattern.compile("(<B>)");
-		
-		Pattern patternToFind = paramNum == 0 ? PARAM_A : PARAM_B;
-		Matcher matcher = patternToFind.matcher(text);
-		
-		int count = 0;
-		while(matcher.find()) {
-			count++;
-		}
-		
-		return count == expectedCount;
-	}
-
-	/**
-	 * Checks if a string has matching square brackets. In this context that
-	 * means only depth one of [] pairs with nothing but a-z and ' ' inside.
-	 * 
-	 * @param text
-	 *            the String to test.
-	 * @return if it has only matching brackets.
-	 */
-	private boolean hasMatchingBrackets(String text) {
-		Pattern MATCHED_BRACKETS = Pattern.compile("(\\[[a-z &&[^\\]]]*\\])");
-		Pattern OPENING_BRACKETS = Pattern.compile("(\\[)");
-		Pattern CLOSING_BRACKETS = Pattern.compile("(\\])");
-
-		Matcher matcher1 = MATCHED_BRACKETS.matcher(text);
-		Matcher matcher2 = OPENING_BRACKETS.matcher(text);
-		Matcher matcher3 = CLOSING_BRACKETS.matcher(text);
-		int count1 = 0;
-		int count2 = 0;
-		int count3 = 0;
-		while (matcher1.find()) {
-			count1++;
-		}
-		while (matcher2.find()) {
-			count2++;
-		}
-		while (matcher3.find()) {
-			count3++;
-		}
-		return count1 == count2 && count1 == count3;
-	}
-
 }
