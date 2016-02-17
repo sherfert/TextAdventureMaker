@@ -69,7 +69,7 @@ public class Game implements HasId {
 	 * All commands that make the game exit. Must be lowercase.
 	 */
 	@ElementCollection
-	private final List<String> exitCommands;
+	private List<String> exitCommands;
 
 	/**
 	 * The background color that is used for text printed after a failed action.
@@ -102,7 +102,7 @@ public class Game implements HasId {
 	 * All commands that let the player see the help. Must be lowercase.
 	 */
 	@ElementCollection
-	private final List<String> helpCommands;
+	private List<String> helpCommands;
 
 	/**
 	 * The help text being displayed for the help command
@@ -122,7 +122,7 @@ public class Game implements HasId {
 	 * Must contain at least one word and exactly one parameter for the object.
 	 */
 	@ElementCollection
-	private final List<String> inspectCommands;
+	private List<String> inspectCommands;
 
 	/**
 	 * The help text being displayed for the inspect command
@@ -151,7 +151,7 @@ public class Game implements HasId {
 	 * lowercase.
 	 */
 	@ElementCollection
-	private final List<String> inventoryCommands;
+	private List<String> inventoryCommands;
 
 	/**
 	 * The text being displayed, when the player looks into his empty inventory.
@@ -177,7 +177,7 @@ public class Game implements HasId {
 	 * All commands that let the player look around. Must be lowercase.
 	 */
 	@ElementCollection
-	private final List<String> lookAroundCommands;
+	private List<String> lookAroundCommands;
 
 	/**
 	 * The help text being displayed for the look around command
@@ -190,7 +190,7 @@ public class Game implements HasId {
 	 * exactly one parameter for the target.
 	 */
 	@ElementCollection
-	private final List<String> moveCommands;
+	private List<String> moveCommands;
 
 	/**
 	 * The help text being displayed for the move command
@@ -335,7 +335,7 @@ public class Game implements HasId {
 	 * exactly one parameter for the object.
 	 */
 	@ElementCollection
-	private final List<String> takeCommands;
+	private List<String> takeCommands;
 
 	/**
 	 * The help text being displayed for the take command
@@ -356,7 +356,7 @@ public class Game implements HasId {
 	 * contain at least one word and exactly one parameter for the person.
 	 */
 	@ElementCollection
-	private final List<String> talkToCommands;
+	private List<String> talkToCommands;
 
 	/**
 	 * The help text being displayed for the talk to command
@@ -369,7 +369,7 @@ public class Game implements HasId {
 	 * exactly one parameter for the object.
 	 */
 	@ElementCollection
-	private final List<String> useCommands;
+	private List<String> useCommands;
 
 	/**
 	 * The default text, when the player uses an object. May be overwritten for
@@ -403,7 +403,7 @@ public class Game implements HasId {
 	 * {@link HasLocation}.
 	 */
 	@ElementCollection
-	private final List<String> useWithCombineCommands;
+	private List<String> useWithCombineCommands;
 
 	/**
 	 * The help text being displayed for the use with/combine command.
@@ -563,6 +563,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the hasEnded
+	 */
+	public boolean getHasEnded() {
+		return hasEnded;
+	}
+
+	/**
 	 * @return the helpCommands
 	 */
 	public List<String> getHelpCommands() {
@@ -579,13 +586,6 @@ public class Game implements HasId {
 	@Override
 	public int getId() {
 		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	/**
@@ -876,13 +876,6 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the hasEnded
-	 */
-	public boolean getHasEnded() {
-		return hasEnded;
-	}
-
-	/**
 	 * Removes an exit command.
 	 * 
 	 * @param cmd
@@ -981,6 +974,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param exitCommands the exitCommands to set
+	 */
+	public void setExitCommands(List<String> exitCommands) {
+		this.exitCommands = exitCommands;
+	}
+
+	/**
 	 * @param failedBgColor
 	 *            the failedBgColor to set
 	 */
@@ -1013,11 +1013,32 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param helpCommands the helpCommands to set
+	 */
+	public void setHelpCommands(List<String> helpCommands) {
+		this.helpCommands = helpCommands;
+	}
+
+	/**
 	 * @param helpHelpText
 	 *            the helpHelpText to set
 	 */
 	public void setHelpHelpText(String helpHelpText) {
 		this.helpHelpText = helpHelpText;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param inspectCommands the inspectCommands to set
+	 */
+	public void setInspectCommands(List<String> inspectCommands) {
+		this.inspectCommands = inspectCommands;
 	}
 
 	/**
@@ -1046,6 +1067,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param inventoryCommands the inventoryCommands to set
+	 */
+	public void setInventoryCommands(List<String> inventoryCommands) {
+		this.inventoryCommands = inventoryCommands;
+	}
+
+	/**
 	 * @param inventoryEmptyText
 	 *            the inventoryEmptyText to set
 	 */
@@ -1070,11 +1098,25 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param lookAroundCommands the lookAroundCommands to set
+	 */
+	public void setLookAroundCommands(List<String> lookAroundCommands) {
+		this.lookAroundCommands = lookAroundCommands;
+	}
+
+	/**
 	 * @param lookAroundHelpText
 	 *            the lookAroundHelpText to set
 	 */
 	public void setLookAroundHelpText(String lookAroundHelpText) {
 		this.lookAroundHelpText = lookAroundHelpText;
+	}
+
+	/**
+	 * @param moveCommands the moveCommands to set
+	 */
+	public void setMoveCommands(List<String> moveCommands) {
+		this.moveCommands = moveCommands;
 	}
 
 	/**
@@ -1230,6 +1272,13 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param takeCommands the takeCommands to set
+	 */
+	public void setTakeCommands(List<String> takeCommands) {
+		this.takeCommands = takeCommands;
+	}
+
+	/**
 	 * @param takeHelpText
 	 *            the takeHelpText to set
 	 */
@@ -1246,11 +1295,25 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @param talkToCommands the talkToCommands to set
+	 */
+	public void setTalkToCommands(List<String> talkToCommands) {
+		this.talkToCommands = talkToCommands;
+	}
+
+	/**
 	 * @param talkToHelpText
 	 *            the talkToHelpText to set
 	 */
 	public void setTalkToHelpText(String talkToHelpText) {
 		this.talkToHelpText = talkToHelpText;
+	}
+
+	/**
+	 * @param useCommands the useCommands to set
+	 */
+	public void setUseCommands(List<String> useCommands) {
+		this.useCommands = useCommands;
 	}
 
 	/**
@@ -1275,6 +1338,13 @@ public class Game implements HasId {
 	 */
 	public void setUseHelpText(String useHelpText) {
 		this.useHelpText = useHelpText;
+	}
+
+	/**
+	 * @param useWithCombineCommands the useWithCombineCommands to set
+	 */
+	public void setUseWithCombineCommands(List<String> useWithCombineCommands) {
+		this.useWithCombineCommands = useWithCombineCommands;
 	}
 
 	/**
