@@ -34,7 +34,10 @@ public class GameDetailsController extends GameDataController {
 	public static final String COMMAND_WHITESPACE_BEGINNING_END = "A command must not have white space in the beginning or end";
 	public static final String COMMAND_INVALID_CHAR = "Only lowercase letters a-z and the space character are allowed.\n"
 			+ "(Except for the characters '[' and ']' and the sequences '<A>' and '<B>')";
-	public static final String COMMAND_UNMATCHING_BRACKETS = "Brackets must be matching and only contain a-z or space characters.";
+	public static final String COMMAND_NO_WORD = "A command must contain at least one word";
+	public static final String COMMAND_UNMATCHING_BRACKETS = "Brackets must be matching and only contain a-z or space characters";
+	public static final String COMMAND_PARAM_WRONG_NOT_ONE = "The parameter %s is expected to occur exactly once";
+	public static final String COMMAND_PARAM_WRONG_NOT_ZERO = "The parameter %s is notsupported for this command";
 
 	public static final int MIN_OPTION_LINES = 3;
 	public static final int MAX_OPTION_LINES = 3;
@@ -281,12 +284,14 @@ public class GameDetailsController extends GameDataController {
 				.collect(Collectors.joining("\n"));
 	}
 
-	// TODO at least one word and the exactly correct parameters
 	// TODO Flexible
 	private void updateGameCommands(String commandsText) {
 		Pattern MULTIPLE_BLANKS = Pattern.compile("\\p{Blank}{2,}");
 		Pattern BLANKS_BEGINNING_END = Pattern.compile("(^\\p{Blank})|(\\p{Blank}$)");
-		Pattern VALID_SEQS = Pattern.compile("([a-z\\[\\] ]|(<(A|B)>))*");
+		Pattern VALID_SEQS = Pattern.compile("(([a-z])|[\\[\\] ]|(<(A|B)>))*");
+		Pattern CHAR = Pattern.compile("([a-z])");
+		
+		int paramNum = 2;
 
 		String[] lines = commandsText.split("\\n");
 		if (Arrays.stream(lines).anyMatch((s) -> MULTIPLE_BLANKS.matcher(s).find())) {
@@ -295,21 +300,56 @@ public class GameDetailsController extends GameDataController {
 			showError(useWithCommandsTextField, COMMAND_WHITESPACE_BEGINNING_END);
 		} else if (Arrays.stream(lines).anyMatch((s) -> !VALID_SEQS.matcher(s).matches())) {
 			showError(useWithCommandsTextField, COMMAND_INVALID_CHAR);
+		} else if (Arrays.stream(lines).anyMatch((s) -> !CHAR.matcher(s).find())) {
+			showError(useWithCommandsTextField, COMMAND_NO_WORD);
+		} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
+			showError(useWithCommandsTextField, COMMAND_UNMATCHING_BRACKETS);
 		} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
 			showError(useWithCommandsTextField, COMMAND_UNMATCHING_BRACKETS);
 		} else {
-			hideError(useWithCommandsTextField);
-			List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
-					.collect(Collectors.toList());
-			System.out.println(newCommands);
+			boolean errorFound = false;
+			//For each param, check if it has the right number of occurrences
+			for(int i = 0; i < 2; i++) {
+				int num = i;
+				int expectedCount = i < paramNum ? 1 : 0;
+				if (Arrays.stream(lines).anyMatch((s) -> !checkParamOccurrences(s, num, expectedCount))) {
+					errorFound = true;
+					String param = i == 0 ? "<A>" : "<B>";
+					String err = expectedCount == 0 ? COMMAND_PARAM_WRONG_NOT_ZERO : COMMAND_PARAM_WRONG_NOT_ONE;
+					showError(useWithCommandsTextField, String.format(err, param));
+					break;
+				}
+			}
+			
+			if(!errorFound) {
+				hideError(useWithCommandsTextField);
+				List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
+						.collect(Collectors.toList());
+				System.out.println(newCommands);
 
-			game.setUseWithCombineCommands(newCommands);
+				game.setUseWithCombineCommands(newCommands);
+			}
 		}
+	}
+	
+	private boolean checkParamOccurrences(String text, int paramNum, int expectedCount) {
+		Pattern PARAM_A = Pattern.compile("(<A>)");
+		Pattern PARAM_B = Pattern.compile("(<B>)");
+		
+		Pattern patternToFind = paramNum == 0 ? PARAM_A : PARAM_B;
+		Matcher matcher = patternToFind.matcher(text);
+		
+		int count = 0;
+		while(matcher.find()) {
+			count++;
+		}
+		
+		return count == expectedCount;
 	}
 
 	/**
 	 * Checks if a string has matching square brackets. In this context that
-	 * means only depth one of [] pairs with nothing but a-z and " " inside.
+	 * means only depth one of [] pairs with nothing but a-z and ' ' inside.
 	 * 
 	 * @param text
 	 *            the String to test.
