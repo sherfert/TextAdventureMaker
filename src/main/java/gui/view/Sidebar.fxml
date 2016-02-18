@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+
+<VBox id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" styleClass="vbox" stylesheets="@sidebar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Hyperlink fx:id="gameConfigHL" maxWidth="1.7976931348623157E308" text="Game configuration" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="locationsHL" maxWidth="1.7976931348623157E308" text="Locations" VBox.vgrow="ALWAYS" />
+   </children>
+</VBox>

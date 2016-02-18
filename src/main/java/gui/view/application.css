@@ -2,3 +2,12 @@
 .error {
 	-fx-control-inner-background: #ffb3b3;
 }
+
+.accordion {
+	-fx-box-border: transparent;
+}
+
+.vbox#sidebar {
+	-fx-border-width: 0 1px 0 0; 
+	-fx-border-color: grey;
+}

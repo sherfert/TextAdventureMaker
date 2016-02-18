@@ -98,11 +98,11 @@ public class MainWindowController {
 	 */
 	public void setCenterContent(String fxml, GameDataController controller) {
 		try {
+			initializeGamaDataController(controller);
+			
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainWindowController.class.getResource(fxml));
-
-			initializeGamaDataController(controller);
 
 			// Set the controller for the fxml
 			loader.setController(controller);
@@ -114,6 +114,31 @@ public class MainWindowController {
 		} catch (IOException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Could not set the main window's center content.", e);
+		}
+	}
+	
+	/**
+	 * Load the sidebar.
+	 */
+	public void loadSidebar() {
+		try {
+			SidebarController controller = new SidebarController();
+			
+			// Load layout from fxml file.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainWindowController.class.getResource("Sidebar.fxml"));
+			
+
+			// Set the controller for the fxml
+			loader.setController(controller);
+
+			// Load the view
+			Node node = loader.load();
+			
+			borderPane.setLeft(node);
+		} catch (IOException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Could not load the main window's sidebar", e);
 		}
 	}
 
@@ -158,6 +183,8 @@ public class MainWindowController {
 
 			// Load the game details in the center of the window
 			setCenterContent("GameDetails.fxml", new GameDetailsController());
+			// Load the side bar left
+			loadSidebar();
 		}
 	}
 
