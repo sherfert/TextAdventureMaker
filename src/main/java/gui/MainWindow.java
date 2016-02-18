@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import gui.view.MainWindowController;
-
 /**
  * Test class to have a GUI and a playing main class and different JARs.
  * 

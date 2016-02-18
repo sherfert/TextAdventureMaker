@@ -1,4 +1,4 @@
-package gui.view;
+package gui;
 
 import java.io.File;
 import java.io.IOException;
@@ -126,7 +126,7 @@ public class MainWindowController {
 			
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource("Sidebar.fxml"));
+			loader.setLocation(MainWindowController.class.getResource("view/Sidebar.fxml"));
 			
 
 			// Set the controller for the fxml
@@ -182,7 +182,7 @@ public class MainWindowController {
 			gameMenu.setDisable(false);
 
 			// Load the game details in the center of the window
-			setCenterContent("GameDetails.fxml", new GameDetailsController());
+			setCenterContent("view/GameDetails.fxml", new GameDetailsController());
 			// Load the side bar left
 			loadSidebar();
 		}
