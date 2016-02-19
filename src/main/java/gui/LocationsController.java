@@ -19,6 +19,7 @@ import logic.CurrentGameManager;
  * Controller for the locations view.
  * 
  * TODO Support to change list of items/persons/waysIn/waysOut.
+ * TODO Removing locations
  * 
  * @author Satia
  *

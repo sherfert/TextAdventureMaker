@@ -6,10 +6,18 @@ import data.interfaces.Combinable;
 import data.interfaces.HasId;
 import data.interfaces.HasLocation;
 import data.interfaces.UsableWithHasLocation;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -20,6 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 /**
  * A game that can be played. Contains all configuration and (default) texts.
@@ -50,6 +59,7 @@ import javax.persistence.OneToOne;
  * @author Satia
  */
 @Entity
+@Access(AccessType.FIELD)
 public class Game implements HasId {
 	/*
 	 * Thoughts on sets instead of lists: Pro: Use Sets instead of Lists, where
@@ -62,8 +72,8 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the exit command
 	 */
-	@Column(nullable = false)
-	private String exitCommandHelpText;
+	@Transient
+	private final StringProperty exitCommandHelpText;
 
 	/**
 	 * All commands that make the game exit. Must be lowercase.
@@ -74,16 +84,14 @@ public class Game implements HasId {
 	/**
 	 * The background color that is used for text printed after a failed action.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color failedBgColor;
+	@Transient
+	private final Property<Color> failedBgColor;
 
 	/**
 	 * The color that is used for text printed after a failed action.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color failedFgColor;
+	@Transient
+	private final Property<Color> failedFgColor;
 
 	/**
 	 * The name of the game. Should be unique, as savegames are ordered by this
@@ -107,8 +115,8 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the help command
 	 */
-	@Column(nullable = false)
-	private String helpHelpText;
+	@Transient
+	private final StringProperty helpHelpText;
 
 	/**
 	 * The id.
@@ -127,24 +135,24 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the inspect command
 	 */
-	@Column(nullable = false)
-	private String inspectHelpText;
+	@Transient
+	private final StringProperty inspectHelpText;
 
 	/**
 	 * The text being displayed when an object is inspected that does not have
 	 * an individual inspection text. Valid placeholders: input, name,
 	 * identifier, pattern
 	 */
-	@Column(nullable = false)
-	private String inspectionDefaultText;
+	@Transient
+	private final StringProperty inspectionDefaultText;
 
 	/**
 	 * The text displayed when an invalid action is being performed (e.g.
 	 * talking to objects, taking persons, etc.). Valid placeholders: input,
 	 * pattern
 	 */
-	@Column(nullable = false)
-	private String invalidCommandText;
+	@Transient
+	private final StringProperty invalidCommandText;
 
 	/**
 	 * All commands that let the player look into his inventory. Must be
@@ -157,21 +165,21 @@ public class Game implements HasId {
 	 * The text being displayed, when the player looks into his empty inventory.
 	 * Valid placeholders: input, pattern
 	 */
-	@Column(nullable = false)
-	private String inventoryEmptyText;
+	@Transient
+	private final StringProperty inventoryEmptyText;
 
 	/**
 	 * The help text being displayed for the inventory command.
 	 */
-	@Column(nullable = false)
-	private String inventoryHelpText;
+	@Transient
+	private final StringProperty inventoryHelpText;
 
 	/**
 	 * The text introducing a look into the inventory. Valid placeholders:
 	 * input, pattern
 	 */
-	@Column(nullable = false)
-	private String inventoryText;
+	@Transient
+	private final StringProperty inventoryText;
 
 	/**
 	 * All commands that let the player look around. Must be lowercase.
@@ -182,8 +190,8 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the look around command
 	 */
-	@Column(nullable = false)
-	private String lookAroundHelpText;
+	@Transient
+	private final StringProperty lookAroundHelpText;
 
 	/**
 	 * All move commands. Must be lowercase. Must contain at least one word and
@@ -195,105 +203,104 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the move command
 	 */
-	@Column(nullable = false)
-	private String moveHelpText;
+	@Transient
+	private final StringProperty moveHelpText;
+
 	/**
 	 * The background color that is used for text printed after a neutral
 	 * action.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color neutralBgColor;
+	@Transient
+	private final Property<Color> neutralBgColor;
 
 	/**
 	 * The color that is used for text printed after a neutral action.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color neutralFgColor;
+	@Transient
+	private final Property<Color> neutralFgColor;
 
 	/**
 	 * The text being displayed, when any entered text is not recognized as a
 	 * valid command. Valid placeholders: input
 	 */
-	@Column(nullable = false)
-	private String noCommandText;
+	@Transient
+	private final StringProperty noCommandText;
 
 	/**
 	 * The text being displayed, when the player tries to use, etc. a
 	 * non-existing inventory item. Valid placeholders: input, pattern,
 	 * identifier
 	 */
-	@Column(nullable = false)
-	private String noSuchInventoryItemText;
+	@Transient
+	private final StringProperty noSuchInventoryItemText;
 
 	/**
 	 * The text being displayed, when the player tries to use, take, etc. a
 	 * non-existing item. Valid placeholders: input, pattern, identifier
 	 */
-	@Column(nullable = false)
-	private String noSuchItemText;
+	@Transient
+	private final StringProperty noSuchItemText;
 
 	/**
 	 * The text being displayed, when the player tries to talk to a non-existing
-	 * perosn. Valid placeholders: input, pattern, identifier
+	 * person. Valid placeholders: input, pattern, identifier
 	 */
-	@Column(nullable = false)
-	private String noSuchPersonText;
+	@Transient
+	private final StringProperty noSuchPersonText;
 
 	/**
 	 * The text being displayed, when the player tries to travel by a
 	 * non-existing way. Valid placeholders: input, pattern, identifier
 	 */
-	@Column(nullable = false)
-	private String noSuchWayText;
+	@Transient
+	private final StringProperty noSuchWayText;
 
 	/**
 	 * The default text, when the player tries to take a non-takeable item. May
 	 * be overwritten for each individual item. Valid placeholders: input,
 	 * pattern, name, identifier
 	 */
-	@Column(nullable = false)
-	private String notTakeableText;
+	@Transient
+	private final StringProperty notTakeableText;
 
 	/**
 	 * The default text, when the player tries to talk to a person he cannot
 	 * talk to. way. May be overwritten for each individual person. Valid
 	 * placeholders: input, pattern, name, identifier
 	 */
-	@Column(nullable = false)
-	private String notTalkingToEnabledText;
+	@Transient
+	private final StringProperty notTalkingToEnabledText;
 
 	/**
 	 * The default text, when the player tries to travel by a non-travelable
 	 * way. May be overwritten for each individual way. Valid placeholders:
 	 * input, pattern, name, identifier
 	 */
-	@Column(nullable = false)
-	private String notTravelableText;
+	@Transient
+	private final StringProperty notTravelableText;
 
 	/**
 	 * The default text, when the player tries to use a non-usable object. May
 	 * be overwritten for each individual object. Valid placeholders: input,
 	 * pattern, name, identifier
 	 */
-	@Column(nullable = false)
-	private String notUsableText;
+	@Transient
+	private final StringProperty notUsableText;
 
 	/**
 	 * The default text, when the player tries to use two incompatible object
 	 * with one another. May be overwritten for each individual combination.
 	 * Valid placeholders: input, pattern, name, identifier, name2, identifier2
 	 */
-	@Column(nullable = false)
-	private String notUsableWithText;
+	@Transient
+	private final StringProperty notUsableWithText;
 
 	/**
 	 * The number of lines used to display options in dialogues. Recommendation
 	 * is ~10.
 	 */
-	@Column(nullable = false)
-	private int numberOfOptionLines;
+	@Transient
+	private final IntegerProperty numberOfOptionLines;
 
 	/**
 	 * The player of this game.
@@ -312,23 +319,21 @@ public class Game implements HasId {
 	/**
 	 * The text being displayed, when the game starts.
 	 */
-	@Column(nullable = false)
-	private String startText;
+	@Transient
+	private final StringProperty startText;
 
 	/**
 	 * The background color that is used for text printed after a successful
 	 * action.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color successfullBgColor;
+	@Transient
+	private final Property<Color> successfullBgColor;
 
 	/**
 	 * The color that is used for text printed after a successful action.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Color successfullFgColor;
+	@Transient
+	private final Property<Color> successfullFgColor;
 
 	/**
 	 * All take commands. Must be lowercase. Must contain at least one word and
@@ -340,16 +345,16 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the take command
 	 */
-	@Column(nullable = false)
-	private String takeHelpText;
+	@Transient
+	private final StringProperty takeHelpText;
 
 	/**
 	 * The default text, when the player takes an item. May be overwritten for
 	 * each individual item. Valid placeholders: input, pattern, name,
 	 * identifier
 	 */
-	@Column(nullable = false)
-	private String takenText;
+	@Transient
+	private final StringProperty takenText;
 
 	/**
 	 * All commands that let the player talk to someone. Must be lowercase. Must
@@ -361,8 +366,8 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the talk to command
 	 */
-	@Column(nullable = false)
-	private String talkToHelpText;
+	@Transient
+	private final StringProperty talkToHelpText;
 
 	/**
 	 * All use commands. Must be lowercase. Must contain at least one word and
@@ -373,24 +378,25 @@ public class Game implements HasId {
 
 	/**
 	 * The default text, when the player uses an object. May be overwritten for
-	 * each individual object. Valid placeholders: input, pattern, name, identifier
+	 * each individual object. Valid placeholders: input, pattern, name,
+	 * identifier
 	 */
-	@Column(nullable = false)
-	private String usedText;
+	@Transient
+	private final StringProperty usedText;
 
 	/**
 	 * The default text, when the player uses two compatible object with one
 	 * another. May be overwritten for each individual combination. Valid
 	 * placeholders: input, pattern, name, identifier, name2, identifier2
 	 */
-	@Column(nullable = false)
-	private String usedWithText;
+	@Transient
+	private final StringProperty usedWithText;
 
 	/**
 	 * The help text being displayed for the use command.
 	 */
-	@Column(nullable = false)
-	private String useHelpText;
+	@Transient
+	private final StringProperty useHelpText;
 
 	/**
 	 * All useWith/combine commands. Must be lowercase. Must contain at least
@@ -408,8 +414,8 @@ public class Game implements HasId {
 	/**
 	 * The help text being displayed for the use with/combine command.
 	 */
-	@Column(nullable = false)
-	private String useWithCombineHelpText;
+	@Transient
+	private final StringProperty useWithCombineHelpText;
 
 	/**
 	 * Constructs a new game object.
@@ -425,6 +431,42 @@ public class Game implements HasId {
 		useCommands = new ArrayList<>();
 		useWithCombineCommands = new ArrayList<>();
 		talkToCommands = new ArrayList<>();
+
+		useWithCombineHelpText = new SimpleStringProperty();
+		useHelpText = new SimpleStringProperty();
+		talkToHelpText = new SimpleStringProperty();
+		exitCommandHelpText = new SimpleStringProperty();
+		helpHelpText = new SimpleStringProperty();
+		takeHelpText = new SimpleStringProperty();
+		inspectHelpText = new SimpleStringProperty();
+		inventoryHelpText = new SimpleStringProperty();
+		lookAroundHelpText = new SimpleStringProperty();
+		moveHelpText = new SimpleStringProperty();
+		startText = new SimpleStringProperty();
+		inspectionDefaultText = new SimpleStringProperty();
+		invalidCommandText = new SimpleStringProperty();
+		inventoryEmptyText = new SimpleStringProperty();
+		inventoryText = new SimpleStringProperty();
+		noCommandText = new SimpleStringProperty();
+		noSuchInventoryItemText = new SimpleStringProperty();
+		noSuchItemText = new SimpleStringProperty();
+		noSuchPersonText = new SimpleStringProperty();
+		noSuchWayText = new SimpleStringProperty();
+		notTakeableText = new SimpleStringProperty();
+		notTalkingToEnabledText = new SimpleStringProperty();
+		notTravelableText = new SimpleStringProperty();
+		notUsableText = new SimpleStringProperty();
+		notUsableWithText = new SimpleStringProperty();
+		takenText = new SimpleStringProperty();
+		usedText = new SimpleStringProperty();
+		usedWithText = new SimpleStringProperty();
+		numberOfOptionLines = new SimpleIntegerProperty();
+		failedBgColor = new SimpleObjectProperty<>();
+		failedFgColor = new SimpleObjectProperty<>();
+		neutralBgColor = new SimpleObjectProperty<>();
+		neutralFgColor = new SimpleObjectProperty<>();
+		successfullBgColor = new SimpleObjectProperty<>();
+		successfullFgColor = new SimpleObjectProperty<>();
 	}
 
 	/**
@@ -530,8 +572,10 @@ public class Game implements HasId {
 	/**
 	 * @return the exitCommandHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getExitCommandHelpText() {
-		return exitCommandHelpText;
+		return exitCommandHelpText.get();
 	}
 
 	/**
@@ -544,15 +588,21 @@ public class Game implements HasId {
 	/**
 	 * @return the failedBgColor
 	 */
+	@Access(AccessType.PROPERTY)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Color getFailedBgColor() {
-		return failedBgColor;
+		return failedBgColor.getValue();
 	}
 
 	/**
 	 * @return the failedFgColor
 	 */
+	@Access(AccessType.PROPERTY)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Color getFailedFgColor() {
-		return failedFgColor;
+		return failedFgColor.getValue();
 	}
 
 	/**
@@ -579,8 +629,10 @@ public class Game implements HasId {
 	/**
 	 * @return the helpHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getHelpHelpText() {
-		return helpHelpText;
+		return helpHelpText.get();
 	}
 
 	@Override
@@ -598,22 +650,28 @@ public class Game implements HasId {
 	/**
 	 * @return the inspectHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getInspectHelpText() {
-		return inspectHelpText;
+		return inspectHelpText.get();
 	}
 
 	/**
 	 * @return the inspectionDefaultText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getInspectionDefaultText() {
-		return inspectionDefaultText;
+		return inspectionDefaultText.get();
 	}
 
 	/**
 	 * @return the invalidCommandText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getInvalidCommandText() {
-		return invalidCommandText;
+		return invalidCommandText.get();
 	}
 
 	/**
@@ -626,22 +684,28 @@ public class Game implements HasId {
 	/**
 	 * @return the inventoryEmptyText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getInventoryEmptyText() {
-		return inventoryEmptyText;
+		return inventoryEmptyText.get();
 	}
 
 	/**
 	 * @return the inventoryHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getInventoryHelpText() {
-		return inventoryHelpText;
+		return inventoryHelpText.get();
 	}
 
 	/**
 	 * @return the inventoryText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getInventoryText() {
-		return inventoryText;
+		return inventoryText.get();
 	}
 
 	/**
@@ -654,8 +718,10 @@ public class Game implements HasId {
 	/**
 	 * @return the lookAroundHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getLookAroundHelpText() {
-		return lookAroundHelpText;
+		return lookAroundHelpText.get();
 	}
 
 	/**
@@ -668,99 +734,129 @@ public class Game implements HasId {
 	/**
 	 * @return the moveHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getMoveHelpText() {
-		return moveHelpText;
+		return moveHelpText.get();
 	}
 
 	/**
 	 * @return the neutralBgColor
 	 */
+	@Access(AccessType.PROPERTY)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Color getNeutralBgColor() {
-		return neutralBgColor;
+		return neutralBgColor.getValue();
 	}
 
 	/**
 	 * @return the neutralFgColor
 	 */
+	@Access(AccessType.PROPERTY)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Color getNeutralFgColor() {
-		return neutralFgColor;
+		return neutralFgColor.getValue();
 	}
 
 	/**
 	 * @return the noCommandText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNoCommandText() {
-		return noCommandText;
+		return noCommandText.get();
 	}
 
 	/**
 	 * @return the noSuchInventoryItemText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNoSuchInventoryItemText() {
-		return noSuchInventoryItemText;
+		return noSuchInventoryItemText.get();
 	}
 
 	/**
 	 * @return the noSuchItemText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNoSuchItemText() {
-		return noSuchItemText;
+		return noSuchItemText.get();
 	}
 
 	/**
 	 * @return the noSuchPersonText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNoSuchPersonText() {
-		return noSuchPersonText;
+		return noSuchPersonText.get();
 	}
 
 	/**
 	 * @return the noSuchWayText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNoSuchWayText() {
-		return noSuchWayText;
+		return noSuchWayText.get();
 	}
 
 	/**
 	 * @return the notTakeableText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNotTakeableText() {
-		return notTakeableText;
+		return notTakeableText.get();
 	}
 
 	/**
 	 * @return the notTalkingToEnabledText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNotTalkingToEnabledText() {
-		return notTalkingToEnabledText;
+		return notTalkingToEnabledText.get();
 	}
 
 	/**
 	 * @return the notTravelableText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNotTravelableText() {
-		return notTravelableText;
+		return notTravelableText.get();
 	}
 
 	/**
 	 * @return the notUsableText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNotUsableText() {
-		return notUsableText;
+		return notUsableText.get();
 	}
 
 	/**
 	 * @return the notUsableWithText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getNotUsableWithText() {
-		return notUsableWithText;
+		return notUsableWithText.get();
 	}
 
 	/**
 	 * @return the numberOfOptionLines
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public int getNumberOfOptionLines() {
-		return numberOfOptionLines;
+		return numberOfOptionLines.get();
 	}
 
 	/**
@@ -780,22 +876,30 @@ public class Game implements HasId {
 	/**
 	 * @return the startText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getStartText() {
-		return startText;
+		return startText.get();
 	}
 
 	/**
 	 * @return the successfullBgColor
 	 */
+	@Access(AccessType.PROPERTY)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Color getSuccessfullBgColor() {
-		return successfullBgColor;
+		return successfullBgColor.getValue();
 	}
 
 	/**
 	 * @return the successfullFgColor
 	 */
+	@Access(AccessType.PROPERTY)
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Color getSuccessfullFgColor() {
-		return successfullFgColor;
+		return successfullFgColor.getValue();
 	}
 
 	/**
@@ -808,15 +912,19 @@ public class Game implements HasId {
 	/**
 	 * @return the takeHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getTakeHelpText() {
-		return takeHelpText;
+		return takeHelpText.get();
 	}
 
 	/**
 	 * @return the takenText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getTakenText() {
-		return takenText;
+		return takenText.get();
 	}
 
 	/**
@@ -829,8 +937,10 @@ public class Game implements HasId {
 	/**
 	 * @return the talkToHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getTalkToHelpText() {
-		return talkToHelpText;
+		return talkToHelpText.get();
 	}
 
 	/**
@@ -843,22 +953,28 @@ public class Game implements HasId {
 	/**
 	 * @return the usedText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getUsedText() {
-		return usedText;
+		return usedText.get();
 	}
 
 	/**
 	 * @return the usedWithText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getUsedWithText() {
-		return usedWithText;
+		return usedWithText.get();
 	}
 
 	/**
 	 * @return the useHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getUseHelpText() {
-		return useHelpText;
+		return useHelpText.get();
 	}
 
 	/**
@@ -871,8 +987,10 @@ public class Game implements HasId {
 	/**
 	 * @return the useWithCombineHelpText
 	 */
+	@Access(AccessType.PROPERTY)
+	@Column(nullable = false)
 	public String getUseWithCombineHelpText() {
-		return useWithCombineHelpText;
+		return useWithCombineHelpText.get();
 	}
 
 	/**
@@ -970,11 +1088,19 @@ public class Game implements HasId {
 	 *            the exitCommandHelpText to set
 	 */
 	public void setExitCommandHelpText(String exitCommandHelpText) {
-		this.exitCommandHelpText = exitCommandHelpText;
+		this.exitCommandHelpText.set(exitCommandHelpText);
 	}
 
 	/**
-	 * @param exitCommands the exitCommands to set
+	 * @return the exitCommandHelpText property
+	 */
+	public StringProperty exitCommandHelpTextProperty() {
+		return exitCommandHelpText;
+	}
+
+	/**
+	 * @param exitCommands
+	 *            the exitCommands to set
 	 */
 	public void setExitCommands(List<String> exitCommands) {
 		this.exitCommands = exitCommands;
@@ -985,7 +1111,14 @@ public class Game implements HasId {
 	 *            the failedBgColor to set
 	 */
 	public void setFailedBgColor(Color failedBgColor) {
-		this.failedBgColor = failedBgColor;
+		this.failedBgColor.setValue(failedBgColor);
+	}
+
+	/**
+	 * @return the failedBgColor property
+	 */
+	public Property<Color> failedBgColorProperty() {
+		return failedBgColor;
 	}
 
 	/**
@@ -993,7 +1126,14 @@ public class Game implements HasId {
 	 *            the failedFgColor to set
 	 */
 	public void setFailedFgColor(Color failedFgColor) {
-		this.failedFgColor = failedFgColor;
+		this.failedFgColor.setValue(failedFgColor);
+	}
+	
+	/**
+	 * @return the failedFgColor property
+	 */
+	public Property<Color> failedFgColorProperty() {
+		return failedFgColor;
 	}
 
 	/**
@@ -1013,7 +1153,8 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @param helpCommands the helpCommands to set
+	 * @param helpCommands
+	 *            the helpCommands to set
 	 */
 	public void setHelpCommands(List<String> helpCommands) {
 		this.helpCommands = helpCommands;
@@ -1024,18 +1165,27 @@ public class Game implements HasId {
 	 *            the helpHelpText to set
 	 */
 	public void setHelpHelpText(String helpHelpText) {
-		this.helpHelpText = helpHelpText;
+		this.helpHelpText.set(helpHelpText);
 	}
 
 	/**
-	 * @param id the id to set
+	 * @return the helphelptext property
+	 */
+	public StringProperty helphelpTextProperty() {
+		return helpHelpText;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	/**
-	 * @param inspectCommands the inspectCommands to set
+	 * @param inspectCommands
+	 *            the inspectCommands to set
 	 */
 	public void setInspectCommands(List<String> inspectCommands) {
 		this.inspectCommands = inspectCommands;
@@ -1046,7 +1196,14 @@ public class Game implements HasId {
 	 *            the inspectHelpText to set
 	 */
 	public void setInspectHelpText(String inspectHelpText) {
-		this.inspectHelpText = inspectHelpText;
+		this.inspectHelpText.set(inspectHelpText);
+	}
+
+	/**
+	 * @return inspectHelpText property
+	 */
+	public StringProperty inspectHelpTextProperty() {
+		return inspectHelpText;
 	}
 
 	/**
@@ -1054,7 +1211,14 @@ public class Game implements HasId {
 	 *            the inspectionDefaultText to set
 	 */
 	public void setInspectionDefaultText(String inspectionDefaultText) {
-		this.inspectionDefaultText = inspectionDefaultText;
+		this.inspectionDefaultText.set(inspectionDefaultText);
+	}
+
+	/**
+	 * @return inspectionDefaultText property
+	 */
+	public StringProperty inspectionDefaultTextProperty() {
+		return inspectionDefaultText;
 	}
 
 	/**
@@ -1063,11 +1227,19 @@ public class Game implements HasId {
 	 *            the invalidCommandText to set
 	 */
 	public void setInvalidCommandText(String invalidCommandText) {
-		this.invalidCommandText = invalidCommandText;
+		this.invalidCommandText.set(invalidCommandText);
 	}
 
 	/**
-	 * @param inventoryCommands the inventoryCommands to set
+	 * @return invalidCommandText property
+	 */
+	public StringProperty invalidCommandTextProperty() {
+		return invalidCommandText;
+	}
+
+	/**
+	 * @param inventoryCommands
+	 *            the inventoryCommands to set
 	 */
 	public void setInventoryCommands(List<String> inventoryCommands) {
 		this.inventoryCommands = inventoryCommands;
@@ -1078,7 +1250,14 @@ public class Game implements HasId {
 	 *            the inventoryEmptyText to set
 	 */
 	public void setInventoryEmptyText(String inventoryEmptyText) {
-		this.inventoryEmptyText = inventoryEmptyText;
+		this.inventoryEmptyText.set(inventoryEmptyText);
+	}
+
+	/**
+	 * @return inventoryEmptyText property
+	 */
+	public StringProperty inventoryEmptyTextProperty() {
+		return inventoryEmptyText;
 	}
 
 	/**
@@ -1086,7 +1265,14 @@ public class Game implements HasId {
 	 *            the inventoryHelpText to set
 	 */
 	public void setInventoryHelpText(String inventoryHelpText) {
-		this.inventoryHelpText = inventoryHelpText;
+		this.inventoryHelpText.set(inventoryHelpText);
+	}
+
+	/**
+	 * @return inventoryHelpText property
+	 */
+	public StringProperty inventoryHelpTextProperty() {
+		return inventoryHelpText;
 	}
 
 	/**
@@ -1094,11 +1280,19 @@ public class Game implements HasId {
 	 *            the inventoryText to set
 	 */
 	public void setInventoryText(String inventoryText) {
-		this.inventoryText = inventoryText;
+		this.inventoryText.set(inventoryText);
 	}
 
 	/**
-	 * @param lookAroundCommands the lookAroundCommands to set
+	 * @return inventoryText property
+	 */
+	public StringProperty inventoryTextProperty() {
+		return inventoryText;
+	}
+
+	/**
+	 * @param lookAroundCommands
+	 *            the lookAroundCommands to set
 	 */
 	public void setLookAroundCommands(List<String> lookAroundCommands) {
 		this.lookAroundCommands = lookAroundCommands;
@@ -1109,11 +1303,19 @@ public class Game implements HasId {
 	 *            the lookAroundHelpText to set
 	 */
 	public void setLookAroundHelpText(String lookAroundHelpText) {
-		this.lookAroundHelpText = lookAroundHelpText;
+		this.lookAroundHelpText.set(lookAroundHelpText);
 	}
 
 	/**
-	 * @param moveCommands the moveCommands to set
+	 * @return lookAroundHelpText property
+	 */
+	public StringProperty lookAroundHelpTextProperty() {
+		return lookAroundHelpText;
+	}
+
+	/**
+	 * @param moveCommands
+	 *            the moveCommands to set
 	 */
 	public void setMoveCommands(List<String> moveCommands) {
 		this.moveCommands = moveCommands;
@@ -1124,7 +1326,14 @@ public class Game implements HasId {
 	 *            the moveHelpText to set
 	 */
 	public void setMoveHelpText(String moveHelpText) {
-		this.moveHelpText = moveHelpText;
+		this.moveHelpText.set(moveHelpText);
+	}
+
+	/**
+	 * @return moveHelpText property
+	 */
+	public StringProperty moveHelpTextProperty() {
+		return moveHelpText;
 	}
 
 	/**
@@ -1132,7 +1341,14 @@ public class Game implements HasId {
 	 *            the neutralBgColor to set
 	 */
 	public void setNeutralBgColor(Color neutralBgColor) {
-		this.neutralBgColor = neutralBgColor;
+		this.neutralBgColor.setValue(neutralBgColor);
+	}
+	
+	/**
+	 * @return the neutralBgColor property
+	 */
+	public Property<Color> neutralBgColorProperty() {
+		return neutralBgColor;
 	}
 
 	/**
@@ -1140,7 +1356,14 @@ public class Game implements HasId {
 	 *            the neutralFgColor to set
 	 */
 	public void setNeutralFgColor(Color neutralFgColor) {
-		this.neutralFgColor = neutralFgColor;
+		this.neutralFgColor.setValue(neutralFgColor);
+	}
+	
+	/**
+	 * @return the neutralFgColor property
+	 */
+	public Property<Color> neutralFgColorProperty() {
+		return neutralFgColor;
 	}
 
 	/**
@@ -1148,7 +1371,14 @@ public class Game implements HasId {
 	 *            the noCommandText to set
 	 */
 	public void setNoCommandText(String noCommandText) {
-		this.noCommandText = noCommandText;
+		this.noCommandText.set(noCommandText);
+	}
+
+	/**
+	 * @return noCommandText property
+	 */
+	public StringProperty noCommandTextProperty() {
+		return noCommandText;
 	}
 
 	/**
@@ -1156,7 +1386,14 @@ public class Game implements HasId {
 	 *            the noSuchInventoryItemText to set
 	 */
 	public void setNoSuchInventoryItemText(String noSuchInventoryItemText) {
-		this.noSuchInventoryItemText = noSuchInventoryItemText;
+		this.noSuchInventoryItemText.set(noSuchInventoryItemText);
+	}
+
+	/**
+	 * @return noSuchInventoryItemText property
+	 */
+	public StringProperty noSuchInventoryItemTextProperty() {
+		return noSuchInventoryItemText;
 	}
 
 	/**
@@ -1164,7 +1401,14 @@ public class Game implements HasId {
 	 *            the noSuchItemText to set
 	 */
 	public void setNoSuchItemText(String noSuchItemText) {
-		this.noSuchItemText = noSuchItemText;
+		this.noSuchItemText.set(noSuchItemText);
+	}
+
+	/**
+	 * @return noSuchItemText property
+	 */
+	public StringProperty noSuchItemTextProperty() {
+		return noSuchItemText;
 	}
 
 	/**
@@ -1172,7 +1416,14 @@ public class Game implements HasId {
 	 *            the noSuchPersonText to set
 	 */
 	public void setNoSuchPersonText(String noSuchPersonText) {
-		this.noSuchPersonText = noSuchPersonText;
+		this.noSuchPersonText.set(noSuchPersonText);
+	}
+
+	/**
+	 * @return noSuchPersonText property
+	 */
+	public StringProperty noSuchPersonTextProperty() {
+		return noSuchPersonText;
 	}
 
 	/**
@@ -1180,7 +1431,14 @@ public class Game implements HasId {
 	 *            the noSuchWayText to set
 	 */
 	public void setNoSuchWayText(String noSuchWayText) {
-		this.noSuchWayText = noSuchWayText;
+		this.noSuchWayText.set(noSuchWayText);
+	}
+
+	/**
+	 * @return noSuchWayText property
+	 */
+	public StringProperty noSuchWayTextProperty() {
+		return noSuchWayText;
 	}
 
 	/**
@@ -1188,7 +1446,14 @@ public class Game implements HasId {
 	 *            the notTakeableText to set
 	 */
 	public void setNotTakeableText(String notTakeableText) {
-		this.notTakeableText = notTakeableText;
+		this.notTakeableText.set(notTakeableText);
+	}
+
+	/**
+	 * @return notTakeableText property
+	 */
+	public StringProperty notTakeableTextProperty() {
+		return notTakeableText;
 	}
 
 	/**
@@ -1196,7 +1461,14 @@ public class Game implements HasId {
 	 *            the notTalkingToEnabledText to set
 	 */
 	public void setNotTalkingToEnabledText(String notTalkingToEnabledText) {
-		this.notTalkingToEnabledText = notTalkingToEnabledText;
+		this.notTalkingToEnabledText.set(notTalkingToEnabledText);
+	}
+
+	/**
+	 * @return notTalkingToEnabledText property
+	 */
+	public StringProperty notTalkingToEnabledTextProperty() {
+		return notTalkingToEnabledText;
 	}
 
 	/**
@@ -1204,7 +1476,14 @@ public class Game implements HasId {
 	 *            the notTravelableText to set
 	 */
 	public void setNotTravelableText(String notTravelableText) {
-		this.notTravelableText = notTravelableText;
+		this.notTravelableText.set(notTravelableText);
+	}
+
+	/**
+	 * @return notTravelableText property
+	 */
+	public StringProperty notTravelableTextProperty() {
+		return notTravelableText;
 	}
 
 	/**
@@ -1212,7 +1491,14 @@ public class Game implements HasId {
 	 *            the notUsableText to set
 	 */
 	public void setNotUsableText(String notUsableText) {
-		this.notUsableText = notUsableText;
+		this.notUsableText.set(notUsableText);
+	}
+
+	/**
+	 * @return notUsableText property
+	 */
+	public StringProperty notUsableTextProperty() {
+		return notUsableText;
 	}
 
 	/**
@@ -1220,7 +1506,14 @@ public class Game implements HasId {
 	 *            the notUsableWithText to set
 	 */
 	public void setNotUsableWithText(String notUsableWithText) {
-		this.notUsableWithText = notUsableWithText;
+		this.notUsableWithText.set(notUsableWithText);
+	}
+
+	/**
+	 * @return notUsableWithText property
+	 */
+	public StringProperty notUsableWithTextProperty() {
+		return notUsableWithText;
 	}
 
 	/**
@@ -1228,7 +1521,14 @@ public class Game implements HasId {
 	 *            the numberOfOptionLines to set
 	 */
 	public void setNumberOfOptionLines(int numberOfOptionLines) {
-		this.numberOfOptionLines = numberOfOptionLines;
+		this.numberOfOptionLines.set(numberOfOptionLines);
+	}
+
+	/**
+	 * @return numberOfOptionLines property
+	 */
+	public IntegerProperty numberOfOptionLinesProperty() {
+		return numberOfOptionLines;
 	}
 
 	/**
@@ -1252,7 +1552,14 @@ public class Game implements HasId {
 	 *            the startText to set
 	 */
 	public void setStartText(String startText) {
-		this.startText = startText;
+		this.startText.set(startText);
+	}
+
+	/**
+	 * @return startText property
+	 */
+	public StringProperty startTextProperty() {
+		return startText;
 	}
 
 	/**
@@ -1260,7 +1567,14 @@ public class Game implements HasId {
 	 *            the successfullBgColor to set
 	 */
 	public void setSuccessfullBgColor(Color successfullBgColor) {
-		this.successfullBgColor = successfullBgColor;
+		this.successfullBgColor.setValue(successfullBgColor);
+	}
+	
+	/**
+	 * @return the successfullBgColor property
+	 */
+	public Property<Color> successfullBgColorProperty() {
+		return successfullBgColor;
 	}
 
 	/**
@@ -1268,11 +1582,19 @@ public class Game implements HasId {
 	 *            the successfullFgColor to set
 	 */
 	public void setSuccessfullFgColor(Color successfullFgColor) {
-		this.successfullFgColor = successfullFgColor;
+		this.successfullFgColor.setValue(successfullFgColor);
+	}
+	
+	/**
+	 * @return the successfullFgColor property
+	 */
+	public Property<Color> successfullFgColorProperty() {
+		return successfullFgColor;
 	}
 
 	/**
-	 * @param takeCommands the takeCommands to set
+	 * @param takeCommands
+	 *            the takeCommands to set
 	 */
 	public void setTakeCommands(List<String> takeCommands) {
 		this.takeCommands = takeCommands;
@@ -1283,7 +1605,14 @@ public class Game implements HasId {
 	 *            the takeHelpText to set
 	 */
 	public void setTakeHelpText(String takeHelpText) {
-		this.takeHelpText = takeHelpText;
+		this.takeHelpText.set(takeHelpText);
+	}
+
+	/**
+	 * @return takeHelpText property
+	 */
+	public StringProperty takeHelpTextProperty() {
+		return takeHelpText;
 	}
 
 	/**
@@ -1291,11 +1620,19 @@ public class Game implements HasId {
 	 *            the takenText to set
 	 */
 	public void setTakenText(String takenText) {
-		this.takenText = takenText;
+		this.takenText.set(takenText);
 	}
 
 	/**
-	 * @param talkToCommands the talkToCommands to set
+	 * @return takenText property
+	 */
+	public StringProperty takenTextProperty() {
+		return takenText;
+	}
+
+	/**
+	 * @param talkToCommands
+	 *            the talkToCommands to set
 	 */
 	public void setTalkToCommands(List<String> talkToCommands) {
 		this.talkToCommands = talkToCommands;
@@ -1306,11 +1643,12 @@ public class Game implements HasId {
 	 *            the talkToHelpText to set
 	 */
 	public void setTalkToHelpText(String talkToHelpText) {
-		this.talkToHelpText = talkToHelpText;
+		this.talkToHelpText.set(talkToHelpText);
 	}
 
 	/**
-	 * @param useCommands the useCommands to set
+	 * @param useCommands
+	 *            the useCommands to set
 	 */
 	public void setUseCommands(List<String> useCommands) {
 		this.useCommands = useCommands;
@@ -1321,7 +1659,14 @@ public class Game implements HasId {
 	 *            the usedText to set
 	 */
 	public void setUsedText(String usedText) {
-		this.usedText = usedText;
+		this.usedText.set(usedText);
+	}
+
+	/**
+	 * @return usedText property
+	 */
+	public StringProperty usedTextProperty() {
+		return usedText;
 	}
 
 	/**
@@ -1329,7 +1674,14 @@ public class Game implements HasId {
 	 *            the usedWithText to set
 	 */
 	public void setUsedWithText(String usedWithText) {
-		this.usedWithText = usedWithText;
+		this.usedWithText.set(usedWithText);
+	}
+
+	/**
+	 * @return usedWithText property
+	 */
+	public StringProperty usedWithTextProperty() {
+		return usedWithText;
 	}
 
 	/**
@@ -1337,11 +1689,12 @@ public class Game implements HasId {
 	 *            the useHelpText to set
 	 */
 	public void setUseHelpText(String useHelpText) {
-		this.useHelpText = useHelpText;
+		this.useHelpText.set(useHelpText);
 	}
 
 	/**
-	 * @param useWithCombineCommands the useWithCombineCommands to set
+	 * @param useWithCombineCommands
+	 *            the useWithCombineCommands to set
 	 */
 	public void setUseWithCombineCommands(List<String> useWithCombineCommands) {
 		this.useWithCombineCommands = useWithCombineCommands;
@@ -1352,6 +1705,27 @@ public class Game implements HasId {
 	 *            the useWithCombineHelpText to set
 	 */
 	public void setUseWithCombineHelpText(String useWithCombineHelpText) {
-		this.useWithCombineHelpText = useWithCombineHelpText;
+		this.useWithCombineHelpText.set(useWithCombineHelpText);
+	}
+
+	/**
+	 * @return the useWithCombineHelpText property
+	 */
+	public StringProperty useWithCombineHelpTextProperty() {
+		return useWithCombineHelpText;
+	}
+
+	/**
+	 * @return the useHelpText property
+	 */
+	public StringProperty useHelpTextProperty() {
+		return useHelpText;
+	}
+
+	/**
+	 * @return the talkToHelpText property
+	 */
+	public StringProperty talkToHelpTextProperty() {
+		return talkToHelpText;
 	}
 }
