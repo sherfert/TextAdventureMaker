@@ -96,10 +96,8 @@ public class MainWindowController {
 	 * @param the
 	 *            controller
 	 */
-	public void setCenterContent(String fxml, GameDataController controller) {
+	private void setCenterContent(String fxml, GameDataController controller) {
 		try {
-			initializeGamaDataController(controller);
-			
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainWindowController.class.getResource(fxml));
@@ -116,41 +114,44 @@ public class MainWindowController {
 					"Could not set the main window's center content.", e);
 		}
 	}
-	
+
+	/**
+	 * Loads the game details into the center.
+	 */
+	public void loadGameDetails() {
+		// Load the game details in the center of the window
+		setCenterContent("view/GameDetails.fxml", new GameDetailsController(currentGameManager));
+	}
+
+	/**
+	 * Loads the locations into the center.
+	 */
+	public void loadLocations() {
+		setCenterContent("view/Locations.fxml", new LocationsController(currentGameManager));
+	}
+
 	/**
 	 * Load the sidebar.
 	 */
-	public void loadSidebar() {
+	private void loadSidebar() {
 		try {
-			SidebarController controller = new SidebarController();
-			
+			SidebarController controller = new SidebarController(this);
+
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainWindowController.class.getResource("view/Sidebar.fxml"));
-			
 
 			// Set the controller for the fxml
 			loader.setController(controller);
 
 			// Load the view
 			Node node = loader.load();
-			
+
 			borderPane.setLeft(node);
 		} catch (IOException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Could not load the main window's sidebar", e);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not load the main window's sidebar",
+					e);
 		}
-	}
-
-	/**
-	 * Initializes a {@link GameDataContoller} with the current game manager.
-	 * 
-	 * @param controller
-	 *            the controller
-	 */
-	private void initializeGamaDataController(GameDataController controller) {
-		// Pass the currentGameManager to the controller
-		controller.setCurrentGameManager(currentGameManager);
 	}
 
 	/**
@@ -181,8 +182,9 @@ public class MainWindowController {
 			exportMenuItem.setDisable(false);
 			gameMenu.setDisable(false);
 
-			// Load the game details in the center of the window
-			setCenterContent("view/GameDetails.fxml", new GameDetailsController());
+			// Load game details as first view
+			loadGameDetails();
+
 			// Load the side bar left
 			loadSidebar();
 		}
@@ -202,27 +204,35 @@ public class MainWindowController {
 		File file = fileChooser.showSaveDialog(window);
 		// Ensure JARCReator does not crash if the Game-missing-db file is not
 		// present.
+		if (file != null) {
+			try {
+				JARCreator.copyGameDBIntoGameJAR(currentGameManager.getOpenFile(), file);
+			} catch (IOException e) {
+				// This very probably means that the "Game_missing_db.jar" was
+				// removed
 
-		try {
-			JARCreator.copyGameDBIntoGameJAR(currentGameManager.getOpenFile(), file);
-		} catch (IOException e) {
-			// This very probably means that the "Game_missing_db.jar" was
-			// removed
-
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Export Error");
-			alert.setHeaderText("The game file could not be exported!");
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Export Error");
+				alert.setHeaderText("The game file could not be exported!");
+				alert.setContentText(
+						"Make sure that the file \"Game_missing_db.jar\" is present in the same folder as the executable of TextAdventureMaker.");
+				alert.showAndWait();
+			}
+			// Show a success message.
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Export Successful");
+			alert.setHeaderText("The game file was exported!");
 			alert.setContentText(
-					"Make sure that the file \"Game_missing_db.jar\" is present in the same folder as the executable of TextAdventureMaker.");
+					"To execute the game, double click it or run 'java -jar <name-of-the-file>' in a command line.");
 			alert.showAndWait();
 		}
-		// Show a success message.
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Export Successful");
-		alert.setHeaderText("The game file was exported!");
-		alert.setContentText(
-				"To execute the game, double click it or run 'java -jar <name-of-the-file>' in a command line.");
-		alert.showAndWait();
+	}
+
+	/**
+	 * Starts the loaded game.
+	 */
+	private void play() {
+		currentGameManager.playGame();
 	}
 
 	/**
@@ -231,12 +241,5 @@ public class MainWindowController {
 	public void close() {
 		currentGameManager.close();
 		Platform.exit();
-	}
-
-	/**
-	 * Starts the loaded game.
-	 */
-	public void play() {
-		currentGameManager.playGame();
 	}
 }

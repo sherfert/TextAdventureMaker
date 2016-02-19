@@ -15,6 +15,18 @@ public class SidebarController {
 	@FXML
 	private Hyperlink locationsHL;
 
+	/**
+	 * A reference to the main window controller to change the contents.
+	 */
+	private MainWindowController mwController;
+	
+	/**
+	 * @param mwController
+	 */
+	public SidebarController(MainWindowController mwController) {
+		this.mwController = mwController;
+	}
+
 	@FXML
 	private void initialize() {
 		gameConfigHL.setOnAction(this::linkClicked);
@@ -36,9 +48,9 @@ public class SidebarController {
 		
 		// Switch behavior depending on the link
 		if(clicked == gameConfigHL) {
-			System.out.println("game");
+			mwController.loadGameDetails();
 		} else if(clicked == locationsHL) {
-			System.out.println("locations");
+			mwController.loadLocations();
 		}
 	}
 

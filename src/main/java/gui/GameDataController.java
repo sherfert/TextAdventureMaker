@@ -18,8 +18,6 @@ import utility.CommandRegExConverter;
  * manager. They can use it to obtain the persistence manager and query the
  * database.
  * 
- * Any implementing class must provide a public Constructor with no parameters.
- * 
  * @author Satia
  *
  */
@@ -67,9 +65,8 @@ public abstract class GameDataController {
 
 	/**
 	 * @param currentGameManager
-	 *            the currentGameManager to set
 	 */
-	public void setCurrentGameManager(CurrentGameManager currentGameManager) {
+	public GameDataController(CurrentGameManager currentGameManager) {
 		this.currentGameManager = currentGameManager;
 	}
 

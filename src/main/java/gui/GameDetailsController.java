@@ -12,6 +12,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import logic.CurrentGameManager;
 
 /**
  * Controller for the game details view.
@@ -120,6 +121,14 @@ public class GameDetailsController extends GameDataController {
 	private ComboBox<Color> failureFGColorPicker;
 	@FXML
 	private ComboBox<Color> failureBGColorPicker;
+	
+
+	/**
+	 * @param currentGameManager
+	 */
+	public GameDetailsController(CurrentGameManager currentGameManager) {
+		super(currentGameManager);
+	}
 
 	@FXML
 	private void initialize() {
