@@ -45,6 +45,7 @@ public class PersistenceManager {
 	private InspectableObjectManager inspectableObjectManager;
 	private InventoryItemManager inventoryItemManager;
 	private ItemManager itemManager;
+	private LocationManager locationManager;
 	private PersonManager personManager;
 	private PlayerManager playerManager;
 	private UsableObjectManager usableObjectManager;
@@ -60,6 +61,7 @@ public class PersistenceManager {
 		this.inspectableObjectManager = new InspectableObjectManager(this);
 		this.inventoryItemManager = new InventoryItemManager(this);
 		this.itemManager = new ItemManager(this);
+		this.locationManager = new LocationManager(this);
 		this.personManager = new PersonManager(this);
 		this.playerManager = new PlayerManager(this);
 		this.usableObjectManager = new UsableObjectManager(this);
@@ -173,6 +175,13 @@ public class PersistenceManager {
 	 */
 	public ItemManager getItemManager() {
 		return itemManager;
+	}
+
+	/**
+	 * @return the locationManager
+	 */
+	public LocationManager getLocationManager() {
+		return locationManager;
 	}
 
 	/**

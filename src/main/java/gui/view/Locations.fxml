@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<TableView maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
   <columns>
-    <TableColumn prefWidth="75.0" text="ID" />
-    <TableColumn prefWidth="75.0" text="Name" />
-      <TableColumn prefWidth="75.0" text="Description" />
+    <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
+    <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
+      <TableColumn fx:id="descriptionCol" prefWidth="400.0" text="Description" />
   </columns>
 </TableView>
