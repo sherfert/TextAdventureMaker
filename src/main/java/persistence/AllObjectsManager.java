@@ -28,20 +28,40 @@ public class AllObjectsManager {
 	/**
 	 * Removes an object from the database.
 	 *
-	 * @param object the object
+	 * @param object
+	 *            the object
 	 */
 	public void removeObject(HasId object) {
-		
+
 		// It is not permitted to delete Game or Player objects
-		if(object instanceof Player || object instanceof Game) {
+		if (object instanceof Player || object instanceof Game) {
 			Logger.getLogger(AllObjectsManager.class.getName()).log(Level.WARNING,
-			"It is not permitted to delete an object of type {0}", object.getClass().getName());
+					"It is not permitted to delete an object of type {0}", object.getClass().getName());
 			return;
 		}
-		
+
 		Logger.getLogger(AllObjectsManager.class.getName()).log(Level.INFO,
-			"Deleting object with ID {0} type {1} from database",
-			new Object[]{object.getId(), object.getClass().getName()});
+				"Deleting object with ID {0} type {1} from database",
+				new Object[] { object.getId(), object.getClass().getName() });
 		persistenceManager.getEntityManager().remove(object);
+	}
+
+	/**
+	 * Adds an object to the database.
+	 * 
+	 * @param object
+	 *            the object
+	 */
+	public void addObject(HasId object) {
+		// It is not permitted to add Game or Player objects
+		if (object instanceof Player || object instanceof Game) {
+			Logger.getLogger(AllObjectsManager.class.getName()).log(Level.WARNING,
+					"It is not permitted to add an object of type {0}", object.getClass().getName());
+			return;
+		}
+
+		Logger.getLogger(AllObjectsManager.class.getName()).log(Level.INFO, "Adding object of type {0} to database",
+				new Object[] { object.getClass().getName() });
+		persistenceManager.getEntityManager().persist(object);
 	}
 }

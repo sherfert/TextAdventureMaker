@@ -6,10 +6,46 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
-  <columns>
-    <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
-    <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
-      <TableColumn fx:id="descriptionCol" prefWidth="400.0" text="Description" />
-  </columns>
-</TableView>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TableView fx:id="table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0">
+         <columns>
+            <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
+            <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="descriptionCol" prefWidth="400.0" text="Description" />
+         </columns>
+      </TableView>
+   </center>
+   <right>
+      <TabPane prefHeight="200.0" prefWidth="200.0" stylesheets="@locations.css" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab fx:id="newTab" text="New">
+            <content>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox spacing="2.0">
+                           <children>
+                              <Label text="Name" />
+                              <TextField fx:id="newNameTF" />
+                              <Label text="Description" />
+                              <TextArea fx:id="newDescriptionTA" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+                              <Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+            </content>
+          </Tab>
+          <Tab fx:id="editTab" text="Edit">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </right>
+</BorderPane>

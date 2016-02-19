@@ -196,8 +196,6 @@ public abstract class GameDataController {
 				hideError(inputNode);
 				List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
 						.collect(Collectors.toList());
-				System.out.println(newCommands);
-
 				setter.setCommands(newCommands);
 			}
 		}
