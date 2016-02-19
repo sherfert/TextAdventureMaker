@@ -1,10 +1,16 @@
 package data;
 
 import data.interfaces.HasId;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,27 +25,24 @@ import javax.persistence.InheritanceType;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Access(AccessType.PROPERTY)
 public abstract class NamedObject implements HasId {
 
 	/**
 	 * The id.
 	 */
-	@Id
-	@GeneratedValue
 	private int id;
 
 	/**
 	 * The name.
 	 */
-	@Column(nullable = false)
-	private String name;
+	private final StringProperty name;
 
 	/**
 	 * The description. It is being displayed when the named object is e.g.
 	 * in the same location.
 	 */
-	@Column(nullable = false)
-	private String description;
+	private final StringProperty description;
 
 	/**
 	 * No-arg constructor for the database. Use
@@ -47,6 +50,8 @@ public abstract class NamedObject implements HasId {
 	 */
 	@Deprecated
 	protected NamedObject() {
+		name = new SimpleStringProperty();
+		description = new SimpleStringProperty();
 	}
 
 	/**
@@ -54,42 +59,69 @@ public abstract class NamedObject implements HasId {
 	 * @param description the description
 	 */
 	protected NamedObject(String name, String description) {
-		this.name = name;
-		this.description = description;
+		this.name = new SimpleStringProperty(name);
+		this.description = new SimpleStringProperty(description);
 	}
 
 	@Override
+	@Id
+	@GeneratedValue
 	public int getId() {
 		return id;
+	}
+	
+	/**
+	 * Just for the database.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setId(int id) {
+		this.id = id;
 	}
 
 	/**
 	 * @return the name
 	 */
+	@Column(nullable = false)
 	public String getName() {
-		return name;
+		return name.get();
 	}
 
 	/**
 	 * @return the description
 	 */
+	@Column(nullable = false)
 	public String getDescription() {
-		return description;
+		return description.get();
 	}
 
 	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.name.set(name);
 	}
+	
+	/**
+	 * @return the name property
+	 */
+	public StringProperty nameProperty() {
+        return name;
+    }
 
 	/**
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
-		this.description = description;
+		this.description.set(description);
 	}
+	
+	/**
+	 * @return the description property
+	 */
+	public StringProperty descriptionProperty() {
+        return description;
+    }
 
 	/**
 	 * @return a string representation of this object

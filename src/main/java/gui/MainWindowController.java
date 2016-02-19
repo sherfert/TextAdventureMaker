@@ -23,6 +23,9 @@ import logic.JARCreator;
 /**
  * Controller for the main window.
  * 
+ * TODO only instantiate center controllers once.
+ * FIXME crash if same DB opened twice.
+ * 
  * @author Satia
  */
 public class MainWindowController {
@@ -32,6 +35,10 @@ public class MainWindowController {
 
 	/** The current game manager. */
 	private CurrentGameManager currentGameManager;
+	
+	// All controllers that can be loaded dynamically
+	private GameDetailsController gameDetailsController;
+	private LocationsController locationsController;
 
 	@FXML
 	private MenuItem newMenuItem;
@@ -120,14 +127,14 @@ public class MainWindowController {
 	 */
 	public void loadGameDetails() {
 		// Load the game details in the center of the window
-		setCenterContent("view/GameDetails.fxml", new GameDetailsController(currentGameManager));
+		setCenterContent("view/GameDetails.fxml", gameDetailsController);
 	}
 
 	/**
 	 * Loads the locations into the center.
 	 */
 	public void loadLocations() {
-		setCenterContent("view/Locations.fxml", new LocationsController(currentGameManager));
+		setCenterContent("view/Locations.fxml", locationsController);
 	}
 
 	/**
@@ -181,6 +188,10 @@ public class MainWindowController {
 			// Enable the menu items that need a loaded game
 			exportMenuItem.setDisable(false);
 			gameMenu.setDisable(false);
+			
+			// Create all controllers
+			gameDetailsController = new GameDetailsController(currentGameManager);
+			locationsController = new LocationsController(currentGameManager);
 
 			// Load game details as first view
 			loadGameDetails();

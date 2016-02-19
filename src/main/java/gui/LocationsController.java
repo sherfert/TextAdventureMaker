@@ -7,7 +7,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -16,6 +18,8 @@ import logic.CurrentGameManager;
 /**
  * Controller for the locations view.
  * 
+ * TODO Support to change list of items/persons/waysIn/waysOut.
+ * 
  * @author Satia
  *
  */
@@ -23,6 +27,9 @@ public class LocationsController extends GameDataController {
 
 	/** An observable list with the locations. */
 	private ObservableList<Location> locationsOL;
+
+	// The currently edited location
+	private Location editedLocation;
 
 	@FXML
 	private TableView<Location> table;
@@ -35,6 +42,9 @@ public class LocationsController extends GameDataController {
 
 	@FXML
 	private TableColumn<Location, String> descriptionCol;
+
+	@FXML
+	private TabPane newEditTabs;
 
 	@FXML
 	private Tab newTab;
@@ -51,6 +61,12 @@ public class LocationsController extends GameDataController {
 	@FXML
 	private Button saveButton;
 
+	@FXML
+	private TextField editNameTF;
+
+	@FXML
+	private TextArea editDescriptionTA;
+
 	/**
 	 * @param currentGameManager
 	 */
@@ -61,28 +77,39 @@ public class LocationsController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Set cell value factories for the columns
-		// TODO use properties
 		idCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<Integer>(p.getValue().getId()));
-		nameCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<String>(p.getValue().getName()));
-		descriptionCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<String>(p.getValue().getDescription()));
+		nameCol.setCellValueFactory((p) -> p.getValue().nameProperty());
+		descriptionCol.setCellValueFactory((p) -> p.getValue().descriptionProperty());
 
-		// Get all locations and store in observable list
-		locationsOL = FXCollections
-				.observableArrayList(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+		// A listener for row clicks
+		table.setRowFactory(tv -> {
+			TableRow<Location> row = new TableRow<>();
+			row.setOnMouseClicked(event -> locationSelected(row.getItem()));
+			return row;
+		});
+
+		// Get all locations and store in observable list, unless the list is
+		// already propagated
+		if (locationsOL == null) {
+			locationsOL = FXCollections.observableArrayList(
+					currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+		}
 
 		// Fill table
 		table.setItems(locationsOL);
-		
+
 		// Disable save button at beginning
 		saveButton.setDisable(true);
-		
-		// TODO
-		// Handlers
+
 		// Assure save is only enabled if there is a name
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
-		saveButton.setOnMouseClicked((e) -> saveNewLocation()); 
+		// Save button handler
+		saveButton.setOnMouseClicked((e) -> saveNewLocation());
 	}
-	
+
+	/**
+	 * Saves a new location to both DB and table.
+	 */
 	private void saveNewLocation() {
 		Location l = new Location(newNameTF.getText(), newDescriptionTA.getText());
 		// Add location to DB
@@ -90,10 +117,39 @@ public class LocationsController extends GameDataController {
 		currentGameManager.getPersistenceManager().updateChanges();
 		// Add location to our table
 		locationsOL.add(l);
-		
+
 		// Reset the form values
 		newNameTF.setText("");
 		newDescriptionTA.setText("");
+	}
+
+	/**
+	 * Places the selected location in the edit area of the tab pane.
+	 * 
+	 * @param l
+	 *            the location
+	 */
+	private void locationSelected(Location l) {
+		// Select the edit tab
+		newEditTabs.getSelectionModel().select(editTab);
+
+		// Remove previous bindings
+		finishEditLocation();
+
+		// Set new edited location
+		editedLocation = l;
+		
+		// Create new bindings
+		editNameTF.textProperty().bindBidirectional(l.nameProperty());
+		editDescriptionTA.textProperty().bindBidirectional(l.descriptionProperty());
+	}
+
+	private void finishEditLocation() {
+		if (editedLocation != null) {
+			editNameTF.textProperty().unbindBidirectional(editedLocation.nameProperty());
+			editDescriptionTA.textProperty().unbindBidirectional(editedLocation.descriptionProperty());
+			editedLocation = null;
+		}
 	}
 
 }

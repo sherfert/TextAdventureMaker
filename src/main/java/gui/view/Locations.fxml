@@ -18,7 +18,7 @@
       </TableView>
    </center>
    <right>
-      <TabPane prefHeight="200.0" prefWidth="200.0" stylesheets="@locations.css" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="newEditTabs" prefHeight="200.0" prefWidth="200.0" stylesheets="@locations.css" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="newTab" text="New">
             <content>
@@ -42,7 +42,21 @@
           </Tab>
           <Tab fx:id="editTab" text="Edit">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox spacing="2.0">
+                           <children>
+                              <Label text="Name" />
+                              <TextField fx:id="editNameTF" />
+                              <Label text="Description" />
+                              <TextArea fx:id="editDescriptionTA" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
             </content>
           </Tab>
         </tabs>
