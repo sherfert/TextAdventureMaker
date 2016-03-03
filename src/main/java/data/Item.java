@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
@@ -187,11 +188,13 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
+	@Transient
 	public boolean isRemoveItem() {
 		return removeAction.getEnabled();
 	}
 
 	@Override
+	@Transient
 	public boolean isTakingEnabled() {
 		return addInventoryItemsAction.getEnabled();
 	}

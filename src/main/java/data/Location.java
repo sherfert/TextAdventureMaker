@@ -8,6 +8,7 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
@@ -118,6 +119,7 @@ public class Location extends NamedObject {
 	 * @return the short description plus the short descriptions of
 	 * everything here.
 	 */
+	@Transient
 	public String getEnteredText() {
 		StringBuilder sb = new StringBuilder(getDescription());
 		// Persons
@@ -139,6 +141,7 @@ public class Location extends NamedObject {
 	 * @return a list containing the {@link HasLocation}s: Persons and
 	 * Items.
 	 */
+	@Transient
 	public List<HasLocation> getHasLocations() {
 		List<HasLocation> result = new ArrayList<>(persons.size()
 			+ items.size());
@@ -153,6 +156,7 @@ public class Location extends NamedObject {
 	 * @return a list containing everything that can be inspected in this
 	 * location.
 	 */
+	@Transient
 	public List<Inspectable> getInspectables() {
 		List<Inspectable> result = new ArrayList<>(persons.size() + items.size() + waysOut.size());
 		// The persons

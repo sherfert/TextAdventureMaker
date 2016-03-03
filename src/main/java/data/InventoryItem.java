@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
@@ -420,28 +421,33 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
+	@Transient
 	public List<AbstractAction> getAdditionalActionsFromCombineWith(
 			Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).additionalCombineWithActions;
 	}
 
 	@Override
+	@Transient
 	public List<AbstractAction> getAdditionalActionsFromUseWith(
 			HasLocation object) {
 		return getUsableHasLocation(object).additionalUseWithActions;
 	}
 
 	@Override
+	@Transient
 	public String getCombineWithForbiddenText(Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).combineWithForbiddenText;
 	}
 
 	@Override
+	@Transient
 	public String getCombineWithSuccessfulText(Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).combineWithSuccessfulText;
 	}
 
 	@Override
+	@Transient
 	public List<InventoryItem> getNewCombinablesWhenCombinedWith(
 			Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).addInventoryItemsAction
@@ -449,38 +455,45 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
+	@Transient
 	public List<String> getAdditionalCombineCommands(
 			Combinable<InventoryItem> partner) {
 		return getCombineCommands(partner).commands;
 	}
 
 	@Override
+	@Transient
 	public List<String> getAdditionalUseWithCommands(HasLocation object) {
 		return getUsableHasLocation(object).additionalUseWithCommands;
 	}
 
 	@Override
+	@Transient
 	public boolean getRemoveCombinablesWhenCombinedWith(
 			Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).removeCombinables;
 	}
 
 	@Override
+	@Transient
 	public String getUseWithForbiddenText(HasLocation object) {
 		return getUsableHasLocation(object).useWithForbiddenText;
 	}
 
 	@Override
+	@Transient
 	public String getUseWithSuccessfulText(HasLocation object) {
 		return getUsableHasLocation(object).useWithSuccessfulText;
 	}
 
 	@Override
+	@Transient
 	public boolean isCombiningEnabledWith(Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).enabled;
 	}
 
 	@Override
+	@Transient
 	public boolean isUsingEnabledWith(HasLocation object) {
 		return getUsableHasLocation(object).enabled;
 	}
@@ -578,6 +591,7 @@ public class InventoryItem extends UsableObject implements
 	 *            the item
 	 * @return the associated {@link CombinableInventoryItem}.
 	 */
+	@Transient
 	private CombinableInventoryItem getCombinableInventoryItem(
 			Combinable<InventoryItem> item) {
 		if (item instanceof InventoryItem) {
@@ -608,6 +622,7 @@ public class InventoryItem extends UsableObject implements
 	 *            the item
 	 * @return the associated {@link CombineCommands}.
 	 */
+	@Transient
 	private CombineCommands getCombineCommands(Combinable<InventoryItem> item) {
 		if (item instanceof InventoryItem) {
 			CombineCommands result = additionalCombineCommands.get(item);

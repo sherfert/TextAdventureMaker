@@ -8,6 +8,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.interfaces.HasConversation;
@@ -171,6 +172,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	}
 
 	@Override
+	@Transient
 	public boolean isTalkingEnabled() {
 		return conversation != null && conversation.getEnabled();
 	}

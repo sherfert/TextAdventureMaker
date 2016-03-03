@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import data.interfaces.HasId;
 
@@ -96,6 +97,7 @@ public class ConversationLayer implements HasId {
 	/**
 	 * @return a list of the texts of all enabled options.
 	 */
+	@Transient
 	public List<String> getOptionTexts() {
 		List<String> result = new ArrayList<>(options.size());
 		for (ConversationOption option : options) {
@@ -110,6 +112,7 @@ public class ConversationLayer implements HasId {
 	/**
 	 * @return a list of all enabled options.
 	 */
+	@Transient
 	public List<ConversationOption> getEnabledOptions() {
 		List<ConversationOption> result = new ArrayList<>(options.size());
 		for (ConversationOption option : options) {
@@ -126,6 +129,7 @@ public class ConversationLayer implements HasId {
 	 * 
 	 * @return if the layer is playable.
 	 */
+	@Transient
 	public boolean isPlayable() {
 		for (ConversationOption option : options) {
 			if (option.getEnabled()) {
