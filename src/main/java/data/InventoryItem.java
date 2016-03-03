@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -31,9 +33,12 @@ import data.interfaces.UsableWithHasLocation;
 /**
  * Any item that can appear in your inventory. These items are not in locations.
  * 
+ * TODO access property
+ * 
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class InventoryItem extends UsableObject implements
 		UsableWithHasLocation, Combinable<InventoryItem> {
 
@@ -246,6 +251,7 @@ public class InventoryItem extends UsableObject implements
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
+	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
 
 	/**
@@ -259,6 +265,7 @@ public class InventoryItem extends UsableObject implements
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
+	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombineCommands> additionalCombineCommands;
 
 	/**
@@ -271,6 +278,7 @@ public class InventoryItem extends UsableObject implements
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
+	@Access(AccessType.FIELD)
 	private Map<Item, UsableHasLocation> usableItems;
 
 	/**
@@ -283,6 +291,7 @@ public class InventoryItem extends UsableObject implements
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn
 	@MapKeyJoinColumn
+	@Access(AccessType.FIELD)
 	private Map<Person, UsableHasLocation> usablePersons;
 
 	/**

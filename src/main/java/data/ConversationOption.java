@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,45 +30,38 @@ import data.interfaces.HasId;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ConversationOption implements HasId {
 
 	/**
 	 * The id.
 	 */
-	@Id
-	@GeneratedValue
 	private int id;
 
 	/**
 	 * The text the player says when choosing that option.
 	 */
-	@Column(nullable = false)
 	private String text;
 
 	/**
 	 * The answer the player gets when choosing that option.
 	 */
-	@Column(nullable = false)
 	private String answer;
 
 	/**
 	 * A text describing what is going on additionally. If empty, nothing is
 	 * printed.
 	 */
-	@Column(nullable = false)
 	private String event;
 
 	/**
 	 * All additional actions.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
 	private List<AbstractAction> additionalActions;
 
 	/**
 	 * Only enabled options from a layer are listed.
 	 */
-	@Column(nullable = false)
 	private boolean enabled;
 
 	/**
@@ -76,8 +71,6 @@ public class ConversationOption implements HasId {
 	 * 
 	 * This should only point to layers of the same conversation.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
 	private ConversationLayer target;
 
 	/**
@@ -91,6 +84,7 @@ public class ConversationOption implements HasId {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	// (nullable = false)
+	@Access(AccessType.FIELD)
 	private ChangeConversationOptionAction disableAction;
 
 	/**
@@ -152,20 +146,25 @@ public class ConversationOption implements HasId {
 	}
 
 	@Override
+	@Id
+	@GeneratedValue
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @param id the id to set
+	 * Just for the database.
 	 */
-	public void setId(int id) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setId(int id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the text
 	 */
+	@Column(nullable = false)
 	public String getText() {
 		return text;
 	}
@@ -181,6 +180,7 @@ public class ConversationOption implements HasId {
 	/**
 	 * @return the answer
 	 */
+	@Column(nullable = false)
 	public String getAnswer() {
 		return answer;
 	}
@@ -196,6 +196,7 @@ public class ConversationOption implements HasId {
 	/**
 	 * @return the event
 	 */
+	@Column(nullable = false)
 	public String getEvent() {
 		return event;
 	}
@@ -211,6 +212,8 @@ public class ConversationOption implements HasId {
 	/**
 	 * @return the additionalActions
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
 	public List<AbstractAction> getAdditionalActions() {
 		return additionalActions;
 	}
@@ -226,7 +229,8 @@ public class ConversationOption implements HasId {
 	/**
 	 * @return the enabled
 	 */
-	public boolean isEnabled() {
+	@Column(nullable = false)
+	public boolean getEnabled() {
 		return enabled;
 	}
 
@@ -241,6 +245,8 @@ public class ConversationOption implements HasId {
 	/**
 	 * @return the target
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
 	public ConversationLayer getTarget() {
 		return target;
 	}

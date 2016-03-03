@@ -6,6 +6,8 @@ import data.Game;
 import data.action.AbstractAction;
 
 /**
+ * TODO check which of the Interface methods (for all interfaces) are actually used!
+ * 
  * Anything combineable with another class. Usually the same class. Namely
  * {@link InventoryItem}.
  * 

@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -18,32 +20,29 @@ import data.interfaces.Inspectable;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class Location extends NamedObject {
 
 	/**
 	 * The items located here.
 	 */
-	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	private List<Item> items;
 
 	/**
 	 * The persons located here.
 	 */
-	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	private List<Person> persons;
 
 	/**
 	 * The ways leading inside this location. They get deleted when the
 	 * location is deleted.
 	 */
-	@OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
 	private List<Way> waysIn;
 
 	/**
 	 * The ways leading outside this location. They get deleted when the
 	 * location is deleted.
 	 */
-	@OneToMany(mappedBy = "origin", cascade = CascadeType.ALL)
 	private List<Way> waysOut;
 
 	/**
@@ -168,6 +167,7 @@ public class Location extends NamedObject {
 	/**
 	 * @return the items
 	 */
+	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	public List<Item> getItems() {
 		return items;
 	}
@@ -175,6 +175,7 @@ public class Location extends NamedObject {
 	/**
 	 * @return the persons
 	 */
+	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	public List<Person> getPersons() {
 		return persons;
 	}
@@ -182,8 +183,53 @@ public class Location extends NamedObject {
 	/**
 	 * @return the waysOut
 	 */
+	@OneToMany(mappedBy = "origin", cascade = CascadeType.ALL)
 	public List<Way> getWaysOut() {
 		return waysOut;
+	}
+
+	/**
+	 * @return the waysIn
+	 */
+	@OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
+	public List<Way> getWaysIn() {
+		return waysIn;
+	}
+
+	/**
+	 * Just for the database.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setItems(List<Item> items) {
+		this.items = items;
+	}
+
+	/**
+	 * Just for the database.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setPersons(List<Person> persons) {
+		this.persons = persons;
+	}
+
+	/**
+	 * Just for the database.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setWaysIn(List<Way> waysIn) {
+		this.waysIn = waysIn;
+	}
+
+	/**
+	 * Just for the database.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setWaysOut(List<Way> waysOut) {
+		this.waysOut = waysOut;
 	}
 
 	/**

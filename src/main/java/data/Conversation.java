@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,47 +27,39 @@ import data.interfaces.HasId;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class Conversation implements HasId {
 
 	/**
 	 * The id.
 	 */
-	@Id
-	@GeneratedValue
 	private int id;
 
 	/**
 	 * The greeting from the Person.
 	 */
-	@Column(nullable = false)
 	private String greeting;
 
 	/**
 	 * A text describing what is going on additionally. If empty, nothing is
 	 * printed.
 	 */
-	@Column(nullable = false)
 	private String event;
 
 	/**
 	 * If this conversation is enabled.
 	 */
-	@Column(nullable = false)
 	private boolean enabled;
 
 	/**
 	 * All additional actions.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
 	private List<AbstractAction> additionalActions;
 
 	/**
 	 * All layers belonging to this conversation. A layer can only belong to one
 	 * conversation.
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn
 	private List<ConversationLayer> layers;
 
 	/**
@@ -73,8 +67,6 @@ public class Conversation implements HasId {
 	 * greeting. If this is {@code null}, the conversation will end after the
 	 * greeting.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn
 	private ConversationLayer startLayer;
 
 	/**
@@ -117,20 +109,25 @@ public class Conversation implements HasId {
 	}
 
 	@Override
+	@Id
+	@GeneratedValue
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @param id the id to set
+	 * Just for the database.
 	 */
-	public void setId(int id) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setId(int id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the greeting
 	 */
+	@Column(nullable = false)
 	public String getGreeting() {
 		return greeting;
 	}
@@ -146,6 +143,7 @@ public class Conversation implements HasId {
 	/**
 	 * @return the event
 	 */
+	@Column(nullable = false)
 	public String getEvent() {
 		return event;
 	}
@@ -158,10 +156,13 @@ public class Conversation implements HasId {
 		this.event = event;
 	}
 
+
 	/**
+	 * If this conversation is enabled.
 	 * @return the enabled
 	 */
-	public boolean isEnabled() {
+	@Column(nullable = false)
+	public boolean getEnabled() {
 		return enabled;
 	}
 
@@ -176,6 +177,8 @@ public class Conversation implements HasId {
 	/**
 	 * @return the layers
 	 */
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
 	public List<ConversationLayer> getLayers() {
 		return layers;
 	}
@@ -191,6 +194,8 @@ public class Conversation implements HasId {
 	/**
 	 * @return the startLayer
 	 */
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn
 	public ConversationLayer getStartLayer() {
 		return startLayer;
 	}
@@ -206,6 +211,8 @@ public class Conversation implements HasId {
 	/**
 	 * @return the additionalActions
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
 	public List<AbstractAction> getAdditionalActions() {
 		return additionalActions;
 	}
@@ -260,11 +267,10 @@ public class Conversation implements HasId {
 
 	@Override
 	public String toString() {
-		return "Conversation{id=" + id + ", greeting=" + greeting + ", event="
-				+ event + ", enabled=" + enabled + ", additionalActionsIDs="
-				+ NamedObject.getIDList(additionalActions) + ", layersIDs="
-				+ NamedObject.getIDList(layers) + ", startLayerID="
-				+ (startLayer != null ? startLayer.getId() : "null") + "}";
+		return "Conversation{id=" + id + ", greeting=" + greeting + ", event=" + event + ", enabled=" + enabled
+				+ ", additionalActionsIDs=" + NamedObject.getIDList(additionalActions) + ", layersIDs="
+				+ NamedObject.getIDList(layers) + ", startLayerID=" + (startLayer != null ? startLayer.getId() : "null")
+				+ "}";
 	}
 
 }

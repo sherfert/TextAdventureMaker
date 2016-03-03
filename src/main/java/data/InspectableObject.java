@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -26,25 +28,23 @@ import java.util.logging.Logger;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Access(AccessType.PROPERTY)
 public abstract class InspectableObject extends NamedObject implements Inspectable {
+	
 	/**
 	 * All additional inspect actions.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
 	private List<AbstractAction> additionalInspectActions;
 
 	/**
 	 * All identifiers. Must be lowercase.
 	 */
-	@ElementCollection
 	private List<String> identifiers;
 
 	/**
 	 * It is being displayed when the named object is inspected or suggests the
 	 * default text to be displayed if {@code null}.
 	 */
-	@Column(nullable = true)
 	private String inspectionText;
 
 	/**
@@ -84,6 +84,8 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	}
 
 	@Override
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
 	public List<AbstractAction> getAdditionalInspectActions() {
 		return additionalInspectActions;
 	}
@@ -97,6 +99,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	}
 
 	@Override
+	@ElementCollection
 	public List<String> getIdentifiers() {
 		return identifiers;
 	}
@@ -110,6 +113,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	}
 
 	@Override
+	@Column(nullable = true)
 	public String getInspectionText() {
 		return inspectionText;
 	}

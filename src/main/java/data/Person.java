@@ -1,5 +1,7 @@
 package data;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -22,14 +24,12 @@ import java.util.logging.Logger;
  * @author Satia
  */
 @Entity
-public class Person extends InspectableObject implements HasLocation,
-		HasConversation {
+@Access(AccessType.PROPERTY)
+public class Person extends InspectableObject implements HasLocation, HasConversation {
 
 	/**
 	 * The current location of the person. May be {@code null}.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
 	private Location location;
 
 	/**
@@ -37,8 +37,6 @@ public class Person extends InspectableObject implements HasLocation,
 	 * disabled, you cannot talk to the person. A conversation can be used by
 	 * more than one person.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
 	private Conversation conversation;
 
 	/**
@@ -46,13 +44,11 @@ public class Person extends InspectableObject implements HasLocation,
 	 * no such successful text, as then the conversation is started immediately.
 	 * Suggests the default text to be displayed if {@code null}.
 	 */
-	@Column(nullable = true)
 	private String talkingToForbiddenText;
-	
+
 	/**
 	 * All additional talk to commands.
 	 */
-	@ElementCollection
 	private List<String> additionalTalkToCommands;
 
 	/**
@@ -90,30 +86,41 @@ public class Person extends InspectableObject implements HasLocation,
 		super(name, description);
 		init();
 	}
-	
+
 	/**
 	 * Initializes the fields.
 	 */
 	private final void init() {
 		this.additionalTalkToCommands = new ArrayList<>();
 	}
-	
+
 	@Override
 	public void addAdditionalTalkToCommand(String command) {
 		additionalTalkToCommands.add(command);
 	}
-	
+
 	@Override
+	@ElementCollection
 	public List<String> getAdditionalTalkToCommands() {
 		return additionalTalkToCommands;
 	}
-	
+
+	/**
+	 * @param additionalTalkToCommands
+	 *            the additionalTalkToCommands to set
+	 */
+	public void setAdditionalTalkToCommands(List<String> additionalTalkToCommands) {
+		this.additionalTalkToCommands = additionalTalkToCommands;
+	}
+
 	@Override
 	public void removeAdditionalTalkToCommand(String command) {
 		additionalTalkToCommands.remove(command);
 	}
 
 	@Override
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
 	public Location getLocation() {
 		return location;
 	}
@@ -121,8 +128,7 @@ public class Person extends InspectableObject implements HasLocation,
 	// final as called in constructor
 	@Override
 	public final void setLocation(Location location) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Setting location of {0} to {1}",
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Setting location of {0} to {1}",
 				new Object[] { this, location });
 
 		if (this.location != null) {
@@ -136,11 +142,12 @@ public class Person extends InspectableObject implements HasLocation,
 
 	@Override
 	public String toString() {
-		return "Person{" + "locationID=" + location.getId() + " "
-				+ super.toString() + '}';
+		return "Person{" + "locationID=" + location.getId() + " " + super.toString() + '}';
 	}
 
 	@Override
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
 	public Conversation getConversation() {
 		return conversation;
 	}
@@ -153,13 +160,11 @@ public class Person extends InspectableObject implements HasLocation,
 	@Override
 	public void talkTo(Game game) {
 		if (isTalkingEnabled()) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-					"Talking to {0}", this);
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Talking to {0}", this);
 		}
 		if (conversation != null) {
 			// Trigger additional actions
-			for (AbstractAction abstractAction : conversation
-					.getAdditionalActions()) {
+			for (AbstractAction abstractAction : conversation.getAdditionalActions()) {
 				abstractAction.triggerAction(game);
 			}
 		}
@@ -167,10 +172,11 @@ public class Person extends InspectableObject implements HasLocation,
 
 	@Override
 	public boolean isTalkingEnabled() {
-		return conversation != null && conversation.isEnabled();
+		return conversation != null && conversation.getEnabled();
 	}
 
 	@Override
+	@Column(nullable = true)
 	public String getTalkingToForbiddenText() {
 		return talkingToForbiddenText;
 	}

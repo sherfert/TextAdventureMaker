@@ -102,7 +102,7 @@ public class Use extends Command {
 
 				// Save name
 				currentReplacer.setName(object.getName());
-				if (object.isUsingEnabled()) {
+				if (object.getUsingEnabled()) {
 					Logger.getLogger(this.getClass().getName()).log(
 							Level.FINEST, "Use id {0} enabled", object.getId());
 

@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -29,6 +31,7 @@ import java.util.logging.Logger;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class Item extends UsableObject implements Takeable, HasLocation {
 
 	/**
@@ -36,26 +39,22 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
+	@Access(AccessType.FIELD)
 	private AddInventoryItemsAction addInventoryItemsAction;
 
 	/**
 	 * All additional take actions.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
 	private List<AbstractAction> additionalTakeActions;
-	
+
 	/**
 	 * All additional take commands.
 	 */
-	@ElementCollection
 	private List<String> additionalTakeCommands;
 
 	/**
 	 * The current location of the item. May be {@code null}.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
 	private Location location;
 
 	/**
@@ -69,20 +68,19 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn
 	// (nullable = false)
+	@Access(AccessType.FIELD)
 	private ChangeItemAction removeAction;
 
 	/**
 	 * A personalized error message displayed if taking this item was forbidden
 	 * or suggests the default text to be displayed if {@code null}.
 	 */
-	@Column(nullable = true)
 	private String takeForbiddenText;
 
 	/**
 	 * A personalized error message displayed if taking this item was successful
 	 * or suggests the default text to be displayed if {@code null}.
 	 */
-	@Column(nullable = true)
 	private String takeSuccessfulText;
 
 	/**
@@ -131,36 +129,59 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	public void addAdditionalActionToTake(AbstractAction action) {
+	public void addAdditionalTakeAction(AbstractAction action) {
 		additionalTakeActions.add(action);
 	}
-	
+
 	@Override
 	public void addAdditionalTakeCommand(String command) {
 		additionalTakeCommands.add(command);
 	}
 
 	@Override
-	public List<AbstractAction> getAdditionalActionsFromTake() {
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
+	public List<AbstractAction> getAdditionalTakeActions() {
 		return additionalTakeActions;
 	}
-	
+
+	/**
+	 * @param additionalTakeActions
+	 *            the additionalTakeActions to set
+	 */
+	public void setAdditionalTakeActions(List<AbstractAction> additionalTakeActions) {
+		this.additionalTakeActions = additionalTakeActions;
+	}
+
 	@Override
+	@ElementCollection
 	public List<String> getAdditionalTakeCommands() {
 		return additionalTakeCommands;
 	}
 
+	/**
+	 * @param additionalTakeCommands
+	 *            the additionalTakeCommands to set
+	 */
+	public void setAdditionalTakeCommands(List<String> additionalTakeCommands) {
+		this.additionalTakeCommands = additionalTakeCommands;
+	}
+
 	@Override
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
 	public Location getLocation() {
 		return location;
 	}
 
 	@Override
+	@Column(nullable = true)
 	public String getTakeForbiddenText() {
 		return takeForbiddenText;
 	}
 
 	@Override
+	@Column(nullable = true)
 	public String getTakeSuccessfulText() {
 		return takeSuccessfulText;
 	}
@@ -176,10 +197,10 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	public void removeAdditionalActionFromTake(AbstractAction action) {
+	public void removeAdditionalTakeAction(AbstractAction action) {
 		additionalTakeActions.remove(action);
 	}
-	
+
 	@Override
 	public void removeAdditionalTakeCommand(String command) {
 		additionalTakeCommands.remove(command);
@@ -188,8 +209,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	// final as called in constructor.
 	@Override
 	public final void setLocation(Location location) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Setting location of {0} to {1}",
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Setting location of {0} to {1}",
 				new Object[] { this, location });
 
 		if (this.location != null) {
@@ -242,8 +262,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public void take(Game game) {
 		if (isTakingEnabled()) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-					"Taking {0}", this);
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Taking {0}", this);
 
 			addInventoryItemsAction.triggerAction(game);
 			removeAction.triggerAction(game);
@@ -267,13 +286,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 
 	@Override
 	public String toString() {
-		return "Item{" + "addInventoryItemsActionID="
-				+ addInventoryItemsAction.getId()
-				+ ", additionalTakeActionsIDs="
-				+ NamedObject.getIDList(additionalTakeActions)
-				+ ", locationID=" + location.getId() + ", removeActionID="
-				+ removeAction.getId() + ", takeForbiddenText="
-				+ takeForbiddenText + ", takeSuccessfulText="
-				+ takeSuccessfulText + " " + super.toString() + '}';
+		return "Item{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId() + ", additionalTakeActionsIDs="
+				+ NamedObject.getIDList(additionalTakeActions) + ", locationID=" + location.getId()
+				+ ", removeActionID=" + removeAction.getId() + ", takeForbiddenText=" + takeForbiddenText
+				+ ", takeSuccessfulText=" + takeSuccessfulText + " " + super.toString() + '}';
 	}
 }

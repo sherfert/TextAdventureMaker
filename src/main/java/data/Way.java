@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -11,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.action.MoveAction;
@@ -25,25 +28,24 @@ import java.util.logging.Logger;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class Way extends InspectableObject implements Travelable {
 
 	/**
 	 * All additional move actions.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
 	private List<AbstractAction> additionalMoveActions;
-	
+
 	/**
 	 * All additional travel commands.
 	 */
-	@ElementCollection
 	private List<String> additionalTravelCommands;
 
 	/**
 	 * The move action.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
+	@Access(AccessType.FIELD)
 	private MoveAction moveAction;
 
 	/**
@@ -51,6 +53,7 @@ public class Way extends InspectableObject implements Travelable {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
+	@Access(AccessType.FIELD)
 	private Location destination;
 
 	/**
@@ -58,20 +61,19 @@ public class Way extends InspectableObject implements Travelable {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false)
+	@Access(AccessType.FIELD)
 	private Location origin;
 
 	/**
 	 * A personalized error message displayed if moving this way was forbidden.
 	 * The default message is used if this is {@code null}.
 	 */
-	@Column(nullable = true)
 	private String moveForbiddenText;
 
 	/**
 	 * A personalized error message displayed if moving this way was successful.
 	 * The default message is used if this is {@code null}.
 	 */
-	@Column(nullable = true)
 	private String moveSuccessfulText;
 
 	/**
@@ -93,8 +95,7 @@ public class Way extends InspectableObject implements Travelable {
 	 * @param destination
 	 *            the destination
 	 */
-	public Way(String name, String description, Location origin,
-			Location destination) {
+	public Way(String name, String description, Location origin, Location destination) {
 		super(name, description);
 		init();
 		moveAction = new MoveAction(destination);
@@ -106,20 +107,39 @@ public class Way extends InspectableObject implements Travelable {
 	public void addAdditionalActionToMove(AbstractAction action) {
 		additionalMoveActions.add(action);
 	}
-	
+
 	@Override
 	public void addAdditionalTravelCommand(String command) {
 		additionalTravelCommands.add(command);
 	}
 
 	@Override
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
 	public List<AbstractAction> getAdditionalMoveActions() {
 		return additionalMoveActions;
 	}
-	
+
+	/**
+	 * @param additionalMoveActions
+	 *            the additionalMoveActions to set
+	 */
+	public void setAdditionalMoveActions(List<AbstractAction> additionalMoveActions) {
+		this.additionalMoveActions = additionalMoveActions;
+	}
+
 	@Override
+	@ElementCollection
 	public List<String> getAdditionalTravelCommands() {
 		return additionalTravelCommands;
+	}
+
+	/**
+	 * @param additionalTravelCommands
+	 *            the additionalTravelCommands to set
+	 */
+	public void setAdditionalTravelCommands(List<String> additionalTravelCommands) {
+		this.additionalTravelCommands = additionalTravelCommands;
 	}
 
 	@Override
@@ -128,11 +148,13 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	@Override
+	@Column(nullable = true)
 	public String getMoveForbiddenText() {
 		return moveForbiddenText;
 	}
 
 	@Override
+	@Column(nullable = true)
 	public String getMoveSuccessfulText() {
 		return moveSuccessfulText;
 	}
@@ -145,6 +167,7 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	@Override
+	@Transient
 	public boolean isMovingEnabled() {
 		return moveAction.getEnabled();
 	}
@@ -153,7 +176,7 @@ public class Way extends InspectableObject implements Travelable {
 	public void removeAdditionalActionFromMove(AbstractAction action) {
 		additionalMoveActions.remove(action);
 	}
-	
+
 	@Override
 	public void removeAdditionalTravelCommand(String command) {
 		additionalTravelCommands.remove(command);
@@ -177,8 +200,7 @@ public class Way extends InspectableObject implements Travelable {
 	@Override
 	public void travel(Game game) {
 		// MoveAction is either enabled or not, no need to check here
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Travelling (if enabled) over {0}", this);
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Travelling (if enabled) over {0}", this);
 
 		moveAction.triggerAction(game);
 		for (AbstractAction abstractAction : additionalMoveActions) {
@@ -227,12 +249,9 @@ public class Way extends InspectableObject implements Travelable {
 
 	@Override
 	public String toString() {
-		return "Way{" + "additionalMoveActionsIDs="
-				+ NamedObject.getIDList(additionalMoveActions)
-				+ ", moveActionID=" + moveAction.getId() + ", destinationID="
-				+ destination.getId() + ", originID=" + origin.getId()
-				+ ", moveForbiddenText=" + moveForbiddenText
-				+ ", moveSuccessfulText=" + moveSuccessfulText + " "
+		return "Way{" + "additionalMoveActionsIDs=" + NamedObject.getIDList(additionalMoveActions) + ", moveActionID="
+				+ moveAction.getId() + ", destinationID=" + destination.getId() + ", originID=" + origin.getId()
+				+ ", moveForbiddenText=" + moveForbiddenText + ", moveSuccessfulText=" + moveSuccessfulText + " "
 				+ super.toString() + '}';
 	}
 }

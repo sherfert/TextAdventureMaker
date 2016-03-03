@@ -283,8 +283,8 @@ public class Main {
 		// Only let him in if he has the chair
 		ChangeWayAction allowGettingInsideAction = new ChangeWayAction(wayToFlat);
 		allowGettingInsideAction.setEnabling(Enabling.ENABLE);
-		chair.addAdditionalActionToTake(allowGettingInsideAction);
-		chair.addAdditionalActionToTake(changeBalconyDescriptionAction);
+		chair.addAdditionalTakeAction(allowGettingInsideAction);
+		chair.addAdditionalTakeAction(changeBalconyDescriptionAction);
 
 		/*
 		 * The tv can be hit with the chair. It is then replaced with a

@@ -20,7 +20,7 @@ public interface Takeable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToTake(AbstractAction action);
+	public void addAdditionalTakeAction(AbstractAction action);
 
 	/**
 	 * Adds an additional command that can be used to take the object.
@@ -61,7 +61,7 @@ public interface Takeable extends Identifiable {
 	/**
 	 * @return the additional actions.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromTake();
+	public List<AbstractAction> getAdditionalTakeActions();
 
 	/**
 	 * @return the forbiddenText or {@code null}.
@@ -89,7 +89,7 @@ public interface Takeable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromTake(AbstractAction action);
+	public void removeAdditionalTakeAction(AbstractAction action);
 
 	/**
 	 * Removes an additional take command.

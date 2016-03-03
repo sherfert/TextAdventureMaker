@@ -3,6 +3,8 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -26,39 +28,34 @@ import java.util.logging.Logger;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Access(AccessType.PROPERTY)
 public abstract class UsableObject extends InspectableObject implements Usable {
 
 	/**
 	 * All additional use actions.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
 	private List<AbstractAction> additionalUseActions;
-	
+
 	/**
 	 * All additional use commands.
 	 */
-	@ElementCollection
 	private List<String> additionalUseCommands;
 
 	/**
-	 * The text being displayed when not successfully used. The default
-	 * message is used if this is {@code null}.
+	 * The text being displayed when not successfully used. The default message
+	 * is used if this is {@code null}.
 	 */
-	@Column(nullable = true)
 	private String useForbiddenText;
 
 	/**
-	 * The text being displayed when successfully used. The default message
-	 * is used if this is {@code null}.
+	 * The text being displayed when successfully used. The default message is
+	 * used if this is {@code null}.
 	 */
-	@Column(nullable = true)
 	private String useSuccessfulText;
 
 	/**
 	 * If using is enabled. {@code false} by default.
 	 */
-	@Column(nullable = false)
 	private boolean usingEnabled;
 
 	/**
@@ -73,8 +70,10 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	/**
 	 * By default non-usable.
 	 *
-	 * @param name the name
-	 * @param description the description
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
 	 */
 	protected UsableObject(String name, String description) {
 		super(name, description);
@@ -85,34 +84,56 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	public void addAdditionalActionToUse(AbstractAction action) {
 		additionalUseActions.add(action);
 	}
-	
+
 	@Override
 	public void addAdditionalUseCommand(String command) {
 		additionalUseCommands.add(command);
 	}
 
 	@Override
-	public List<AbstractAction> getAdditionalActionsFromUse() {
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable
+	public List<AbstractAction> getAdditionalUseActions() {
 		return additionalUseActions;
 	}
-	
+
+	/**
+	 * @param additionalUseActions
+	 *            the additionalUseActions to set
+	 */
+	public void setAdditionalUseActions(List<AbstractAction> additionalUseActions) {
+		this.additionalUseActions = additionalUseActions;
+	}
+
 	@Override
+	@ElementCollection
 	public List<String> getAdditionalUseCommands() {
 		return additionalUseCommands;
 	}
 
+	/**
+	 * @param additionalUseCommands
+	 *            the additionalUseCommands to set
+	 */
+	public void setAdditionalUseCommands(List<String> additionalUseCommands) {
+		this.additionalUseCommands = additionalUseCommands;
+	}
+
 	@Override
+	@Column(nullable = true)
 	public String getUseForbiddenText() {
 		return useForbiddenText;
 	}
 
 	@Override
+	@Column(nullable = true)
 	public String getUseSuccessfulText() {
 		return useSuccessfulText;
 	}
 
 	@Override
-	public boolean isUsingEnabled() {
+	@Column(nullable = false)
+	public boolean getUsingEnabled() {
 		return usingEnabled;
 	}
 
@@ -120,7 +141,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	public void removeAdditionalActionFromUse(AbstractAction action) {
 		additionalUseActions.remove(action);
 	}
-	
+
 	@Override
 	public void removeAdditionalUseCommand(String command) {
 		additionalUseCommands.remove(command);
@@ -144,9 +165,8 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	@Override
 	public void use(Game game) {
 		// There is no "primary" action, so no "isEnabled" check
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Using {0}", this);
-		
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Using {0}", this);
+
 		for (AbstractAction abstractAction : additionalUseActions) {
 			abstractAction.triggerAction(game);
 		}
@@ -163,10 +183,8 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 
 	@Override
 	public String toString() {
-		return "UsableObject{" + "additionalUseActionsIDs="
-			+ NamedObject.getIDList(additionalUseActions)
-			+ ", useForbiddenText=" + useForbiddenText
-			+ ", useSuccessfulText=" + useSuccessfulText
-			+ ", usingEnabled=" + usingEnabled + " " + super.toString() + '}';
+		return "UsableObject{" + "additionalUseActionsIDs=" + NamedObject.getIDList(additionalUseActions)
+				+ ", useForbiddenText=" + useForbiddenText + ", useSuccessfulText=" + useSuccessfulText
+				+ ", usingEnabled=" + usingEnabled + " " + super.toString() + '}';
 	}
 }

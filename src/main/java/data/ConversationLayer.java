@@ -2,6 +2,9 @@ package data;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,20 +20,17 @@ import data.interfaces.HasId;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ConversationLayer implements HasId {
 
 	/**
 	 * The id.
 	 */
-	@Id
-	@GeneratedValue
 	private int id;
 
 	/**
 	 * The options of this layer. Options can only belong to one layer.
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn
 	private List<ConversationOption> options;
 
 	/**
@@ -40,21 +40,27 @@ public class ConversationLayer implements HasId {
 		this.options = new ArrayList<>();
 	}
 
+	@Id
+	@GeneratedValue
 	@Override
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * @param id the id to set
+	 * Just for the database.
 	 */
-	public void setId(int id) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setId(int id) {
 		this.id = id;
 	}
 
 	/**
 	 * @return the options
 	 */
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn
 	public List<ConversationOption> getOptions() {
 		return options;
 	}
@@ -93,7 +99,7 @@ public class ConversationLayer implements HasId {
 	public List<String> getOptionTexts() {
 		List<String> result = new ArrayList<>(options.size());
 		for (ConversationOption option : options) {
-			if (option.isEnabled()) {
+			if (option.getEnabled()) {
 				result.add(option.getText());
 			}
 		}
@@ -107,7 +113,7 @@ public class ConversationLayer implements HasId {
 	public List<ConversationOption> getEnabledOptions() {
 		List<ConversationOption> result = new ArrayList<>(options.size());
 		for (ConversationOption option : options) {
-			if (option.isEnabled()) {
+			if (option.getEnabled()) {
 				result.add(option);
 			}
 		}
@@ -122,7 +128,7 @@ public class ConversationLayer implements HasId {
 	 */
 	public boolean isPlayable() {
 		for (ConversationOption option : options) {
-			if (option.isEnabled()) {
+			if (option.getEnabled()) {
 				return true;
 			}
 		}

@@ -30,7 +30,7 @@ public interface Usable extends Identifiable {
 	/**
 	 * @return the additional actions.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromUse();
+	public List<AbstractAction> getAdditionalUseActions();
 
 	/**
 	 * @return the additional use commands.
@@ -50,7 +50,7 @@ public interface Usable extends Identifiable {
 	/**
 	 * @return if using is enabled.
 	 */
-	public boolean isUsingEnabled();
+	public boolean getUsingEnabled();
 
 	/**
 	 * Removes an additional action.
