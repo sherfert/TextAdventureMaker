@@ -22,6 +22,8 @@ import javax.persistence.ManyToOne;
  * This action modifies the usage behavior of two {@link InventoryItem} with one
  * another.
  * 
+ * TODO inverse cascading
+ * 
  * @author Satia
  * 
  */

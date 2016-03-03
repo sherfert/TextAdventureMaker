@@ -294,6 +294,11 @@ public class InventoryItem extends UsableObject implements
 	@MapKeyJoinColumn
 	@Access(AccessType.FIELD)
 	private Map<Person, UsableHasLocation> usablePersons;
+	
+	// Inverse mappings just for cascading.
+	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+	@Access(AccessType.FIELD)
+	private List<RemoveInventoryItemAction> removeActions;
 
 	/**
 	 * No-arg constructor for the database.

@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
  * This action modifies the usage behavior of an {@link InventoryItem} with a
  * {@link HasLocation}.
  * 
+ * TODO inverse cascading
+ * 
  * @author Satia
  * 
  */

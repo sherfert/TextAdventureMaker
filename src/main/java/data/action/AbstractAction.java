@@ -2,14 +2,19 @@ package data.action;
 
 import data.Game;
 import data.interfaces.HasId;
+
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 
 /**
  * Any action that changes something in the game (if enabled).
@@ -61,6 +66,10 @@ public abstract class AbstractAction implements HasId {
 	@Column(nullable = false)
 	protected boolean enabled;
 
+	// Inverse mappings just for cascading.
+	@OneToMany(mappedBy = "action", cascade = CascadeType.ALL)
+	private List<ChangeActionAction> changeActions;
+
 	/**
 	 * An enabled action.
 	 */
@@ -84,7 +93,8 @@ public abstract class AbstractAction implements HasId {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -132,6 +142,7 @@ public abstract class AbstractAction implements HasId {
 
 	/**
 	 * Actually perform the action.
+	 * 
 	 * @param game
 	 *            a reference to the game, needed for some actions.
 	 */

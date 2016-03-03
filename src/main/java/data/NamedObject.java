@@ -1,5 +1,6 @@
 package data;
 
+import data.action.ChangeNamedObjectAction;
 import data.interfaces.HasId;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -11,12 +12,14 @@ import java.util.Map;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 
 /**
  * Anything having a name and description.
@@ -43,6 +46,11 @@ public abstract class NamedObject implements HasId {
 	 * in the same location.
 	 */
 	private final StringProperty description;
+	
+	// Inverse mappings just for cascading.
+	@OneToMany(mappedBy = "object", cascade = CascadeType.ALL)
+	@Access(AccessType.FIELD)
+	private List<ChangeNamedObjectAction> changeActions;
 
 	/**
 	 * No-arg constructor for the database. Use

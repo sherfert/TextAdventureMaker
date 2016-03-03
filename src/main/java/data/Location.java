@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import data.action.MoveAction;
 import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 
@@ -45,6 +46,11 @@ public class Location extends NamedObject {
 	 * location is deleted.
 	 */
 	private List<Way> waysOut;
+	
+	// Inverse mappings just for cascading.
+	@OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
+	@Access(AccessType.FIELD)
+	private List<MoveAction> moveActions;
 
 	/**
 	 * No-arg constructor for the database.
