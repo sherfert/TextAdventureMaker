@@ -18,8 +18,8 @@ import logic.CurrentGameManager;
 /**
  * Controller for the locations view.
  * 
- * TODO Support to change list of items/persons/waysIn/waysOut.
- * TODO Removing locations
+ * TODO Support to change list of items/persons/waysIn/waysOut. TODO Removing
+ * locations
  * 
  * @author Satia
  *
@@ -68,6 +68,9 @@ public class LocationsController extends GameDataController {
 	@FXML
 	private TextArea editDescriptionTA;
 
+	@FXML
+	private Button removeButton;
+
 	/**
 	 * @param currentGameManager
 	 */
@@ -99,13 +102,16 @@ public class LocationsController extends GameDataController {
 		// Fill table
 		table.setItems(locationsOL);
 
-		// Disable save button at beginning
+		// Disable buttons at beginning
 		saveButton.setDisable(true);
+		removeButton.setDisable(true);
 
 		// Assure save is only enabled if there is a name
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
 		// Save button handler
 		saveButton.setOnMouseClicked((e) -> saveNewLocation());
+
+		removeButton.setOnMouseClicked((e) -> removeLocation());
 	}
 
 	/**
@@ -131,26 +137,51 @@ public class LocationsController extends GameDataController {
 	 *            the location
 	 */
 	private void locationSelected(Location l) {
+		if (l == null) {
+			return;
+		}
+
 		// Select the edit tab
 		newEditTabs.getSelectionModel().select(editTab);
+		// Activate the remove button
+		removeButton.setDisable(false);
 
 		// Remove previous bindings
 		finishEditLocation();
 
 		// Set new edited location
 		editedLocation = l;
-		
+
 		// Create new bindings
 		editNameTF.textProperty().bindBidirectional(l.nameProperty());
 		editDescriptionTA.textProperty().bindBidirectional(l.descriptionProperty());
 	}
 
+	/**
+	 * Called when the editing of a location was finished.
+	 */
 	private void finishEditLocation() {
 		if (editedLocation != null) {
 			editNameTF.textProperty().unbindBidirectional(editedLocation.nameProperty());
 			editDescriptionTA.textProperty().unbindBidirectional(editedLocation.descriptionProperty());
 			editedLocation = null;
 		}
+	}
+
+	/**
+	 * Removes a location from both DB and table.
+	 */
+	private void removeLocation() {
+		// Remove location from DB
+		currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(editedLocation);
+		currentGameManager.getPersistenceManager().updateChanges();
+		// Remove location from our table
+		locationsOL.remove(editedLocation);
+
+		// Stop editing the location
+		finishEditLocation();
+		// Disable the remove button
+		removeButton.setDisable(true);
 	}
 
 }
