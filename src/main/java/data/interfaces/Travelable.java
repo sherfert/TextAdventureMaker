@@ -32,7 +32,7 @@ public interface Travelable extends Identifiable {
 	/**
 	 * @return the additional actions.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromMove();
+	public List<AbstractAction> getAdditionalMoveActions();
 
 	/**
 	 * @return the additional travel commands.

@@ -113,7 +113,7 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	@Override
-	public List<AbstractAction> getAdditionalActionsFromMove() {
+	public List<AbstractAction> getAdditionalMoveActions() {
 		return additionalMoveActions;
 	}
 	
