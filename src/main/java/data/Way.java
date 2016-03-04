@@ -44,7 +44,7 @@ public class Way extends InspectableObject implements Travelable {
 	/**
 	 * The move action.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@Access(AccessType.FIELD)
 	private MoveAction moveAction;
 
@@ -114,7 +114,7 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	@Override
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable
 	public List<AbstractAction> getAdditionalMoveActions() {
 		return additionalMoveActions;

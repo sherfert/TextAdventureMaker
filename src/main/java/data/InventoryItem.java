@@ -55,15 +55,17 @@ public class InventoryItem extends UsableObject implements
 		/**
 		 * The action adding the new inventory items.
 		 */
-		@ManyToOne(cascade = CascadeType.PERSIST)
+		@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 		@JoinColumn(nullable = false)
 		private final AddInventoryItemsAction addInventoryItemsAction;
 
 		/**
 		 * All actions triggered when the two {@link InventoryItem}s are
 		 * combined. They are triggered regardless of the enabled status.
+		 * 
+		 * TODO test deletion / inverse binding!
 		 */
-		@ManyToMany(cascade = CascadeType.PERSIST)
+		@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 		@JoinTable
 		private final List<AbstractAction> additionalCombineWithActions;
 
@@ -174,8 +176,10 @@ public class InventoryItem extends UsableObject implements
 		 * All actions triggered when the {@link InventoryItem} is used with the
 		 * mapped {@link HasLocation}. They are triggered regardless of the
 		 * enabled status.
+		 * 
+		 * TODO test s.a.
 		 */
-		@ManyToMany(cascade = CascadeType.PERSIST)
+		@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 		@JoinTable
 		private final List<AbstractAction> additionalUseWithActions;
 
@@ -662,6 +666,7 @@ public class InventoryItem extends UsableObject implements
 	 *            the object
 	 * @return the associated {@link UsableHasLocation}.
 	 */
+	@Transient
 	private UsableHasLocation getUsableHasLocation(HasLocation object) {
 		UsableHasLocation result;
 

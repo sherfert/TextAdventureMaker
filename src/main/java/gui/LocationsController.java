@@ -18,8 +18,9 @@ import logic.CurrentGameManager;
 /**
  * Controller for the locations view.
  * 
- * TODO Support to change list of items/persons/waysIn/waysOut. TODO Removing
- * locations
+ * TODO Support to change list of items/persons/waysIn/waysOut. 
+ * 
+ * TODO Removing locations (confirm popup, do not allow deleting start location)
  * 
  * @author Satia
  *

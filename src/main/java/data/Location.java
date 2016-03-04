@@ -176,6 +176,9 @@ public class Location extends NamedObject {
 
 	/**
 	 * @return the items
+	 * 
+	 * FIXME why get items deleted
+	 * TODO test with persons
 	 */
 	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	public List<Item> getItems() {

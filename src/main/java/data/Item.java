@@ -29,6 +29,8 @@ import java.util.logging.Logger;
  * Any item in the game world. This items are stored in locations but cannot be
  * in your inventory.
  * 
+ * FIXME Bug when looking at tv twice.
+ * 
  * @author Satia
  */
 @Entity
@@ -38,7 +40,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * The {@link AddInventoryItemsAction}.
 	 */
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn(nullable = false)
 	@Access(AccessType.FIELD)
 	private AddInventoryItemsAction addInventoryItemsAction;
@@ -140,7 +142,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable
 	public List<AbstractAction> getAdditionalTakeActions() {
 		return additionalTakeActions;

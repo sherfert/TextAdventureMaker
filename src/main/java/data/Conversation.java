@@ -217,7 +217,7 @@ public class Conversation implements HasId {
 	/**
 	 * @return the additionalActions
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable
 	public List<AbstractAction> getAdditionalActions() {
 		return additionalActions;

@@ -91,7 +91,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	}
 
 	@Override
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable
 	public List<AbstractAction> getAdditionalUseActions() {
 		return additionalUseActions;

@@ -34,7 +34,11 @@ import data.action.RemoveInventoryItemAction;
  * 
  * General TODOs:
  * 
- * TODO GUI TODO Tooltips everywhere!
+ * TODO GUI 
+ * 
+ * TODO Tooltips everywhere!
+ * 
+ * TODO Test suite for deleting items
  * 
  * TODO Default new game
  * 

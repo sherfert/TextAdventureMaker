@@ -1,6 +1,12 @@
 package data.action;
 
+import data.Conversation;
+import data.ConversationOption;
 import data.Game;
+import data.InspectableObject;
+import data.Item;
+import data.UsableObject;
+import data.Way;
 import data.interfaces.HasId;
 
 import java.util.List;
@@ -14,6 +20,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -69,6 +76,18 @@ public abstract class AbstractAction implements HasId {
 	// Inverse mappings just for cascading.
 	@OneToMany(mappedBy = "action", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<ChangeActionAction> changeActions;
+	@ManyToMany(mappedBy = "getAdditionalTakeActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<Item> takeItems;
+	@ManyToMany(mappedBy = "getAdditionalActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<Conversation> conversations;
+	@ManyToMany(mappedBy = "getAdditionalActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<ConversationOption> conversationOptions;
+	@ManyToMany(mappedBy = "getAdditionalInspectActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<InspectableObject> inspectObjects;
+	@ManyToMany(mappedBy = "getAdditionalUseActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<UsableObject> useObjects;
+	@ManyToMany(mappedBy = "getAdditionalMoveActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	private List<Way> ways;
 
 	/**
 	 * An enabled action.

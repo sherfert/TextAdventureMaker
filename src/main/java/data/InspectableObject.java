@@ -84,7 +84,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	}
 
 	@Override
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable
 	public List<AbstractAction> getAdditionalInspectActions() {
 		return additionalInspectActions;
