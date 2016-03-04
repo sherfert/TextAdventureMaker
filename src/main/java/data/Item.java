@@ -56,6 +56,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	/**
 	 * The current location of the item. May be {@code null}.
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
+	@Access(AccessType.FIELD)
 	private Location location;
 
 	/**
@@ -169,8 +172,6 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
 	public Location getLocation() {
 		return location;
 	}
