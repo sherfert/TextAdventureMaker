@@ -648,6 +648,7 @@ public class InventoryItem extends UsableObject implements
 	 *            the object
 	 * @return the associated {@link UsableHasLocation}.
 	 */
+	@Transient
 	private UsableHasLocation getUsableHasLocation(HasLocation object) {
 		UsableHasLocation result;
 

@@ -17,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
 
 /**
  * Anything having a name and description.
@@ -138,6 +139,7 @@ public abstract class NamedObject implements HasId {
 	 * @param originalList the original list
 	 * @return the ID list
 	 */
+	@Transient
 	public static List<Integer> getIDList(List<? extends HasId> originalList) {
 		List<Integer> result = new ArrayList<>(originalList.size());
 		for (HasId hasId : originalList) {
@@ -155,6 +157,7 @@ public abstract class NamedObject implements HasId {
 	 * @param originalMap the original map
 	 * @return the ID map
 	 */
+	@Transient
 	public static <E> Map<Integer, E> getIDMap(Map<? extends HasId, E> originalMap) {
 		Map<Integer, E> result = new HashMap<>();
 		for (Map.Entry<? extends HasId, E> entry : originalMap.entrySet()) {
