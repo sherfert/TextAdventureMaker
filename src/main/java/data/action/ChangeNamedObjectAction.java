@@ -3,6 +3,7 @@ package data.action;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -40,8 +41,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 * dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
-	// (nullable = false)
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private NamedObject object;
 
 	/**

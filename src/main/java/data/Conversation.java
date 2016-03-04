@@ -17,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
-import data.action.ChangeConversationAction;
 import data.interfaces.HasId;
 
 /**
@@ -69,11 +68,6 @@ public class Conversation implements HasId {
 	 * greeting.
 	 */
 	private ConversationLayer startLayer;
-	
-	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "conversation", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@Access(AccessType.FIELD)
-	private List<ChangeConversationAction> changeActions;
 
 	/**
 	 * No-arg constructor for the database.

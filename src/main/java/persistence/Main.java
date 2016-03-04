@@ -34,6 +34,8 @@ import data.action.RemoveInventoryItemAction;
  * 
  * General TODOs:
  * 
+ * TODO FOREIGN KEY definitions for missing OneToMany and ManyToMany relations
+ * 
  * TODO GUI 
  * 
  * TODO Tooltips everywhere!
@@ -451,6 +453,8 @@ public class Main {
 		Location locToDel = new Location("Del me", "pls");
 		ChangeNamedObjectAction cltd = new ChangeNamedObjectAction(locToDel);
 		cltd.setNewName("Did ja del me?");
+		Item thing = new Item(locToDel, "Thing", "useless");
+		
 		pm.getEntityManager().persist(locToDel);
 		pm.getEntityManager().persist(cltd);
 		///////////////////////

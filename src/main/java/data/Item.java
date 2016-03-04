@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -26,10 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Any item in the game world. This items are stored in locations but cannot be
+ * Any item in the game world. These items are stored in locations but cannot be
  * in your inventory.
- * 
- * FIXME Bug when looking at tv twice.
  * 
  * @author Satia
  */
@@ -38,9 +37,12 @@ import java.util.logging.Logger;
 public class Item extends UsableObject implements Takeable, HasLocation {
 
 	/**
-	 * The {@link AddInventoryItemsAction}.
+	 * The {@link AddInventoryItemsAction} that adds item to your inventory when
+	 * invoking a pick up command on this Item.
+	 * 
+	 * No ON CASCADE definitions, since this field is not accessible.
 	 */
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn(nullable = false)
 	@Access(AccessType.FIELD)
 	private AddInventoryItemsAction addInventoryItemsAction;
@@ -59,7 +61,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * The current location of the item. May be {@code null}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_ITEM_LOCATION", foreignKeyDefinition = "FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
 	@Access(AccessType.FIELD)
 	private Location location;
 
@@ -69,11 +71,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * 
 	 * Note: This is NOT the Inverse connection of {@link ChangeItemAction#item}
 	 * .
+	 * 
+	 * No ON CASCADE definitions, since this field is not accessible.
 	 */
 	// XXX why not unnullable?
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn
-	// (nullable = false)
 	@Access(AccessType.FIELD)
 	private ChangeItemAction removeAction;
 
@@ -145,7 +148,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinTable
 	public List<AbstractAction> getAdditionalTakeActions() {
 		return additionalTakeActions;

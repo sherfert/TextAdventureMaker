@@ -25,8 +25,6 @@ import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
-import data.action.ChangeInvItemCombinationAction;
-import data.action.ChangeInvItemUsageAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasId;
@@ -298,20 +296,6 @@ public class InventoryItem extends UsableObject implements
 	@MapKeyJoinColumn
 	@Access(AccessType.FIELD)
 	private Map<Person, UsableHasLocation> usablePersons;
-	
-	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@Access(AccessType.FIELD)
-	private List<RemoveInventoryItemAction> removeActions;
-	@OneToMany(mappedBy = "inventoryItem1", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@Access(AccessType.FIELD)
-	private List<ChangeInvItemCombinationAction> combination1Actions;
-	@OneToMany(mappedBy = "inventoryItem2", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@Access(AccessType.FIELD)
-	private List<ChangeInvItemCombinationAction> combination2Actions;
-	@OneToMany(mappedBy = "inventoryItem", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@Access(AccessType.FIELD)
-	private List<ChangeInvItemUsageAction> usageActions;
 
 	/**
 	 * No-arg constructor for the database.

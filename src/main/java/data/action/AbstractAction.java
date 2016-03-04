@@ -21,7 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
 /**
  * Any action that changes something in the game (if enabled).
@@ -74,8 +73,6 @@ public abstract class AbstractAction implements HasId {
 	protected boolean enabled;
 
 	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "action", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	private List<ChangeActionAction> changeActions;
 	@ManyToMany(mappedBy = "getAdditionalTakeActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<Item> takeItems;
 	@ManyToMany(mappedBy = "getAdditionalActions", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

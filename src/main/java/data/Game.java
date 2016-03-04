@@ -56,7 +56,7 @@ import javax.persistence.Transient;
  * uppercase, rest lowercase), e.g. {@literal <Name>}, and uppercase, e.g.
  * {@literal <NAME>}.
  * 
- * TODO StartGameAction(s), e.g. for plaxing things in the inventory!
+ * TODO StartGameAction(s), e.g. for placing things in the inventory!
  * 
  * @author Satia
  */

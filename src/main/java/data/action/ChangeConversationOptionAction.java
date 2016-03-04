@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -27,8 +28,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 * dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
-	// (nullable = false)
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGECONVERSATIONOPTIONACTION_OPTION", foreignKeyDefinition = "FOREIGN KEY (OPTION_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") )
 	private ConversationOption option;
 
 	/**

@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
@@ -84,14 +83,9 @@ public class ConversationOption implements HasId {
 	// XXX why not unnullable?
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
-	// (nullable = false)
 	@Access(AccessType.FIELD)
 	private ChangeConversationOptionAction disableAction;
 	
-	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "option", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@Access(AccessType.FIELD)
-	private List<ChangeConversationOptionAction> changeActions;
 
 	/**
 	 * No-arg constructor for the database.

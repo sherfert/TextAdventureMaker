@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -43,6 +44,8 @@ public class Way extends InspectableObject implements Travelable {
 
 	/**
 	 * The move action.
+	 * 
+	 * No ON CASCADE definitions, since this field is not accessible.
 	 */
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@Access(AccessType.FIELD)
@@ -52,7 +55,7 @@ public class Way extends InspectableObject implements Travelable {
 	 * The destination.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_DESTINATION", foreignKeyDefinition = "FOREIGN KEY (DESTINATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Location destination;
 
@@ -60,7 +63,7 @@ public class Way extends InspectableObject implements Travelable {
 	 * The origin.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_ORIGIN", foreignKeyDefinition = "FOREIGN KEY (ORIGIN_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Location origin;
 

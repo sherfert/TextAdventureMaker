@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
@@ -32,7 +33,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 * The current location of the person. May be {@code null}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_PERSON_LOCATION", foreignKeyDefinition = "FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
 	@Access(AccessType.FIELD)
 	private Location location;
 
@@ -149,7 +150,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 
 	@Override
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_PERSON_CONVERSATION", foreignKeyDefinition = "FOREIGN KEY (CONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE SET NULL") )
 	public Conversation getConversation() {
 		return conversation;
 	}

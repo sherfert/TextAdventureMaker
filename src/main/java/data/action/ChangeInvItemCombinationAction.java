@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -32,14 +33,14 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 * The first inventory item.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM1", foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM1_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem inventoryItem1;
 
 	/**
 	 * The second inventory item.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM2", foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM2_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem inventoryItem2;
 
 	/**

@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -26,7 +27,7 @@ public class ChangeActionAction extends AbstractAction {
 	 * The action to change
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEACTIONACTION_ACTION", foreignKeyDefinition = "FOREIGN KEY (ACTION_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	private AbstractAction action;
 
 	/**

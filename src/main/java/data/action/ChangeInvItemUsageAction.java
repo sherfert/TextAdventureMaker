@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -26,7 +27,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * The inventory item.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_INVENTORYITEM", foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )	
 	private InventoryItem inventoryItem;
 
 	// Specify the common supertype
@@ -34,7 +35,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * The person or item.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedObject.class)
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private HasLocation object;
 
 	/**
