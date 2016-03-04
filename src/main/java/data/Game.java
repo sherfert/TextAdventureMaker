@@ -305,14 +305,14 @@ public class Game implements HasId {
 	/**
 	 * The player of this game.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn(nullable = false)
 	private Player player;
 
 	/**
 	 * The starting location of the game.
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn(nullable = false)
 	private Location startLocation;
 

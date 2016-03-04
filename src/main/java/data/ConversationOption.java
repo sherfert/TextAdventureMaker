@@ -82,14 +82,14 @@ public class ConversationOption implements HasId {
 	 * {@link ChangeConversationOptionAction#option}.
 	 */
 	// XXX why not unnullable?
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	// (nullable = false)
 	@Access(AccessType.FIELD)
 	private ChangeConversationOptionAction disableAction;
 	
 	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "option", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "option", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@Access(AccessType.FIELD)
 	private List<ChangeConversationOptionAction> changeActions;
 

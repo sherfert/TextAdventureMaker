@@ -67,7 +67,7 @@ public abstract class AbstractAction implements HasId {
 	protected boolean enabled;
 
 	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "action", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "action", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private List<ChangeActionAction> changeActions;
 
 	/**

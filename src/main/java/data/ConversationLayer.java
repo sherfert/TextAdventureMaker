@@ -60,7 +60,7 @@ public class ConversationLayer implements HasId {
 	/**
 	 * @return the options
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	public List<ConversationOption> getOptions() {
 		return options;

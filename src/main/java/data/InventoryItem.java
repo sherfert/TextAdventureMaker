@@ -25,6 +25,8 @@ import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
+import data.action.ChangeInvItemCombinationAction;
+import data.action.ChangeInvItemUsageAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasId;
@@ -33,8 +35,6 @@ import data.interfaces.UsableWithHasLocation;
 
 /**
  * Any item that can appear in your inventory. These items are not in locations.
- * 
- * TODO access property
  * 
  * @author Satia
  */
@@ -249,7 +249,7 @@ public class InventoryItem extends UsableObject implements
 	 * ManyToMany since exactly TWO InventoryItems store this
 	 * CombinableInventoryItem in their map.
 	 */
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	@MapKeyJoinColumn
 	@Access(AccessType.FIELD)
@@ -263,7 +263,7 @@ public class InventoryItem extends UsableObject implements
 	 * OneToMany since each InventoryItem has its own CombineCommands (they are
 	 * not shared).
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	@MapKeyJoinColumn
 	@Access(AccessType.FIELD)
@@ -276,7 +276,7 @@ public class InventoryItem extends UsableObject implements
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	@MapKeyJoinColumn
 	@Access(AccessType.FIELD)
@@ -289,16 +289,25 @@ public class InventoryItem extends UsableObject implements
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	@MapKeyJoinColumn
 	@Access(AccessType.FIELD)
 	private Map<Person, UsableHasLocation> usablePersons;
 	
 	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@Access(AccessType.FIELD)
 	private List<RemoveInventoryItemAction> removeActions;
+	@OneToMany(mappedBy = "inventoryItem1", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@Access(AccessType.FIELD)
+	private List<ChangeInvItemCombinationAction> combination1Actions;
+	@OneToMany(mappedBy = "inventoryItem2", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@Access(AccessType.FIELD)
+	private List<ChangeInvItemCombinationAction> combination2Actions;
+	@OneToMany(mappedBy = "inventoryItem", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@Access(AccessType.FIELD)
+	private List<ChangeInvItemUsageAction> usageActions;
 
 	/**
 	 * No-arg constructor for the database.

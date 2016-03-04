@@ -48,7 +48,7 @@ public class Location extends NamedObject {
 	private List<Way> waysOut;
 	
 	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "target", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@Access(AccessType.FIELD)
 	private List<MoveAction> moveActions;
 
@@ -193,7 +193,7 @@ public class Location extends NamedObject {
 	/**
 	 * @return the waysOut
 	 */
-	@OneToMany(mappedBy = "origin", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "origin", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	public List<Way> getWaysOut() {
 		return waysOut;
 	}
@@ -201,7 +201,7 @@ public class Location extends NamedObject {
 	/**
 	 * @return the waysIn
 	 */
-	@OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "destination", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	public List<Way> getWaysIn() {
 		return waysIn;
 	}

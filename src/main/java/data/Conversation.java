@@ -71,7 +71,7 @@ public class Conversation implements HasId {
 	private ConversationLayer startLayer;
 	
 	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "conversation", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@Access(AccessType.FIELD)
 	private List<ChangeConversationAction> changeActions;
 
@@ -183,7 +183,7 @@ public class Conversation implements HasId {
 	/**
 	 * @return the layers
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	public List<ConversationLayer> getLayers() {
 		return layers;
@@ -200,7 +200,7 @@ public class Conversation implements HasId {
 	/**
 	 * @return the startLayer
 	 */
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	public ConversationLayer getStartLayer() {
 		return startLayer;

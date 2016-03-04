@@ -1,5 +1,6 @@
 package data;
 
+import data.action.ChangeInvItemUsageAction;
 import data.action.ChangeNamedObjectAction;
 import data.interfaces.HasId;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,9 +49,12 @@ public abstract class NamedObject implements HasId {
 	private final StringProperty description;
 	
 	// Inverse mappings just for cascading.
-	@OneToMany(mappedBy = "object", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "object", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@Access(AccessType.FIELD)
 	private List<ChangeNamedObjectAction> changeActions;
+	@OneToMany(mappedBy = "object", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@Access(AccessType.FIELD)
+	private List<ChangeInvItemUsageAction> usageActions;
 
 	/**
 	 * No-arg constructor for the database. Use

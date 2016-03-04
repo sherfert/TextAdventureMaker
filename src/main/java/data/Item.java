@@ -66,7 +66,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * .
 	 */
 	// XXX why not unnullable?
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn
 	// (nullable = false)
 	@Access(AccessType.FIELD)

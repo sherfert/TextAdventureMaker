@@ -16,14 +16,11 @@ import javax.persistence.ManyToOne;
  * This action modifies the usage behavior of an {@link InventoryItem} with a
  * {@link HasLocation}.
  * 
- * TODO inverse cascading
- * 
  * @author Satia
  * 
  */
 @Entity
-public class ChangeInvItemUsageAction extends
-		AbstractAction {
+public class ChangeInvItemUsageAction extends AbstractAction {
 
 	/**
 	 * The inventory item.
@@ -79,8 +76,7 @@ public class ChangeInvItemUsageAction extends
 	 * @param object
 	 *            the person or item
 	 */
-	public ChangeInvItemUsageAction(
-			InventoryItem inventoryItem, HasLocation object) {
+	public ChangeInvItemUsageAction(InventoryItem inventoryItem, HasLocation object) {
 		init();
 		this.inventoryItem = inventoryItem;
 		this.object = object;
@@ -94,14 +90,13 @@ public class ChangeInvItemUsageAction extends
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeInvItemUsageAction(
-			InventoryItem inventoryItem, HasLocation object, boolean enabled) {
+	public ChangeInvItemUsageAction(InventoryItem inventoryItem, HasLocation object, boolean enabled) {
 		super(enabled);
 		init();
 		this.inventoryItem = inventoryItem;
 		this.object = object;
 	}
-	
+
 	/**
 	 * Initializes the fields.
 	 */
@@ -117,7 +112,8 @@ public class ChangeInvItemUsageAction extends
 	}
 
 	/**
-	 * @param inventoryItem the inventoryItem to set
+	 * @param inventoryItem
+	 *            the inventoryItem to set
 	 */
 	public void setInventoryItem(InventoryItem inventoryItem) {
 		this.inventoryItem = inventoryItem;
@@ -131,7 +127,8 @@ public class ChangeInvItemUsageAction extends
 	}
 
 	/**
-	 * @param newUseWithForbiddenText the newUseWithForbiddenText to set
+	 * @param newUseWithForbiddenText
+	 *            the newUseWithForbiddenText to set
 	 */
 	public void setNewUseWithForbiddenText(String newUseWithForbiddenText) {
 		this.newUseWithForbiddenText = newUseWithForbiddenText;
@@ -145,7 +142,8 @@ public class ChangeInvItemUsageAction extends
 	}
 
 	/**
-	 * @param newUseWithSuccessfulText the newUseWithSuccessfulText to set
+	 * @param newUseWithSuccessfulText
+	 *            the newUseWithSuccessfulText to set
 	 */
 	public void setNewUseWithSuccessfulText(String newUseWithSuccessfulText) {
 		this.newUseWithSuccessfulText = newUseWithSuccessfulText;
@@ -159,7 +157,8 @@ public class ChangeInvItemUsageAction extends
 	}
 
 	/**
-	 * @param enabling the enabling to set
+	 * @param enabling
+	 *            the enabling to set
 	 */
 	public void setEnabling(Enabling enabling) {
 		this.enabling = enabling;
@@ -173,7 +172,8 @@ public class ChangeInvItemUsageAction extends
 	}
 
 	/**
-	 * @param object the object to set
+	 * @param object
+	 *            the object to set
 	 */
 	public void setObject(HasLocation object) {
 		this.object = object;
@@ -182,12 +182,10 @@ public class ChangeInvItemUsageAction extends
 	@Override
 	protected void doAction(Game game) {
 		if (newUseWithForbiddenText != null) {
-			inventoryItem.setUseWithForbiddenText(object,
-					newUseWithForbiddenText);
+			inventoryItem.setUseWithForbiddenText(object, newUseWithForbiddenText);
 		}
 		if (newUseWithSuccessfulText != null) {
-			inventoryItem.setUseWithSuccessfulText(object,
-					newUseWithSuccessfulText);
+			inventoryItem.setUseWithSuccessfulText(object, newUseWithSuccessfulText);
 		}
 		if (enabling == Enabling.ENABLE) {
 			inventoryItem.setUsingEnabledWith(object, true);
@@ -198,28 +196,24 @@ public class ChangeInvItemUsageAction extends
 
 	@Override
 	public String toString() {
-		return "ChangeInvItemUsageAction{inventoryItemID="
-				+ inventoryItem.getId() + ", objectID=" + object.getId()
-				+ ", newUseWithForbiddenText=" + newUseWithForbiddenText
-				+ ", newUseWithSuccessfulText=" + newUseWithSuccessfulText
-				+ ", enabling=" + enabling + " " + super.toString() + "]";
+		return "ChangeInvItemUsageAction{inventoryItemID=" + inventoryItem.getId() + ", objectID=" + object.getId()
+				+ ", newUseWithForbiddenText=" + newUseWithForbiddenText + ", newUseWithSuccessfulText="
+				+ newUseWithSuccessfulText + ", enabling=" + enabling + " " + super.toString() + "]";
 	}
 
 	@Override
 	public String getActionDescription() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Changing usage of ").append(inventoryItem.getName())
-				.append(" with ").append(object.getName()).append(".");
+		builder.append("Changing usage of ").append(inventoryItem.getName()).append(" with ").append(object.getName())
+				.append(".");
 		if (enabling != Enabling.DO_NOT_CHANGE) {
 			builder.append(" ").append(enabling.description).append(" usage.");
 		}
 		if (newUseWithSuccessfulText != null) {
-			builder.append(" Setting use with successful text to '")
-					.append(newUseWithSuccessfulText).append("'.");
+			builder.append(" Setting use with successful text to '").append(newUseWithSuccessfulText).append("'.");
 		}
 		if (newUseWithForbiddenText != null) {
-			builder.append(" Setting use with forbidden text to '")
-					.append(newUseWithForbiddenText).append("'.");
+			builder.append(" Setting use with forbidden text to '").append(newUseWithForbiddenText).append("'.");
 		}
 		return builder.toString();
 	}
