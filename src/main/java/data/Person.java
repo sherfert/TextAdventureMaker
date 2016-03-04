@@ -31,6 +31,9 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	/**
 	 * The current location of the person. May be {@code null}.
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn
+	@Access(AccessType.FIELD)
 	private Location location;
 
 	/**
@@ -120,8 +123,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	}
 
 	@Override
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
 	public Location getLocation() {
 		return location;
 	}
