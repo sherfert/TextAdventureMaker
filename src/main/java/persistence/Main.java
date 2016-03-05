@@ -372,7 +372,7 @@ public class Main {
 
 		// Game options
 		game.setPlayer(player);
-		game.setStartLocation(flat);
+		game.setStartLocation(balcony);
 		game.setStartText("This is a little text adventure.");
 
 		game.setNoCommandText("I don't understand you.");

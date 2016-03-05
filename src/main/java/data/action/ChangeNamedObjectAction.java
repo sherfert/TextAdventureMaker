@@ -16,6 +16,8 @@ import data.NamedObject;
 /**
  * An action changing properties of a {@link NamedObject} .
  * 
+ * FIXME not getting deleted, if the changed object is deleted (case: ChangeWayAction)
+ * 
  * @author Satia
  */
 @Entity

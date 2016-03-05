@@ -172,14 +172,13 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	}
 
 	/**
-	 * Tries to copy the db file to a temp file. Shuts the whole VM down, if
-	 * that fails.
+	 * Tries to copy the db file to a temp file.
 	 * 
 	 * @param file
 	 *            the original file.
 	 * @return the temp file.
 	 */
-	private static File copyToTempDB(URL file) {
+	private File copyToTempDB(URL file) {
 		// Copy to temp file
 		try {
 			Path tempFile = Files.createTempFile("tam", H2_ENDING);
@@ -189,7 +188,6 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		} catch (IOException e) {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not copy db file. Exiting now.",
 					e);
-			System.exit(-1);
 			return null;
 		}
 	}
@@ -214,20 +212,18 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	public void showMenu(boolean gameRunning) {
 		mainMenu.show(gameRunning);
 	}
-	
+
 	@Override
 	public String getSaveGamesDir() {
 		return saveGamesDir;
 	}
 
-	
 	@Override
 	public void newGame() {
 		// "Load" the new file
 		load(file);
 	}
 
-	
 	@Override
 	public void load(File file) {
 		try {
@@ -259,6 +255,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
 					"Could not get the game. Database incompatible. Exiting.", e);
 			// This means we cannot continue in any sensible way
+			// XXX better error handling here!
 			System.exit(-1);
 		}
 		// Start a game
@@ -266,19 +263,28 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		gamePlayer.start();
 	}
 
-	
+	/**
+	 * Disconnects, does something, reconnects.
+	 * 
+	 * @param doSth
+	 *            the thing to do in between. Not related to threads!
+	 * @param path
+	 *            the path to reconnect to
+	 */
+	private void disconnectDoReconnect(Runnable doSth, String path) {
+		// Disconnect
+		persistenceManager.disconnect();
+		// Do whatever
+		doSth.run();
+		// Reconnect to path
+		persistenceManager.connect(path, false);
+	}
+
 	@Override
 	public void save(File file) {
-		// If disconnecting should become necessary, consider the following code
-		// PersistenceManager.disconnect();
-		// [...]
-		// Reconnect
-		// PersistenceManager.connect(fileName + TEMP_APPENDIX, false);
-		// Set the game for the game player
-		// gamePlayer.setGame(GameManager.getGame());
-		// PersistenceManager.disconnect();
-
-		copyFromTempDB(file);
-
+		String path = tempFile.getAbsolutePath();
+		disconnectDoReconnect(() -> copyFromTempDB(file), path.substring(0, path.length() - H2_ENDING.length()));
+		// We must set the reference to the game again
+		gamePlayer.setGame(persistenceManager.getGameManager().getGame());
 	}
 }

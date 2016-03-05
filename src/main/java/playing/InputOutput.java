@@ -216,21 +216,18 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * @return the thread.
 	 */
 	private Thread startInputReadingThread() {
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					// Check for interruptions
-					if (Thread.interrupted()) {
-						break;
-					}
-
-					Key key = screen.readInput();
-					if (key == null) {
-						continue;
-					}
-					readInput(key);
+		Thread t = new Thread(() -> {
+			while (true) {
+				// Check for interruptions
+				if (Thread.interrupted()) {
+					break;
 				}
+
+				Key key = screen.readInput();
+				if (key == null) {
+					continue;
+				}
+				readInput(key);
 			}
 		});
 		t.start();
@@ -320,7 +317,6 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 */
 	public void enterOptionMode(OptionIOManager optionIOManager, List<String> options) {
 		this.optionIOManager = optionIOManager;
-
 
 		int cols = screen.getTerminalSize().getColumns();
 		int rows = screen.getTerminalSize().getRows();
