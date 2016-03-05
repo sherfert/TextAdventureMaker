@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import persistence.PersistenceManager;
 import playing.GamePlayer;
 import configuration.PropertiesReader;
+import exception.DBIncompatibleException;
 
 /**
  * This class handles starting new games, loading (and saving). Saving is done
@@ -250,12 +251,12 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		// Set the game for the game player
 		try {
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
-		} catch (Exception e) {
+		} catch (DBIncompatibleException e) {
 			// This means the database is incompatible with the model.
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
 					"Could not get the game. Database incompatible. Exiting.", e);
 			// This means we cannot continue in any sensible way
-			// XXX better error handling here!
+			// TODO better error handling here!
 			System.exit(-1);
 		}
 		// Start a game
@@ -285,6 +286,12 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		String path = tempFile.getAbsolutePath();
 		disconnectDoReconnect(() -> copyFromTempDB(file), path.substring(0, path.length() - H2_ENDING.length()));
 		// We must set the reference to the game again
-		gamePlayer.setGame(persistenceManager.getGameManager().getGame());
+		
+		try {
+			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
+		} catch (DBIncompatibleException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

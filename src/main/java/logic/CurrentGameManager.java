@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
 
@@ -98,19 +100,27 @@ public class CurrentGameManager {
 		persistenceManager.disconnect();
 
 		Path from = openFile.getAbsoluteFile().toPath();
-		Path to = new File(openFile.getParent() + File.separator + gameName + "_temp" + LoadSaveManager.H2_ENDING).toPath();
-		System.out.println("to: " + to);
+		Path to = new File(openFile.getParent() + File.separator + gameName + "_temp" + LoadSaveManager.H2_ENDING)
+				.toPath();
 		try {
 			Files.copy(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file.", e);
-			// TODO show error message
+			// Show error message
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Could not start the game");
+			alert.setHeaderText("While copying the game file to a temporary Location, an error ocurred:");
+			alert.setContentText(
+					e.getMessage());
+			alert.showAndWait();
+			
 			return;
+		} finally {
+			// Reconnect
+			String fileName = openFile.getAbsolutePath();
+			persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
+					false);
 		}
-		// Reconnect
-		String fileName = openFile.getAbsolutePath();
-		persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
-				false);
 
 		LoadSaveManager.main(new String[] { gameName + "_temp" });
 

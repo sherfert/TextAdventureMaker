@@ -117,6 +117,10 @@ public class MainWindowController {
 		} catch (IOException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Could not set the main window's center content.", e);
+			
+			// Unload GUI
+			borderPane.setLeft(null);
+			borderPane.setCenter(null);
 		}
 	}
 	
@@ -199,11 +203,11 @@ public class MainWindowController {
 			exportMenuItem.setDisable(false);
 			gameMenu.setDisable(false);
 			
-			// Load the center stuff
-			resetCenterGUI();
-
 			// Load the side bar left
 			loadSidebar();
+			
+			// Load the center stuff (last, because this can cause an unload of the whole GUI!)
+			resetCenterGUI();
 		}
 	}
 

@@ -1,17 +1,23 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
+import exception.DBIncompatibleException;
 import gui.utility.StringUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import logic.CurrentGameManager;
 
 /**
@@ -135,9 +141,24 @@ public class GameDetailsController extends GameDataController {
 	}
 
 	@FXML
-	private void initialize() {
+	private void initialize() throws DBIncompatibleException {
 		// Obtain the game
-		game = currentGameManager.getPersistenceManager().getGameManager().getGame();
+		try {
+			game = currentGameManager.getPersistenceManager().getGameManager().getGame();
+		} catch (DBIncompatibleException e) {
+			// This means the database is incompatible with the model.
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Could not get the game. Database incompatible.", e);
+
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Could not load the game");
+			alert.setHeaderText("The loaded file seems to be incompatible");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+
+			// Rethrow e so that the GUI loading can take appropriate actions
+			throw e;
+		}
 		// Set all GUI fields accordingly
 		gameTitleField.setText(game.getGameTitle());
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
@@ -187,7 +208,7 @@ public class GameDetailsController extends GameDataController {
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES,
 				MAX_OPTION_LINES, game.getNumberOfOptionLines());
 		// FIXME bidirectional binding only working once here.
-		//svf.valueProperty().bindBidirectional(game.numberOfOptionLinesProperty().asObject());
+		// svf.valueProperty().bindBidirectional(game.numberOfOptionLinesProperty().asObject());
 		optionLinesSpinner.setValueFactory(svf);
 		optionLinesSpinner.valueProperty().addListener((f, o, n) -> game.setNumberOfOptionLines(n));
 
@@ -206,7 +227,8 @@ public class GameDetailsController extends GameDataController {
 		failureBGColorPicker.valueProperty().bindBidirectional(game.failedBgColorProperty());
 
 		// Register change listeners on the fields that update the game
-		// accordingly, where sanity checks need to be made (no bidirectional binding)
+		// accordingly, where sanity checks need to be made (no bidirectional
+		// binding)
 		gameTitleField.textProperty().addListener((f, o, n) -> updateGameTitle(n));
 
 		useWithCommandsTextField.textProperty().addListener(

@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.Game;
+import exception.DBIncompatibleException;
 
 /**
  * Managing access to the game in a database.
@@ -51,7 +52,7 @@ public class GameManager {
 	 * @throws Exception
 	 *             (unchecked) if the database is not compatible with the model.
 	 */
-	public Game getGame() {
+	public Game getGame() throws DBIncompatibleException {
 		if (game != null) {
 			return game;
 		}
@@ -68,6 +69,7 @@ public class GameManager {
 		if (resultListGame.size() != 1) {
 			Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE,
 					"There are {0} games.", resultListGame.size());
+			throw new DBIncompatibleException("There is no game in the database.");
 		}
 
 		return game = resultListGame.get(0);
