@@ -1,11 +1,17 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import data.Location;
+import exception.DBIncompatibleException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -13,14 +19,13 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import logic.CurrentGameManager;
 
 /**
  * Controller for the locations view.
  * 
- * TODO Support to change list of items/persons/waysIn/waysOut. 
- * 
- * TODO Removing locations (confirm popup, do not allow deleting start location)
+ * TODO Support to change list of items/persons/waysIn/waysOut.
  * 
  * @author Satia
  *
@@ -173,16 +178,52 @@ public class LocationsController extends GameDataController {
 	 * Removes a location from both DB and table.
 	 */
 	private void removeLocation() {
-		// Remove location from DB
-		currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(editedLocation);
-		currentGameManager.getPersistenceManager().updateChanges();
-		// Remove location from our table
-		locationsOL.remove(editedLocation);
+		if(isStartLocation(editedLocation)) {
+			// Do not allow removal
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("This is the start location");
+			alert.setHeaderText("The start location of a game cannot be removed.");
+			alert.showAndWait();
+			return;
+		}
+		
+		// Show a confirmation dialog
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Deleting a location");
+		alert.setHeaderText("Do you really want to delete this location?");
+		alert.setContentText(
+				"This will delete the location, the ways connected to this location, and actions associated with any of the deleted entities.");
+		alert.showAndWait().ifPresent(response -> {
+		     if (response == ButtonType.OK) {
+		    	// Remove location from DB
+		 		currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(editedLocation);
+		 		currentGameManager.getPersistenceManager().updateChanges();
+		 		// Remove location from our table
+		 		locationsOL.remove(editedLocation);
 
-		// Stop editing the location
-		finishEditLocation();
-		// Disable the remove button
-		removeButton.setDisable(true);
+		 		// Stop editing the location
+		 		finishEditLocation();
+		 		// Disable the remove button
+		 		removeButton.setDisable(true);
+		     }
+		 });
+	}
+
+	/**
+	 * Checks if a location is the start location.
+	 * 
+	 * @param l
+	 *            the location
+	 * @return if it is the start location.
+	 */
+	private boolean isStartLocation(Location l) {
+		try {
+			return currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation().getId() == l
+					.getId();
+		} catch (DBIncompatibleException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not get Game.", e);
+		}
+		return false;
 	}
 
 }

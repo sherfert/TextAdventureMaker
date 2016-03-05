@@ -81,7 +81,7 @@ public class GameManager {
 	 * 
 	 * @return the game title.
 	 */
-	public String getGameTitle() {
+	public String getGameTitle() throws DBIncompatibleException {
 		if (game != null) {
 			return game.getGameTitle();
 		}
@@ -98,6 +98,7 @@ public class GameManager {
 		if (resultList.size() != 1) {
 			Logger.getLogger(GameManager.class.getName()).log(Level.SEVERE,
 					"There are {0} games.", resultList.size());
+			throw new DBIncompatibleException("There is no game in the database.");
 		}
 
 		return resultList.get(0);

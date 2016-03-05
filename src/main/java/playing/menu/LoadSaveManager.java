@@ -109,7 +109,13 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		// Connect
 		String path = tFile.getAbsolutePath();
 		this.persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
-		this.gameName = persistenceManager.getGameManager().getGameTitle();
+		try {
+			this.gameName = persistenceManager.getGameManager().getGameTitle();
+		} catch (DBIncompatibleException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not read game name. Aborting init.",
+					e);
+			return;
+		}
 		// Do NOT disconnect from DB here, because loading a new game will
 		// already disconnect and
 		// otherwise there are exceptions.
@@ -188,7 +194,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			FileUtils.copyURLToFile(file, tempFile.toFile());
 			return tempFile.toFile();
 		} catch (IOException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file. Exiting now.",
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file.",
 					e);
 			return null;
 		}
