@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
@@ -24,7 +25,10 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 * All {@link InventoryItem}s that will be added to the inventory.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
+	@JoinTable(name = "AIIA_PI", foreignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_S", //
+	foreignKeyDefinition = "FOREIGN KEY (AddInventoryItemsAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_D", //
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItems_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItems;
 
 	/**

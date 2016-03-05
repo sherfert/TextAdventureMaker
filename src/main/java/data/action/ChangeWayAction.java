@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -37,13 +38,16 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	 * The new origin. If {@code null}, the old will not be changed.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWORIGIN", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWORIGIN_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newOrigin;
+	
 	/**
 	 * The new destination. If {@code null}, the old will not be changed.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWDESTINATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWDESTINATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newDestination;
 
 	/**

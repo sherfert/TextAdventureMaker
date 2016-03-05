@@ -3,6 +3,7 @@ package data.action;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -40,7 +41,8 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * has to be set to {@code true}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEPERSONACTION_NEWLOCATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newLocation;
 
 	/**
@@ -57,7 +59,8 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * {@link #changeConversation} has to be set to {@code true}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEPERSONACTION_NEWCONVERSATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWCONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE SET NULL") )
 	private Conversation newConversation;
 
 	/**

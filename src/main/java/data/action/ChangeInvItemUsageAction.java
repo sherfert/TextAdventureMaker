@@ -27,7 +27,8 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * The inventory item.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_INVENTORYITEM", foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )	
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_INVENTORYITEM", //
+	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )	
 	private InventoryItem inventoryItem;
 
 	// Specify the common supertype
@@ -35,7 +36,8 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * The person or item.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedObject.class)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", //
+	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private HasLocation object;
 
 	/**

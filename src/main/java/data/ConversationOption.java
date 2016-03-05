@@ -10,6 +10,7 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -85,7 +86,6 @@ public class ConversationOption implements HasId {
 	@JoinColumn
 	@Access(AccessType.FIELD)
 	private ChangeConversationOptionAction disableAction;
-	
 
 	/**
 	 * No-arg constructor for the database.
@@ -213,7 +213,10 @@ public class ConversationOption implements HasId {
 	 * @return the additionalActions
 	 */
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinTable
+	@JoinTable(name = "CONVOP_AA", foreignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ConversationOption_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_D", //
+	foreignKeyDefinition = "FOREIGN KEY (additionalActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getAdditionalActions() {
 		return additionalActions;
 	}

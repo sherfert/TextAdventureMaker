@@ -13,6 +13,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -60,11 +61,12 @@ public class InventoryItem extends UsableObject implements
 		/**
 		 * All actions triggered when the two {@link InventoryItem}s are
 		 * combined. They are triggered regardless of the enabled status.
-		 * 
-		 * TODO test deletion / inverse binding!
 		 */
-		@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-		@JoinTable
+		@ManyToMany(cascade = {CascadeType.PERSIST})
+		@JoinTable(name = "CII_ACWA", foreignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_S", //
+		foreignKeyDefinition = "FOREIGN KEY (InventoryItem$CombinableInventoryItem_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") , //
+		inverseForeignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_D", //
+		foreignKeyDefinition = "FOREIGN KEY (additionalCombineWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 		private final List<AbstractAction> additionalCombineWithActions;
 
 		/**
@@ -174,11 +176,12 @@ public class InventoryItem extends UsableObject implements
 		 * All actions triggered when the {@link InventoryItem} is used with the
 		 * mapped {@link HasLocation}. They are triggered regardless of the
 		 * enabled status.
-		 * 
-		 * TODO test s.a.
 		 */
-		@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-		@JoinTable
+		@ManyToMany(cascade = {CascadeType.PERSIST})
+		@JoinTable(name = "UHL_AUWA", foreignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_S", //
+		foreignKeyDefinition = "FOREIGN KEY (InventoryItem$UsableHasLocation_ID) REFERENCES INVENTORYITEM$USABLEHASLOCATION (ID) ON DELETE CASCADE") , //
+		inverseForeignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_D", //
+		foreignKeyDefinition = "FOREIGN KEY (additionalUseWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 		private final List<AbstractAction> additionalUseWithActions;
 
 		/**
@@ -327,23 +330,7 @@ public class InventoryItem extends UsableObject implements
 		for (String identifier : item.getIdentifiers()) {
 			addIdentifier(identifier);
 		}
-		// // Additional inspect actions
-		// for (AbstractAction action : item.getAdditionalActionsFromInspect())
-		// {
-		// addAdditionalActionToInspect(convertInventoryItemActionToItemAction(
-		// item, action));
-		// }
-		// // Additional use actions
-		// for (AbstractAction action : item.getAdditionalActionsFromUse()) {
-		// addAdditionalActionToUse(convertInventoryItemActionToItemAction(
-		// item, action));
-		// }
-		// // Use forbidden/successful text
-		// setUseForbiddenText(item.getUseForbiddenText());
-		// setUseSuccessfulText(item.getUseSuccessfulText());
-		// // Using enabled status
-		// setUsingEnabled(item.isUsingEnabled());
-
+		
 		init();
 	}
 

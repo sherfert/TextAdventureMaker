@@ -41,7 +41,8 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 * dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", //
+	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private NamedObject object;
 
 	/**

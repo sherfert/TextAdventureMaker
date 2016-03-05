@@ -22,7 +22,8 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	 * The item to be removed.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_REMOVEINVENTORYITEMACTION_ITEM", foreignKeyDefinition = "FOREIGN KEY (ITEM_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_REMOVEINVENTORYITEMACTION_ITEM", //
+	foreignKeyDefinition = "FOREIGN KEY (ITEM_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem item;
 
 	/**

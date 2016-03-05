@@ -28,7 +28,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	 * dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGECONVERSATIONOPTIONACTION_OPTION", foreignKeyDefinition = "FOREIGN KEY (OPTION_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") )
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGECONVERSATIONOPTIONACTION_OPTION", //
+	foreignKeyDefinition = "FOREIGN KEY (OPTION_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") )
 	private ConversationOption option;
 
 	/**

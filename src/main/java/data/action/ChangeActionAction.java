@@ -27,7 +27,8 @@ public class ChangeActionAction extends AbstractAction {
 	 * The action to change
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEACTIONACTION_ACTION", foreignKeyDefinition = "FOREIGN KEY (ACTION_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEACTIONACTION_ACTION", //
+	foreignKeyDefinition = "FOREIGN KEY (ACTION_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	private AbstractAction action;
 
 	/**

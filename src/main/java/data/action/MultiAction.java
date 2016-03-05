@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
@@ -29,7 +30,10 @@ public class MultiAction extends AbstractAction {
 	 * All actions.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
+	@JoinTable(name = "MA_A", foreignKey = @ForeignKey(name = "FK_MultiAction_actions_S", //
+	foreignKeyDefinition = "FOREIGN KEY (MultiAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_MultiAction_actions_D", //
+	foreignKeyDefinition = "FOREIGN KEY (actions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	private List<AbstractAction> actions;
 
 	/**

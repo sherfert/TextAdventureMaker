@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinTable;
@@ -84,8 +85,11 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	}
 
 	@Override
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinTable
+	@ManyToMany(cascade = {CascadeType.PERSIST})
+	@JoinTable(name = "INSPOBJ_AIA", foreignKey = @ForeignKey(name = "FK_INSPECTABLEOBJECT_ADDITIONAINSPECTACTIONS_S", //
+	foreignKeyDefinition = "FOREIGN KEY (InspectableObject_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_INSPECTABLEOBJECT_ADDITIONAINSPECTACTIONS_D", //
+	foreignKeyDefinition = "FOREIGN KEY (additionalInspectActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getAdditionalInspectActions() {
 		return additionalInspectActions;
 	}

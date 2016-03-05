@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -71,14 +72,20 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 * All pick up items to be added.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
+	@JoinTable(name="CIA_PITA", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_D", //
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToAdd_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItemsToAdd;
 
 	/**
 	 * All pick up items to be removed.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable
+	@JoinTable(name="CIA_PITR", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_D", //
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToRemove_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItemsToRemove;
 
 	/**

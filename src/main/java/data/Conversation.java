@@ -8,6 +8,7 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -212,7 +213,10 @@ public class Conversation implements HasId {
 	 * @return the additionalActions
 	 */
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinTable
+	@JoinTable(name = "CONV_AA", foreignKey = @ForeignKey(name = "FK_CONVERSATION_ADDITIONALACTIONS_S", //
+	foreignKeyDefinition = "FOREIGN KEY (Conversation_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATION_ADDITIONALACTIONS_D", //
+	foreignKeyDefinition = "FOREIGN KEY (additionalActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getAdditionalActions() {
 		return additionalActions;
 	}
