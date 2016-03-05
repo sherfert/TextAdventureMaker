@@ -214,7 +214,7 @@ public class Conversation implements HasId {
 	/**
 	 * @return the additionalActions
 	 */
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToMany(cascade = {CascadeType.PERSIST})
 	@JoinTable(name = "CONV_AA", foreignKey = @ForeignKey(name = "FK_CONVERSATION_ADDITIONALACTIONS_S", //
 	foreignKeyDefinition = "FOREIGN KEY (Conversation_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATION_ADDITIONALACTIONS_D", //

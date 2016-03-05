@@ -30,7 +30,7 @@ public class MultiAction extends AbstractAction {
 	 * All actions.
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "MA_A", foreignKey = @ForeignKey(name = "FK_MultiAction_actions_S", //
+	@JoinTable(name = "MULTIACTION_ACTIONS", foreignKey = @ForeignKey(name = "FK_MultiAction_actions_S", //
 	foreignKeyDefinition = "FOREIGN KEY (MultiAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_MultiAction_actions_D", //
 	foreignKeyDefinition = "FOREIGN KEY (actions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )

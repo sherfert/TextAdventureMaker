@@ -149,7 +149,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "ITEM_ATA", foreignKey = @ForeignKey(name = "FK_ITEM_ADDITIONALTAKEACTIONS_S", //
 	foreignKeyDefinition = "FOREIGN KEY (Item_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_ITEM_ADDITIONALTAKEACTIONS_D", //
