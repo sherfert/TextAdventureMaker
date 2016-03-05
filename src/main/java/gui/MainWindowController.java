@@ -22,7 +22,6 @@ import logic.JARCreator;
 
 /**
  * Controller for the main window.
- * FIXME crash if same DB opened twice.
  * 
  * @author Satia
  */
@@ -33,7 +32,7 @@ public class MainWindowController {
 
 	/** The current game manager. */
 	private CurrentGameManager currentGameManager;
-	
+
 	// All controllers that can be loaded dynamically
 	private GameDetailsController gameDetailsController;
 	private LocationsController locationsController;
@@ -117,13 +116,22 @@ public class MainWindowController {
 		} catch (IOException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Could not set the main window's center content.", e);
-			
+
 			// Unload GUI
-			borderPane.setLeft(null);
-			borderPane.setCenter(null);
+			unloadGameRelatedGUI();
 		}
 	}
-	
+
+	/**
+	 * Puts the GUI in a state like no game was loaded.
+	 */
+	private void unloadGameRelatedGUI() {
+		borderPane.setLeft(null);
+		borderPane.setCenter(null);
+		exportMenuItem.setDisable(true);
+		gameMenu.setDisable(true);
+	}
+
 	/**
 	 * Resets the content of the center
 	 */
@@ -198,20 +206,31 @@ public class MainWindowController {
 
 		// Open the file, if one was chosen
 		if (file != null) {
-			currentGameManager.open(file);
+			try {
+				currentGameManager.open(file);
+			} catch (IOException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not open db file.", e);
+				// Show error message
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Could not open the game");
+				alert.setHeaderText("Propably the file is already opened by another application.");
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+				return;
+			}
+
 			// Enable the menu items that need a loaded game
 			exportMenuItem.setDisable(false);
 			gameMenu.setDisable(false);
-			
+
 			// Load the side bar left
 			loadSidebar();
-			
-			// Load the center stuff (last, because this can cause an unload of the whole GUI!)
+
+			// Load the center stuff (last, because this can cause an unload of
+			// the whole GUI!)
 			resetCenterGUI();
 		}
 	}
-
-
 
 	/**
 	 * Called when the export menu item is clicked.
@@ -255,8 +274,19 @@ public class MainWindowController {
 	 * Starts the loaded game.
 	 */
 	private void play() {
-		currentGameManager.playGame();
-		// After starting the game, the DB has been reconnected and the GUI is in a detached state.
+		try {
+			currentGameManager.playGame();
+		} catch (IOException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file.", e);
+			// Show error message
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Could not start the game");
+			alert.setHeaderText("While copying the game file to a temporary Location, an error ocurred:");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+		// After starting the game, the DB has been reconnected and the GUI is
+		// in a detached state.
 		// Therefore, we reset the GUI state.
 		resetCenterGUI();
 	}

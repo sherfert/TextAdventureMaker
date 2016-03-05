@@ -253,7 +253,7 @@ public class MainMenu implements OptionIOManager {
 			back();
 		} catch (LoadSaveException e) {
 
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not load a game", e);
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not load a game", e);
 		}
 		// Exit menu (or just back to main menu in case of failure)
 		back();

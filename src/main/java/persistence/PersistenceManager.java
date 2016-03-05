@@ -1,5 +1,6 @@
 package persistence;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 
 /**
@@ -71,15 +73,20 @@ public class PersistenceManager {
 	/**
 	 * Connects to the database.
 	 * 
+	 * TODO verify that the model is the same!
+	 * 
 	 * @param dropTables
 	 *            if {@code true}, the database contents will be deleted
 	 *            entirely, all tables are dropped and recreated.
 	 * @param filename
 	 *            the file to connect to.
+	 * @throws IOException
+	 *             if connecting does not work. Usually because the file is in
+	 *             use.
 	 */
-	public void connect(String filename, boolean dropTables) {
-		Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO,
-				"Connecting to database {0}. Dropping tables: {1}", new Object[] { filename, dropTables });
+	public void connect(String filename, boolean dropTables) throws IOException {
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Connecting to database {0}. Dropping tables: {1}",
+				new Object[] { filename, dropTables });
 
 		String ddlGenerationValue = dropTables ? "drop-and-create-tables" : "create-tables";
 		// Create objects for database access
@@ -89,7 +96,13 @@ public class PersistenceManager {
 
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, properties);
 
-		entityManager = entityManagerFactory.createEntityManager();
+		try {
+			entityManager = entityManagerFactory.createEntityManager();
+		} catch (PersistenceException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not connect to database.", e);
+			throw new IOException(e);
+		}
+
 		criteriaBuilder = entityManager.getCriteriaBuilder();
 	}
 
@@ -98,14 +111,16 @@ public class PersistenceManager {
 	 */
 	public void disconnect() {
 		if (entityManagerFactory != null) {
-			Logger.getLogger(PersistenceManager.class.getName()).log(Level.INFO, "Disconnecting from database");
+			Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Disconnecting from database");
 
 			// Reset the game manager, so that it will load the new game after
 			// connecting to a new DB
 			this.gameManager.reset();
 
 			// Close everything
-			entityManager.close();
+			if (entityManager != null) {
+				entityManager.close();
+			}
 			entityManagerFactory.close();
 		}
 	}

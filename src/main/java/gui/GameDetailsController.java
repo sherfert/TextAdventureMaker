@@ -3,6 +3,8 @@ package gui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.PersistenceException;
+
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
@@ -145,7 +147,7 @@ public class GameDetailsController extends GameDataController {
 		// Obtain the game
 		try {
 			game = currentGameManager.getPersistenceManager().getGameManager().getGame();
-		} catch (DBIncompatibleException e) {
+		} catch (DBIncompatibleException|PersistenceException e) {
 			// This means the database is incompatible with the model.
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Could not get the game. Database incompatible.", e);

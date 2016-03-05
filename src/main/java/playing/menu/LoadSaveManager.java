@@ -108,12 +108,11 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		File tFile = copyToTempDB(file);
 		// Connect
 		String path = tFile.getAbsolutePath();
-		this.persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
 		try {
+			this.persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
 			this.gameName = persistenceManager.getGameManager().getGameTitle();
-		} catch (DBIncompatibleException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not read game name. Aborting init.",
-					e);
+		} catch (DBIncompatibleException | IOException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Aborting init.", e);
 			return;
 		}
 		// Do NOT disconnect from DB here, because loading a new game will
@@ -194,8 +193,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			FileUtils.copyURLToFile(file, tempFile.toFile());
 			return tempFile.toFile();
 		} catch (IOException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file.",
-					e);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file.", e);
 			return null;
 		}
 	}
@@ -211,8 +209,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		try {
 			Files.copy(tempFile.toPath(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file when saving.",
-					e);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file when saving.", e);
 		}
 	}
 
@@ -249,21 +246,20 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	 */
 	private void load(URL file) throws LoadSaveException {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "New game/Load game");
-		
+
 		// Disconnect from old db
 		persistenceManager.disconnect();
 		// Copy file to a temp db
 		tempFile = copyToTempDB(file);
 		// Connect
 		String path = tempFile.getAbsolutePath();
-		persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
-		// Set the game for the game player
 		try {
+			persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
+			// Set the game for the game player
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
-		} catch (DBIncompatibleException e) {
-			// This means the database is incompatible with the model.
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Could not get the game. Database incompatible.", e);
+		} catch (DBIncompatibleException | IOException e) {
+			// This means the database could not be loaded
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error loading", e);
 			// Show some error message
 			gamePlayer.getIo().println(e.getMessage());
 			throw new LoadSaveException(e);
@@ -279,8 +275,10 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	 *            the thing to do in between. Not related to threads!
 	 * @param path
 	 *            the path to reconnect to
+	 * @throws IOException
+	 *             if reconnecting does not work
 	 */
-	private void disconnectDoReconnect(Runnable doSth, String path) {
+	private void disconnectDoReconnect(Runnable doSth, String path) throws IOException {
 		// Disconnect
 		persistenceManager.disconnect();
 		// Do whatever
@@ -292,14 +290,14 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	@Override
 	public void save(File file) throws LoadSaveException {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Save game");
-		
-		String path = tempFile.getAbsolutePath();
-		disconnectDoReconnect(() -> copyFromTempDB(file), path.substring(0, path.length() - H2_ENDING.length()));
-		// We must set the reference to the game again
 
+		String path = tempFile.getAbsolutePath();
 		try {
+			disconnectDoReconnect(() -> copyFromTempDB(file), path.substring(0, path.length() - H2_ENDING.length()));
+			// We must set the reference to the game again
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
-		} catch (DBIncompatibleException e) {
+		} catch (DBIncompatibleException|IOException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error saving", e);
 			// Show some error message
 			gamePlayer.getIo().println(e.getMessage());
 			throw new LoadSaveException(e);

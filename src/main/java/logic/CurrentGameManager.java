@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
 
@@ -48,8 +46,10 @@ public class CurrentGameManager {
 	 * Open a file and connect to it using the Persistence unit.
 	 * 
 	 * @param file
+	 * @throws IOException
+	 *             if the game could not be opened
 	 */
-	public void open(File file) {
+	public void open(File file) throws IOException {
 		// Be sure to close the connection if another file was open
 		if (openFile != null) {
 			close();
@@ -92,7 +92,7 @@ public class CurrentGameManager {
 	/**
 	 * Starts the game from within the TextAdventureMaker.
 	 */
-	public void playGame() {
+	public void playGame() throws IOException {
 		// Be sure to commit the latest changes
 		persistenceManager.updateChanges();
 
@@ -104,22 +104,16 @@ public class CurrentGameManager {
 				.toPath();
 		try {
 			Files.copy(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file.", e);
-			// Show error message
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Could not start the game");
-			alert.setHeaderText("While copying the game file to a temporary Location, an error ocurred:");
-			alert.setContentText(
-					e.getMessage());
-			alert.showAndWait();
-			
-			return;
 		} finally {
 			// Reconnect
 			String fileName = openFile.getAbsolutePath();
-			persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
-					false);
+			try {
+				persistenceManager
+						.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()), false);
+			} catch (IOException e) {
+				// Should never happen at this point
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not open db file.", e);
+			}
 		}
 
 		LoadSaveManager.main(new String[] { gameName + "_temp" });
