@@ -178,8 +178,9 @@ public class Conversation implements HasId {
 	/**
 	 * @return the layers
 	 */
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn
+	@OneToMany(cascade = {CascadeType.PERSIST})
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CONVERSATION_LAYERS", //
+	foreignKeyDefinition = "FOREIGN KEY (LAYERS_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") )
 	public List<ConversationLayer> getLayers() {
 		return layers;
 	}

@@ -31,6 +31,8 @@ public class Player implements HasId {
 
 	/**
 	 * The inventory.
+	 * 
+	 * No ON CASCADE definitions, since the player cannot be deleted.
 	 */
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn

@@ -7,6 +7,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -60,8 +61,9 @@ public class ConversationLayer implements HasId {
 	/**
 	 * @return the options
 	 */
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn
+	@OneToMany(cascade = {CascadeType.PERSIST})
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CONVERSATIONLAYER_OPTIONS", //
+	foreignKeyDefinition = "FOREIGN KEY (OPTIONS_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE CASCADE") )
 	public List<ConversationOption> getOptions() {
 		return options;
 	}
