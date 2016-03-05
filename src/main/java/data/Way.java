@@ -152,6 +152,7 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	@Override
+	@Transient
 	public Location getDestination() {
 		return destination;
 	}
@@ -171,6 +172,7 @@ public class Way extends InspectableObject implements Travelable {
 	/**
 	 * @return the origin
 	 */
+	@Transient
 	public Location getOrigin() {
 		return origin;
 	}

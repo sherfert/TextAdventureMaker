@@ -181,6 +181,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
+	@Transient
 	public Location getLocation() {
 		return location;
 	}

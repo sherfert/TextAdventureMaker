@@ -125,6 +125,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	}
 
 	@Override
+	@Transient
 	public Location getLocation() {
 		return location;
 	}
