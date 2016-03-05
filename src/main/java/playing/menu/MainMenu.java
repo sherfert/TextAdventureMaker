@@ -12,6 +12,7 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import exception.LoadSaveException;
 import playing.InputOutput;
 import playing.InputOutput.OptionIOManager;
 
@@ -231,9 +232,13 @@ public class MainMenu implements OptionIOManager {
 	 * Starts a new game and also exits the menu.
 	 */
 	private void newGame() {
-		ls.newGame();
-		// Exit menu
-		back();
+		try {
+			ls.newGame();
+			// Exit menu
+			back();
+		} catch (LoadSaveException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not start a new game", e);
+		}
 	}
 
 	/**
@@ -243,9 +248,14 @@ public class MainMenu implements OptionIOManager {
 	 *            the file to load.
 	 */
 	private void load(File file) {
-		ls.load(file);
-		// Exit menu
-		back();
+		try {
+			ls.load(file);
+			back();
+		} catch (LoadSaveException e) {
+
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not load a game", e);
+		}
+		// Exit menu (or just back to main menu in case of failure)
 		back();
 	}
 
@@ -256,11 +266,18 @@ public class MainMenu implements OptionIOManager {
 	 *            the file to load.
 	 */
 	private void save(File file) {
-		ls.save(file);
-		// Exit menu
-		back();
-		back();
-
+		try {
+			ls.save(file);
+			// Exit menu
+			back();
+			back();
+		} catch (LoadSaveException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not continue after saving", e);
+			// If this fails, it is not possible to continue playing
+			back();
+			back();
+			show(false);
+		}
 	}
 
 	@Override

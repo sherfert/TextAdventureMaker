@@ -16,6 +16,7 @@ import persistence.PersistenceManager;
 import playing.GamePlayer;
 import configuration.PropertiesReader;
 import exception.DBIncompatibleException;
+import exception.LoadSaveException;
 
 /**
  * This class handles starting new games, loading (and saving). Saving is done
@@ -88,7 +89,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 
 	public LoadSaveManager(String gameName) throws IOException {
 		// Use game with the provided title
-		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "Started LoadSaveManager with argument: {0}",
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Started LoadSaveManager with argument: {0}",
 				gameName);
 
 		File f = new File(PropertiesReader.DIRECTORY + gameName + H2_ENDING);
@@ -120,10 +121,10 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		// Create the dir if necessary
 		if (!saveGamesDirFile.exists()) {
 			if (saveGamesDirFile.mkdirs()) {
-				Logger.getLogger(LoadSaveManager.class.getName()).log(Level.FINE, "Created save game directory: {0}",
+				Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Created save game directory: {0}",
 						saveGamesDir);
 			} else {
-				Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 						"Could not create save game directory: {0} Aborting.", saveGamesDir);
 				return;
 			}
@@ -187,7 +188,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			FileUtils.copyURLToFile(file, tempFile.toFile());
 			return tempFile.toFile();
 		} catch (IOException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not copy db file. Exiting now.",
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file. Exiting now.",
 					e);
 			return null;
 		}
@@ -204,7 +205,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		try {
 			Files.copy(tempFile.toPath(), file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not copy db file when saving.",
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not copy db file when saving.",
 					e);
 		}
 	}
@@ -220,17 +221,17 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	}
 
 	@Override
-	public void newGame() {
+	public void newGame() throws LoadSaveException {
 		// "Load" the new file
 		load(file);
 	}
 
 	@Override
-	public void load(File file) {
+	public void load(File file) throws LoadSaveException {
 		try {
 			load(file.toURI().toURL());
 		} catch (MalformedURLException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Malformed file URL.", e);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Malformed file URL.", e);
 		}
 	}
 
@@ -240,7 +241,9 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	 * @param file
 	 *            the file to load.
 	 */
-	private void load(URL file) {
+	private void load(URL file) throws LoadSaveException {
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "New game/Load game");
+		
 		// Disconnect from old db
 		persistenceManager.disconnect();
 		// Copy file to a temp db
@@ -253,14 +256,13 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
 		} catch (DBIncompatibleException e) {
 			// This means the database is incompatible with the model.
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE,
-					"Could not get the game. Database incompatible. Exiting.", e);
-			// This means we cannot continue in any sensible way
-			// TODO better error handling here!
-			System.exit(-1);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Could not get the game. Database incompatible.", e);
+			// Show some error message
+			gamePlayer.getIo().println(e.getMessage());
+			throw new LoadSaveException(e);
 		}
 		// Start a game
-		Logger.getLogger(LoadSaveManager.class.getName()).log(Level.INFO, "New game/Load game");
 		gamePlayer.start();
 	}
 
@@ -282,16 +284,19 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	}
 
 	@Override
-	public void save(File file) {
+	public void save(File file) throws LoadSaveException {
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Save game");
+		
 		String path = tempFile.getAbsolutePath();
 		disconnectDoReconnect(() -> copyFromTempDB(file), path.substring(0, path.length() - H2_ENDING.length()));
 		// We must set the reference to the game again
-		
+
 		try {
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
 		} catch (DBIncompatibleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Show some error message
+			gamePlayer.getIo().println(e.getMessage());
+			throw new LoadSaveException(e);
 		}
 	}
 }
