@@ -46,7 +46,8 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 * be set to {@code true}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEITEMACTION_NEWLOCATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newLocation;
 
 	/**

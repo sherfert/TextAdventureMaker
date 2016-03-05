@@ -53,6 +53,8 @@ public class InventoryItem extends UsableObject implements
 
 		/**
 		 * The action adding the new inventory items.
+		 * 
+		 * No ON CASCADE definitions, since this field is not accessible.
 		 */
 		@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 		@JoinColumn(nullable = false)

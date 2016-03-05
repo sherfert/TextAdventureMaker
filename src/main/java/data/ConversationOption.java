@@ -251,7 +251,8 @@ public class ConversationOption implements HasId {
 	 * @return the target
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_TARGET", //
+	foreignKeyDefinition = "FOREIGN KEY (TARGET_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE SET NULL") )
 	public ConversationLayer getTarget() {
 		return target;
 	}
