@@ -61,7 +61,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * The current location of the item. May be {@code null}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_ITEM_LOCATION", //
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_ITEM_LOCATION", //
 	foreignKeyDefinition = "FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
 	@Access(AccessType.FIELD)
 	private Location location;

@@ -37,8 +37,10 @@ public class Player implements HasId {
 	private final List<InventoryItem> inventory;
 
 	/**
-	 * The location. If {@code null}, the game supposedly has not started
-	 * yet.
+	 * The location. If {@code null}, the game supposedly has not started yet.
+	 * 
+	 * No ON CASCADE definitions, since when deleting locations, the game hasn't
+	 * started and this will be {@code null}.
 	 */
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true)
@@ -55,12 +57,12 @@ public class Player implements HasId {
 	/**
 	 * Adds an item to the inventory.
 	 *
-	 * @param item the item
+	 * @param item
+	 *            the item
 	 */
 	public void addInventoryItem(InventoryItem item) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-			"Adding inventory item {0}", item);
-		
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Adding inventory item {0}", item);
+
 		this.inventory.add(item);
 	}
 
@@ -86,21 +88,20 @@ public class Player implements HasId {
 	/**
 	 * Removes an item from the inventory.
 	 *
-	 * @param item the item
+	 * @param item
+	 *            the item
 	 */
 	public void removeInventoryItem(InventoryItem item) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-			"Removing inventory item {0}", item);
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Removing inventory item {0}", item);
 		this.inventory.remove(item);
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param location
+	 *            the location to set
 	 */
 	public void setLocation(Location location) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-			"Moving player to {0}", location);
-		
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Moving player to {0}", location);
 		this.location = location;
 	}
 
@@ -109,8 +110,8 @@ public class Player implements HasId {
 	 */
 	@Override
 	public String toString() {
-		return "Player{" + "id=" + id + ", inventoryIDs=" + NamedObject.getIDList(inventory)
-			+ ", locationID=" + location.getId() + " " + super.toString() + '}';
+		return "Player{" + "id=" + id + ", inventoryIDs=" + NamedObject.getIDList(inventory) + ", locationID="
+				+ location.getId() + " " + super.toString() + '}';
 	}
 
 }

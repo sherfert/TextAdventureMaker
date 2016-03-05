@@ -196,7 +196,8 @@ public class Conversation implements HasId {
 	 * @return the startLayer
 	 */
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CONVERSATION_STARTLAYER", //
+	foreignKeyDefinition = "FOREIGN KEY (startLayer_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE SET NULL") )
 	public ConversationLayer getStartLayer() {
 		return startLayer;
 	}

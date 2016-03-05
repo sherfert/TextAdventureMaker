@@ -306,6 +306,8 @@ public class Game implements HasId {
 
 	/**
 	 * The player of this game.
+	 * 
+	 * No ON CASCADE definitions, the player must not be deleted.
 	 */
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn(nullable = false)
@@ -313,6 +315,8 @@ public class Game implements HasId {
 
 	/**
 	 * The starting location of the game.
+	 * 
+	 * No ON CASCADE definitions, since it is not allowed deleting the start location.
 	 */
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinColumn(nullable = false)

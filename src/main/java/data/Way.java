@@ -48,6 +48,7 @@ public class Way extends InspectableObject implements Travelable {
 	 * No ON CASCADE definitions, since this field is not accessible.
 	 */
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@JoinColumn(nullable = false)
 	@Access(AccessType.FIELD)
 	private MoveAction moveAction;
 

@@ -80,6 +80,8 @@ public class ConversationOption implements HasId {
 	 * 
 	 * Note: This is NOT the Inverse connection of
 	 * {@link ChangeConversationOptionAction#option}.
+	 * 
+	 * No ON CASCADE definitions, since this field is not accessible.
 	 */
 	// XXX why not unnullable?
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
