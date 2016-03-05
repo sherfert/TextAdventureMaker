@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
-
 import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
 
@@ -91,16 +89,13 @@ public class CurrentGameManager {
 
 	/**
 	 * Starts the game from within the TextAdventureMaker.
-	 * 
-	 * FIXME copying with disconnect does not work. But if you disconnect,
-	 * the GUI changes are not mirrored in the DB afterwards (detached state).
 	 */
 	public void playGame() {
 		// Be sure to commit the latest changes
 		persistenceManager.updateChanges();
 
 		// Disconnect before copying
-		//persistenceManager.disconnect();
+		persistenceManager.disconnect();
 
 		Path from = openFile.getAbsoluteFile().toPath();
 		Path to = new File(openFile.getParent() + File.separator + gameName + "_temp" + LoadSaveManager.H2_ENDING).toPath();
@@ -113,9 +108,9 @@ public class CurrentGameManager {
 			return;
 		}
 		// Reconnect
-//		String fileName = openFile.getAbsolutePath();
-//		persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
-//				false);
+		String fileName = openFile.getAbsolutePath();
+		persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
+				false);
 
 		LoadSaveManager.main(new String[] { gameName + "_temp" });
 

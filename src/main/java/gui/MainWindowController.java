@@ -22,8 +22,6 @@ import logic.JARCreator;
 
 /**
  * Controller for the main window.
- * 
- * TODO only instantiate center controllers once.
  * FIXME crash if same DB opened twice.
  * 
  * @author Satia
@@ -121,6 +119,18 @@ public class MainWindowController {
 					"Could not set the main window's center content.", e);
 		}
 	}
+	
+	/**
+	 * Resets the content of the center
+	 */
+	private void resetCenterGUI() {
+		// Create all controllers
+		gameDetailsController = new GameDetailsController(currentGameManager);
+		locationsController = new LocationsController(currentGameManager);
+
+		// Load game details as first view
+		loadGameDetails();
+	}
 
 	/**
 	 * Loads the game details into the center.
@@ -189,17 +199,15 @@ public class MainWindowController {
 			exportMenuItem.setDisable(false);
 			gameMenu.setDisable(false);
 			
-			// Create all controllers
-			gameDetailsController = new GameDetailsController(currentGameManager);
-			locationsController = new LocationsController(currentGameManager);
-
-			// Load game details as first view
-			loadGameDetails();
+			// Load the center stuff
+			resetCenterGUI();
 
 			// Load the side bar left
 			loadSidebar();
 		}
 	}
+
+
 
 	/**
 	 * Called when the export menu item is clicked.
@@ -244,6 +252,9 @@ public class MainWindowController {
 	 */
 	private void play() {
 		currentGameManager.playGame();
+		// After starting the game, the DB has been reconnected and the GUI is in a detached state.
+		// Therefore, we reset the GUI state.
+		resetCenterGUI();
 	}
 
 	/**

@@ -34,8 +34,6 @@ import data.action.RemoveInventoryItemAction;
  * 
  * General TODOs:
  * 
- * TODO FOREIGN KEY definitions for missing OneToMany and ManyToMany relations
- * 
  * TODO GUI 
  * 
  * TODO Tooltips everywhere!
