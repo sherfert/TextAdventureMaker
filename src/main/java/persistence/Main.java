@@ -367,6 +367,11 @@ public class Main {
 		tv.addAdditionalInspectAction(changeChairTVaction);
 		tv.addAdditionalInspectAction(changeSatiaMoneyAction);
 		tv.addAdditionalInspectAction(changePeelPenCombinationAction);
+		
+		// Start item in the inventory
+		InventoryItem dildo = new InventoryItem("Dildo", "Made out of Kruppstahl.");
+		dildo.setInspectionText("Why are you carrying that around with you!?");
+		game.addStartItem(dildo);
 
 		// Game options
 		game.setPlayer(player);

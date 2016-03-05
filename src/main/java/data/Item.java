@@ -258,19 +258,16 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public void setPickUpItems(List<InventoryItem> pickUpItems) {
 		addInventoryItemsAction.setPickUpItems(pickUpItems);
-
 	}
 
 	@Override
 	public void addPickUpItem(InventoryItem item) {
 		addInventoryItemsAction.addPickUpItem(item);
-
 	}
 
 	@Override
 	public void removePickUpItem(InventoryItem item) {
 		addInventoryItemsAction.removePickUpItem(item);
-
 	}
 
 	@Override

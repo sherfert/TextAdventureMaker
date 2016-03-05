@@ -163,6 +163,7 @@ public class GameDetailsController extends GameDataController {
 		gameTitleField.setText(game.getGameTitle());
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
 		// TODO the starting location
+		// TODO start items
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());

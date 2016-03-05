@@ -2,6 +2,7 @@ package data;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
+import data.action.AddInventoryItemsAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasId;
 import data.interfaces.HasLocation;
@@ -56,8 +57,6 @@ import javax.persistence.Transient;
  * uppercase, rest lowercase), e.g. {@literal <Name>}, and uppercase, e.g.
  * {@literal <NAME>}.
  * 
- * TODO StartGameAction(s), e.g. for placing things in the inventory!
- * 
  * @author Satia
  */
 @Entity
@@ -70,6 +69,52 @@ public class Game implements HasId {
 	 * "if(contains)" check can be removed. Con: No ordering. Therefore, lists
 	 * are kept.
 	 */
+
+	/**
+	 * The {@link AddInventoryItemsAction} that adds item to your inventory when
+	 * starting the game.
+	 * 
+	 * No ON CASCADE definitions, since this field is not accessible.
+	 */
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@JoinColumn(nullable = false)
+	@Access(AccessType.FIELD)
+	private AddInventoryItemsAction addInventoryItemsAction;
+
+	/**
+	 * @param startItems
+	 *            the start items
+	 */
+	public void setStartItems(List<InventoryItem> startItems) {
+		addInventoryItemsAction.setPickUpItems(startItems);
+	}
+
+	/**
+	 * Adds a start item.
+	 * 
+	 * @param item
+	 */
+	public void addStartItem(InventoryItem item) {
+		addInventoryItemsAction.addPickUpItem(item);
+
+	}
+
+	/**
+	 * Removes a start item.
+	 * 
+	 * @param item
+	 */
+	public void removeStartItem(InventoryItem item) {
+		addInventoryItemsAction.removePickUpItem(item);
+	}
+
+	/**
+	 * Puts the configured start items in the players inventory. Should be
+	 * called once upon starting a new game.
+	 */
+	public void putStartItemsIntoInventory() {
+		addInventoryItemsAction.triggerAction(this);
+	}
 
 	/**
 	 * The help text being displayed for the exit command
@@ -309,16 +354,17 @@ public class Game implements HasId {
 	 * 
 	 * No ON CASCADE definitions, the player must not be deleted.
 	 */
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn(nullable = false)
 	private Player player;
 
 	/**
 	 * The starting location of the game.
 	 * 
-	 * No ON CASCADE definitions, since it is not allowed deleting the start location.
+	 * No ON CASCADE definitions, since it is not allowed deleting the start
+	 * location.
 	 */
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn(nullable = false)
 	private Location startLocation;
 
@@ -427,6 +473,8 @@ public class Game implements HasId {
 	 * Constructs a new game object.
 	 */
 	public Game() {
+		addInventoryItemsAction = new AddInventoryItemsAction(true);
+
 		exitCommands = new ArrayList<>();
 		lookAroundCommands = new ArrayList<>();
 		helpCommands = new ArrayList<>();
@@ -1134,7 +1182,7 @@ public class Game implements HasId {
 	public void setFailedFgColor(Color failedFgColor) {
 		this.failedFgColor.setValue(failedFgColor);
 	}
-	
+
 	/**
 	 * @return the failedFgColor property
 	 */
@@ -1349,7 +1397,7 @@ public class Game implements HasId {
 	public void setNeutralBgColor(Color neutralBgColor) {
 		this.neutralBgColor.setValue(neutralBgColor);
 	}
-	
+
 	/**
 	 * @return the neutralBgColor property
 	 */
@@ -1364,7 +1412,7 @@ public class Game implements HasId {
 	public void setNeutralFgColor(Color neutralFgColor) {
 		this.neutralFgColor.setValue(neutralFgColor);
 	}
-	
+
 	/**
 	 * @return the neutralFgColor property
 	 */
@@ -1575,7 +1623,7 @@ public class Game implements HasId {
 	public void setSuccessfullBgColor(Color successfullBgColor) {
 		this.successfullBgColor.setValue(successfullBgColor);
 	}
-	
+
 	/**
 	 * @return the successfullBgColor property
 	 */
@@ -1590,7 +1638,7 @@ public class Game implements HasId {
 	public void setSuccessfullFgColor(Color successfullFgColor) {
 		this.successfullFgColor.setValue(successfullFgColor);
 	}
-	
+
 	/**
 	 * @return the successfullFgColor property
 	 */

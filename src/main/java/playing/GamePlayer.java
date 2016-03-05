@@ -197,6 +197,8 @@ public class GamePlayer implements GeneralIOManager {
 
 		// If the player has no location, this is a new game.
 		if (game.getPlayer().getLocation() == null) {
+			// Place the start items in his inventory
+			game.putStartItemsIntoInventory();
 			// Transfer him to the start location and start a new game.
 			game.getPlayer().setLocation(game.getStartLocation());
 			io.println(game.getStartText(), game.getNeutralBgColor(), game.getNeutralFgColor());

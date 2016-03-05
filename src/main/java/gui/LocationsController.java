@@ -28,7 +28,6 @@ import logic.CurrentGameManager;
  * TODO Support to change list of items/persons/waysIn/waysOut.
  * 
  * @author Satia
- *
  */
 public class LocationsController extends GameDataController {
 
