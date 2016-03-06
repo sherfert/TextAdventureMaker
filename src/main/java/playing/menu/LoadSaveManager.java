@@ -35,7 +35,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	/**
 	 * The ending of H2 databases.
 	 */
-	public static final String H2_ENDING = ".h2.db";
+	public static final String H2_ENDING = ".mv.db";
 
 	/**
 	 * The main menu
@@ -151,7 +151,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	/**
 	 * The main method to play a game. If there is an argument provided, it must
 	 * point to a valid game database file. If there is no argument provided, it
-	 * is assumed there is a file named "game"+H2_ENDING ("game.h2.db") in this
+	 * is assumed there is a file named "game"+H2_ENDING in this
 	 * JAR file.
 	 * 
 	 * @param args

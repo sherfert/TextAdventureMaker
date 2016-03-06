@@ -46,10 +46,13 @@ public class CurrentGameManager {
 	 * Open a file and connect to it using the Persistence unit.
 	 * 
 	 * @param file
+	 * @param create
+	 *            if {@code true}, the tables are dropped and created (any old
+	 *            data is lost), and a default Game is placed in the DB.
 	 * @throws IOException
 	 *             if the game could not be opened
 	 */
-	public void open(File file) throws IOException {
+	public void open(File file, boolean create) throws IOException {
 		// Be sure to close the connection if another file was open
 		if (openFile != null) {
 			close();
@@ -61,7 +64,12 @@ public class CurrentGameManager {
 
 		String fileName = openFile.getAbsolutePath();
 		persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
-				false);
+				create);
+		
+		if(create) {
+			// Place some default contents in the DB
+			persistenceManager.getGameManager().loadDefaultGame();
+		}
 	}
 
 	/**

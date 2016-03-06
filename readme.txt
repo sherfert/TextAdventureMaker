@@ -1,5 +1,5 @@
 persistence.Main:
-	Creates a test game database: ~/.textAdventureMaker/Test-Adventure.h2.db
+	Creates a test game database: ~/.textAdventureMaker/Test-Adventure.mv.db
 
 mvn package:
 	Creates a file called "Game_missing_db.jar", which still needs to be augmented with a game database to be executable.

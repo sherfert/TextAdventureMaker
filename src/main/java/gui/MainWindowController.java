@@ -19,6 +19,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import logic.CurrentGameManager;
 import logic.JARCreator;
+import playing.menu.LoadSaveManager;
 
 /**
  * Controller for the main window.
@@ -194,7 +195,7 @@ public class MainWindowController {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(creatingNew ? "Choose where to save the new file" : "Choose a game file");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Game databases", "*.h2.db"),
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Game databases", "*" + LoadSaveManager.H2_ENDING),
 				new FileChooser.ExtensionFilter("All Files", "*.*"));
 
 		File file;
@@ -207,7 +208,7 @@ public class MainWindowController {
 		// Open the file, if one was chosen
 		if (file != null) {
 			try {
-				currentGameManager.open(file);
+				currentGameManager.open(file, creatingNew);
 			} catch (IOException e) {
 				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not open db file.", e);
 				// Show error message

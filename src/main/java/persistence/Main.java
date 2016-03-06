@@ -40,8 +40,6 @@ import data.action.RemoveInventoryItemAction;
  * 
  * TODO Test suite for deleting items
  * 
- * TODO Default new game
- * 
  * TODO no logging to console
  * 
  * TODO sound support (optional)

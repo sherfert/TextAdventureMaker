@@ -14,6 +14,8 @@ import java.util.jar.JarOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import playing.menu.LoadSaveManager;
+
 /**
  * This class is responsible for copying the DB file into the existing game jar.
  * 
@@ -23,7 +25,7 @@ import java.util.logging.Logger;
 public class JARCreator {
 
 	/**
-	 * Copies the game database with the new filename game.h2.db into a new file
+	 * Copies the game database with the new filename game.mv.db into a new file
 	 * with the contents of Game_missing_db.jar.
 	 * 
 	 * @param gameDB
@@ -32,9 +34,9 @@ public class JARCreator {
 	 *            the file where to place the final jar
 	 */
 	public static void copyGameDBIntoGameJAR(File gameDB, File jarDest) throws IOException {
-		// Copy game db into temp folder with name game.h2.db
+		// Copy game db into temp folder with name game.mv.db
 		// create a temp file
-		File temp = new File("game.h2.db");
+		File temp = new File("game" + LoadSaveManager.H2_ENDING);
 
 		try {
 			Files.copy(gameDB.toPath(), temp.toPath());
