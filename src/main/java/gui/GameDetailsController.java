@@ -138,11 +138,9 @@ public class GameDetailsController extends GameDataController {
 
 	private Property<Integer> numOptionLinesProp;
 
-	/**
-	 * @param currentGameManager
-	 */
-	public GameDetailsController(CurrentGameManager currentGameManager) {
-		super(currentGameManager);
+
+	public GameDetailsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
+		super(currentGameManager, mwController);
 	}
 
 	@FXML

@@ -64,10 +64,24 @@ public abstract class GameDataController {
 	protected CurrentGameManager currentGameManager;
 
 	/**
+	 * A reference to the main window controller to change the contents.
+	 */
+	protected MainWindowController mwController;
+
+	/**
 	 * @param currentGameManager
 	 */
-	public GameDataController(CurrentGameManager currentGameManager) {
+	public GameDataController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		this.currentGameManager = currentGameManager;
+		this.mwController = mwController;
+	}
+
+	/**
+	 * Updates the view by synchronizing with the database. Should be called
+	 * each time the view is loaded again into the scene. This implementation
+	 * does nothing and should be appropriately overridden by subclasses.
+	 */
+	public void update() {
 	}
 
 	/**
@@ -109,9 +123,9 @@ public abstract class GameDataController {
 	}
 
 	/**
-	 * Hide any previous error messages and remove the css class "error"from the
-	 * node. It is safe to call this method even though no error was showing
-	 * previously
+	 * Hide any previous error messages and remove the css class "error" from
+	 * the node. It is safe to call this method even though no error was showing
+	 * previously.
 	 * 
 	 * @param node
 	 *            the node

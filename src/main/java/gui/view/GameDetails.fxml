@@ -27,7 +27,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Starting text" />
-                        <TextArea fx:id="startingTextField" prefHeight="200.0" prefWidth="200.0" wrapText="true" HBox.hgrow="ALWAYS" />
+                        <TextArea fx:id="startingTextField" prefHeight="200.0" prefWidth="198.0" wrapText="true" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />

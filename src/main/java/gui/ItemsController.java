@@ -43,11 +43,8 @@ public class ItemsController extends GameDataController {
 	@FXML
 	private Button saveButton;
 
-	/**
-	 * @param currentGameManager
-	 */
-	public ItemsController(CurrentGameManager currentGameManager) {
-		super(currentGameManager);
+	public ItemsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
+		super(currentGameManager, mwController);
 	}
 
 	@FXML
@@ -74,6 +71,13 @@ public class ItemsController extends GameDataController {
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
 		// Save button handler
 		saveButton.setOnMouseClicked((e) -> saveNewItem());
+	}
+	
+	@Override
+	public void update() {
+		if (itemsOL != null) {
+			itemsOL.setAll(currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+		}
 	}
 
 	/**

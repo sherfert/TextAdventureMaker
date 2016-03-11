@@ -24,6 +24,8 @@ import playing.menu.LoadSaveManager;
 /**
  * Controller for the main window.
  * 
+ * TODO Navbar and stack of center controllers.
+ * 
  * @author Satia
  */
 public class MainWindowController {
@@ -102,7 +104,7 @@ public class MainWindowController {
 	 * @param the
 	 *            controller
 	 */
-	private void setCenterContent(String fxml, GameDataController controller) {
+	public void setCenterContent(String fxml, GameDataController controller) {
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
@@ -139,9 +141,9 @@ public class MainWindowController {
 	 */
 	private void resetCenterGUI() {
 		// Create all controllers
-		gameDetailsController = new GameDetailsController(currentGameManager);
-		locationsController = new LocationsController(currentGameManager);
-		itemsController = new ItemsController(currentGameManager);
+		gameDetailsController = new GameDetailsController(currentGameManager, this);
+		locationsController = new LocationsController(currentGameManager, this);
+		itemsController = new ItemsController(currentGameManager, this);
 
 		// Load game details as first view
 		loadGameDetails();
@@ -151,7 +153,7 @@ public class MainWindowController {
 	 * Loads the game details into the center.
 	 */
 	public void loadGameDetails() {
-		// Load the game details in the center of the window
+		gameDetailsController.update();
 		setCenterContent("view/GameDetails.fxml", gameDetailsController);
 	}
 
@@ -159,6 +161,7 @@ public class MainWindowController {
 	 * Loads the locations into the center.
 	 */
 	public void loadLocations() {
+		locationsController.update();
 		setCenterContent("view/Locations.fxml", locationsController);
 	}
 	
@@ -166,6 +169,7 @@ public class MainWindowController {
 	 * Loads the items into the center.
 	 */
 	public void loadItems() {
+		itemsController.update();
 		setCenterContent("view/Items.fxml", itemsController);
 	}
 
