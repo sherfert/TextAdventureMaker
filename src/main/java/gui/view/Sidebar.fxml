@@ -12,5 +12,6 @@
    <children>
       <Hyperlink fx:id="gameConfigHL" maxWidth="1.7976931348623157E308" text="Game configuration" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="locationsHL" maxWidth="1.7976931348623157E308" text="Locations" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="itemsHL" maxWidth="1.7976931348623157E308" text="Items" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>

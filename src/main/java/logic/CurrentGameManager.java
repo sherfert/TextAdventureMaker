@@ -73,7 +73,7 @@ public class CurrentGameManager {
 	}
 
 	/**
-	 * Closes the file by disconnecting from the DB. TODO delete temp file
+	 * Closes the file by disconnecting from the DB.
 	 */
 	public void close() {
 		// Be sure to commit any remaining changed data

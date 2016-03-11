@@ -4,6 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import data.Item;
+
 /**
  * Managing access to the items in the database.
  * 
@@ -36,6 +41,20 @@ public class ItemManager {
 				.getResultList();
 	
 		return new HashSet<>(resultList);
+	}
+	
+	/**
+	 * @return all items in the game.
+	 */
+	public List<Item> getAllItems() {
+		// Find all items
+		CriteriaQuery<Item> query = persistenceManager
+				.getCriteriaBuilder().createQuery(Item.class);
+		Root<Item> root = query.from(Item.class);
+		query.select(root);
+		List<Item> resultList = persistenceManager.getEntityManager()
+				.createQuery(query).getResultList();
+		return resultList;
 	}
 
 }

@@ -1,11 +1,2 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
-.tab-pane:top *.tab-header-area {
-    -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0 0 0 0;
-}
-
-.tab-pane
-{
-    -fx-tab-min-width:70px;
-}

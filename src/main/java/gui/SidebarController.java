@@ -14,6 +14,9 @@ public class SidebarController {
 
 	@FXML
 	private Hyperlink locationsHL;
+	
+	@FXML
+	private Hyperlink itemsHL;
 
 	/**
 	 * A reference to the main window controller to change the contents.
@@ -31,9 +34,10 @@ public class SidebarController {
 	private void initialize() {
 		gameConfigHL.setOnAction(this::linkClicked);
 		locationsHL.setOnAction(this::linkClicked);
+		itemsHL.setOnAction(this::linkClicked);
 		
 
-		allLinks = new Hyperlink[] { gameConfigHL, locationsHL };
+		allLinks = new Hyperlink[] { gameConfigHL, locationsHL, itemsHL };
 	}
 	
 	private void linkClicked(ActionEvent e) {
@@ -51,6 +55,8 @@ public class SidebarController {
 			mwController.loadGameDetails();
 		} else if(clicked == locationsHL) {
 			mwController.loadLocations();
+		} else if(clicked == itemsHL) {
+			mwController.loadItems();
 		}
 	}
 

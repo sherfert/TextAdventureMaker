@@ -37,6 +37,7 @@ public class MainWindowController {
 	// All controllers that can be loaded dynamically
 	private GameDetailsController gameDetailsController;
 	private LocationsController locationsController;
+	private ItemsController itemsController;
 
 	@FXML
 	private MenuItem newMenuItem;
@@ -140,6 +141,7 @@ public class MainWindowController {
 		// Create all controllers
 		gameDetailsController = new GameDetailsController(currentGameManager);
 		locationsController = new LocationsController(currentGameManager);
+		itemsController = new ItemsController(currentGameManager);
 
 		// Load game details as first view
 		loadGameDetails();
@@ -158,6 +160,13 @@ public class MainWindowController {
 	 */
 	public void loadLocations() {
 		setCenterContent("view/Locations.fxml", locationsController);
+	}
+	
+	/**
+	 * Loads the items into the center.
+	 */
+	public void loadItems() {
+		setCenterContent("view/Items.fxml", itemsController);
 	}
 
 	/**
