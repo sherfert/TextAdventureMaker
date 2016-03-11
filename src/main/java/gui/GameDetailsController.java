@@ -10,6 +10,7 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
 import data.Game;
 import exception.DBIncompatibleException;
 import gui.utility.StringUtils;
+import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -135,6 +136,8 @@ public class GameDetailsController extends GameDataController {
 	@FXML
 	private ComboBox<Color> failureBGColorPicker;
 
+	private Property<Integer> numOptionLinesProp;
+
 	/**
 	 * @param currentGameManager
 	 */
@@ -210,10 +213,12 @@ public class GameDetailsController extends GameDataController {
 
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES,
 				MAX_OPTION_LINES, game.getNumberOfOptionLines());
-		// FIXME bidirectional binding only working once here.
-		// svf.valueProperty().bindBidirectional(game.numberOfOptionLinesProperty().asObject());
+		// The value numOptionLinesProp must NOT be stored in a local variable or passed directly.
+		// Since JavaFX uses weak references for bidirectional bindings, it will get
+		// garbage collected otherwise. Stupid!
+		numOptionLinesProp = game.numberOfOptionLinesProperty().asObject();
+		svf.valueProperty().bindBidirectional(numOptionLinesProp);
 		optionLinesSpinner.setValueFactory(svf);
-		optionLinesSpinner.valueProperty().addListener((f, o, n) -> game.setNumberOfOptionLines(n));
 
 		ObservableList<Color> colors = FXCollections.observableArrayList(Color.values());
 		successfulFGColorPicker.setItems(colors);
