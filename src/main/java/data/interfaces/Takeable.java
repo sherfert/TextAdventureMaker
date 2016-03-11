@@ -138,4 +138,20 @@ public interface Takeable extends Identifiable {
 	 *            the game
 	 */
 	public void take(Game game);
+
+	/**
+	 * Sets additional take commands.
+	 * 
+	 * @param additionalTakeCommands
+	 *            the additionalTakeCommands to set
+	 */
+	public void setAdditionalTakeCommands(List<String> additionalTakeCommands);
+
+	/**
+	 * Sets additional take actions.
+	 * 
+	 * @param additionalTakeActions
+	 *            the additionalTakeActions to set
+	 */
+	public void setAdditionalTakeActions(List<AbstractAction> additionalTakeActions);
 }

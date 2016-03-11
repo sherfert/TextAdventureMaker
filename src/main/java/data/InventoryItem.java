@@ -654,13 +654,13 @@ public class InventoryItem extends UsableObject implements
 		UsableHasLocation result;
 
 		if (object instanceof Item) {
-			result = usableItems.get((Item) object);
+			result = usableItems.get(object);
 			if (result == null) {
 				usableItems
 						.put((Item) object, result = new UsableHasLocation());
 			}
 		} else if (object instanceof Person) {
-			result = usablePersons.get((Person) object);
+			result = usablePersons.get(object);
 			if (result == null) {
 				usablePersons.put((Person) object,
 						result = new UsableHasLocation());

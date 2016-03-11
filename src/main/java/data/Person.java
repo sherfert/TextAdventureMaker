@@ -111,10 +111,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 		return additionalTalkToCommands;
 	}
 
-	/**
-	 * @param additionalTalkToCommands
-	 *            the additionalTalkToCommands to set
-	 */
+	@Override
 	public void setAdditionalTalkToCommands(List<String> additionalTalkToCommands) {
 		this.additionalTalkToCommands = additionalTalkToCommands;
 	}

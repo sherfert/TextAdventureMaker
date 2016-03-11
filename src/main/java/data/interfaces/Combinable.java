@@ -5,10 +5,8 @@ import java.util.List;
 import data.Game;
 import data.action.AbstractAction;
 
-/**
- * TODO check which of the Interface methods (for all interfaces) are actually used!
- * 
- * Anything combineable with another class. Usually the same class. Namely
+/** 
+ * Anything combinable with another class. Usually the same class. Namely
  * {@link InventoryItem}.
  * 
  * The InventoryItems may disappear and new ones can be added.

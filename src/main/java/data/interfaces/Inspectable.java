@@ -54,4 +54,20 @@ public interface Inspectable extends Identifiable {
 	 *            the inspectionText to set
 	 */
 	public void setInspectionText(String inspectionText);
+
+	/**
+	 * Sets the identifiers.
+	 * 
+	 * @param identifiers
+	 *            the identifiers to set
+	 */
+	public void setIdentifiers(List<String> identifiers);
+
+	/**
+	 * Sets the additional inspect actions.
+	 * 
+	 * @param additionalInspectActions
+	 *            the additionalInspectActions to set
+	 */
+	public void setAdditionalInspectActions(List<AbstractAction> additionalInspectActions);
 }

@@ -101,10 +101,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 		return additionalUseActions;
 	}
 
-	/**
-	 * @param additionalUseActions
-	 *            the additionalUseActions to set
-	 */
+	@Override
 	public void setAdditionalUseActions(List<AbstractAction> additionalUseActions) {
 		this.additionalUseActions = additionalUseActions;
 	}
@@ -115,10 +112,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 		return additionalUseCommands;
 	}
 
-	/**
-	 * @param additionalUseCommands
-	 *            the additionalUseCommands to set
-	 */
+	@Override
 	public void setAdditionalUseCommands(List<String> additionalUseCommands) {
 		this.additionalUseCommands = additionalUseCommands;
 	}

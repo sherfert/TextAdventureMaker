@@ -94,10 +94,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 		return additionalInspectActions;
 	}
 
-	/**
-	 * @param additionalInspectActions
-	 *            the additionalInspectActions to set
-	 */
+	@Override
 	public void setAdditionalInspectActions(List<AbstractAction> additionalInspectActions) {
 		this.additionalInspectActions = additionalInspectActions;
 	}
@@ -108,10 +105,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 		return identifiers;
 	}
 
-	/**
-	 * @param identifiers
-	 *            the identifiers to set
-	 */
+	@Override
 	public void setIdentifiers(List<String> identifiers) {
 		this.identifiers = identifiers;
 	}

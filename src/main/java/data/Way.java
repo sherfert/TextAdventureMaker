@@ -129,10 +129,7 @@ public class Way extends InspectableObject implements Travelable {
 		return additionalMoveActions;
 	}
 
-	/**
-	 * @param additionalMoveActions
-	 *            the additionalMoveActions to set
-	 */
+	@Override
 	public void setAdditionalMoveActions(List<AbstractAction> additionalMoveActions) {
 		this.additionalMoveActions = additionalMoveActions;
 	}
@@ -143,10 +140,7 @@ public class Way extends InspectableObject implements Travelable {
 		return additionalTravelCommands;
 	}
 
-	/**
-	 * @param additionalTravelCommands
-	 *            the additionalTravelCommands to set
-	 */
+	@Override
 	public void setAdditionalTravelCommands(List<String> additionalTravelCommands) {
 		this.additionalTravelCommands = additionalTravelCommands;
 	}
@@ -220,13 +214,9 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	// final as called in constructor
-	/**
-	 * This also modifies the location and the moveAction.
-	 * 
-	 * @param destination
-	 *            the destination to set
-	 */
+	@Override
 	public final void setDestination(Location destination) {
+		// This also modifies the location and the moveAction.
 		if (this.destination != null) {
 			this.destination.removeWayIn(this);
 		}

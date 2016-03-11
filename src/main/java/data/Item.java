@@ -158,10 +158,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		return additionalTakeActions;
 	}
 
-	/**
-	 * @param additionalTakeActions
-	 *            the additionalTakeActions to set
-	 */
+	@Override
 	public void setAdditionalTakeActions(List<AbstractAction> additionalTakeActions) {
 		this.additionalTakeActions = additionalTakeActions;
 	}
@@ -172,10 +169,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		return additionalTakeCommands;
 	}
 
-	/**
-	 * @param additionalTakeCommands
-	 *            the additionalTakeCommands to set
-	 */
+	@Override
 	public void setAdditionalTakeCommands(List<String> additionalTakeCommands) {
 		this.additionalTakeCommands = additionalTakeCommands;
 	}

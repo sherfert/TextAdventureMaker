@@ -75,4 +75,12 @@ public interface HasConversation extends Identifiable {
 	 *            the game
 	 */
 	public void talkTo(Game game);
+	
+	/**
+	 * Sets additional talk to commands.
+	 * 
+	 * @param additionalTalkToCommands
+	 *            the additionalTalkToCommands to set
+	 */
+	public void setAdditionalTalkToCommands(List<String> additionalTalkToCommands);
 }

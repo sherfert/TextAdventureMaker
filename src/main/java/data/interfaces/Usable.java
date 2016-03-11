@@ -99,4 +99,20 @@ public interface Usable extends Identifiable {
 	 *            the game
 	 */
 	public void use(Game game);
+
+	/**
+	 * Sets additional use commands.
+	 * 
+	 * @param additionalUseCommands
+	 *            the additionalUseCommands to set
+	 */
+	public void setAdditionalUseCommands(List<String> additionalUseCommands);
+
+	/**
+	 * Sets additional use actions.
+	 * 
+	 * @param additionalUseActions
+	 *            the additionalUseActions to set
+	 */
+	public void setAdditionalUseActions(List<AbstractAction> additionalUseActions);
 }

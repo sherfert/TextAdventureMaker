@@ -85,7 +85,8 @@ public interface Travelable extends Identifiable {
 	public void setMoveForbiddenText(String forbiddenText);
 
 	/**
-	 * Sets the successful text. If {@code null} passed, no text will be displayed.
+	 * Sets the successful text. If {@code null} passed, no text will be
+	 * displayed.
 	 * 
 	 * @param successfulText
 	 *            the successfulText to set
@@ -105,4 +106,28 @@ public interface Travelable extends Identifiable {
 	 *            the game
 	 */
 	public void travel(Game game);
+
+	/**
+	 * Set the destination.
+	 * 
+	 * @param destination
+	 *            the destination to set
+	 */
+	public void setDestination(Location destination);
+
+	/**
+	 * Sets additional travel commands.
+	 * 
+	 * @param additionalTravelCommands
+	 *            the additionalTravelCommands to set
+	 */
+	public void setAdditionalTravelCommands(List<String> additionalTravelCommands);
+
+	/**
+	 * Sets additional move actions
+	 * 
+	 * @param additionalMoveActions
+	 *            the additionalMoveActions to set
+	 */
+	public void setAdditionalMoveActions(List<AbstractAction> additionalMoveActions);
 }
