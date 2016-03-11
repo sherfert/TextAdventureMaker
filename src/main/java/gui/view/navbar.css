@@ -1,0 +1,22 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+
+.hyperlink {
+	-fx-font-size: 10pt;
+	-fx-text-fill: black;
+    -fx-border-style: hidden;
+}
+
+.hyperlink:visited {
+	-fx-underline: false;
+}
+
+.hyperlink:hover {
+   -fx-text-fill: #606060;
+   -fx-underline: true;
+}
+
+.label {
+	-fx-font-size: 10pt;
+	-fx-label-padding: 4px;
+}

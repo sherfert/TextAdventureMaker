@@ -24,8 +24,6 @@ import playing.menu.LoadSaveManager;
 /**
  * Controller for the main window.
  * 
- * TODO Navbar and stack of center controllers.
- * 
  * @author Satia
  */
 public class MainWindowController {
@@ -40,6 +38,9 @@ public class MainWindowController {
 	private GameDetailsController gameDetailsController;
 	private LocationsController locationsController;
 	private ItemsController itemsController;
+
+	// The navigation bar controller
+	private NavbarController navbarController;
 
 	@FXML
 	private MenuItem newMenuItem;
@@ -105,6 +106,9 @@ public class MainWindowController {
 	 *            controller
 	 */
 	public void setCenterContent(String fxml, GameDataController controller) {
+		// Update the controller to load
+		controller.update();
+		
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
@@ -150,27 +154,63 @@ public class MainWindowController {
 	}
 
 	/**
+	 * Pushes a new view onto the center.
+	 * 
+	 * @param linkTitle
+	 *            the title for the link to this view in the navbar
+	 * @param fxml
+	 *            the FXML
+	 * @param controller
+	 *            the controller
+	 */
+	public void pushCenterContent(String linkTitle, String fxml, GameDataController controller) {
+		// Push to the navbar
+		navbarController.push(linkTitle, controller, fxml);
+		// Set the content
+		setCenterContent(fxml, controller);
+	}
+	
+	/**
+	 * Pops the last controller from the center content and restores the view below that.
+	 */
+	public void popCenterContent() {
+		navbarController.pop();
+	}
+
+	/**
 	 * Loads the game details into the center.
 	 */
 	public void loadGameDetails() {
-		gameDetailsController.update();
-		setCenterContent("view/GameDetails.fxml", gameDetailsController);
+		String fxml = "view/GameDetails.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		navbarController.push("Game Configuration", gameDetailsController, fxml);
+		// Load the content
+		setCenterContent(fxml, gameDetailsController);
 	}
 
 	/**
 	 * Loads the locations into the center.
 	 */
 	public void loadLocations() {
-		locationsController.update();
-		setCenterContent("view/Locations.fxml", locationsController);
+		String fxml = "view/Locations.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		navbarController.push("Locations", locationsController, fxml);
+		// Load the content
+		setCenterContent(fxml, locationsController);
 	}
-	
+
 	/**
 	 * Loads the items into the center.
 	 */
 	public void loadItems() {
-		itemsController.update();
-		setCenterContent("view/Items.fxml", itemsController);
+		String fxml = "view/Items.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		navbarController.push("Items", itemsController, fxml);
+		// Load the content
+		setCenterContent(fxml, itemsController);
 	}
 
 	/**
@@ -198,6 +238,30 @@ public class MainWindowController {
 	}
 
 	/**
+	 * Load the navbar.
+	 */
+	private void loadNavbar() {
+		try {
+			navbarController = new NavbarController(this);
+
+			// Load layout from fxml file.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainWindowController.class.getResource("view/Navbar.fxml"));
+
+			// Set the controller for the fxml
+			loader.setController(navbarController);
+
+			// Load the view
+			Node node = loader.load();
+
+			borderPane.setBottom(node);
+		} catch (IOException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not load the main window's sidebar",
+					e);
+		}
+	}
+
+	/**
 	 * Opens a file chooser to let the user choose the file to create/open in
 	 * the application.
 	 * 
@@ -208,7 +272,8 @@ public class MainWindowController {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(creatingNew ? "Choose where to save the new file" : "Choose a game file");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Game databases", "*" + LoadSaveManager.H2_ENDING),
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("Game databases", "*" + LoadSaveManager.H2_ENDING),
 				new FileChooser.ExtensionFilter("All Files", "*.*"));
 
 		File file;
@@ -239,6 +304,8 @@ public class MainWindowController {
 
 			// Load the side bar left
 			loadSidebar();
+			// And the navbar top
+			loadNavbar();
 
 			// Load the center stuff (last, because this can cause an unload of
 			// the whole GUI!)

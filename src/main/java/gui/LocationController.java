@@ -56,8 +56,6 @@ public class LocationController extends GameDataController {
 
 	/**
 	 * Removes a location from the DB.
-	 * 
-	 * TODO switch back to LocationsView
 	 */
 	private void removeLocation() {
 		if (isStartLocation(location)) {
@@ -80,6 +78,9 @@ public class LocationController extends GameDataController {
 				// Remove location from DB
 				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(location);
 				currentGameManager.getPersistenceManager().updateChanges();
+				
+				// Switch back to previous view
+				mwController.popCenterContent();
 			}
 		});
 	}

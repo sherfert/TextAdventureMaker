@@ -16,8 +16,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for the locations view.
  * 
- * TODO update this view (when locations get deleted)
- * 
  * @author Satia
  */
 public class LocationsController extends GameDataController {
@@ -57,10 +55,14 @@ public class LocationsController extends GameDataController {
 		nameCol.setCellValueFactory((p) -> p.getValue().nameProperty());
 		descriptionCol.setCellValueFactory((p) -> p.getValue().descriptionProperty());
 
-		// A listener for row clicks
+		// A listener for row double-clicks
 		table.setRowFactory(tv -> {
 			TableRow<Location> row = new TableRow<>();
-			row.setOnMouseClicked(event -> locationSelected(row.getItem()));
+			row.setOnMouseClicked(event ->  {
+				if(event.getClickCount() == 2) {
+					locationSelected(row.getItem());
+				}
+			});
 			return row;
 		});
 
@@ -119,6 +121,6 @@ public class LocationsController extends GameDataController {
 
 		// Open the location view
 		LocationController locationController = new LocationController(currentGameManager, mwController, l);
-		mwController.setCenterContent("view/Location.fxml", locationController);
+		mwController.pushCenterContent(l.getName(),"view/Location.fxml", locationController);
 	}
 }
