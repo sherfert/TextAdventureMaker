@@ -10,8 +10,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
@@ -25,12 +23,6 @@ public class LocationController extends GameDataController {
 
 	/** The location */
 	private Location location;
-
-	@FXML
-	private TextField editNameTF;
-
-	@FXML
-	private TextArea editDescriptionTA;
 
 	@FXML
 	private Button removeButton;
@@ -49,9 +41,19 @@ public class LocationController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		editNameTF.textProperty().bindBidirectional(location.nameProperty());
-		editDescriptionTA.textProperty().bindBidirectional(location.descriptionProperty());
 		removeButton.setOnMouseClicked((e) -> removeLocation());
+	}
+	
+	/**
+	 * Controller factory that initializes named object controllers correctly.
+	 */
+	@Override
+	public Object controllerFactory(Class<?> type) {
+		if (type == NamedObjectController.class) {
+	        return new NamedObjectController(currentGameManager, mwController, location);
+	    } else {
+	        return super.controllerFactory(type);
+	    }
 	}
 
 	/**

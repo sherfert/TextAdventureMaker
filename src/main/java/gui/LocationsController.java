@@ -121,6 +121,6 @@ public class LocationsController extends GameDataController {
 
 		// Open the location view
 		LocationController locationController = new LocationController(currentGameManager, mwController, l);
-		mwController.pushCenterContent(l.getName(),"view/Location.fxml", locationController);
+		mwController.pushCenterContent(l.getName(),"view/Location.fxml", locationController, locationController::controllerFactory);
 	}
 }

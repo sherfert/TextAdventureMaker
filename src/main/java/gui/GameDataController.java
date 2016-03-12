@@ -85,6 +85,25 @@ public abstract class GameDataController {
 	}
 
 	/**
+	 * Default controller factory. This can be used by subclasses. They should
+	 * override the method, do some type checks and create their own instances.
+	 * In an else branch, they should return
+	 * {@code super.controllerFactory(type)}.
+	 * 
+	 * @param type
+	 *            the type of the object
+	 * @return the new controller
+	 */
+	protected Object controllerFactory(Class<?> type) {
+		try {
+			return type.newInstance();
+		} catch (Exception e) {
+			System.err.println("Could not create controller for " + type.getName());
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
 	 * Show an error for any (input) node. This applies the css class "error" to
 	 * the node (light red background) and shows a tooltip with the given error
 	 * message right below the node. This tooltip cannot be hidden, until

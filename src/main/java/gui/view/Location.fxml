@@ -8,15 +8,8 @@
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label text="Name" />
-      <TextField fx:id="editNameTF" prefWidth="198.0" />
-      <Label text="Description" />
-      <TextArea fx:id="editDescriptionTA" minHeight="-Infinity" prefHeight="200.0" prefWidth="198.0" wrapText="true" />
-      <HBox>
-         <children>
-            <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Remove" />
-         </children>
-      </HBox>
+      <fx:include fx:id="namedObject" source="NamedObject.fxml" />
+      <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Remove" />
    </children>
    <padding>
       <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

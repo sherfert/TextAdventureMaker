@@ -17,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import javafx.util.Callback;
 import logic.CurrentGameManager;
 import logic.JARCreator;
 import playing.menu.LoadSaveManager;
@@ -94,6 +95,20 @@ public class MainWindowController {
 	public void setWindow(Window window) {
 		this.window = window;
 	}
+	
+	/**
+	 * Load the view given by the fxml into the center of the main window's
+	 * border pane. With that fxml must be associated a controller implementing
+	 * {@link GameDataController}.
+	 * 
+	 * @param fxml
+	 *            The fxml file to load
+	 * @param controller
+	 *            the controller
+	 */
+	public void setCenterContent(String fxml, GameDataController controller) {
+		setCenterContent(fxml, controller, null);
+	}
 
 	/**
 	 * Load the view given by the fxml into the center of the main window's
@@ -102,13 +117,16 @@ public class MainWindowController {
 	 * 
 	 * @param fxml
 	 *            The fxml file to load
-	 * @param the
-	 *            controller
+	 * @param controller
+	 *            the controller
+	 * @param controllerFactory
+	 *            either {@code} null, or a context specific controller factory
 	 */
-	public void setCenterContent(String fxml, GameDataController controller) {
+	public void setCenterContent(String fxml, GameDataController controller,
+			Callback<Class<?>, Object> controllerFactory) {
 		// Update the controller to load
 		controller.update();
-		
+
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
@@ -116,6 +134,11 @@ public class MainWindowController {
 
 			// Set the controller for the fxml
 			loader.setController(controller);
+
+			// If provided, use the controller factory
+			if (controllerFactory != null) {
+				loader.setControllerFactory(controllerFactory);
+			}
 
 			// Load the view
 			Node node = loader.load();
@@ -152,7 +175,7 @@ public class MainWindowController {
 		// Load game details as first view
 		loadGameDetails();
 	}
-
+	
 	/**
 	 * Pushes a new view onto the center.
 	 * 
@@ -164,14 +187,32 @@ public class MainWindowController {
 	 *            the controller
 	 */
 	public void pushCenterContent(String linkTitle, String fxml, GameDataController controller) {
+		pushCenterContent(linkTitle, fxml, controller, null);
+	}
+
+	/**
+	 * Pushes a new view onto the center.
+	 * 
+	 * @param linkTitle
+	 *            the title for the link to this view in the navbar
+	 * @param fxml
+	 *            the FXML
+	 * @param controller
+	 *            the controller
+	 * @param controllerFactory
+	 *            either {@code} null, or a context specific controller factory
+	 */
+	public void pushCenterContent(String linkTitle, String fxml, GameDataController controller,
+			Callback<Class<?>, Object> controllerFactory) {
 		// Push to the navbar
 		navbarController.push(linkTitle, controller, fxml);
 		// Set the content
-		setCenterContent(fxml, controller);
+		setCenterContent(fxml, controller, controllerFactory);
 	}
-	
+
 	/**
-	 * Pops the last controller from the center content and restores the view below that.
+	 * Pops the last controller from the center content and restores the view
+	 * below that.
 	 */
 	public void popCenterContent() {
 		navbarController.pop();
