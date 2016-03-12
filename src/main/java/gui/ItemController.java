@@ -41,12 +41,14 @@ public class ItemController extends GameDataController {
 	}
 
 	/**
-	 * Controller factory that initializes named object controllers correctly.
+	 * Controller factory that initializes controllers correctly.
 	 */
 	@Override
 	public Object controllerFactory(Class<?> type) {
 		if (type == NamedObjectController.class) {
 			return new NamedObjectController(currentGameManager, mwController, item);
+		} else if (type == InspectableObjectController.class) {
+			return new InspectableObjectController(currentGameManager, mwController, item);
 		} else {
 			return super.controllerFactory(type);
 		}
@@ -60,8 +62,7 @@ public class ItemController extends GameDataController {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Deleting an item");
 		alert.setHeaderText("Do you really want to delete this item?");
-		alert.setContentText(
-				"This will delete the item, usage information of inventory items with this item, "
+		alert.setContentText("This will delete the item, usage information of inventory items with this item, "
 				+ "and actions associated with any of the deleted entities.");
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {

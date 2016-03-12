@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.InspectableObjectController">
+   <children>
+      <Label text="Inspection Text" />
+      <TextArea fx:id="editInspectionTextTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
+      <Label text="Identifiers" />
+      <TextArea fx:id="editIdentifiersTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
+   </children>
+   <padding>
+      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+   </padding>
+</VBox>

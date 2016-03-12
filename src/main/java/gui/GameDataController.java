@@ -24,19 +24,19 @@ import utility.CommandRegExConverter;
 public abstract class GameDataController {
 
 	/**
-	 * A method allowing to set commands as a list of strings.
+	 * A method allowing to set a list of strings.
 	 * 
 	 * @author Satia
 	 */
 	@FunctionalInterface
-	public static interface CommandSetter {
+	public static interface StringListSetter {
 		/**
-		 * Sets the commands.
+		 * Sets the list.
 		 * 
-		 * @param commands
-		 *            the commands
+		 * @param list
+		 *            the list
 		 */
-		public void setCommands(List<String> commands);
+		public void setList(List<String> list);
 	}
 
 	private static final String NODE_PROPERTIES_KEY_ERROR_TOOLTIP = "Error-Tooltip";
@@ -162,6 +162,34 @@ public abstract class GameDataController {
 	}
 
 	/**
+	 * Obtains a single String from the list of Strings in the game. strings are
+	 * joined with the '\n' character
+	 * 
+	 * @param strings
+	 *            the list of strings
+	 * @return the joined string.
+	 */
+	protected String getListString(List<String> strings) {
+		// Assure no lazy loading DB list is used, therefore copy to a new list
+		// The DB lists are incompatible with streams
+		return new ArrayList<String>(strings).stream().collect(Collectors.joining("\n"));
+	}
+
+	/**
+	 * Splits the string by the '\n'char and then invokes the setter with the
+	 * obtained list.
+	 * 
+	 * @param joinedString
+	 *            a string joined with '\n'chars.
+	 * @param setter
+	 *            a method to call that accepts a list of strings.
+	 */
+	protected void updateList(String joinedString, StringListSetter setter) {
+		ArrayList<String> lines = new ArrayList<String>(Arrays.asList(joinedString.split("\\n")));
+		setter.setList(lines);
+	}
+
+	/**
 	 * Obtains a single command String from the list of commands in the game.
 	 * Each command is converted into a better human readable form and the
 	 * strings are joined with the '\n' character
@@ -183,20 +211,20 @@ public abstract class GameDataController {
 	/**
 	 * Updates a list of commands in the game, after various error checks. If a
 	 * required property does not hold, an error tooltip will be shown on the
-	 * passed input node. Otheriwse the given method is executed to set the
+	 * passed input node. Otherwise the given method is executed to set the
 	 * commands.
 	 * 
 	 * @param commandsText
 	 *            the input text for the commands as a single 'n'-separated
 	 *            String.
 	 * @param paramNum
-	 *            the number of paramters this command expects.
+	 *            the number of parameters this command expects.
 	 * @param inputNode
 	 *            the input node used to type the commands
 	 * @param setter
 	 *            the method to call if the commands are valid
 	 */
-	protected void updateGameCommands(String commandsText, int paramNum, Node inputNode, CommandSetter setter) {
+	protected void updateGameCommands(String commandsText, int paramNum, Node inputNode, StringListSetter setter) {
 		String[] lines = commandsText.split("\\n");
 		if (Arrays.stream(lines).anyMatch((s) -> MULTIPLE_BLANKS.matcher(s).find())) {
 			showError(inputNode, COMMAND_MULTI_WHITESPACE);
@@ -229,7 +257,7 @@ public abstract class GameDataController {
 				hideError(inputNode);
 				List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
 						.collect(Collectors.toList());
-				setter.setCommands(newCommands);
+				setter.setList(newCommands);
 			}
 		}
 	}

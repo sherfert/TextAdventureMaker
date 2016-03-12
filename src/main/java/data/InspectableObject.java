@@ -17,6 +17,8 @@ import javax.persistence.ManyToMany;
 
 import data.action.AbstractAction;
 import data.interfaces.Inspectable;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +48,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 * It is being displayed when the named object is inspected or suggests the
 	 * default text to be displayed if {@code null}.
 	 */
-	private String inspectionText;
+	private final StringProperty inspectionText;
 
 	/**
 	 * No-arg constructor for the database. Use
@@ -55,6 +57,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	@Deprecated
 	protected InspectableObject() {
 		init();
+		inspectionText = new SimpleStringProperty();
 	}
 
 	/**
@@ -68,6 +71,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	protected InspectableObject(String name, String description) {
 		super(name, description);
 		init();
+		inspectionText = new SimpleStringProperty();
 		addIdentifier(name);
 	}
 
@@ -113,8 +117,15 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	@Override
 	@Column(nullable = true)
 	public String getInspectionText() {
-		return inspectionText;
+		return inspectionText.get();
 	}
+	
+	/**
+	 * @return the inspection text property
+	 */
+	public StringProperty inspectionTextProperty() {
+        return inspectionText;
+    }
 
 	@Override
 	public void inspect(Game game) {
@@ -137,7 +148,7 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 
 	@Override
 	public void setInspectionText(String inspectionText) {
-		this.inspectionText = inspectionText;
+		this.inspectionText.set(inspectionText);
 	}
 
 	/**
