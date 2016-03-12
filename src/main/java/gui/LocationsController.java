@@ -109,7 +109,7 @@ public class LocationsController extends GameDataController {
 	}
 
 	/**
-	 * Places the selected location in the edit area of the tab pane.
+	 * Opens this location for editing
 	 * 
 	 * @param l
 	 *            the location

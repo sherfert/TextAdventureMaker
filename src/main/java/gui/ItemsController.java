@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -19,7 +20,7 @@ import logic.CurrentGameManager;
  */
 public class ItemsController extends GameDataController {
 
-	/** An observable list with the locations. */
+	/** An observable list with the items. */
 	private ObservableList<Item> itemsOL;
 
 	@FXML
@@ -53,8 +54,19 @@ public class ItemsController extends GameDataController {
 		idCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<Integer>(p.getValue().getId()));
 		nameCol.setCellValueFactory((p) -> p.getValue().nameProperty());
 		descriptionCol.setCellValueFactory((p) -> p.getValue().descriptionProperty());
+		
+		// A listener for row double-clicks
+		table.setRowFactory(tv -> {
+			TableRow<Item> row = new TableRow<>();
+			row.setOnMouseClicked(event ->  {
+				if(event.getClickCount() == 2) {
+					itemSelected(row.getItem());
+				}
+			});
+			return row;
+		});
 
-		// Get all locations and store in observable list, unless the list is
+		// Get all items and store in observable list, unless the list is
 		// already propagated
 		if (itemsOL == null) {
 			itemsOL = FXCollections.observableArrayList(
@@ -94,6 +106,22 @@ public class ItemsController extends GameDataController {
 		// Reset the form values
 		newNameTF.setText("");
 		newDescriptionTA.setText("");
+	}
+	
+	/**
+	 * Opens this item for editing.
+	 * 
+	 * @param i
+	 *            the item
+	 */
+	private void itemSelected(Item i) {
+		if (i == null) {
+			return;
+		}
+
+		// Open the location view
+		ItemController itemController = new ItemController(currentGameManager, mwController, i);
+		mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
 	}
 
 }

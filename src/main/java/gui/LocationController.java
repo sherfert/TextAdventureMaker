@@ -33,7 +33,8 @@ public class LocationController extends GameDataController {
 	 * @param location
 	 *            the location to edit
 	 */
-	public LocationController(CurrentGameManager currentGameManager, MainWindowController mwController, Location location) {
+	public LocationController(CurrentGameManager currentGameManager, MainWindowController mwController,
+			Location location) {
 		super(currentGameManager, mwController);
 		this.location = location;
 	}
@@ -43,17 +44,17 @@ public class LocationController extends GameDataController {
 		// Create new bindings
 		removeButton.setOnMouseClicked((e) -> removeLocation());
 	}
-	
+
 	/**
 	 * Controller factory that initializes named object controllers correctly.
 	 */
 	@Override
 	public Object controllerFactory(Class<?> type) {
 		if (type == NamedObjectController.class) {
-	        return new NamedObjectController(currentGameManager, mwController, location);
-	    } else {
-	        return super.controllerFactory(type);
-	    }
+			return new NamedObjectController(currentGameManager, mwController, location);
+		} else {
+			return super.controllerFactory(type);
+		}
 	}
 
 	/**
@@ -73,14 +74,14 @@ public class LocationController extends GameDataController {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Deleting a location");
 		alert.setHeaderText("Do you really want to delete this location?");
-		alert.setContentText(
-				"This will delete the location, the ways connected to this location, and actions associated with any of the deleted entities.");
+		alert.setContentText("This will delete the location, the ways connected to this location, "
+				+ "and actions associated with any of the deleted entities.");
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
 				// Remove location from DB
 				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(location);
 				currentGameManager.getPersistenceManager().updateChanges();
-				
+
 				// Switch back to previous view
 				mwController.popCenterContent();
 			}

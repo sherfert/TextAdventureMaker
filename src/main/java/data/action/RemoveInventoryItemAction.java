@@ -8,7 +8,6 @@ import javax.persistence.ManyToOne;
 
 import data.Game;
 import data.InventoryItem;
-import data.Item;
 
 /**
  * An action removing an {@link InventoryItem}.
@@ -30,7 +29,7 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link RemoveInventoryItemAction#RemoveInventoryItemAction(Item)}
+	 *             {@link RemoveInventoryItemAction#RemoveInventoryItemAction(InventoryItem)}
 	 *             instead.
 	 */
 	@Deprecated
