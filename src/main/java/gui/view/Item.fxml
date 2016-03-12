@@ -10,6 +10,7 @@
    <children>
       <fx:include fx:id="namedObject" source="NamedObject.fxml" />
       <fx:include fx:id="inspectableObject" source="InspectableObject.fxml" />
+      <fx:include fx:id="usableObject" source="UsableObject.fxml" />
       <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Remove" />
    </children>
    <padding>

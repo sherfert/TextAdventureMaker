@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.UsableObjectController">
+   <children>
+      <CheckBox fx:id="editEnabledCB" mnemonicParsing="false" text="Using enabled?" />
+      <Label text="Use Successful Text" />
+      <TextField fx:id="editUseSuccessfulTextTF" />
+      <Label text="Use Forbidden Text" />
+      <TextField fx:id="editUseForbiddenTextTF" />
+      <Label text="Use commands" />
+      <TextArea fx:id="editUseCommandsTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
+   </children>
+   <padding>
+      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+   </padding>
+</VBox>

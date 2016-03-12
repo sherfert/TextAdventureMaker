@@ -25,6 +25,8 @@ import playing.menu.LoadSaveManager;
 /**
  * Controller for the main window.
  * 
+ * FIXME VM not properly closed. When and why?
+ * 
  * @author Satia
  */
 public class MainWindowController {
@@ -159,6 +161,7 @@ public class MainWindowController {
 	private void unloadGameRelatedGUI() {
 		borderPane.setLeft(null);
 		borderPane.setCenter(null);
+		borderPane.setBottom(null);
 		exportMenuItem.setDisable(true);
 		gameMenu.setDisable(true);
 	}

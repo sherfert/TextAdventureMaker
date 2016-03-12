@@ -49,6 +49,8 @@ public class ItemController extends GameDataController {
 			return new NamedObjectController(currentGameManager, mwController, item);
 		} else if (type == InspectableObjectController.class) {
 			return new InspectableObjectController(currentGameManager, mwController, item);
+		} else if (type == UsableObjectController.class) {
+			return new UsableObjectController(currentGameManager, mwController, item);
 		} else {
 			return super.controllerFactory(type);
 		}

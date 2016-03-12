@@ -17,6 +17,10 @@ import javax.persistence.ManyToMany;
 
 import data.action.AbstractAction;
 import data.interfaces.Usable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,18 +50,18 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	 * The text being displayed when not successfully used. The default message
 	 * is used if this is {@code null}.
 	 */
-	private String useForbiddenText;
+	private final StringProperty useForbiddenText;
 
 	/**
 	 * The text being displayed when successfully used. The default message is
 	 * used if this is {@code null}.
 	 */
-	private String useSuccessfulText;
+	private final StringProperty useSuccessfulText;
 
 	/**
 	 * If using is enabled. {@code false} by default.
 	 */
-	private boolean usingEnabled;
+	private final BooleanProperty usingEnabled;
 
 	/**
 	 * No-arg constructor for the database. Use
@@ -65,6 +69,9 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	 */
 	@Deprecated
 	protected UsableObject() {
+		useForbiddenText = new SimpleStringProperty();
+		useSuccessfulText = new SimpleStringProperty();
+		usingEnabled = new SimpleBooleanProperty();
 		init();
 	}
 
@@ -78,6 +85,9 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	 */
 	protected UsableObject(String name, String description) {
 		super(name, description);
+		useForbiddenText = new SimpleStringProperty();
+		useSuccessfulText = new SimpleStringProperty();
+		usingEnabled = new SimpleBooleanProperty();
 		init();
 	}
 
@@ -120,18 +130,39 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	@Override
 	@Column(nullable = true)
 	public String getUseForbiddenText() {
+		return useForbiddenText.get();
+	}
+	
+	/**
+	 * @return the forbidden text property
+	 */
+	public StringProperty useForbiddenTextProperty() {
 		return useForbiddenText;
 	}
 
 	@Override
 	@Column(nullable = true)
 	public String getUseSuccessfulText() {
+		return useSuccessfulText.get();
+	}
+	
+	/**
+	 * @return the successful text property
+	 */
+	public StringProperty useSuccessfulTextProperty() {
 		return useSuccessfulText;
 	}
 
 	@Override
 	@Column(nullable = false)
 	public boolean getUsingEnabled() {
+		return usingEnabled.get();
+	}
+	
+	/**
+	 * @return using enabled property.
+	 */
+	public BooleanProperty usingEnabledProperty() {
 		return usingEnabled;
 	}
 
@@ -147,17 +178,17 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 
 	@Override
 	public void setUseForbiddenText(String forbiddenText) {
-		useForbiddenText = forbiddenText;
+		useForbiddenText.set(forbiddenText);
 	}
 
 	@Override
 	public void setUseSuccessfulText(String successfulText) {
-		useSuccessfulText = successfulText;
+		useSuccessfulText.set(successfulText);
 	}
 
 	@Override
 	public void setUsingEnabled(boolean enabled) {
-		usingEnabled = enabled;
+		usingEnabled.set(enabled);
 	}
 
 	@Override
@@ -176,7 +207,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	private final void init() {
 		additionalUseActions = new ArrayList<>();
 		additionalUseCommands = new ArrayList<>();
-		usingEnabled = false;
+		usingEnabled.set(false);
 	}
 
 	@Override

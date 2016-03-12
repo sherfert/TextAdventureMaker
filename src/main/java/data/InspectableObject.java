@@ -56,8 +56,8 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 */
 	@Deprecated
 	protected InspectableObject() {
-		init();
 		inspectionText = new SimpleStringProperty();
+		init();
 	}
 
 	/**
@@ -70,8 +70,8 @@ public abstract class InspectableObject extends NamedObject implements Inspectab
 	 */
 	protected InspectableObject(String name, String description) {
 		super(name, description);
-		init();
 		inspectionText = new SimpleStringProperty();
+		init();
 		addIdentifier(name);
 	}
 
