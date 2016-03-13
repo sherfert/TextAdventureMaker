@@ -6,12 +6,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
  * Controller for one item.
  * 
- * TODO Support to change fields of InspectableObject, UsableObject, and Item
+ * TODO Support to change removeItem, location, additionalTakeActions, pickUpItems
  * 
  * @author Satia
  */
@@ -22,6 +25,18 @@ public class ItemController extends GameDataController {
 
 	@FXML
 	private Button removeButton;
+	
+	@FXML
+	private CheckBox editTakingEnabledCB;
+
+	@FXML
+	private TextField editTakeSuccessfulTextTF;
+
+	@FXML
+	private TextField editTakeForbiddenTextTF;
+
+	@FXML
+	private TextArea editTakeCommandsTA;
 
 	/**
 	 * @param currentGameManager
@@ -38,6 +53,15 @@ public class ItemController extends GameDataController {
 	private void initialize() {
 		// Create new bindings
 		removeButton.setOnMouseClicked((e) -> removeItem());
+		editTakeSuccessfulTextTF.textProperty().bindBidirectional(item.takeSuccessfulTextProperty());
+		editTakeForbiddenTextTF.textProperty().bindBidirectional(item.takeForbiddenTextProperty());
+		
+		editTakingEnabledCB.setSelected(item.isTakingEnabled());
+		editTakingEnabledCB.selectedProperty().addListener((f, o, n) -> item.setTakingEnabled(n));
+
+		editTakeCommandsTA.setText(getCommandString(item.getAdditionalTakeCommands()));
+		editTakeCommandsTA.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, editTakeCommandsTA, item::setAdditionalTakeCommands));
 	}
 
 	/**

@@ -8,7 +8,7 @@
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.UsableObjectController">
    <children>
-      <CheckBox fx:id="editEnabledCB" mnemonicParsing="false" text="Using enabled?" />
+      <CheckBox fx:id="editUsingEnabledCB" mnemonicParsing="false" text="Using enabled?" />
       <Label text="Use Successful Text" />
       <TextField fx:id="editUseSuccessfulTextTF" />
       <Label text="Use Forbidden Text" />
@@ -16,7 +16,4 @@
       <Label text="Use commands" />
       <TextArea fx:id="editUseCommandsTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
    </children>
-   <padding>
-      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-   </padding>
 </VBox>

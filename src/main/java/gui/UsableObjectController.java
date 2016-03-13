@@ -20,7 +20,7 @@ public class UsableObjectController extends GameDataController {
 	private UsableObject object;
 
 	@FXML
-	private CheckBox editEnabledCB;
+	private CheckBox editUsingEnabledCB;
 
 	@FXML
 	private TextField editUseSuccessfulTextTF;
@@ -48,7 +48,7 @@ public class UsableObjectController extends GameDataController {
 		// Create new bindings
 		editUseSuccessfulTextTF.textProperty().bindBidirectional(object.useSuccessfulTextProperty());
 		editUseForbiddenTextTF.textProperty().bindBidirectional(object.useForbiddenTextProperty());
-		editEnabledCB.selectedProperty().bindBidirectional(object.usingEnabledProperty());
+		editUsingEnabledCB.selectedProperty().bindBidirectional(object.usingEnabledProperty());
 
 		editUseCommandsTA.setText(getCommandString(object.getAdditionalUseCommands()));
 

@@ -6,14 +6,52 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <fx:include fx:id="namedObject" source="NamedObject.fxml" />
-      <fx:include fx:id="inspectableObject" source="InspectableObject.fxml" />
-      <fx:include fx:id="usableObject" source="UsableObject.fxml" />
-      <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Remove" />
-   </children>
-   <padding>
-      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-   </padding>
-</VBox>
+
+<TabPane prefHeight="500.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <tabs>
+    <Tab text="Basic properties">
+         <content>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+               <children>
+                  <fx:include fx:id="namedObject" source="NamedObject.fxml" />
+                  <fx:include fx:id="inspectableObject" source="InspectableObject.fxml" />
+                  <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" text="Delete this item" />
+               </children>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </VBox>
+         </content>
+      </Tab>
+    <Tab text="Using the item">
+         <content>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+               <children>
+                  <fx:include fx:id="usableObject" source="UsableObject.fxml" />
+               </children>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </VBox>
+         </content>
+      </Tab>
+      <Tab text="Taking the item">
+        <content>
+            <VBox spacing="2.0">
+               <children>
+                  <CheckBox fx:id="editTakingEnabledCB" mnemonicParsing="false" text="Taking enabled?" />
+                  <Label text="Take Successful Text" />
+                  <TextField fx:id="editTakeSuccessfulTextTF" />
+                  <Label text="Take Forbidden Text" />
+                  <TextField fx:id="editTakeForbiddenTextTF" />
+                  <Label text="Take commands" />
+                  <TextArea fx:id="editTakeCommandsTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
+               </children>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </VBox>
+        </content>
+      </Tab>
+  </tabs>
+</TabPane>

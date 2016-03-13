@@ -13,7 +13,4 @@
       <Label text="Description" />
       <TextArea fx:id="editDescriptionTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
    </children>
-   <padding>
-      <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-   </padding>
 </VBox>

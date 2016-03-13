@@ -22,6 +22,8 @@ import data.action.AddInventoryItemsAction;
 import data.action.ChangeItemAction;
 import data.interfaces.HasLocation;
 import data.interfaces.Takeable;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,13 +87,13 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * A personalized error message displayed if taking this item was forbidden
 	 * or suggests the default text to be displayed if {@code null}.
 	 */
-	private String takeForbiddenText;
+	private final StringProperty takeForbiddenText;
 
 	/**
 	 * A personalized error message displayed if taking this item was successful
 	 * or suggests the default text to be displayed if {@code null}.
 	 */
-	private String takeSuccessfulText;
+	private final StringProperty takeSuccessfulText;
 
 	/**
 	 * No-arg constructor for the database.
@@ -104,6 +106,8 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 */
 	@Deprecated
 	public Item() {
+		takeSuccessfulText = new SimpleStringProperty();
+		takeForbiddenText = new SimpleStringProperty();
 		init();
 	}
 
@@ -120,6 +124,8 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 */
 	public Item(Location location, String name, String description) {
 		super(name, description);
+		takeSuccessfulText = new SimpleStringProperty();
+		takeForbiddenText = new SimpleStringProperty();
 		init();
 		setLocation(location);
 	}
@@ -135,6 +141,8 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 */
 	public Item(String name, String description) {
 		super(name, description);
+		takeSuccessfulText = new SimpleStringProperty();
+		takeForbiddenText = new SimpleStringProperty();
 		init();
 	}
 
@@ -179,17 +187,31 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	public Location getLocation() {
 		return location;
 	}
-
-	@Override
-	@Column(nullable = true)
-	public String getTakeForbiddenText() {
+	
+	/**
+	 * @return the take forbidden text property
+	 */
+	public StringProperty takeForbiddenTextProperty() {
 		return takeForbiddenText;
 	}
 
 	@Override
 	@Column(nullable = true)
-	public String getTakeSuccessfulText() {
+	public String getTakeForbiddenText() {
+		return takeForbiddenText.get();
+	}
+	
+	/**
+	 * @return the take successful text property
+	 */
+	public StringProperty takeSuccessfulTextProperty() {
 		return takeSuccessfulText;
+	}
+
+	@Override
+	@Column(nullable = true)
+	public String getTakeSuccessfulText() {
+		return takeSuccessfulText.get();
 	}
 
 	@Override
@@ -236,12 +258,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 
 	@Override
 	public void setTakeForbiddenText(String forbiddenText) {
-		takeForbiddenText = forbiddenText;
+		takeForbiddenText.set(forbiddenText);
 	}
 
 	@Override
 	public void setTakeSuccessfulText(String successfulText) {
-		takeSuccessfulText = successfulText;
+		takeSuccessfulText.set(successfulText);
 	}
 
 	@Override

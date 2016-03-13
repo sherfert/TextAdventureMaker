@@ -134,7 +134,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	}
 	
 	/**
-	 * @return the forbidden text property
+	 * @return the use forbidden text property
 	 */
 	public StringProperty useForbiddenTextProperty() {
 		return useForbiddenText;
@@ -147,7 +147,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	}
 	
 	/**
-	 * @return the successful text property
+	 * @return the use successful text property
 	 */
 	public StringProperty useSuccessfulTextProperty() {
 		return useSuccessfulText;
