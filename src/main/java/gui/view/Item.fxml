@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-
 <TabPane prefHeight="500.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab text="Basic properties">
@@ -40,6 +39,7 @@
             <VBox spacing="2.0">
                <children>
                   <CheckBox fx:id="editTakingEnabledCB" mnemonicParsing="false" text="Taking enabled?" />
+                  <CheckBox fx:id="editRemoveItemEnabledCB" mnemonicParsing="false" text="Remove the item after taking?" />
                   <Label text="Take Successful Text" />
                   <TextField fx:id="editTakeSuccessfulTextTF" />
                   <Label text="Take Forbidden Text" />

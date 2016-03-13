@@ -28,6 +28,9 @@ public class ItemController extends GameDataController {
 	
 	@FXML
 	private CheckBox editTakingEnabledCB;
+	
+	@FXML
+	private CheckBox editRemoveItemEnabledCB;
 
 	@FXML
 	private TextField editTakeSuccessfulTextTF;
@@ -58,6 +61,9 @@ public class ItemController extends GameDataController {
 		
 		editTakingEnabledCB.setSelected(item.isTakingEnabled());
 		editTakingEnabledCB.selectedProperty().addListener((f, o, n) -> item.setTakingEnabled(n));
+		
+		editRemoveItemEnabledCB.setSelected(item.isRemoveItem());
+		editRemoveItemEnabledCB.selectedProperty().addListener((f, o, n) -> item.setRemoveItem(n));
 
 		editTakeCommandsTA.setText(getCommandString(item.getAdditionalTakeCommands()));
 		editTakeCommandsTA.textProperty().addListener(
