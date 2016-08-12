@@ -122,6 +122,12 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * The thread that reads the input.
 	 */
 	private Thread inputReader;
+	
+	/**
+	 * XXX The interrupted status of the inputReader Thread is reset somehow on Linux after calling
+	 * interrupt on it. To overcome this problem, this variable was introduced.
+	 */
+	private volatile boolean inputReaderRunning;
 
 	/**
 	 * @param ioManager
@@ -216,10 +222,12 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * @return the thread.
 	 */
 	private Thread startInputReadingThread() {
+		this.inputReaderRunning = true;
+		
 		Thread t = new Thread(() -> {
 			while (true) {
 				// Check for interruptions
-				if (Thread.interrupted()) {
+				if (!this.inputReaderRunning) {
 					break;
 				}
 
@@ -266,8 +274,8 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * Exits the IO.
 	 */
 	public void exitIO() {
-		screen.stopScreen();
-		inputReader.interrupt();
+		this.screen.stopScreen();
+		this.inputReaderRunning = false;
 	}
 
 	/**
@@ -279,7 +287,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	public void println(String output) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Printing \"{0}\"", output);
 
-		defaultTextArea.println(output);
+		this.defaultTextArea.println(output);
 		this.screen.refresh();
 	}
 

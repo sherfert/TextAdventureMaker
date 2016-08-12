@@ -25,8 +25,6 @@ import playing.menu.LoadSaveManager;
 /**
  * Controller for the main window.
  * 
- * FIXME VM not properly closed. When and why?
- * 
  * @author Satia
  */
 public class MainWindowController {
