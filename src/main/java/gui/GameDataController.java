@@ -3,6 +3,8 @@ package gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -98,8 +100,9 @@ public abstract class GameDataController {
 		try {
 			return type.newInstance();
 		} catch (Exception e) {
-			System.err.println("Could not create controller for " + type.getName());
-			throw new RuntimeException(e);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not create controller for  {0}",
+					type.getName());
+			return null;
 		}
 	}
 

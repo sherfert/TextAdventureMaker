@@ -119,9 +119,9 @@ public class PersonsController extends GameDataController {
 			return;
 		}
 
-		// TODOOpen the person view 
-		//ItemController itemController = new ItemController(currentGameManager, mwController, i);
-		//mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
+		// Open the person view 
+		PersonController personController = new PersonController(currentGameManager, mwController, p);
+		mwController.pushCenterContent(p.getName(),"view/Person.fxml", personController, personController::controllerFactory);
 	}
 
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+
+<TabPane prefHeight="500.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<tabs>
+		<Tab text="Basic properties">
+			<content>
+				<VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+					<children>
+						<fx:include fx:id="namedObject" source="NamedObject.fxml" />
+						<fx:include fx:id="inspectableObject" source="InspectableObject.fxml" />
+						<Button fx:id="removeButton" minWidth="-Infinity"
+							mnemonicParsing="false" prefHeight="25.0" text="Delete this item" />
+					</children>
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+				</VBox>
+			</content>
+		</Tab>
+		<Tab text="Talking to the person">
+			<content>
+				<VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+					<children>
+						<Label text="Talk Forbidden Text" />
+						<TextField fx:id="editTalkForbiddenTextTF" />
+						<Label text="Talk commands" />
+						<TextArea fx:id="editTalkCommandsTA" prefHeight="100.0"
+							prefWidth="198.0" wrapText="true" />
+					</children>
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+				</VBox>
+			</content>
+		</Tab>
+	</tabs>
+</TabPane>
