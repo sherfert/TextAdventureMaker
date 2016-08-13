@@ -1,6 +1,6 @@
 package gui;
 
-import data.Item;
+import data.Person;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,26 +14,26 @@ import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
- * Controller for the items view.
+ * Controller for the persons view.
  * 
  * @author Satia
  */
-public class ItemsController extends GameDataController {
+public class PersonsController extends GameDataController {
 
-	/** An observable list with the items. */
-	private ObservableList<Item> itemsOL;
-
-	@FXML
-	private TableView<Item> table;
+	/** An observable list with the persons. */
+	private ObservableList<Person> personsOL;
 
 	@FXML
-	private TableColumn<Item, Integer> idCol;
+	private TableView<Person> table;
 
 	@FXML
-	private TableColumn<Item, String> nameCol;
+	private TableColumn<Person, Integer> idCol;
 
 	@FXML
-	private TableColumn<Item, String> descriptionCol;
+	private TableColumn<Person, String> nameCol;
+
+	@FXML
+	private TableColumn<Person, String> descriptionCol;
 
 	@FXML
 	private TextField newNameTF;
@@ -44,7 +44,7 @@ public class ItemsController extends GameDataController {
 	@FXML
 	private Button saveButton;
 
-	public ItemsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
+	public PersonsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController);
 	}
 
@@ -57,10 +57,10 @@ public class ItemsController extends GameDataController {
 		
 		// A listener for row double-clicks
 		table.setRowFactory(tv -> {
-			TableRow<Item> row = new TableRow<>();
+			TableRow<Person> row = new TableRow<>();
 			row.setOnMouseClicked(event ->  {
 				if(event.getClickCount() == 2) {
-					itemSelected(row.getItem());
+					personSelected(row.getItem());
 				}
 			});
 			return row;
@@ -68,13 +68,13 @@ public class ItemsController extends GameDataController {
 
 		// Get all items and store in observable list, unless the list is
 		// already propagated
-		if (itemsOL == null) {
-			itemsOL = FXCollections.observableArrayList(
-					currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+		if (personsOL == null) {
+			personsOL = FXCollections.observableArrayList(
+					currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
 		}
 
 		// Fill table
-		table.setItems(itemsOL);
+		table.setItems(personsOL);
 
 		// Disable buttons at beginning
 		saveButton.setDisable(true);
@@ -82,26 +82,26 @@ public class ItemsController extends GameDataController {
 		// Assure save is only enabled if there is a name
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
 		// Save button handler
-		saveButton.setOnMouseClicked((e) -> saveNewItem());
+		saveButton.setOnMouseClicked((e) -> saveNewPerson());
 	}
 	
 	@Override
 	public void update() {
-		if (itemsOL != null) {
-			itemsOL.setAll(currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+		if (personsOL != null) {
+			personsOL.setAll(currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
 		}
 	}
 
 	/**
-	 * Saves a new item to both DB and table.
+	 * Saves a new person to both DB and table.
 	 */
-	private void saveNewItem() {
-		Item i = new Item(newNameTF.getText(), newDescriptionTA.getText());
+	private void saveNewPerson() {
+		Person p = new Person(newNameTF.getText(), newDescriptionTA.getText());
 		// Add item to DB
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(i);
+		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(p);
 		currentGameManager.getPersistenceManager().updateChanges();
 		// Add location to our table
-		itemsOL.add(i);
+		personsOL.add(p);
 
 		// Reset the form values
 		newNameTF.setText("");
@@ -109,19 +109,19 @@ public class ItemsController extends GameDataController {
 	}
 	
 	/**
-	 * Opens this item for editing.
+	 * Opens this person for editing.
 	 * 
 	 * @param i
 	 *            the item
 	 */
-	private void itemSelected(Item i) {
-		if (i == null) {
+	private void personSelected(Person p) {
+		if (p == null) {
 			return;
 		}
 
-		// Open the item view
-		ItemController itemController = new ItemController(currentGameManager, mwController, i);
-		mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
+		// TODOOpen the person view 
+		//ItemController itemController = new ItemController(currentGameManager, mwController, i);
+		//mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
 	}
 
 }

@@ -14,6 +14,8 @@ import javax.persistence.Transient;
 import data.action.AbstractAction;
 import data.interfaces.HasConversation;
 import data.interfaces.HasLocation;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +52,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 * no such successful text, as then the conversation is started immediately.
 	 * Suggests the default text to be displayed if {@code null}.
 	 */
-	private String talkingToForbiddenText;
+	private final StringProperty talkingToForbiddenText;
 
 	/**
 	 * All additional talk to commands.
@@ -65,6 +67,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 */
 	@Deprecated
 	public Person() {
+		talkingToForbiddenText = new SimpleStringProperty();
 		init();
 	}
 
@@ -78,6 +81,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 */
 	public Person(Location location, String name, String description) {
 		super(name, description);
+		talkingToForbiddenText = new SimpleStringProperty();
 		init();
 		setLocation(location);
 	}
@@ -90,6 +94,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 */
 	public Person(String name, String description) {
 		super(name, description);
+		talkingToForbiddenText = new SimpleStringProperty();
 		init();
 	}
 
@@ -178,16 +183,23 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	public boolean isTalkingEnabled() {
 		return conversation != null && conversation.getEnabled();
 	}
-
-	@Override
-	@Column(nullable = true)
-	public String getTalkingToForbiddenText() {
+	
+	/**
+	 * @return the talk to forbidden text property
+	 */
+	public StringProperty talkingToForbiddenTextProperty() {
 		return talkingToForbiddenText;
 	}
 
 	@Override
+	@Column(nullable = true)
+	public String getTalkingToForbiddenText() {
+		return talkingToForbiddenText.get();
+	}
+
+	@Override
 	public void setTalkingToForbiddenText(String text) {
-		this.talkingToForbiddenText = text;
+		talkingToForbiddenText.set(text);
 	}
 
 }

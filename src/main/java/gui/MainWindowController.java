@@ -39,6 +39,7 @@ public class MainWindowController {
 	private GameDetailsController gameDetailsController;
 	private LocationsController locationsController;
 	private ItemsController itemsController;
+	private PersonsController personsController;
 
 	// The navigation bar controller
 	private NavbarController navbarController;
@@ -172,6 +173,7 @@ public class MainWindowController {
 		gameDetailsController = new GameDetailsController(currentGameManager, this);
 		locationsController = new LocationsController(currentGameManager, this);
 		itemsController = new ItemsController(currentGameManager, this);
+		personsController = new PersonsController(currentGameManager, this);
 
 		// Load game details as first view
 		loadGameDetails();
@@ -235,7 +237,7 @@ public class MainWindowController {
 	 * Loads the locations into the center.
 	 */
 	public void loadLocations() {
-		String fxml = "view/Locations.fxml";
+		String fxml = "view/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		navbarController.push("Locations", locationsController, fxml);
@@ -247,12 +249,24 @@ public class MainWindowController {
 	 * Loads the items into the center.
 	 */
 	public void loadItems() {
-		String fxml = "view/Items.fxml";
+		String fxml = "view/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		navbarController.push("Items", itemsController, fxml);
 		// Load the content
 		setCenterContent(fxml, itemsController);
+	}
+	
+	/**
+	 * Loads the persons into the center.
+	 */
+	public void loadPersons() {
+		String fxml = "view/NameDescTableAndFields.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		navbarController.push("Persons", personsController, fxml);
+		// Load the content
+		setCenterContent(fxml, personsController);
 	}
 
 	/**
