@@ -66,7 +66,7 @@ public class PersonsController extends GameDataController {
 			return row;
 		});
 
-		// Get all items and store in observable list, unless the list is
+		// Get all persons and store in observable list, unless the list is
 		// already propagated
 		if (personsOL == null) {
 			personsOL = FXCollections.observableArrayList(
@@ -111,8 +111,8 @@ public class PersonsController extends GameDataController {
 	/**
 	 * Opens this person for editing.
 	 * 
-	 * @param i
-	 *            the item
+	 * @param p
+	 *            the person
 	 */
 	private void personSelected(Person p) {
 		if (p == null) {

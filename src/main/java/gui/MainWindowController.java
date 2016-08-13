@@ -40,6 +40,7 @@ public class MainWindowController {
 	private LocationsController locationsController;
 	private ItemsController itemsController;
 	private PersonsController personsController;
+	private ConversationsController conversationsController;
 
 	// The navigation bar controller
 	private NavbarController navbarController;
@@ -174,6 +175,7 @@ public class MainWindowController {
 		locationsController = new LocationsController(currentGameManager, this);
 		itemsController = new ItemsController(currentGameManager, this);
 		personsController = new PersonsController(currentGameManager, this);
+		conversationsController = new ConversationsController(currentGameManager, this);
 
 		// Load game details as first view
 		loadGameDetails();
@@ -267,6 +269,18 @@ public class MainWindowController {
 		navbarController.push("Persons", personsController, fxml);
 		// Load the content
 		setCenterContent(fxml, personsController);
+	}
+	
+	/**
+	 * Loads the conversations into the center.
+	 */
+	public void loadConversations() {
+		String fxml = "view/Conversations.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		navbarController.push("Conversations", conversationsController, fxml);
+		// Load the content
+		setCenterContent(fxml, conversationsController);
 	}
 
 	/**

@@ -14,5 +14,6 @@
       <Hyperlink fx:id="locationsHL" maxWidth="1.7976931348623157E308" text="Locations" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="itemsHL" maxWidth="1.7976931348623157E308" text="Items" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="personsHL" maxWidth="1.7976931348623157E308" text="Persons" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="conversationsHL" maxWidth="1.7976931348623157E308" text="Conversations" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>
