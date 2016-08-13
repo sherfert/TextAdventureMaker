@@ -19,6 +19,10 @@ import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
 import data.interfaces.HasId;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * A conversation, consisting of different layers and a greeting. Can be enabled
@@ -39,18 +43,25 @@ public class Conversation implements HasId {
 	/**
 	 * The greeting from the Person.
 	 */
-	private String greeting;
+	private final StringProperty greeting;
 
 	/**
 	 * A text describing what is going on additionally. If empty, nothing is
 	 * printed.
 	 */
-	private String event;
+	private final StringProperty event;
+
+	/**
+	 * A name for the conversation. Only relevant for the GUI, not displayed
+	 * anywhere in the game. A conversation does not have a description and can
+	 * therefore not inherit from NamedObject.
+	 */
+	private final StringProperty name;
 
 	/**
 	 * If this conversation is enabled.
 	 */
-	private boolean enabled;
+	private final BooleanProperty enabled;
 
 	/**
 	 * All additional actions.
@@ -77,6 +88,10 @@ public class Conversation implements HasId {
 	 */
 	@Deprecated
 	public Conversation() {
+		this.event = new SimpleStringProperty();
+		this.greeting = new SimpleStringProperty();
+		this.name = new SimpleStringProperty();
+		this.enabled = new SimpleBooleanProperty();
 		this.layers = new ArrayList<>();
 		this.additionalActions = new ArrayList<>();
 	}
@@ -84,29 +99,35 @@ public class Conversation implements HasId {
 	/**
 	 * An enabled conversation with no layers yet.
 	 * 
+	 * @param name
+	 *            the name 
 	 * @param greeting
 	 *            the greeting
 	 */
-	public Conversation(String greeting) {
+	public Conversation(String name, String greeting) {
 		this();
-		this.greeting = greeting;
-		this.event = "";
-		this.enabled = true;
+		this.name.set(name);
+		this.greeting.set(greeting);
+		this.event.set("");
+		this.enabled.set(true);
 	}
 
 	/**
 	 * An enabled conversation with no layers yet.
 	 * 
+	 * @param name
+	 *            the name 
 	 * @param greeting
 	 *            the greeting
 	 * @param event
 	 *            the event
 	 */
-	public Conversation(String greeting, String event) {
+	public Conversation(String name, String greeting, String event) {
 		this();
-		this.greeting = greeting;
-		this.event = event;
-		this.enabled = true;
+		this.name.set(name);
+		this.greeting.set(greeting);
+		this.event.set(event);
+		this.enabled.set(true);
 	}
 
 	@Override
@@ -130,6 +151,13 @@ public class Conversation implements HasId {
 	 */
 	@Column(nullable = false)
 	public String getGreeting() {
+		return greeting.get();
+	}
+
+	/**
+	 * @return the greeting property
+	 */
+	public StringProperty greetingProperty() {
 		return greeting;
 	}
 
@@ -138,7 +166,7 @@ public class Conversation implements HasId {
 	 *            the greeting to set
 	 */
 	public void setGreeting(String greeting) {
-		this.greeting = greeting;
+		this.greeting.set(greeting);
 	}
 
 	/**
@@ -146,6 +174,13 @@ public class Conversation implements HasId {
 	 */
 	@Column(nullable = false)
 	public String getEvent() {
+		return event.get();
+	}
+
+	/**
+	 * @return the event property
+	 */
+	public StringProperty eventProperty() {
 		return event;
 	}
 
@@ -154,16 +189,46 @@ public class Conversation implements HasId {
 	 *            the event to set
 	 */
 	public void setEvent(String event) {
-		this.event = event;
+		this.event.set(event);
 	}
 
+	/**
+	 * @return the name
+	 */
+	@Column(nullable = false)
+	public String getName() {
+		return name.get();
+	}
+
+	/**
+	 * @return the name property
+	 */
+	public StringProperty nameProperty() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name.set(name);
+	}
 
 	/**
 	 * If this conversation is enabled.
+	 * 
 	 * @return the enabled
 	 */
 	@Column(nullable = false)
 	public boolean getEnabled() {
+		return enabled.get();
+	}
+
+	/**
+	 * @return the enabled property
+	 */
+	public BooleanProperty enabledProperty() {
 		return enabled;
 	}
 
@@ -172,13 +237,13 @@ public class Conversation implements HasId {
 	 *            the enabled to set
 	 */
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		this.enabled.set(enabled);
 	}
 
 	/**
 	 * @return the layers
 	 */
-	@OneToMany(cascade = {CascadeType.PERSIST})
+	@OneToMany(cascade = { CascadeType.PERSIST })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CONVERSATION_LAYERS", //
 	foreignKeyDefinition = "FOREIGN KEY (LAYERS_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") )
 	public List<ConversationLayer> getLayers() {
@@ -196,7 +261,7 @@ public class Conversation implements HasId {
 	/**
 	 * @return the startLayer
 	 */
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CONVERSATION_STARTLAYER", //
 	foreignKeyDefinition = "FOREIGN KEY (startLayer_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE SET NULL") )
 	public ConversationLayer getStartLayer() {
@@ -214,7 +279,7 @@ public class Conversation implements HasId {
 	/**
 	 * @return the additionalActions
 	 */
-	@ManyToMany(cascade = {CascadeType.PERSIST})
+	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "CONV_AA", foreignKey = @ForeignKey(name = "FK_CONVERSATION_ADDITIONALACTIONS_S", //
 	foreignKeyDefinition = "FOREIGN KEY (Conversation_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATION_ADDITIONALACTIONS_D", //

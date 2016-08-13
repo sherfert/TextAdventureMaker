@@ -104,8 +104,8 @@ public class Main {
 		money.setInspectionText("You stole them from poor Satia.");
 
 		// Create conversations first, add other stuff later
-		Conversation satiaConversation = new Conversation("I'm busy, keep it short.");
-		Conversation satiaShortConversation = new Conversation("Hey. Gimme back my money! Douche!",
+		Conversation satiaConversation = new Conversation("satiaConversation", "I'm busy, keep it short.");
+		Conversation satiaShortConversation = new Conversation("satiaShortConversation", "Hey. Gimme back my money! Douche!",
 				"Satia takes his money back semi-violently.");
 
 		// Combining these 2 actions
@@ -213,7 +213,7 @@ public class Main {
 		Person hotChick = new Person(flat, "Hot chick", "A hot chick is standing in the corner.");
 		hotChick.addIdentifier("chick");
 		hotChick.setInspectionText("Stunning.");
-		Conversation hotChickConversation = new Conversation("Sorry, you're not my type.");
+		Conversation hotChickConversation = new Conversation("chickConv", "Sorry, you're not my type.");
 		hotChick.setConversation(hotChickConversation);
 		hotChick.addAdditionalTalkToCommand("flirt with (?<o0>.+?)");
 
