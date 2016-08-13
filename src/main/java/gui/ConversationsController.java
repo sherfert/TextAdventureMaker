@@ -2,7 +2,6 @@ package gui;
 
 import data.Conversation;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -125,11 +124,10 @@ public class ConversationsController extends GameDataController {
 			return;
 		}
 
-		// TODO Open the conversations view
-		// PersonController personController = new
-		// PersonController(currentGameManager, mwController, p);
-		// mwController.pushCenterContent(p.getName(),"view/Person.fxml",
-		// personController, personController::controllerFactory);
+		// Open the conversations view
+		ConversationController conversationController = new ConversationController(currentGameManager, mwController, c);
+		mwController.pushCenterContent(c.getName(), "view/Conversation.fxml", conversationController,
+				conversationController::controllerFactory);
 	}
 
 }
