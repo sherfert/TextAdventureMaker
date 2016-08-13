@@ -117,14 +117,9 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * Signaling whether the initialization is finished.
 	 */
 	private volatile boolean isFinished;
-
-	/**
-	 * The thread that reads the input.
-	 */
-	private Thread inputReader;
 	
 	/**
-	 * XXX The interrupted status of the inputReader Thread is reset somehow on Linux after calling
+	 * The interrupted status of the input reader Thread is reset somehow on Linux after calling
 	 * interrupt on it. To overcome this problem, this variable was introduced.
 	 */
 	private volatile boolean inputReaderRunning;
@@ -141,10 +136,11 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		this.screen = TerminalFacade.createScreen();
 		this.screen.startScreen();
 
-		// Add us as resize listener
-		screen.getTerminal().addResizeListener(this);
-
 		Terminal t = this.screen.getTerminal();
+		
+		// Add us as resize listener
+		t.addResizeListener(this);
+
 		// Modify (which includes resize) the JFrame
 		if (t instanceof SwingTerminal) {
 			modifyJFrame(((SwingTerminal) t).getJFrame());
@@ -159,7 +155,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		}
 
 		// Start the thread reading input
-		this.inputReader = startInputReadingThread();
+		startInputReadingThread();
 	}
 
 	/**
@@ -205,8 +201,20 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 			}
 		});
 		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension prefSize = new Dimension((int) (fullScreen.width * 0.8), (int) (fullScreen.height * 0.8));
 		// Let the screen cover 80 % of the real screen in each dimension
-		frame.setPreferredSize(new Dimension((int) (fullScreen.width * 0.8), (int) (fullScreen.height * 0.8)));
+		frame.setPreferredSize(prefSize);
+
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting preferred dimension to {0}", prefSize);
+		
+		// Sometimes the resize does not take effect when calling pack immediately.
+		// Therefore we wait a little and then pack
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		frame.pack();
 		// Not resizable
 		frame.setResizable(false);
 
@@ -218,10 +226,8 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 * Starts a thread that reads the input in an infinite loop.
 	 * 
 	 * XXX is this possible without busy waiting?
-	 * 
-	 * @return the thread.
 	 */
-	private Thread startInputReadingThread() {
+	private void startInputReadingThread() {
 		this.inputReaderRunning = true;
 		
 		Thread t = new Thread(() -> {
@@ -239,8 +245,6 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 			}
 		});
 		t.start();
-
-		return t;
 	}
 
 	/**

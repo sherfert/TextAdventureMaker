@@ -9,10 +9,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * Test class to have a GUI and a playing main class and different JARs.
+ * Opens the GUI of TextAdventureMaker.
+ * 
+ * TODO Font sizes in Linux
  * 
  * @author Satia
- *
  */
 public class MainWindow extends Application {
 
