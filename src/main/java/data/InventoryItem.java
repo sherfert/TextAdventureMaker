@@ -248,9 +248,9 @@ public class InventoryItem extends UsableObject implements
 
 	/**
 	 * An inventory item can be combined with others. For each inventory item
-	 * there are additional informations about the usability, etc. The method
+	 * there is additional information about the usability, etc. The method
 	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key and
-	 * value, if it was not stored before. The other inventory item's map will
+	 * value, if it was not stored before. The other inventory items map will
 	 * be synchronized, too.
 	 * 
 	 * ManyToMany since exactly TWO InventoryItems store this
@@ -284,7 +284,7 @@ public class InventoryItem extends UsableObject implements
 
 	/**
 	 * An inventory item can be used with {@link Item}s. For each object there
-	 * are additional informations about the usability, etc. The method
+	 * is additional information about the usability, etc. The method
 	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
@@ -299,7 +299,7 @@ public class InventoryItem extends UsableObject implements
 
 	/**
 	 * An inventory item can be used with {@link Person}s. For each object there
-	 * are additional informations about the usability, etc. The method
+	 * is additional information about the usability, etc. The method
 	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
@@ -326,7 +326,7 @@ public class InventoryItem extends UsableObject implements
 	/**
 	 * Copies name, inspection text, and identifiers from the Item.
 	 * 
-	 * Any additional inspect or use action have to converted and added
+	 * Any additional inspect or use action have to be converted and added
 	 * manually. Also the using enabled status, forbidden and successful texts
 	 * have to be set manually.
 	 * 
@@ -681,7 +681,6 @@ public class InventoryItem extends UsableObject implements
 		usableItems = new HashMap<>();
 		usablePersons = new HashMap<>();
 		combinableInventoryItems = new HashMap<>();
-
 		additionalCombineCommands = new HashMap<>();
 	}
 

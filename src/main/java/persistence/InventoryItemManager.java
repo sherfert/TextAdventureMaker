@@ -4,6 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import data.InventoryItem;
+
 /**
  * Managing access to the inventory items in the database.
  * 
@@ -38,8 +43,6 @@ public class InventoryItemManager {
 		return new HashSet<>(resultList);
 	}
 	
-	
-	
 	/**
 	 * @return a set of all additional use with commands defined anywhere in the
 	 *         game.
@@ -53,5 +56,18 @@ public class InventoryItemManager {
 				.getResultList();
 	
 		return new HashSet<>(resultList);
+	}
+	
+	/**
+	 * @return all inventory items in the game.
+	 */
+	public List<InventoryItem> getAllInventoryItems() {
+		CriteriaQuery<InventoryItem> query = persistenceManager
+				.getCriteriaBuilder().createQuery(InventoryItem.class);
+		Root<InventoryItem> root = query.from(InventoryItem.class);
+		query.select(root);
+		List<InventoryItem> resultList = persistenceManager.getEntityManager()
+				.createQuery(query).getResultList();
+		return resultList;
 	}
 }

@@ -40,6 +40,7 @@ public class MainWindowController {
 	private LocationsController locationsController;
 	private WaysController waysController;
 	private ItemsController itemsController;
+	private InventoryItemsController inventoryItemsController;
 	private PersonsController personsController;
 	private ConversationsController conversationsController;
 
@@ -176,6 +177,7 @@ public class MainWindowController {
 		locationsController = new LocationsController(currentGameManager, this);
 		waysController = new WaysController(currentGameManager, this);
 		itemsController = new ItemsController(currentGameManager, this);
+		inventoryItemsController = new InventoryItemsController(currentGameManager, this);
 		personsController = new PersonsController(currentGameManager, this);
 		conversationsController = new ConversationsController(currentGameManager, this);
 
@@ -271,6 +273,18 @@ public class MainWindowController {
 		navbarController.push("Items", itemsController, fxml);
 		// Load the content
 		setCenterContent(fxml, itemsController);
+	}
+
+	/**
+	 * Loads the items into the center.
+	 */
+	public void loadInventoryItems() {
+		String fxml = "view/NameDescTableAndFields.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		navbarController.push("Inventory items", inventoryItemsController, fxml);
+		// Load the content
+		setCenterContent(fxml, inventoryItemsController);
 	}
 	
 	/**

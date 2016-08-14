@@ -86,6 +86,8 @@ public abstract class GameDataController {
 	 * Updates the view by synchronizing with the database. Should be called
 	 * each time the view is loaded again into the scene. This implementation
 	 * does nothing and should be appropriately overridden by subclasses.
+	 * 
+	 * TODO overthink if this should be abstract
 	 */
 	public void update() {
 	}

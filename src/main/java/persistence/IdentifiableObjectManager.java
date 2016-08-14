@@ -14,6 +14,7 @@ public class IdentifiableObjectManager {
 	/**
 	 * A reference to the overall manager of the persistence.
 	 */
+	@SuppressWarnings("unused")
 	private PersistenceManager persistenceManager;
 
 	/**
