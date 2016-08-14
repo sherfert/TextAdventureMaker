@@ -21,6 +21,9 @@ public class SidebarController {
 	private Hyperlink locationsHL;
 
 	@FXML
+	private Hyperlink waysHL;
+
+	@FXML
 	private Hyperlink itemsHL;
 
 	@FXML
@@ -45,11 +48,12 @@ public class SidebarController {
 	private void initialize() {
 		gameConfigHL.setOnAction(this::linkClicked);
 		locationsHL.setOnAction(this::linkClicked);
+		waysHL.setOnAction(this::linkClicked);
 		itemsHL.setOnAction(this::linkClicked);
 		personsHL.setOnAction(this::linkClicked);
 		conversationsHL.setOnAction(this::linkClicked);
 
-		allLinks = new Hyperlink[] { gameConfigHL, locationsHL, itemsHL, personsHL, conversationsHL };
+		allLinks = new Hyperlink[] { gameConfigHL, locationsHL, waysHL, itemsHL, personsHL, conversationsHL };
 	}
 
 	/**
@@ -73,6 +77,8 @@ public class SidebarController {
 			mwController.loadGameDetails();
 		} else if (clicked == locationsHL) {
 			mwController.loadLocations();
+		} else if (clicked == waysHL) {
+			mwController.loadWays();
 		} else if (clicked == itemsHL) {
 			mwController.loadItems();
 		}else if (clicked == personsHL) {

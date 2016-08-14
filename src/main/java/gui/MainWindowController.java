@@ -38,6 +38,7 @@ public class MainWindowController {
 	// All controllers that can be loaded dynamically
 	private GameDetailsController gameDetailsController;
 	private LocationsController locationsController;
+	private WaysController waysController;
 	private ItemsController itemsController;
 	private PersonsController personsController;
 	private ConversationsController conversationsController;
@@ -173,6 +174,7 @@ public class MainWindowController {
 		// Create all controllers
 		gameDetailsController = new GameDetailsController(currentGameManager, this);
 		locationsController = new LocationsController(currentGameManager, this);
+		waysController = new WaysController(currentGameManager, this);
 		itemsController = new ItemsController(currentGameManager, this);
 		personsController = new PersonsController(currentGameManager, this);
 		conversationsController = new ConversationsController(currentGameManager, this);
@@ -245,6 +247,18 @@ public class MainWindowController {
 		navbarController.push("Locations", locationsController, fxml);
 		// Load the content
 		setCenterContent(fxml, locationsController);
+	}
+
+	/**
+	 * Loads the ways into the center.
+	 */
+	public void loadWays() {
+		String fxml = "view/Ways.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		navbarController.push("Ways", waysController, fxml);
+		// Load the content
+		setCenterContent(fxml, waysController);
 	}
 
 	/**

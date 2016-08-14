@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import data.Location;
 import data.Way;
 
@@ -51,5 +54,19 @@ public class WayManager {
 				.getResultList();
 
 		return new HashSet<>(resultList);
+	}
+	
+	/**
+	 * @return all ways in the game.
+	 */
+	public List<Way> getAllWays() {
+		// Find all items
+		CriteriaQuery<Way> query = persistenceManager
+				.getCriteriaBuilder().createQuery(Way.class);
+		Root<Way> root = query.from(Way.class);
+		query.select(root);
+		List<Way> resultList = persistenceManager.getEntityManager()
+				.createQuery(query).getResultList();
+		return resultList;
 	}
 }

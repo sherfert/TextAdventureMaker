@@ -12,6 +12,8 @@
          <columns>
             <TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
             <TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
+            <TableColumn fx:id="originCol" prefWidth="100.0" text="Origin" />
+            <TableColumn fx:id="destinationCol" prefWidth="100.0" text="Destination" />
          </columns>
       </TableView>
    </center>
@@ -20,10 +22,10 @@
          <children>
             <Label text="Name" />
             <TextField fx:id="newNameTF" />
-            <Label text="Greeting" />
-            <TextArea fx:id="newGreetingTA" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
-            <Label text="Event" />
-            <TextArea fx:id="newEventTA" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+            <Label text="Description" />
+            <TextArea fx:id="newDescriptionTA" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+            <Label text="Origin" />
+            <Label text="Destination" />
             <Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
          </children>
          <padding>
