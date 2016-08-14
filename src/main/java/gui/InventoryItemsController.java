@@ -119,9 +119,9 @@ public class InventoryItemsController extends GameDataController {
 			return;
 		}
 
-		// TODO Open the inventory item view
-		//ItemController itemController = new ItemController(currentGameManager, mwController, i);
-		//mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
+		// Open the inventory item view
+		InventoryItemController invitemController = new InventoryItemController(currentGameManager, mwController, i);
+		mwController.pushCenterContent(i.getName(),"view/InventoryItem.fxml", invitemController, invitemController::controllerFactory);
 	}
 
 }
