@@ -2,12 +2,17 @@ package gui;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
+
+import org.controlsfx.control.textfield.TextFields;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
+import data.Location;
 import exception.DBIncompatibleException;
 import gui.utility.StringUtils;
 import javafx.beans.property.Property;
@@ -15,12 +20,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import javafx.util.StringConverter;
 import logic.CurrentGameManager;
 
 /**
@@ -48,6 +54,8 @@ public class GameDetailsController extends GameDataController {
 	private TextField gameTitleField;
 	@FXML
 	private TextArea startingTextField;
+	@FXML
+	private ComboBox<Location> startLocationCB;
 	@FXML
 	private TextField useWithHelpTextField;
 	@FXML
@@ -139,7 +147,6 @@ public class GameDetailsController extends GameDataController {
 
 	private Property<Integer> numOptionLinesProp;
 
-
 	public GameDetailsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController);
 	}
@@ -149,7 +156,7 @@ public class GameDetailsController extends GameDataController {
 		// Obtain the game
 		try {
 			game = currentGameManager.getPersistenceManager().getGameManager().getGame();
-		} catch (DBIncompatibleException|PersistenceException e) {
+		} catch (DBIncompatibleException | PersistenceException e) {
 			// This means the database is incompatible with the model.
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Could not get the game. Database incompatible.", e);
@@ -166,6 +173,55 @@ public class GameDetailsController extends GameDataController {
 		// Set all GUI fields accordingly
 		gameTitleField.setText(game.getGameTitle());
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
+
+		
+		// TODO create a custom control: LocationChooser
+		StringConverter<Location> locationConverter = new StringConverter<Location>() {
+			@Override
+			public String toString(Location loc) {
+				if (loc == null) {
+					return "";
+				} else {
+					return loc.getName() + " - ID: " + loc.getId();
+				}
+			}
+
+			@Override
+			public Location fromString(String s) {
+				Pattern regex = Pattern.compile(".*?(\\d+)$");
+		        Matcher matcher = regex.matcher(s);
+
+		        if(matcher.matches()) {
+		        	String match = matcher.group(1);
+
+		        	int id = Integer.parseInt(match);
+		        	return currentGameManager.getPersistenceManager().getAllObjectsManager().getObject(Location.class, id);
+		        } else {
+		        	return null;
+		        }
+			}
+		};
+		startLocationCB.getItems()
+				.addAll(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+		startLocationCB.setConverter(locationConverter);
+		startLocationCB.setEditable(true);
+		TextFields.bindAutoCompletion(startLocationCB.getEditor(),
+				(isr) -> startLocationCB.getItems()
+						.filtered((l) -> l.getName().toLowerCase().contains(isr.getUserText().toLowerCase())),
+				locationConverter);
+		startLocationCB.setValue(currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation());
+		startLocationCB.valueProperty().addListener((f, o, n) -> {
+			// If the new value is null, restore the old
+			if(n == null) {
+				startLocationCB.setValue(o);
+			}
+			// Otherwise, change the game's start location
+			try {
+				currentGameManager.getPersistenceManager().getGameManager().getGame().setStartLocation(n);
+			} catch (Exception e) {
+				startLocationCB.setValue(o);
+			}
+		});
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
@@ -210,9 +266,10 @@ public class GameDetailsController extends GameDataController {
 
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES,
 				MAX_OPTION_LINES, game.getNumberOfOptionLines());
-		// The value numOptionLinesProp must NOT be stored in a local variable or passed directly.
-		// Since JavaFX uses weak references for bidirectional bindings, it will get
-		// garbage collected otherwise. Stupid!
+		// The value numOptionLinesProp must NOT be stored in a local variable
+		// or passed directly. Only the class field suffices.
+		// Since JavaFX uses weak references for bidirectional bindings, it will
+		// get garbage collected otherwise. Stupid!
 		numOptionLinesProp = game.numberOfOptionLinesProperty().asObject();
 		svf.valueProperty().bindBidirectional(numOptionLinesProp);
 		optionLinesSpinner.setValueFactory(svf);

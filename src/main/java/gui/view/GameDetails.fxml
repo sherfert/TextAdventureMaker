@@ -36,7 +36,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Starting location" />
-                        <TextField prefHeight="25.0" prefWidth="198.0" HBox.hgrow="ALWAYS" />
+                        <ComboBox fx:id="startLocationCB" prefWidth="250.0" />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />

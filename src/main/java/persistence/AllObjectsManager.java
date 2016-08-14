@@ -24,6 +24,17 @@ public class AllObjectsManager {
 	public AllObjectsManager(PersistenceManager persistenceManager) {
 		this.persistenceManager = persistenceManager;
 	}
+	
+	/**
+	 * Obtain any object in the DB by ID.
+	 * 
+	 * @param clazz the expected class of the object
+	 * @param id the id
+	 * @return the object, or null, if not found or unexpected type
+	 */
+	public <E extends HasId> E getObject(Class<E > clazz, int id) {
+		return persistenceManager.getEntityManager().find(clazz, id);
+	}
 
 	/**
 	 * Removes an object from the database.

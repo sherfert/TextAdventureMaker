@@ -146,9 +146,9 @@ public class PersistenceManager {
 	}
 
 	/**
-	 * @return the entityManager
+	 * @return the entityManager. Only classes in the persistence package have access.
 	 */
-	public EntityManager getEntityManager() {
+	EntityManager getEntityManager() {
 		return entityManager;
 	}
 
