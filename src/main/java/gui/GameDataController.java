@@ -9,9 +9,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import data.interfaces.HasId;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.Alert.AlertType;
 import logic.CurrentGameManager;
 import utility.CommandRegExConverter;
 
@@ -111,6 +115,8 @@ public abstract class GameDataController {
 	 * the node (light red background) and shows a tooltip with the given error
 	 * message right below the node. This tooltip cannot be hidden, until
 	 * {@link #hideError(Node)} is called.
+	 * 
+	 * TODO if you switch view while the error is visible, it doesn't disappear
 	 * 
 	 * @param node
 	 *            the node with the erroneous input
@@ -313,6 +319,27 @@ public abstract class GameDataController {
 			count3++;
 		}
 		return count1 == count2 && count1 == count3;
+	}
+	
+	/**
+	 * Removes an object from the DB, asking for confirmation first.
+	 */
+	protected void removeObject(HasId object, String title, String header, String content) {
+		// Show a confirmation dialog
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+		alert.showAndWait().ifPresent(response -> {
+			if (response == ButtonType.OK) {
+				// Remove item from DB
+				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(object);
+				currentGameManager.getPersistenceManager().updateChanges();
+
+				// Switch back to previous view
+				mwController.popCenterContent();
+			}
+		});
 	}
 
 }

@@ -19,6 +19,8 @@ import javax.persistence.Transient;
 import data.action.AbstractAction;
 import data.action.MoveAction;
 import data.interfaces.Travelable;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,21 +76,23 @@ public class Way extends InspectableObject implements Travelable {
 	 * A personalized error message displayed if moving this way was forbidden.
 	 * The default message is used if this is {@code null}.
 	 */
-	private String moveForbiddenText;
+	private final StringProperty moveForbiddenText;
 
 	/**
 	 * A personalized error message displayed if moving this way was successful.
 	 * The default message is used if this is {@code null}.
 	 */
-	private String moveSuccessfulText;
+	private final StringProperty moveSuccessfulText;
 
 	/**
 	 * No-arg constructor for the database. Use
-	 * {@link Way#Way(String, String, String, Location, Location)} instead.
+	 * {@link Way#Way(String, String, Location, Location)} instead.
 	 */
 	@Deprecated
 	public Way() {
 		init();
+		moveForbiddenText = new SimpleStringProperty();
+		moveSuccessfulText = new SimpleStringProperty();
 	}
 
 	/**
@@ -104,6 +108,8 @@ public class Way extends InspectableObject implements Travelable {
 	public Way(String name, String description, Location origin, Location destination) {
 		super(name, description);
 		init();
+		moveForbiddenText = new SimpleStringProperty();
+		moveSuccessfulText = new SimpleStringProperty();
 		moveAction = new MoveAction(destination);
 		setOrigin(origin);
 		setDestination(destination);
@@ -154,12 +160,26 @@ public class Way extends InspectableObject implements Travelable {
 	@Override
 	@Column(nullable = true)
 	public String getMoveForbiddenText() {
+		return moveForbiddenText.get();
+	}
+	
+	/**
+	 * @return the move forbidden text property
+	 */
+	public StringProperty moveForbiddenTextProperty() {
 		return moveForbiddenText;
 	}
 
 	@Override
 	@Column(nullable = true)
 	public String getMoveSuccessfulText() {
+		return moveSuccessfulText.get();
+	}
+	
+	/**
+	 * @return the move successful text property
+	 */
+	public StringProperty moveSuccessfulTextProperty() {
 		return moveSuccessfulText;
 	}
 
@@ -189,12 +209,12 @@ public class Way extends InspectableObject implements Travelable {
 
 	@Override
 	public void setMoveForbiddenText(String forbiddenText) {
-		moveForbiddenText = forbiddenText;
+		moveForbiddenText.set(forbiddenText);
 	}
 
 	@Override
 	public void setMoveSuccessfulText(String successfulText) {
-		moveSuccessfulText = successfulText;
+		moveSuccessfulText.set(successfulText);
 	}
 
 	@Override

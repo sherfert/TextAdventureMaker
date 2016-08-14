@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import logic.CurrentGameManager;
 
 /**
@@ -70,22 +69,9 @@ public class LocationController extends GameDataController {
 			return;
 		}
 
-		// Show a confirmation dialog
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Deleting a location");
-		alert.setHeaderText("Do you really want to delete this location?");
-		alert.setContentText("This will delete the location, the ways connected to this location, "
-				+ "and actions associated with any of the deleted entities.");
-		alert.showAndWait().ifPresent(response -> {
-			if (response == ButtonType.OK) {
-				// Remove location from DB
-				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(location);
-				currentGameManager.getPersistenceManager().updateChanges();
-
-				// Switch back to previous view
-				mwController.popCenterContent();
-			}
-		});
+		removeObject(location, "Deleting a location", "Do you really want to delete this location?",
+				"This will delete the location, the ways connected to this location, "
+						+ "and actions associated with any of the deleted entities.");
 	}
 
 	/**

@@ -26,6 +26,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for the game details view.
  * 
+ * TODO Support to change starting location, start items
  * 
  * XXX Warnings for empty fields
  * 
@@ -165,8 +166,6 @@ public class GameDetailsController extends GameDataController {
 		// Set all GUI fields accordingly
 		gameTitleField.setText(game.getGameTitle());
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
-		// TODO the starting location
-		// TODO start items
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());

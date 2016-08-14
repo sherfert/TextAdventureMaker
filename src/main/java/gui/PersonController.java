@@ -2,10 +2,7 @@ package gui;
 
 import data.Person;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -45,7 +42,9 @@ public class PersonController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		removeButton.setOnMouseClicked((e) -> removePerson());
+		removeButton.setOnMouseClicked(
+				(e) -> removeObject(person, "Deleting a person", "Do you really want to delete this person?",
+						"This will delete the person, and actions associated with any of the deleted entities."));
 		editTalkForbiddenTextTF.textProperty().bindBidirectional(person.talkingToForbiddenTextProperty());
 
 		editTalkCommandsTA.setText(getCommandString(person.getAdditionalTalkToCommands()));
@@ -62,31 +61,8 @@ public class PersonController extends GameDataController {
 			return new NamedObjectController(currentGameManager, mwController, person);
 		} else if (type == InspectableObjectController.class) {
 			return new InspectableObjectController(currentGameManager, mwController, person);
-		}  else {
+		} else {
 			return super.controllerFactory(type);
 		}
-	}
-
-	/**
-	 * Removes a person from the DB.
-	 */
-	private void removePerson() {
-		// Show a confirmation dialog
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Deleting a person");
-		alert.setHeaderText("Do you really want to delete this person?");
-		// TODO what gets deleted
-		alert.setContentText("This will delete the person, "
-				+ "and actions associated with any of the deleted entities.");
-		alert.showAndWait().ifPresent(response -> {
-			if (response == ButtonType.OK) {
-				// Remove person from DB
-				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(person);
-				currentGameManager.getPersistenceManager().updateChanges();
-
-				// Switch back to previous view
-				mwController.popCenterContent();
-			}
-		});
 	}
 }

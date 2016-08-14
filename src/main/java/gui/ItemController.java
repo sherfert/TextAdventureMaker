@@ -2,10 +2,7 @@ package gui;
 
 import data.Item;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -14,7 +11,8 @@ import logic.CurrentGameManager;
 /**
  * Controller for one item.
  * 
- * TODO Support to change removeItem, location, additionalTakeActions, pickUpItems
+ * TODO Support to change removeItem, location, additionalTakeActions,
+ * pickUpItems
  * 
  * @author Satia
  */
@@ -25,10 +23,10 @@ public class ItemController extends GameDataController {
 
 	@FXML
 	private Button removeButton;
-	
+
 	@FXML
 	private CheckBox editTakingEnabledCB;
-	
+
 	@FXML
 	private CheckBox editRemoveItemEnabledCB;
 
@@ -55,13 +53,16 @@ public class ItemController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		removeButton.setOnMouseClicked((e) -> removeItem());
+		removeButton.setOnMouseClicked(
+				(e) -> removeObject(item, "Deleting an item", "Do you really want to delete this item?",
+						"This will delete the item, usage information of inventory items with this item, "
+								+ "and actions associated with any of the deleted entities."));
 		editTakeSuccessfulTextTF.textProperty().bindBidirectional(item.takeSuccessfulTextProperty());
 		editTakeForbiddenTextTF.textProperty().bindBidirectional(item.takeForbiddenTextProperty());
-		
+
 		editTakingEnabledCB.setSelected(item.isTakingEnabled());
 		editTakingEnabledCB.selectedProperty().addListener((f, o, n) -> item.setTakingEnabled(n));
-		
+
 		editRemoveItemEnabledCB.setSelected(item.isRemoveItem());
 		editRemoveItemEnabledCB.selectedProperty().addListener((f, o, n) -> item.setRemoveItem(n));
 
@@ -84,27 +85,5 @@ public class ItemController extends GameDataController {
 		} else {
 			return super.controllerFactory(type);
 		}
-	}
-
-	/**
-	 * Removes an item from the DB.
-	 */
-	private void removeItem() {
-		// Show a confirmation dialog
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Deleting an item");
-		alert.setHeaderText("Do you really want to delete this item?");
-		alert.setContentText("This will delete the item, usage information of inventory items with this item, "
-				+ "and actions associated with any of the deleted entities.");
-		alert.showAndWait().ifPresent(response -> {
-			if (response == ButtonType.OK) {
-				// Remove item from DB
-				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(item);
-				currentGameManager.getPersistenceManager().updateChanges();
-
-				// Switch back to previous view
-				mwController.popCenterContent();
-			}
-		});
 	}
 }

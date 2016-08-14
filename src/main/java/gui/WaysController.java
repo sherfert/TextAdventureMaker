@@ -126,9 +126,9 @@ public class WaysController extends GameDataController {
 			return;
 		}
 
-		// TODO Open the way view
-		//ItemController itemController = new ItemController(currentGameManager, mwController, i);
-		//mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
+		// Open the way view
+		WayController wayController = new WayController(currentGameManager, mwController, w);
+		mwController.pushCenterContent(w.getName(),"view/Way.fxml", wayController, wayController::controllerFactory);
 	}
 
 }

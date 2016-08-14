@@ -2,10 +2,7 @@ package gui;
 
 import data.Conversation;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -25,7 +22,7 @@ public class ConversationController extends GameDataController {
 
 	@FXML
 	private Button removeButton;
-	
+
 	@FXML
 	private CheckBox editConversationEnabledCB;
 
@@ -44,7 +41,8 @@ public class ConversationController extends GameDataController {
 	 * @param item
 	 *            the item to edit
 	 */
-	public ConversationController(CurrentGameManager currentGameManager, MainWindowController mwController, Conversation conversation) {
+	public ConversationController(CurrentGameManager currentGameManager, MainWindowController mwController,
+			Conversation conversation) {
 		super(currentGameManager, mwController);
 		this.conversation = conversation;
 	}
@@ -52,8 +50,11 @@ public class ConversationController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		removeButton.setOnMouseClicked((e) -> removeConversation());
-		
+		removeButton.setOnMouseClicked((e) -> removeObject(conversation, "Deleting a conversation",
+				"Do you really want to delete this conversation?",
+				"This will delete the conversation, all layers and options of the conversation, "
+						+ "and actions associated with any of the deleted entities."));
+
 		editConversationEnabledCB.setSelected(conversation.getEnabled());
 		editConversationEnabledCB.selectedProperty().addListener((f, o, n) -> conversation.setEnabled(n));
 
@@ -68,27 +69,5 @@ public class ConversationController extends GameDataController {
 	@Override
 	public Object controllerFactory(Class<?> type) {
 		return super.controllerFactory(type);
-	}
-
-	/**
-	 * Removes a conversation from the DB.
-	 */
-	private void removeConversation() {
-		// Show a confirmation dialog
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Deleting a conversation");
-		alert.setHeaderText("Do you really want to delete this conversation?");
-		alert.setContentText("This will delete the conversation, all layers and options of the conversation, "
-				+ "and actions associated with any of the deleted entities.");
-		alert.showAndWait().ifPresent(response -> {
-			if (response == ButtonType.OK) {
-				// Remove item from DB
-				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(conversation);
-				currentGameManager.getPersistenceManager().updateChanges();
-
-				// Switch back to previous view
-				mwController.popCenterContent();
-			}
-		});
 	}
 }
