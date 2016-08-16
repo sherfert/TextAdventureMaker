@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
+<?import gui.custumui.LocationChooser?>
 
 <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <panes>
@@ -36,7 +37,7 @@
                   <HBox prefWidth="200.0">
                      <children>
                         <Label prefHeight="17.0" prefWidth="250.0" text="Starting location" />
-                        <ComboBox fx:id="startLocationCB" prefWidth="250.0" />
+                        <LocationChooser fx:id="startLocationChooser" prefHeight="25.0" prefWidth="250.0" HBox.hgrow="ALWAYS"  />
                      </children>
                      <padding>
                         <Insets bottom="2.0" top="2.0" />

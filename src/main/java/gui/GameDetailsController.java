@@ -2,18 +2,14 @@ package gui;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
-
-import org.controlsfx.control.textfield.TextFields;
 
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
-import data.Location;
 import exception.DBIncompatibleException;
+import gui.custumui.LocationChooser;
 import gui.utility.StringUtils;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
@@ -26,7 +22,6 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.util.StringConverter;
 import logic.CurrentGameManager;
 
 /**
@@ -55,7 +50,7 @@ public class GameDetailsController extends GameDataController {
 	@FXML
 	private TextArea startingTextField;
 	@FXML
-	private ComboBox<Location> startLocationCB;
+	private LocationChooser startLocationChooser;
 	@FXML
 	private TextField useWithHelpTextField;
 	@FXML
@@ -174,54 +169,16 @@ public class GameDetailsController extends GameDataController {
 		gameTitleField.setText(game.getGameTitle());
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
 
-		
-		// TODO create a custom control: LocationChooser
-		StringConverter<Location> locationConverter = new StringConverter<Location>() {
-			@Override
-			public String toString(Location loc) {
-				if (loc == null) {
-					return "";
-				} else {
-					return loc.getName() + " - ID: " + loc.getId();
-				}
-			}
-
-			@Override
-			public Location fromString(String s) {
-				Pattern regex = Pattern.compile(".*?(\\d+)$");
-		        Matcher matcher = regex.matcher(s);
-
-		        if(matcher.matches()) {
-		        	String match = matcher.group(1);
-
-		        	int id = Integer.parseInt(match);
-		        	return currentGameManager.getPersistenceManager().getAllObjectsManager().getObject(Location.class, id);
-		        } else {
-		        	return null;
-		        }
-			}
-		};
-		startLocationCB.getItems()
-				.addAll(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
-		startLocationCB.setConverter(locationConverter);
-		startLocationCB.setEditable(true);
-		TextFields.bindAutoCompletion(startLocationCB.getEditor(),
-				(isr) -> startLocationCB.getItems()
-						.filtered((l) -> l.getName().toLowerCase().contains(isr.getUserText().toLowerCase())),
-				locationConverter);
-		startLocationCB.setValue(currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation());
-		startLocationCB.valueProperty().addListener((f, o, n) -> {
-			// If the new value is null, restore the old
-			if(n == null) {
-				startLocationCB.setValue(o);
-			}
-			// Otherwise, change the game's start location
-			try {
-				currentGameManager.getPersistenceManager().getGameManager().getGame().setStartLocation(n);
-			} catch (Exception e) {
-				startLocationCB.setValue(o);
-			}
-		});
+		startLocationChooser.initialize(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations(),
+				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(),
+				currentGameManager, (loc) -> {
+					try {
+						currentGameManager.getPersistenceManager().getGameManager().getGame().setStartLocation(loc);
+					} catch (Exception e) {
+						Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not set start location.",
+								e);
+					}
+				});
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
