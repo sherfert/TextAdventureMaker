@@ -67,8 +67,6 @@ public class LocationChooser extends TextField {
 	/**
 	 * Initializes this location chooser.
 	 * 
-	 * @param availableLocations
-	 *            all available location to choose from
 	 * @param initialLocation
 	 *            the initial location to choose
 	 * @param currentGameManager
@@ -76,11 +74,13 @@ public class LocationChooser extends TextField {
 	 * @param newLocationChosenAction
 	 *            the action executed when a new location is chosen
 	 */
-	public void initialize(List<Location> availableLocations, Location initialLocation,
+	public void initialize(Location initialLocation,
 			CurrentGameManager currentGameManager, Consumer<Location> newLocationChosenAction) {
-		this.availableLocations = availableLocations;
 		this.currentGameManager = currentGameManager;
 		this.newLocationChosenAction = newLocationChosenAction;
+		
+		// Retrieve all available locations
+		this.availableLocations = this.currentGameManager.getPersistenceManager().getLocationManager().getAllLocations();
 
 		// Enable autocompletion with all available locations
 		TextFields.bindAutoCompletion(this,
