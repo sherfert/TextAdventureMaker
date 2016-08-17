@@ -8,6 +8,8 @@ import data.InventoryItem;
 import data.NamedObject;
 import data.interfaces.HasLocation;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,78 +29,57 @@ import javax.persistence.ManyToOne;
  * 
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangeInvItemCombinationAction extends AbstractAction {
 
 	/**
 	 * The first inventory item.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM1", //
-	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM1_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem inventoryItem1;
 
 	/**
 	 * The second inventory item.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM2", //
-	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM2_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem inventoryItem2;
 
 	/**
 	 * The new combineWithForbiddenText. If {@code null}, the old will not be
 	 * changed.
 	 */
-	@Column(nullable = true)
 	private String newCombineWithForbiddenText;
 
 	/**
 	 * The new combineWithSuccessfulText. If {@code null}, the old will not be
 	 * changed.
 	 */
-	@Column(nullable = true)
 	private String newCombineWithSuccessfulText;
 
 	/**
 	 * All combinables to be added.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name="CIICA_CTA", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_S", //
-	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_D", //
-	foreignKeyDefinition = "FOREIGN KEY (combinablesToAdd_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> combinablesToAdd;
 
 	/**
 	 * All combinables to be removed.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name="CIICA_CTR", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_S", //
-	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_D", //
-	foreignKeyDefinition = "FOREIGN KEY (combinablesToRemove_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> combinablesToRemove;
 
 	/**
 	 * Enabling or disabling if this combination is actually usable.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enablingCombinable;
 
 	/**
 	 * Enabling or disabling if triggering this combination will remove the
 	 * items from the inventory.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enablingRemoveCombinables;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInvItemCombinationAction(InventoryItem, HasLocation)}
+	 *             {@link #ChangeInvItemCombinationAction(String, InventoryItem, HasLocation)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -107,29 +88,15 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	}
 
 	/**
+	 * @param name
+	 *            the name
 	 * @param inventoryItem
 	 *            the inventory item
 	 * @param object
 	 *            the person or item
 	 */
-	public ChangeInvItemCombinationAction(InventoryItem inventoryItem1,
-			InventoryItem inventoryItem2) {
-		init();
-		this.inventoryItem1 = inventoryItem1;
-		this.inventoryItem2 = inventoryItem2;
-	}
-
-	/**
-	 * @param inventoryItem
-	 *            the inventory item
-	 * @param object
-	 *            the person or item
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeInvItemCombinationAction(InventoryItem inventoryItem1,
-			InventoryItem inventoryItem2, boolean enabled) {
-		super(enabled);
+	public ChangeInvItemCombinationAction(String name, InventoryItem inventoryItem1, InventoryItem inventoryItem2) {
+		super(name);
 		init();
 		this.inventoryItem1 = inventoryItem1;
 		this.inventoryItem2 = inventoryItem2;
@@ -148,6 +115,9 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	/**
 	 * @return the inventoryItem1
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM1", //
+	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM1_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public InventoryItem getInventoryItem1() {
 		return inventoryItem1;
 	}
@@ -163,6 +133,9 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	/**
 	 * @return the inventoryItem2
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM2", //
+	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM2_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public InventoryItem getInventoryItem2() {
 		return inventoryItem2;
 	}
@@ -178,6 +151,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	/**
 	 * @return the newCombineWithForbiddenText
 	 */
+	@Column(nullable = true)
 	public String getNewCombineWithForbiddenText() {
 		return newCombineWithForbiddenText;
 	}
@@ -186,14 +160,14 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 * @param newCombineWithForbiddenText
 	 *            the newCombineWithForbiddenText to set
 	 */
-	public void setNewCombineWithForbiddenText(
-			String newCombineWithForbiddenText) {
+	public void setNewCombineWithForbiddenText(String newCombineWithForbiddenText) {
 		this.newCombineWithForbiddenText = newCombineWithForbiddenText;
 	}
 
 	/**
 	 * @return the newCombineWithSuccessfulText
 	 */
+	@Column(nullable = true)
 	public String getNewCombineWithSuccessfulText() {
 		return newCombineWithSuccessfulText;
 	}
@@ -202,14 +176,18 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 * @param newCombineWithSuccessfulText
 	 *            the newCombineWithSuccessfulText to set
 	 */
-	public void setNewCombineWithSuccessfulText(
-			String newCombineWithSuccessfulText) {
+	public void setNewCombineWithSuccessfulText(String newCombineWithSuccessfulText) {
 		this.newCombineWithSuccessfulText = newCombineWithSuccessfulText;
 	}
 
 	/**
 	 * @return the combinablesToAdd
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "CIICA_CTA", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_D", //
+	foreignKeyDefinition = "FOREIGN KEY (combinablesToAdd_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public List<InventoryItem> getCombinablesToAdd() {
 		return combinablesToAdd;
 	}
@@ -225,6 +203,11 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	/**
 	 * @return the combinablesToRemove
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "CIICA_CTR", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_D", //
+	foreignKeyDefinition = "FOREIGN KEY (combinablesToRemove_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public List<InventoryItem> getCombinablesToRemove() {
 		return combinablesToRemove;
 	}
@@ -240,6 +223,8 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	/**
 	 * @return the enablingCombinable
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnablingCombinable() {
 		return enablingCombinable;
 	}
@@ -255,6 +240,8 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	/**
 	 * @return the enablingRemoveCombinables
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnablingRemoveCombinables() {
 		return enablingRemoveCombinables;
 	}
@@ -310,12 +297,10 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	@Override
 	protected void doAction(Game game) {
 		if (newCombineWithSuccessfulText != null) {
-			inventoryItem1.setCombineWithSuccessfulText(inventoryItem2,
-					newCombineWithSuccessfulText);
+			inventoryItem1.setCombineWithSuccessfulText(inventoryItem2, newCombineWithSuccessfulText);
 		}
 		if (newCombineWithForbiddenText != null) {
-			inventoryItem1.setCombineWithForbiddenText(inventoryItem2,
-					newCombineWithForbiddenText);
+			inventoryItem1.setCombineWithForbiddenText(inventoryItem2, newCombineWithForbiddenText);
 		}
 		if (enablingCombinable == Enabling.ENABLE) {
 			inventoryItem1.setCombiningEnabledWith(inventoryItem2, true);
@@ -323,60 +308,48 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 			inventoryItem1.setCombiningEnabledWith(inventoryItem2, false);
 		}
 		if (enablingRemoveCombinables == Enabling.ENABLE) {
-			inventoryItem1.setRemoveCombinablesWhenCombinedWith(inventoryItem2,
-					true);
+			inventoryItem1.setRemoveCombinablesWhenCombinedWith(inventoryItem2, true);
 		} else if (enablingRemoveCombinables == Enabling.DISABLE) {
-			inventoryItem1.setRemoveCombinablesWhenCombinedWith(inventoryItem2,
-					false);
+			inventoryItem1.setRemoveCombinablesWhenCombinedWith(inventoryItem2, false);
 		}
 		// Add and remove combinables
 		for (InventoryItem item : combinablesToAdd) {
-			inventoryItem1.addNewCombinableWhenCombinedWith(inventoryItem2,
-					item);
+			inventoryItem1.addNewCombinableWhenCombinedWith(inventoryItem2, item);
 		}
 		for (InventoryItem item : combinablesToRemove) {
-			inventoryItem1.removeNewCombinableWhenCombinedWith(inventoryItem2,
-					item);
+			inventoryItem1.removeNewCombinableWhenCombinedWith(inventoryItem2, item);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "ChangeInvItemCombinationAction{inventoryItem1ID="
-				+ inventoryItem1.getId() + ", inventoryItem2ID="
-				+ inventoryItem2.getId() + ", newCombineWithForbiddenText="
-				+ newCombineWithForbiddenText
-				+ ", newCombineWithSuccessfulText="
-				+ newCombineWithSuccessfulText + ", combinablesToAddIDs="
-				+ NamedObject.getIDList(combinablesToAdd)
-				+ ", combinablesToRemoveIDs="
-				+ NamedObject.getIDList(combinablesToRemove)
-				+ ", enablingCombinable=" + enablingCombinable
-				+ ", enablingRemoveCombinables=" + enablingRemoveCombinables
-				+ " " + super.toString() + "}";
+		return "ChangeInvItemCombinationAction{inventoryItem1ID=" + inventoryItem1.getId() + ", inventoryItem2ID="
+				+ inventoryItem2.getId() + ", newCombineWithForbiddenText=" + newCombineWithForbiddenText
+				+ ", newCombineWithSuccessfulText=" + newCombineWithSuccessfulText + ", combinablesToAddIDs="
+				+ NamedObject.getIDList(combinablesToAdd) + ", combinablesToRemoveIDs="
+				+ NamedObject.getIDList(combinablesToRemove) + ", enablingCombinable=" + enablingCombinable
+				+ ", enablingRemoveCombinables=" + enablingRemoveCombinables + " " + super.toString() + "}";
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Changing combining of ")
-				.append(inventoryItem1.getName()).append(" with ")
+		builder.append("Changing combining of ").append(inventoryItem1.getName()).append(" with ")
 				.append(inventoryItem2.getName()).append(".");
 		if (enablingCombinable != Enabling.DO_NOT_CHANGE) {
-			builder.append(" ").append(enablingCombinable.description)
-					.append(" combining.");
+			builder.append(" ").append(enablingCombinable.description).append(" combining.");
 		}
 		if (enablingRemoveCombinables != Enabling.DO_NOT_CHANGE) {
 			builder.append(" ").append(enablingCombinable.description)
 					.append(" that items will be removed when combined.");
 		}
 		if (newCombineWithSuccessfulText != null) {
-			builder.append(" Setting combine with successful text to '")
-					.append(newCombineWithSuccessfulText).append("'.");
+			builder.append(" Setting combine with successful text to '").append(newCombineWithSuccessfulText)
+					.append("'.");
 		}
 		if (newCombineWithForbiddenText != null) {
-			builder.append(" Setting combine with forbidden text to '")
-					.append(newCombineWithForbiddenText).append("'.");
+			builder.append(" Setting combine with forbidden text to '").append(newCombineWithForbiddenText)
+					.append("'.");
 		}
 		if (!combinablesToAdd.isEmpty()) {
 			builder.append(" Adding combinable items: ");

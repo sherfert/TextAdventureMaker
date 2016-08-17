@@ -1,5 +1,7 @@
 package data.action;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,57 +21,45 @@ import data.Game;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangeConversationOptionAction extends AbstractAction {
 
 	/**
 	 * The option.
-	 * 
-	 * XXX This should be (nullable = false). This is impossible due to circular
-	 * dependencies.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGECONVERSATIONOPTIONACTION_OPTION", //
-	foreignKeyDefinition = "FOREIGN KEY (OPTION_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") )
 	private ConversationOption option;
 
 	/**
 	 * Enabling or disabling the option.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enabling;
 
 	/**
 	 * Enabling or disabling whether this action should be disabled
 	 * (permanently) after being chosen once.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enablingDisableOption;
 
 	/**
 	 * The new text. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newText;
 
 	/**
 	 * The new answer. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newAnswer;
 
 	/**
 	 * The new event. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newEvent;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeConversationOptionAction(ConversationOption)}
+	 *             {@link #ChangeConversationOptionAction(String, ConversationOption)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -77,25 +67,13 @@ public class ChangeConversationOptionAction extends AbstractAction {
 		init();
 	}
 
-	/**
+	/**@param name
+	 *            the name
 	 * @param option
 	 *            the option to be changed
 	 */
-	public ChangeConversationOptionAction(ConversationOption option) {
-		super();
-		init();
-		this.option = option;
-	}
-
-	/**
-	 * @param option
-	 *            the option to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeConversationOptionAction(ConversationOption option,
-			boolean enabled) {
-		super(enabled);
+	public ChangeConversationOptionAction(String name, ConversationOption option) {
+		super(name);
 		init();
 		this.option = option;
 	}
@@ -111,6 +89,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * @return the enabling
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnabling() {
 		return enabling;
 	}
@@ -126,6 +106,8 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * @return the enablingDisableOption
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnablingDisableOption() {
 		return enablingDisableOption;
 	}
@@ -140,7 +122,13 @@ public class ChangeConversationOptionAction extends AbstractAction {
 
 	/**
 	 * @return the option
+	 * 
+	 * XXX This should be (nullable = false). This is impossible due to circular
+	 * dependencies.
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGECONVERSATIONOPTIONACTION_OPTION", //
+	foreignKeyDefinition = "FOREIGN KEY (OPTION_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") )
 	public ConversationOption getOption() {
 		return option;
 	}
@@ -156,6 +144,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * @return the newText
 	 */
+	@Column(nullable = true)
 	public String getNewText() {
 		return newText;
 	}
@@ -171,6 +160,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * @return the newAnswer
 	 */
+	@Column(nullable = true)
 	public String getNewAnswer() {
 		return newAnswer;
 	}
@@ -186,6 +176,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * @return the newEvent
 	 */
+	@Column(nullable = true)
 	public String getNewEvent() {
 		return newEvent;
 	}
@@ -224,31 +215,27 @@ public class ChangeConversationOptionAction extends AbstractAction {
 
 	@Override
 	public String toString() {
-		return "ChangeConversationOptionAction{optionID=" + option.getId()
-				+ ", enabling=" + enabling + ",enablingDisableOption="
-				+ enablingDisableOption + ", newText=" + newText
-				+ ", newAnswer=" + newAnswer + ", newEvent=" + newEvent + " "
-				+ super.toString() + "}";
+		return "ChangeConversationOptionAction{optionID=" + option.getId() + ", enabling=" + enabling
+				+ ",enablingDisableOption=" + enablingDisableOption + ", newText=" + newText + ", newAnswer="
+				+ newAnswer + ", newEvent=" + newEvent + " " + super.toString() + "}";
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Changing conversation option ").append(option.getId());
 		if (enabling != Enabling.DO_NOT_CHANGE) {
 			builder.append(" ").append(enabling.description).append(" it.");
 		}
 		if (enablingDisableOption != Enabling.DO_NOT_CHANGE) {
-			builder.append(" ")
-					.append(enablingDisableOption.description)
+			builder.append(" ").append(enablingDisableOption.description)
 					.append(" that this action should be disabled (permanently) after being chosen once.");
 		}
 		if (newText != null) {
 			builder.append(" Setting text to '").append(newText).append("'.");
 		}
 		if (newAnswer != null) {
-			builder.append(" Setting answer to '").append(newAnswer)
-					.append("'.");
+			builder.append(" Setting answer to '").append(newAnswer).append("'.");
 		}
 		if (newEvent != null) {
 			builder.append(" Setting event to '").append(newEvent).append("'.");

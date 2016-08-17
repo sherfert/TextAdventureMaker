@@ -1,5 +1,7 @@
 package data.action;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,39 +21,33 @@ import data.Game;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangeConversationAction extends AbstractAction {
 
 	/**
 	 * The conversation.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGECONVERSATIONACTION_CONVERSATION", //
-	foreignKeyDefinition = "FOREIGN KEY (CONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") )
 	private Conversation conversation;
 
 	/**
 	 * Enabling or disabling the conversation.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enabling;
 
 	/**
 	 * The new greeting. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newGreeting;
 
 	/**
 	 * The new event. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newEvent;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #ChangeConversationAction(Conversation)} instead.
+	 * @deprecated Use {@link #ChangeConversationAction(String, Conversation)} instead.
 	 */
 	@Deprecated
 	public ChangeConversationAction() {
@@ -62,20 +58,8 @@ public class ChangeConversationAction extends AbstractAction {
 	 * @param conversation
 	 *            the conversation to be changed
 	 */
-	public ChangeConversationAction(Conversation conversation) {
-		super();
-		init();
-		this.conversation = conversation;
-	}
-
-	/**
-	 * @param conversation
-	 *            the conversation to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeConversationAction(Conversation conversation, boolean enabled) {
-		super(enabled);
+	public ChangeConversationAction(String name, Conversation conversation) {
+		super(name);
 		init();
 		this.conversation = conversation;
 	}
@@ -90,6 +74,8 @@ public class ChangeConversationAction extends AbstractAction {
 	/**
 	 * @return the enabling
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnabling() {
 		return enabling;
 	}
@@ -105,6 +91,7 @@ public class ChangeConversationAction extends AbstractAction {
 	/**
 	 * @return the newGreeting
 	 */
+	@Column(nullable = true)
 	public String getNewGreeting() {
 		return newGreeting;
 	}
@@ -120,6 +107,7 @@ public class ChangeConversationAction extends AbstractAction {
 	/**
 	 * @return the newEvent
 	 */
+	@Column(nullable = true)
 	public String getNewEvent() {
 		return newEvent;
 	}
@@ -135,6 +123,9 @@ public class ChangeConversationAction extends AbstractAction {
 	/**
 	 * @return the conversation
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGECONVERSATIONACTION_CONVERSATION", //
+	foreignKeyDefinition = "FOREIGN KEY (CONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") )
 	public Conversation getConversation() {
 		return conversation;
 	}
@@ -178,7 +169,7 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Changing conversation ").append(conversation.getId());
 		if (enabling != Enabling.DO_NOT_CHANGE) {

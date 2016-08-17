@@ -3,6 +3,8 @@ package data.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +32,7 @@ import data.NamedObject;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangeItemAction extends ChangeUsableObjectAction {
 
 	/**
@@ -37,7 +40,6 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 * necessary, as {@code null} is a valid location and cannot be used to
 	 * identify no changes to be applied.
 	 */
-	@Column(nullable = false)
 	private boolean changeLocation;
 
 	/**
@@ -45,61 +47,42 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 * will be removed. To apply these changes, {@link #changeLocation} has to
 	 * be set to {@code true}.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEITEMACTION_NEWLOCATION", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newLocation;
 
 	/**
 	 * The new takeForbiddenText. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newTakeForbiddenText;
 
 	/**
 	 * The new takeSuccessfulText. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newTakeSuccessfulText;
 
 	/**
 	 * Enabling or disabling if the item is takeable.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enablingTakeable;
 
 	/**
 	 * All pick up items to be added.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name="CIA_PITA", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_S", //
-	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_D", //
-	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToAdd_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItemsToAdd;
 
 	/**
 	 * All pick up items to be removed.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name="CIA_PITR", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_S", //
-	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_D", //
-	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToRemove_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItemsToRemove;
 
 	/**
 	 * Enabling or disabling if the item will be removed when taken.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enablingRemoveItem;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link ChangeItemAction#ChangeItemAction(Item)} instead.
+	 * @deprecated Use {@link ChangeItemAction#ChangeItemAction(String, Item)} instead.
 	 */
 	@Deprecated
 	public ChangeItemAction() {
@@ -107,51 +90,14 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	}
 
 	/**
+	 * @param name
+	 *            the name
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangeItemAction(Item object) {
-		super(object);
+	public ChangeItemAction(String name, Item object) {
+		super(name, object);
 		init();
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param newLocation
-	 *            The new location of the item. Can be {@code null}, which means
-	 *            the Item will be removed.
-	 */
-	public ChangeItemAction(Item object, Location newLocation) {
-		super(object);
-		init();
-		setNewLocation(newLocation);
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeItemAction(Item object, boolean enabled) {
-		super(object, enabled);
-		init();
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param newLocation
-	 *            The new location of the item. Can be {@code null}, which means
-	 *            the Item will be removed.
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeItemAction(Item object, Location newLocation, boolean enabled) {
-		super(object, enabled);
-		init();
-		setNewLocation(newLocation);
 	}
 
 	/**
@@ -172,26 +118,28 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * @return the newLocation
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEITEMACTION_NEWLOCATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	public Location getNewLocation() {
 		return newLocation;
 	}
 
 	/**
-	 * This also sets changeLocation to true. If you want to undo this,
-	 * explicitly call {@code setChangeLocation(false)}.
+	 * Remember to also set changeLocation to true.
 	 * 
 	 * @param newLocation
 	 *            the newLocation to set
 	 */
-	public final void setNewLocation(Location newLocation) {
+	public void setNewLocation(Location newLocation) {
 		this.newLocation = newLocation;
-		this.changeLocation = true;
 	}
 
 	/**
 	 * @return the changeLocation
 	 */
-	public boolean isChangeLocation() {
+	@Column(nullable = false)
+	public boolean getChangeLocation() {
 		return changeLocation;
 	}
 
@@ -206,6 +154,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * @return the newTakeForbiddenText
 	 */
+	@Column(nullable = true)
 	public String getNewTakeForbiddenText() {
 		return newTakeForbiddenText;
 	}
@@ -221,6 +170,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * @return the newTakeSuccessfulText
 	 */
+	@Column(nullable = true)
 	public String getNewTakeSuccessfulText() {
 		return newTakeSuccessfulText;
 	}
@@ -236,12 +186,15 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * @return the enablingTakeable
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnablingTakeable() {
 		return enablingTakeable;
 	}
 
 	/**
-	 * @param enablingTakeable the enablingTakeable to set
+	 * @param enablingTakeable
+	 *            the enablingTakeable to set
 	 */
 	public void setEnablingTakeable(Enabling enablingTakeable) {
 		this.enablingTakeable = enablingTakeable;
@@ -250,12 +203,18 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * @return the pickUpItemsToAdd
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "CIA_PITA", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_D", //
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToAdd_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public List<InventoryItem> getPickUpItemsToAdd() {
 		return pickUpItemsToAdd;
 	}
 
 	/**
-	 * @param pickUpItemsToAdd the pickUpItemsToAdd to set
+	 * @param pickUpItemsToAdd
+	 *            the pickUpItemsToAdd to set
 	 */
 	public void setPickUpItemsToAdd(List<InventoryItem> pickUpItemsToAdd) {
 		this.pickUpItemsToAdd = pickUpItemsToAdd;
@@ -264,12 +223,18 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * @return the pickUpItemsToRemove
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "CIA_PITR", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_D", //
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToRemove_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public List<InventoryItem> getPickUpItemsToRemove() {
 		return pickUpItemsToRemove;
 	}
 
 	/**
-	 * @param pickUpItemsToRemove the pickUpItemsToRemove to set
+	 * @param pickUpItemsToRemove
+	 *            the pickUpItemsToRemove to set
 	 */
 	public void setPickUpItemsToRemove(List<InventoryItem> pickUpItemsToRemove) {
 		this.pickUpItemsToRemove = pickUpItemsToRemove;
@@ -278,17 +243,20 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	/**
 	 * @return the enablingRemoveItem
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnablingRemoveItem() {
 		return enablingRemoveItem;
 	}
 
 	/**
-	 * @param enablingRemoveItem the enablingRemoveItem to set
+	 * @param enablingRemoveItem
+	 *            the enablingRemoveItem to set
 	 */
 	public void setEnablingRemoveItem(Enabling enablingRemoveItem) {
 		this.enablingRemoveItem = enablingRemoveItem;
 	}
-	
+
 	/**
 	 * Adds a pick up item to be added.
 	 * 
@@ -308,7 +276,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	public void addPickUpItemToRemove(InventoryItem item) {
 		pickUpItemsToAdd.add(item);
 	}
-	
+
 	/**
 	 * Removes a pick up item to be added.
 	 * 
@@ -366,43 +334,32 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 
 	@Override
 	public String toString() {
-		return "ChangeItemAction{changeLocation=" + changeLocation
-				+ ", newLocationID="
-				+ (newLocation != null ? newLocation.getId() : "null")
-				+ ", newTakeForbiddenText=" + newTakeForbiddenText
-				+ ", newTakeSuccessfulText=" + newTakeSuccessfulText
-				+ ", enablingTakeable=" + enablingTakeable
-				+ ", pickUpItemsToAddIDs="
-				+ NamedObject.getIDList(pickUpItemsToAdd)
-				+ ", pickUpItemsToRemoveIDs="
-				+ NamedObject.getIDList(pickUpItemsToRemove)
-				+ ", enablingRemoveItem=" + enablingRemoveItem + " "
-				+ super.toString() + "}";
+		return "ChangeItemAction{changeLocation=" + changeLocation + ", newLocationID="
+				+ (newLocation != null ? newLocation.getId() : "null") + ", newTakeForbiddenText="
+				+ newTakeForbiddenText + ", newTakeSuccessfulText=" + newTakeSuccessfulText + ", enablingTakeable="
+				+ enablingTakeable + ", pickUpItemsToAddIDs=" + NamedObject.getIDList(pickUpItemsToAdd)
+				+ ", pickUpItemsToRemoveIDs=" + NamedObject.getIDList(pickUpItemsToRemove) + ", enablingRemoveItem="
+				+ enablingRemoveItem + " " + super.toString() + "}";
 	}
 
 	@Override
-	public String getActionDescription() {
-		StringBuilder builder = new StringBuilder(super.getActionDescription());
+	public String actionDescription() {
+		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (changeLocation) {
-			builder.append(" Setting location to '")
-					.append(newLocation != null ? newLocation.getName()
-							: "null").append("'.");
+			builder.append(" Setting location to '").append(newLocation != null ? newLocation.getName() : "null")
+					.append("'.");
 		}
 		if (newTakeSuccessfulText != null) {
-			builder.append(" Setting take successful text to '")
-					.append(newTakeSuccessfulText).append("'.");
+			builder.append(" Setting take successful text to '").append(newTakeSuccessfulText).append("'.");
 		}
 		if (newTakeForbiddenText != null) {
-			builder.append(" Setting take forbidden text to '")
-					.append(newTakeForbiddenText).append("'.");
+			builder.append(" Setting take forbidden text to '").append(newTakeForbiddenText).append("'.");
 		}
 		if (enablingTakeable != Enabling.DO_NOT_CHANGE) {
-			builder.append(" ").append(enablingTakeable.description)
-					.append(" taking.");
+			builder.append(" ").append(enablingTakeable.description).append(" taking.");
 		}
 		if (enablingRemoveItem != Enabling.DO_NOT_CHANGE) {
-			builder.append(" ").append(enablingRemoveItem.description)
-					.append(" removing the item when taken.");
+			builder.append(" ").append(enablingRemoveItem.description).append(" removing the item when taken.");
 		}
 		if (!pickUpItemsToAdd.isEmpty()) {
 			builder.append(" Adding pick up items: ");

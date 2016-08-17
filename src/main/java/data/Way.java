@@ -110,7 +110,7 @@ public class Way extends InspectableObject implements Travelable {
 		init();
 		moveForbiddenText = new SimpleStringProperty();
 		moveSuccessfulText = new SimpleStringProperty();
-		moveAction = new MoveAction(destination);
+		moveAction = new MoveAction("", destination);
 		setOrigin(origin);
 		setDestination(destination);
 	}

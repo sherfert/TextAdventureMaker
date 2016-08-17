@@ -1,5 +1,7 @@
 package data.action;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 
 import data.Game;
@@ -11,22 +13,26 @@ import data.Game;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class EndGameAction extends AbstractAction {
 
 	/**
-	 * An enabled EndGameAction.
+	 * No-arg constructor for the database.
+	 * 
+	 * @deprecated Use {@link #EndGameAction(String)} instead.
 	 */
+	@Deprecated
 	public EndGameAction() {
 	}
-
+	
 	/**
-	 * An EndGameAction.
+	 * An enabled EndGameAction.
 	 * 
-	 * @param enabled
-	 *            if the action should be enabled
+	 * @param name
+	 *            the name
 	 */
-	public EndGameAction(boolean enabled) {
-		super(enabled);
+	public EndGameAction(String name) {
+		super(name);
 	}
 
 	@Override
@@ -35,7 +41,7 @@ public class EndGameAction extends AbstractAction {
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		return "Ends the game.";
 	}
 

@@ -6,6 +6,8 @@ import data.Game;
 import data.Location;
 import data.Way;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -20,47 +22,39 @@ import javax.persistence.ManyToOne;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangeWayAction extends ChangeInspectableObjectAction {
 
 	/**
 	 * The new moveForbiddenText. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newMoveForbiddenText;
 
 	/**
 	 * The new moveSuccessfulText. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newMoveSuccessfulText;
 
 	/**
 	 * The new origin. If {@code null}, the old will not be changed.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWORIGIN", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWORIGIN_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newOrigin;
-	
+
 	/**
 	 * The new destination. If {@code null}, the old will not be changed.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWDESTINATION", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWDESTINATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newDestination;
 
 	/**
 	 * Enabling or disabling if the way is travelable.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enabling;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link ChangeWayAction#ChangeWayAction(Way)} instead.
+	 * @deprecated Use {@link ChangeWayAction#ChangeWayAction(String, Way)}
+	 *             instead.
 	 */
 	@Deprecated
 	public ChangeWayAction() {
@@ -68,22 +62,13 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	/**
+	 * @param name
+	 *            the name
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangeWayAction(Way object) {
-		super(object);
-		init();
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeWayAction(Way object, boolean enabled) {
-		super(object, enabled);
+	public ChangeWayAction(String name, Way object) {
+		super(name, object);
 		init();
 	}
 
@@ -102,6 +87,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newMoveForbiddenText
 	 */
+	@Column(nullable = true)
 	public String getNewMoveForbiddenText() {
 		return newMoveForbiddenText;
 	}
@@ -117,6 +103,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newMoveSuccessfulText
 	 */
+	@Column(nullable = true)
 	public String getNewMoveSuccessfulText() {
 		return newMoveSuccessfulText;
 	}
@@ -132,6 +119,9 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newOrigin
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWORIGIN", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWORIGIN_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	public Location getNewOrigin() {
 		return newOrigin;
 	}
@@ -147,6 +137,9 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newDestination
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWDESTINATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWDESTINATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	public Location getNewDestination() {
 		return newDestination;
 	}
@@ -162,6 +155,8 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the enabling
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnabling() {
 		return enabling;
 	}
@@ -201,35 +196,29 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 
 	@Override
 	public String toString() {
-		return "ChangeWayAction{" + "newMoveForbiddenText="
-				+ newMoveForbiddenText + ", newMoveSuccessfulText="
-				+ newMoveSuccessfulText + ", newOriginID=" + newOrigin.getId()
-				+ ", enabling=" + enabling + ", newDestinationID="
-				+ newDestination.getId() + " " + super.toString() + '}';
+		return "ChangeWayAction{" + "newMoveForbiddenText=" + newMoveForbiddenText + ", newMoveSuccessfulText="
+				+ newMoveSuccessfulText + ", newOriginID=" + newOrigin.getId() + ", enabling=" + enabling
+				+ ", newDestinationID=" + newDestination.getId() + " " + super.toString() + '}';
 	}
 
 	@Override
-	public String getActionDescription() {
-		StringBuilder builder = new StringBuilder(super.getActionDescription());
+	public String actionDescription() {
+		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (enabling != Enabling.DO_NOT_CHANGE) {
 			builder.append(" ").append(enabling.description).append(" moving.");
 		}
 		if (newOrigin != null) {
-			builder.append(" Setting origin to '").append(newOrigin.getName())
-					.append("'.");
+			builder.append(" Setting origin to '").append(newOrigin.getName()).append("'.");
 		}
 		if (newDestination != null) {
-			builder.append(" Setting destination to '")
-					.append(newDestination.getName()).append("'.");
+			builder.append(" Setting destination to '").append(newDestination.getName()).append("'.");
 		}
 
 		if (newMoveSuccessfulText != null) {
-			builder.append(" Setting move successful text to '")
-					.append(newMoveSuccessfulText).append("'.");
+			builder.append(" Setting move successful text to '").append(newMoveSuccessfulText).append("'.");
 		}
 		if (newMoveForbiddenText != null) {
-			builder.append(" Setting move forbidden text to '")
-					.append(newMoveSuccessfulText).append("'.");
+			builder.append(" Setting move forbidden text to '").append(newMoveSuccessfulText).append("'.");
 		}
 		return builder.toString();
 	}

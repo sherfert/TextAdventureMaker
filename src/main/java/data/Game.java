@@ -473,7 +473,7 @@ public class Game implements HasId {
 	 * Constructs a new game object.
 	 */
 	public Game() {
-		addInventoryItemsAction = new AddInventoryItemsAction(true);
+		addInventoryItemsAction = new AddInventoryItemsAction("");
 
 		exitCommands = new ArrayList<>();
 		lookAroundCommands = new ArrayList<>();

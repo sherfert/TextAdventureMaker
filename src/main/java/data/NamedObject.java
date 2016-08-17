@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,6 +25,7 @@ import javafx.beans.property.StringProperty;
  * @author Satia
  */
 @MappedSuperclass
+@Access(AccessType.PROPERTY)
 public abstract class NamedObject implements HasId {
 
 	/**

@@ -1,5 +1,7 @@
 package data.action;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,13 +20,13 @@ import data.Person;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangePersonAction extends ChangeInspectableObjectAction {
 
 	/**
 	 * The new talkingToForbidden text. If {@code null}, the old will not be
 	 * changed.
 	 */
-	@Column(nullable = true)
 	private String newTalkingToForbiddenText;
 
 	/**
@@ -32,7 +34,6 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * necessary, as {@code null} is a valid location and cannot be used to
 	 * identify no changes to be applied.
 	 */
-	@Column(nullable = false)
 	private boolean changeLocation;
 
 	/**
@@ -40,9 +41,6 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * Person will be removed. To apply these changes, {@link #changeLocation}
 	 * has to be set to {@code true}.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEPERSONACTION_NEWLOCATION", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newLocation;
 
 	/**
@@ -50,7 +48,6 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * necessary, as {@code null} is a valid conversation and cannot be used to
 	 * identify no changes to be applied.
 	 */
-	@Column(nullable = false)
 	private boolean changeConversation;
 
 	/**
@@ -58,36 +55,25 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 * Conversation will be removed. To apply these changes,
 	 * {@link #changeConversation} has to be set to {@code true}.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEPERSONACTION_NEWCONVERSATION", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWCONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE SET NULL") )
 	private Conversation newConversation;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #ChangePersonAction(Person)} instead.
+	 * @deprecated Use {@link #ChangePersonAction(String, Person)} instead.
 	 */
 	@Deprecated
 	public ChangePersonAction() {
 	}
 
 	/**
+	 * @param name
+	 *            the name
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangePersonAction(Person object) {
-		super(object);
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangePersonAction(Person object, boolean enabled) {
-		super(object, enabled);
+	public ChangePersonAction(String name, Person object) {
+		super(name, object);
 	}
 
 	@Override
@@ -98,26 +84,28 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newLocation
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEPERSONACTION_NEWLOCATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	public Location getNewLocation() {
 		return newLocation;
 	}
 
 	/**
-	 * This also sets changeLocation to true. If you want to undo this,
-	 * explicitly call {@code setChangeLocation(false)}.
+	 * Remember to also set changeLocation to true.
 	 * 
 	 * @param newLocation
 	 *            the newLocation to set
 	 */
 	public void setNewLocation(Location newLocation) {
 		this.newLocation = newLocation;
-		this.changeLocation = true;
 	}
 
 	/**
 	 * @return the changeLocation
 	 */
-	public boolean isChangeLocation() {
+	@Column(nullable = false)
+	public boolean getChangeLocation() {
 		return changeLocation;
 	}
 
@@ -132,26 +120,28 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newConversation
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEPERSONACTION_NEWCONVERSATION", //
+	foreignKeyDefinition = "FOREIGN KEY (NEWCONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE SET NULL") )
 	public Conversation getNewConversation() {
 		return newConversation;
 	}
 
 	/**
-	 * This also sets changeConversation to true. If you want to undo this,
-	 * explicitly call {@code setChangeConversation(false)}.
+	 * Remember to also set changeConversation to true.
 	 * 
 	 * @param newLocation
 	 *            the newLocation to set
 	 */
 	public void setNewConversation(Conversation newConversation) {
 		this.newConversation = newConversation;
-		this.changeConversation = true;
 	}
 
 	/**
 	 * @return the changeConversation
 	 */
-	public boolean isChangeConversation() {
+	@Column(nullable = false)
+	public boolean getChangeConversation() {
 		return changeConversation;
 	}
 
@@ -161,6 +151,21 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 */
 	public void setChangeConversation(boolean changeConversation) {
 		this.changeConversation = changeConversation;
+	}
+	
+	/**
+	 * @return the newTalkingToForbiddenText
+	 */
+	@Column(nullable = true)
+	public String getNewTalkingToForbiddenText() {
+		return newTalkingToForbiddenText;
+	}
+
+	/**
+	 * @param newTalkingToForbiddenText the newTalkingToForbiddenText to set
+	 */
+	public void setNewTalkingToForbiddenText(String newTalkingToForbiddenText) {
+		this.newTalkingToForbiddenText = newTalkingToForbiddenText;
 	}
 
 	@Override
@@ -182,32 +187,25 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 
 	@Override
 	public String toString() {
-		return "ChangePersonAction{newTalkingToForbiddenText="
-				+ newTalkingToForbiddenText + ", changeLocation="
-				+ changeLocation + ", newLocationID="
-				+ (newLocation != null ? newLocation.getId() : "null")
-				+ ", changeConversation=" + changeConversation
-				+ ", newConversationID="
-				+ (newConversation != null ? newConversation.getId() : "null")
-				+ " " + super.toString() + "}";
+		return "ChangePersonAction{newTalkingToForbiddenText=" + newTalkingToForbiddenText + ", changeLocation="
+				+ changeLocation + ", newLocationID=" + (newLocation != null ? newLocation.getId() : "null")
+				+ ", changeConversation=" + changeConversation + ", newConversationID="
+				+ (newConversation != null ? newConversation.getId() : "null") + " " + super.toString() + "}";
 	}
 
 	@Override
-	public String getActionDescription() {
-		StringBuilder builder = new StringBuilder(super.getActionDescription());
+	public String actionDescription() {
+		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (changeConversation) {
 			builder.append(" Setting conversation to '")
-					.append(newConversation != null ? newConversation.getId()
-							: "null").append("'.");
+					.append(newConversation != null ? newConversation.getId() : "null").append("'.");
 		}
 		if (changeLocation) {
-			builder.append(" Setting location to '")
-					.append(newLocation != null ? newLocation.getName()
-							: "null").append("'.");
+			builder.append(" Setting location to '").append(newLocation != null ? newLocation.getName() : "null")
+					.append("'.");
 		}
 		if (newTalkingToForbiddenText != null) {
-			builder.append(" Setting talking forbidden text to '")
-					.append(newTalkingToForbiddenText).append("'.");
+			builder.append(" Setting talking forbidden text to '").append(newTalkingToForbiddenText).append("'.");
 		}
 		return builder.toString();
 	}

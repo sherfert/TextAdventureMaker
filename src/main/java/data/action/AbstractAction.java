@@ -3,15 +3,15 @@ package data.action;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
 import data.Game;
-import data.interfaces.HasId;
+import data.NamedObject;
 
 /**
  * Any action that changes something in the game (if enabled).
@@ -20,7 +20,8 @@ import data.interfaces.HasId;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractAction implements HasId {
+@Access(AccessType.PROPERTY)
+public abstract class AbstractAction extends NamedObject {
 
 	/**
 	 * When an action changes something that can be disabled or enabled, a
@@ -51,51 +52,35 @@ public abstract class AbstractAction implements HasId {
 	}
 
 	/**
-	 * The Id.
-	 */
-	@Id
-	@GeneratedValue
-	private int id;
-
-	/**
 	 * If the action is enabled and therefore triggerable.
 	 */
-	@Column(nullable = false)
 	protected boolean enabled;
-
+	
 	/**
-	 * An enabled action.
+	 * No-arg constructor for the database.
+	 * 
+	 * @deprecated Use {@link #AbstractAction(String)} instead.
 	 */
+	@Deprecated
 	protected AbstractAction() {
 		enabled = true;
 	}
 
 	/**
-	 * An action.
+	 * An enabled action.
 	 * 
-	 * @param enabled
-	 *            if the action should be enabled
+	 * @param name
+	 *            the name
 	 */
-	protected AbstractAction(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	@Override
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
+	protected AbstractAction(String name) {
+		super(name);
+		enabled = true;
 	}
 
 	/**
 	 * @return the enabled
 	 */
+	@Column(nullable = false)
 	public boolean getEnabled() {
 		return enabled;
 	}
@@ -110,12 +95,9 @@ public abstract class AbstractAction implements HasId {
 		this.enabled = enabled;
 	}
 
-	/**
-	 * @return the class name, id and enabled status.
-	 */
 	@Override
 	public String toString() {
-		return "AbstractAction{" + "id=" + id + ", enabled=" + enabled + '}';
+		return "AbstractAction{" + "enabled=" + enabled + " " + super.toString() + '}';
 	}
 
 	/**
@@ -147,5 +129,5 @@ public abstract class AbstractAction implements HasId {
 	 * 
 	 * @return a description of the action.
 	 */
-	public abstract String getActionDescription();
+	public abstract String actionDescription();
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -24,22 +26,18 @@ import data.NamedObject;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class MultiAction extends AbstractAction {
 
 	/**
 	 * All actions.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "MULTIACTION_ACTIONS", foreignKey = @ForeignKey(name = "FK_MultiAction_actions_S", //
-	foreignKeyDefinition = "FOREIGN KEY (MultiAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_MultiAction_actions_D", //
-	foreignKeyDefinition = "FOREIGN KEY (actions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	private List<AbstractAction> actions;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #MultiAction(AbstractAction...)} instead.
+	 * @deprecated Use {@link #MultiAction(String, AbstractAction...)} instead.
 	 */
 	@Deprecated
 	public MultiAction() {
@@ -48,34 +46,26 @@ public class MultiAction extends AbstractAction {
 
 	/**
 	 * Creates an enabled MultiAction. Also enables all embedded actions.
-	 * 
+	 * @param name
+	 *            the name
 	 * @param actions
 	 *            the actions
 	 */
-	public MultiAction(AbstractAction... actions) {
+	public MultiAction(String name, AbstractAction... actions) {
+		super(name);
 		// Copy the array to a new list, so it can be modified afterwards
 		this.actions = new ArrayList<>(Arrays.asList(actions));
 		setEnabled(true);
 	}
 
 	/**
-	 * Enables/disables all embedded actions.
-	 * 
-	 * @param enabled
-	 *            if the action should be enabled
-	 * @param actions
-	 *            the actions
-	 */
-	public MultiAction(boolean enabled, AbstractAction... actions) {
-		super(enabled);
-		// Copy the array to a new list, so it can be modified afterwards
-		this.actions = new ArrayList<>(Arrays.asList(actions));
-		setEnabled(enabled);
-	}
-
-	/**
 	 * @return the actions
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "MULTIACTION_ACTIONS", foreignKey = @ForeignKey(name = "FK_MultiAction_actions_S", //
+	foreignKeyDefinition = "FOREIGN KEY (MultiAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_MultiAction_actions_D", //
+	foreignKeyDefinition = "FOREIGN KEY (actions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getActions() {
 		return actions;
 	}
@@ -142,11 +132,11 @@ public class MultiAction extends AbstractAction {
 	 * same.
 	 */
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Combining actions: ");
 		for (AbstractAction action : actions) {
-			builder.append(action.getActionDescription());
+			builder.append(action.actionDescription());
 		}
 		return builder.toString();
 	}

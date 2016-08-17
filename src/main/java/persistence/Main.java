@@ -34,7 +34,7 @@ import data.action.RemoveInventoryItemAction;
  * 
  * General TODOs:
  * 
- * TODO GUI 
+ * TODO GUI
  * 
  * TODO Tooltips everywhere!
  * 
@@ -63,11 +63,13 @@ public class Main {
 		Location balcony = new Location("Balcony", "Your balcony. Sitting on the chair you can look at the sunset.");
 		Location voidLoc = new Location("Void", "You jump into the black hole and die. Well done!");
 
-		ChangeNDObjectAction changeBalconyDescriptionAction = new ChangeNDObjectAction(balcony);
+		ChangeNDObjectAction changeBalconyDescriptionAction = new ChangeNDObjectAction("changeBalconyDescriptionAction",
+				balcony);
 		changeBalconyDescriptionAction
 				.setNewDescription("Your balcony. Standing around stupidly you can look at the sunset.");
 
-		ChangeNDObjectAction changeFlatDescriptionAction = new ChangeNDObjectAction(flat);
+		ChangeNDObjectAction changeFlatDescriptionAction = new ChangeNDObjectAction("changeFlatDescriptionAction",
+				flat);
 		changeFlatDescriptionAction.setNewDescription(
 				"Your little home. But now, that you know the answer to everything, you take a completely different look at things.");
 
@@ -91,7 +93,7 @@ public class Main {
 				voidLoc);
 		wayToVoid.addAdditionalTravelCommand("climb into (?<o0>.+?)");
 		wayToVoid.addAdditionalTravelCommand("jump into (?<o0>.+?)");
-		wayToVoid.addAdditionalActionToMove(new EndGameAction());
+		wayToVoid.addAdditionalActionToMove(new EndGameAction("ende"));
 
 		/*
 		 * Inspecting satia will give you 5 bucks. You can "give them back" by
@@ -105,17 +107,18 @@ public class Main {
 
 		// Create conversations first, add other stuff later
 		Conversation satiaConversation = new Conversation("satiaConversation", "I'm busy, keep it short.");
-		Conversation satiaShortConversation = new Conversation("satiaShortConversation", "Hey. Gimme back my money! Douche!",
-				"Satia takes his money back semi-violently.");
+		Conversation satiaShortConversation = new Conversation("satiaShortConversation",
+				"Hey. Gimme back my money! Douche!", "Satia takes his money back semi-violently.");
 
 		// Combining these 2 actions
 		MultiAction stealMoneyAction;
 		{
-			AddInventoryItemsAction addMoneyAction = new AddInventoryItemsAction();
+			AddInventoryItemsAction addMoneyAction = new AddInventoryItemsAction("addMoneyAction");
 			addMoneyAction.addPickUpItem(money);
 			// The order here is critical!
-			stealMoneyAction = new MultiAction(addMoneyAction);
-			ChangeActionAction disableStealMoneyAction = new ChangeActionAction(stealMoneyAction, Enabling.DISABLE);
+			stealMoneyAction = new MultiAction("stealMoneyAction", addMoneyAction);
+			ChangeActionAction disableStealMoneyAction = new ChangeActionAction("disableStealMoneyAction",
+					stealMoneyAction, Enabling.DISABLE);
 			stealMoneyAction.addAction(disableStealMoneyAction);
 
 		}
@@ -123,22 +126,26 @@ public class Main {
 		// Combining these 3 actions
 		MultiAction giveMoneyBackAction;
 		{
-			RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction(money);
-			ChangePersonAction changeSatiaAction2 = new ChangePersonAction(satia);
+			RemoveInventoryItemAction removeMoneyAction = new RemoveInventoryItemAction("removeMoneyAction", money);
+			ChangePersonAction changeSatiaAction2 = new ChangePersonAction("changeSatiaAction2", satia);
 			changeSatiaAction2.setNewInspectionText(
 					"He looks pretty busy programming nonsense stuff. You steal some money out of his pocket.");
 			changeSatiaAction2.setNewConversation(satiaConversation);
-			ChangeActionAction enableAddMoneyAction = new ChangeActionAction(stealMoneyAction, Enabling.ENABLE);
-			giveMoneyBackAction = new MultiAction(removeMoneyAction, changeSatiaAction2, enableAddMoneyAction);
+			changeSatiaAction2.setChangeConversation(true);
+			ChangeActionAction enableAddMoneyAction = new ChangeActionAction("enableAddMoneyAction", stealMoneyAction,
+					Enabling.ENABLE);
+			giveMoneyBackAction = new MultiAction("giveMoneyBackAction", removeMoneyAction, changeSatiaAction2,
+					enableAddMoneyAction);
 		}
 
 		// The order here is critical!
 		satia.addAdditionalInspectAction(stealMoneyAction);
 
-		ChangePersonAction changeSatiaAction1 = new ChangePersonAction(satia);
+		ChangePersonAction changeSatiaAction1 = new ChangePersonAction("changeSatiaAction1", satia);
 		changeSatiaAction1.setNewInspectionText(
 				"He looks pretty busy programming nonsense stuff. You stole the poor guy his last 5 bucks.");
-		changeSatiaAction1.setNewConversation(satiaShortConversation);
+		 changeSatiaAction1.setNewConversation(satiaShortConversation);
+		 changeSatiaAction1.setChangeConversation(true);
 
 		satia.addAdditionalInspectAction(changeSatiaAction1);
 
@@ -150,15 +157,16 @@ public class Main {
 
 		startLayer.addOption(new ConversationOption("Why so hostile?",
 				"Just TextAdventureMaker is harder to code than I though!", "He looks really annoyed!", startLayer));
-		startLayer.addOption(new ConversationOption("cs", "Let's talk about computer science.", "Ask me anything.", csLayer));
+		startLayer.addOption(
+				new ConversationOption("cs", "Let's talk about computer science.", "Ask me anything.", csLayer));
 		startLayer.addOption(new ConversationOption("bye", "I'm gonne leave you now.", "Finally.", null));
 		// An option that finishes the game
 		ConversationOption endGameOption = new ConversationOption("", "Fuck this. Ima quit!",
 				"Quit what? Don't tell me I ended up in a game! Please not!", null);
-		endGameOption.addAdditionalAction(new EndGameAction());
+		endGameOption.addAdditionalAction(new EndGameAction("ente"));
 		startLayer.addOption(endGameOption);
 
-		ConversationOption option42 = new ConversationOption("FT", 
+		ConversationOption option42 = new ConversationOption("FT",
 				"What is the answer to the Ultimate Question of Life, the Universe, and Everything? "
 						+ "Additionally, here is some text to make it cover two lines.",
 				"42", csLayer);
@@ -169,19 +177,21 @@ public class Main {
 		csLayer.addOption(new ConversationOption("CCC", "Do you like C#?", "It's OK", csLayer));
 		csLayer.addOption(new ConversationOption("CC", "Do you like C++?", "I can accomodate", csLayer));
 		csLayer.addOption(new ConversationOption("C", "Do you like C?", "Not really", csLayer));
-		csLayer.addOption(new ConversationOption("A", "Do you like Assembler?", "It's cool, but I'm not crazy.", csLayer));
+		csLayer.addOption(
+				new ConversationOption("A", "Do you like Assembler?", "It's cool, but I'm not crazy.", csLayer));
 		csLayer.addOption(new ConversationOption("P", "Do you like Python?", "I recommend you a gif a made", csLayer));
-		csLayer.addOption(new ConversationOption("3L", 
+		csLayer.addOption(new ConversationOption("3L",
 				"Do you like this threeliner that had to come somewhere "
 						+ "in order to test the conversation option chosing mechasnism for a hell of a lot of options properly "
 						+ "and also with options that are way too long and nobody will ever read them? Assholes! "
 						+ "Still not long enough - need to add some more bullshit. That should do it!",
 				"What!?!", csLayer));
 		csLayer.addOption(new ConversationOption("WS", "Do you like Whitespace?", "I never find the code", csLayer));
-		csLayer.addOption(new ConversationOption("BF", "Do you like Brainfuck?", "I prefer to fuck other things", csLayer));
+		csLayer.addOption(
+				new ConversationOption("BF", "Do you like Brainfuck?", "I prefer to fuck other things", csLayer));
 		csLayer.addOption(new ConversationOption("PL", "Do you like Perl?", "Hell no", csLayer));
-		ConversationOption disappearingOption = new ConversationOption("NV", "I am never gonna say this again.", "What!?",
-				csLayer);
+		ConversationOption disappearingOption = new ConversationOption("NV", "I am never gonna say this again.",
+				"What!?", csLayer);
 		disappearingOption.setDisablingOptionAfterChosen(true);
 		csLayer.addOption(disappearingOption);
 		csLayer.addOption(
@@ -192,14 +202,16 @@ public class Main {
 		satiaConversation.setStartLayer(startLayer);
 		satia.setConversation(satiaConversation);
 
-		ChangeConversationAction changeSatiaConversation = new ChangeConversationAction(satiaConversation);
+		ChangeConversationAction changeSatiaConversation = new ChangeConversationAction("changeSatiaConversation",
+				satiaConversation);
 		changeSatiaConversation.setNewGreeting("What is it, stinky thief?");
 
-		ChangeConversationOptionAction changeSatiaOption42 = new ChangeConversationOptionAction(option42);
+		ChangeConversationOptionAction changeSatiaOption42 = new ChangeConversationOptionAction("changeSatiaOption42",
+				option42);
 		changeSatiaOption42.setNewAnswer("I won't tell you that now, thief!");
 
-		ChangeActionAction disableChangeFlatDescriptionAction = new ChangeActionAction(changeFlatDescriptionAction,
-				Enabling.DISABLE);
+		ChangeActionAction disableChangeFlatDescriptionAction = new ChangeActionAction(
+				"disableChangeFlatDescriptionAction", changeFlatDescriptionAction, Enabling.DISABLE);
 
 		/*
 		 * The short conversation with Satia
@@ -234,7 +246,7 @@ public class Main {
 		/*
 		 * Inspecting the tv will change its inspection text.
 		 */
-		ChangeInspectableObjectAction changeTVAction = new ChangeInspectableObjectAction(tv);
+		ChangeInspectableObjectAction changeTVAction = new ChangeInspectableObjectAction("changeTVAction", tv);
 		changeTVAction.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
 		tv.addAdditionalInspectAction(changeTVAction);
 
@@ -258,7 +270,7 @@ public class Main {
 		/*
 		 * Inspecting the banana will "convert" it into a bananaphone.
 		 */
-		ChangeInspectableObjectAction changeBananaAction = new ChangeInspectableObjectAction(banana);
+		ChangeInspectableObjectAction changeBananaAction = new ChangeInspectableObjectAction("changeBananaAction", banana);
 		changeBananaAction.setNewName("Banana phone");
 		changeBananaAction.setNewInspectionText("Ring ring ring ring ring ring ring - banana phone.");
 		changeBananaAction.addIdentifierToAdd("banana phone");
@@ -268,10 +280,13 @@ public class Main {
 		peel.setInspectionText("You ate the banana inside it.");
 		peel.addIdentifier("peel");
 		peel.setUseForbiddenText("Do you want to eat the peel, too?");
-		AddInventoryItemsAction addPeelAction = new AddInventoryItemsAction();
+		AddInventoryItemsAction addPeelAction = new AddInventoryItemsAction("addPeelAction");
 		addPeelAction.addPickUpItem(peel);
 		banana.addAdditionalActionToUse(addPeelAction);
-		banana.addAdditionalActionToUse(new ChangeItemAction(banana, null));
+		ChangeItemAction removeBananaAction = new ChangeItemAction("removeBananaAction", banana);
+		removeBananaAction.setNewLocation(null);
+		removeBananaAction.setChangeLocation(true);
+		banana.addAdditionalActionToUse(removeBananaAction);
 		InventoryItem invBanana = new InventoryItem(banana);
 		invBanana.setDescription("A banana");
 
@@ -283,7 +298,7 @@ public class Main {
 		chair.addPickUpItem(invChair);
 
 		// Only let him in if he has the chair
-		ChangeWayAction allowGettingInsideAction = new ChangeWayAction(wayToFlat);
+		ChangeWayAction allowGettingInsideAction = new ChangeWayAction("allowGettingInsideAction", wayToFlat);
 		allowGettingInsideAction.setEnabling(Enabling.ENABLE);
 		chair.addAdditionalTakeAction(allowGettingInsideAction);
 		chair.addAdditionalTakeAction(changeBalconyDescriptionAction);
@@ -299,9 +314,15 @@ public class Main {
 		destroyedTv.addIdentifier("tv");
 		destroyedTv.setTakeForbiddenText("What the hell do you want with this mess?");
 		destroyedTv.setUseForbiddenText("It does not work anymore.");
-
-		invChair.addAdditionalActionToUseWith(tv, new ChangeItemAction(destroyedTv, flat));
-		invChair.addAdditionalActionToUseWith(tv, new ChangeItemAction(tv, null));
+		
+		ChangeItemAction addDTVAction = new ChangeItemAction("addDTVAction", destroyedTv);
+		addDTVAction.setNewLocation(flat);
+		addDTVAction.setChangeLocation(true);
+		ChangeItemAction removeTvAction = new ChangeItemAction("removeTvAction", tv);
+		removeTvAction.setNewLocation(null);
+		removeTvAction.setChangeLocation(true);
+		invChair.addAdditionalActionToUseWith(tv, addDTVAction);
+		invChair.addAdditionalActionToUseWith(tv, removeTvAction);
 		invChair.setUseWithSuccessfulText(tv, "You smash the chair into the television.");
 		invChair.setUsingEnabledWith(tv, true);
 
@@ -343,29 +364,29 @@ public class Main {
 		peel.setCombineWithSuccessfulText(invPen, "You painted the banana peel.");
 		peel.addNewCombinableWhenCombinedWith(invPen, paintedPeel);
 
-		AddInventoryItemsAction addPaintedPeelAction = new AddInventoryItemsAction();
-		RemoveInventoryItemAction removePeelAction = new RemoveInventoryItemAction(peel);
+		AddInventoryItemsAction addPaintedPeelAction = new AddInventoryItemsAction("addPaintedPeelAction");
+		RemoveInventoryItemAction removePeelAction = new RemoveInventoryItemAction("removePeelAction", peel);
 		addPaintedPeelAction.addPickUpItem(paintedPeel);
 		peel.addAdditionalActionToUseWith(pen, addPaintedPeelAction);
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
 
-		ChangeInvItemUsageAction changeChairTVaction = new ChangeInvItemUsageAction(invChair, tv);
+		ChangeInvItemUsageAction changeChairTVaction = new ChangeInvItemUsageAction("changeChairTVaction", invChair, tv);
 		changeChairTVaction.setNewUseWithSuccessfulText("32\" wasted!");
 
-		ChangeInvItemUsageAction changeSatiaMoneyAction = new ChangeInvItemUsageAction(money, satia);
+		ChangeInvItemUsageAction changeSatiaMoneyAction = new ChangeInvItemUsageAction("changeSatiaMoneyAction", money, satia);
 		changeSatiaMoneyAction
 				.setNewUseWithSuccessfulText("You feel guilty and put the money back. Although he has a big tv.");
 
-		ChangeInvItemCombinationAction changePeelPenCombinationAction = new ChangeInvItemCombinationAction(peel,
+		ChangeInvItemCombinationAction changePeelPenCombinationAction = new ChangeInvItemCombinationAction("changePeelPenCombinationAction", peel,
 				invPen);
 		changePeelPenCombinationAction.setNewCombineWithSuccessfulText(
 				"Absent-mindedly you paint the peel while staring at the huge tv screen - which is black.");
-
+		
+		tv.addAdditionalInspectAction(changePeelPenCombinationAction);
 		tv.addAdditionalInspectAction(changeChairTVaction);
 		tv.addAdditionalInspectAction(changeSatiaMoneyAction);
-		tv.addAdditionalInspectAction(changePeelPenCombinationAction);
-		
+
 		// Start item in the inventory
 		InventoryItem dildo = new InventoryItem("Dildo", "Made out of Kruppstahl.");
 		dildo.setInspectionText("Why are you carrying that around with you!?");
@@ -452,10 +473,10 @@ public class Main {
 		///////////////////////
 		// Additional test data
 		Location locToDel = new Location("Del me", "pls");
-		ChangeNDObjectAction cltd = new ChangeNDObjectAction(locToDel);
+		ChangeNDObjectAction cltd = new ChangeNDObjectAction("cltd", locToDel);
 		cltd.setNewName("Did ja del me?");
-		Item thing = new Item(locToDel, "Thing", "useless");
-		
+		//Item thing = new Item(locToDel, "Thing", "useless");
+
 		pm.getEntityManager().persist(locToDel);
 		pm.getEntityManager().persist(cltd);
 		///////////////////////

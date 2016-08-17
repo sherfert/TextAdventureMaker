@@ -3,6 +3,8 @@
  */
 package data.action;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,34 +17,30 @@ import javax.persistence.ManyToOne;
 import data.Game;
 
 /**
- * Another action can be changed with this action. Currently this means
- * disabling or enabling it.
+ * Another action can be changed with this action. This means disabling or
+ * enabling it.
  * 
  * @author Satia Herfert
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangeActionAction extends AbstractAction {
 
 	/**
 	 * The action to change
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEACTIONACTION_ACTION", //
-	foreignKeyDefinition = "FOREIGN KEY (ACTION_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	private AbstractAction action;
 
 	/**
 	 * Enabling or disabling the action
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enabling;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link ChangeActionAction#ChangeActionAction(AbstractAction)}
+	 *             {@link ChangeActionAction#ChangeActionAction(String, AbstractAction, Enabling))}
 	 *             instead.
 	 */
 	@Deprecated
@@ -52,29 +50,16 @@ public class ChangeActionAction extends AbstractAction {
 	/**
 	 * An action changing another action.
 	 * 
+	 * @param name
+	 *            the name
 	 * @param action
 	 *            the action to change
 	 * @param enabling
 	 *            if the other action should be enabled, disabled, or left
 	 *            unchanged
 	 */
-	public ChangeActionAction(AbstractAction action, Enabling enabling) {
-		this.action = action;
-		this.enabling = enabling;
-	}
-
-	/**
-	 * 
-	 * @param action
-	 *            the action to change
-	 * @param enabling
-	 *            if the other action should be enabled, disabled, or left
-	 *            unchanged
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeActionAction(AbstractAction action, Enabling enabling, boolean enabled) {
-		super(enabled);
+	public ChangeActionAction(String name, AbstractAction action, Enabling enabling) {
+		super(name);
 		this.action = action;
 		this.enabling = enabling;
 	}
@@ -82,6 +67,9 @@ public class ChangeActionAction extends AbstractAction {
 	/**
 	 * @return the action
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEACTIONACTION_ACTION", //
+	foreignKeyDefinition = "FOREIGN KEY (ACTION_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public AbstractAction getAction() {
 		return action;
 	}
@@ -97,6 +85,8 @@ public class ChangeActionAction extends AbstractAction {
 	/**
 	 * @return the enabling
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnabling() {
 		return enabling;
 	}
@@ -125,7 +115,7 @@ public class ChangeActionAction extends AbstractAction {
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		return enabling.description + " action " + action.getId();
 	}
 }

@@ -3,6 +3,8 @@ package data.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -19,33 +21,40 @@ import data.NamedObject;
  * @author Satia
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class AddInventoryItemsAction extends AbstractAction {
 
 	/**
 	 * All {@link InventoryItem}s that will be added to the inventory.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "AIIA_PI", foreignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_S", //
-	foreignKeyDefinition = "FOREIGN KEY (AddInventoryItemsAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_D", //
-	foreignKeyDefinition = "FOREIGN KEY (pickUpItems_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItems;
 
 	/**
-	 * A new {@link AddInventoryItemsAction}.
+	 * No-arg constructor for the database.
+	 * 
+	 * @deprecated Use {@link #AddInventoryItemsAction(String)} instead.
 	 */
+	@Deprecated
 	public AddInventoryItemsAction() {
 		init();
 	}
 
 	/**
+	 * An action adding things to the inventory.
 	 * 
-	 * @param enabled
-	 *            if the action should be enabled
+	 * @param name
+	 *            the name
 	 */
-	public AddInventoryItemsAction(boolean enabled) {
-		super(enabled);
+	public AddInventoryItemsAction(String name) {
+		super(name);
 		init();
+	}
+
+	/**
+	 * Initializes the fields.
+	 */
+	private final void init() {
+		this.pickUpItems = new ArrayList<>();
 	}
 
 	/**
@@ -61,6 +70,11 @@ public class AddInventoryItemsAction extends AbstractAction {
 	/**
 	 * @return the pickUpItems.
 	 */
+	@ManyToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "AIIA_PI", foreignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_S", //
+	foreignKeyDefinition = "FOREIGN KEY (AddInventoryItemsAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_D", //
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItems_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public List<InventoryItem> getPickUpItems() {
 		return pickUpItems;
 	}
@@ -91,13 +105,6 @@ public class AddInventoryItemsAction extends AbstractAction {
 		}
 	}
 
-	/**
-	 * Initializes the fields
-	 */
-	private final void init() {
-		this.pickUpItems = new ArrayList<>();
-	}
-
 	@Override
 	public String toString() {
 		return "AddInventoryItemsAction{" + "pickUpItemsIDs="
@@ -106,7 +113,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Picking up: ");
 		for (InventoryItem item : pickUpItems) {

@@ -4,6 +4,9 @@ import data.Game;
 import data.InventoryItem;
 import data.NamedDescribedObject;
 import data.interfaces.HasLocation;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,51 +24,41 @@ import javax.persistence.ManyToOne;
  * 
  */
 @Entity
+@Access(AccessType.PROPERTY)
 public class ChangeInvItemUsageAction extends AbstractAction {
 
 	/**
 	 * The inventory item.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_INVENTORYITEM", //
-	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )	
 	private InventoryItem inventoryItem;
 
-	// Specify the common supertype: NamedDescribedObject
 	/**
 	 * The person or item.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedDescribedObject.class)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", //
-	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private HasLocation object;
 
 	/**
 	 * The new useWithForbiddenText. If {@code null}, the old will not be
 	 * changed.
 	 */
-	@Column(nullable = true)
 	private String newUseWithForbiddenText;
 
 	/**
 	 * The new useWithSuccessfulText. If {@code null}, the old will not be
 	 * changed.
 	 */
-	@Column(nullable = true)
 	private String newUseWithSuccessfulText;
 
 	/**
 	 * Enabling or disabling if this combination is actually usable.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enabling;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInvItemUsageAction(InventoryItem, HasLocation)}
+	 *             {@link #ChangeInvItemUsageAction(String, InventoryItem, HasLocation)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -74,27 +67,15 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	}
 
 	/**
+	 * @param name
+	 *            the name
 	 * @param inventoryItem
 	 *            the inventory item
 	 * @param object
 	 *            the person or item
 	 */
-	public ChangeInvItemUsageAction(InventoryItem inventoryItem, HasLocation object) {
-		init();
-		this.inventoryItem = inventoryItem;
-		this.object = object;
-	}
-
-	/**
-	 * @param inventoryItem
-	 *            the inventory item
-	 * @param object
-	 *            the person or item
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeInvItemUsageAction(InventoryItem inventoryItem, HasLocation object, boolean enabled) {
-		super(enabled);
+	public ChangeInvItemUsageAction(String name, InventoryItem inventoryItem, HasLocation object) {
+		super(name);
 		init();
 		this.inventoryItem = inventoryItem;
 		this.object = object;
@@ -110,6 +91,9 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	/**
 	 * @return the inventoryItem
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_INVENTORYITEM", //
+	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public InventoryItem getInventoryItem() {
 		return inventoryItem;
 	}
@@ -125,6 +109,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	/**
 	 * @return the newUseWithForbiddenText
 	 */
+	@Column(nullable = true)
 	public String getNewUseWithForbiddenText() {
 		return newUseWithForbiddenText;
 	}
@@ -140,6 +125,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	/**
 	 * @return the newUseWithSuccessfulText
 	 */
+	@Column(nullable = true)
 	public String getNewUseWithSuccessfulText() {
 		return newUseWithSuccessfulText;
 	}
@@ -155,6 +141,8 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	/**
 	 * @return the enabling
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnabling() {
 		return enabling;
 	}
@@ -170,6 +158,10 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	/**
 	 * @return the object
 	 */
+	// Specify the common supertype of Person and Item: NamedDescribedObject
+	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedDescribedObject.class)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", //
+	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public HasLocation getObject() {
 		return object;
 	}
@@ -205,7 +197,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Changing usage of ").append(inventoryItem.getName()).append(" with ").append(object.getName())
 				.append(".");

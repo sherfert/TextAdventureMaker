@@ -1,5 +1,7 @@
 package data.action;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,32 +20,29 @@ import data.UsableObject;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Access(AccessType.PROPERTY)
 public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 
 	/**
 	 * The new useForbiddenText. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newUseForbiddenText;
 
 	/**
 	 * The new useSuccessfulText. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newUseSuccessfulText;
 
 	/**
 	 * Enabling or disabling if the UsableObject is actually usable.
 	 */
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
 	private Enabling enabling;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link ChangeUsableObjectAction#ChangeUsableObjectAction(InspectableObject)}
+	 *             {@link ChangeUsableObjectAction#ChangeUsableObjectAction(String, InspectableObject)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -55,19 +54,8 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangeUsableObjectAction(UsableObject object) {
-		super(object);
-		init();
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeUsableObjectAction(UsableObject object, boolean enabled) {
-		super(object, enabled);
+	public ChangeUsableObjectAction(String name, UsableObject object) {
+		super(name, object);
 		init();
 	}
 
@@ -86,6 +74,7 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newUseForbiddenText
 	 */
+	@Column(nullable = true)
 	public String getNewUseForbiddenText() {
 		return newUseForbiddenText;
 	}
@@ -101,6 +90,7 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the newUseSuccessfulText
 	 */
+	@Column(nullable = true)
 	public String getNewUseSuccessfulText() {
 		return newUseSuccessfulText;
 	}
@@ -116,6 +106,8 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	/**
 	 * @return the enabling
 	 */
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
 	public Enabling getEnabling() {
 		return enabling;
 	}
@@ -156,8 +148,8 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	public String getActionDescription() {
-		StringBuilder builder = new StringBuilder(super.getActionDescription());
+	public String actionDescription() {
+		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (enabling != Enabling.DO_NOT_CHANGE) {
 			builder.append(" ").append(enabling.description).append(" usage.");
 		}

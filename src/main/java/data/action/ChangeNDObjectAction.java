@@ -1,5 +1,7 @@
 package data.action;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,41 +18,35 @@ import data.NamedDescribedObject;
 /**
  * An action changing properties of a {@link NamedDescribedObject} .
  * 
- * FIXME not getting deleted, if the changed object is deleted (case: ChangeWayAction)
+ * FIXME not getting deleted, if the changed object is deleted (case:
+ * ChangeWayAction)
  * 
  * @author Satia
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Access(AccessType.PROPERTY)
 public class ChangeNDObjectAction extends AbstractAction {
 
 	/**
 	 * The new description. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newDescription;
 
 	/**
 	 * The new name. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newName;
 
 	/**
 	 * The object to be changed.
-	 * 
-	 * XXX This should be (nullable = false). This is impossible due to circular
-	 * dependencies.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", //
-	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private NamedDescribedObject object;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #ChangeNDObjectAction(InspectableObject)}
+	 * @deprecated Use {@link #ChangeNDObjectAction(String, InspectableObject)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -58,27 +54,20 @@ public class ChangeNDObjectAction extends AbstractAction {
 	}
 
 	/**
+	 * @param name
+	 *            the name
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangeNDObjectAction(NamedDescribedObject object) {
-		this.object = object;
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeNDObjectAction(NamedDescribedObject object, boolean enabled) {
-		super(enabled);
+	public ChangeNDObjectAction(String name, NamedDescribedObject object) {
+		super(name);
 		this.object = object;
 	}
 
 	/**
 	 * @return the newDescription
 	 */
+	@Column(nullable = true)
 	public String getNewDescription() {
 		return newDescription;
 	}
@@ -86,15 +75,33 @@ public class ChangeNDObjectAction extends AbstractAction {
 	/**
 	 * @return the newName
 	 */
+	@Column(nullable = true)
 	public String getNewName() {
 		return newName;
 	}
 
 	/**
+	 * XXX This should be (nullable = false). This is impossible due to circular
+	 * dependencies.
+	 * 
 	 * @return the object
+	 * 
+	 * FIXME should the overridden getObjects be  @Transient ?
 	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", //
+	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public NamedDescribedObject getObject() {
 		return object;
+	}
+	
+	/**
+	 * Just for the database.
+	 */
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setObject(NamedDescribedObject object) {
+		this.object = object;
 	}
 
 	/**
@@ -126,21 +133,19 @@ public class ChangeNDObjectAction extends AbstractAction {
 
 	@Override
 	public String toString() {
-		return "ChangeNDObjectAction{" + "newDescription=" + newDescription
-				+ ", newName=" + newName + ", objectID=" + object.getId() + " "
-				+ super.toString() + '}';
+		return "ChangeNDObjectAction{" + "newDescription=" + newDescription + ", newName=" + newName + ", objectID="
+				+ object.getId() + " " + super.toString() + '}';
 	}
 
 	@Override
-	public String getActionDescription() {
+	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Changing ").append(object.getName()).append(".");
 		if (newName != null) {
 			builder.append(" Setting name to '").append(newName).append("'.");
 		}
 		if (newDescription != null) {
-			builder.append(" Setting description to '").append(newDescription)
-					.append("'.");
+			builder.append(" Setting description to '").append(newDescription).append("'.");
 		}
 		return builder.toString();
 	}

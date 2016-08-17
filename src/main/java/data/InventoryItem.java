@@ -114,7 +114,7 @@ public class InventoryItem extends UsableObject implements
 		 */
 		public CombinableInventoryItem() {
 			additionalCombineWithActions = new ArrayList<>();
-			addInventoryItemsAction = new AddInventoryItemsAction();
+			addInventoryItemsAction = new AddInventoryItemsAction("");
 			enabled = false;
 			removeCombinables = false;
 		}
@@ -402,9 +402,9 @@ public class InventoryItem extends UsableObject implements
 				 * Remove both partners with temporary
 				 * RemoveInventoryItemActions.
 				 */
-				new RemoveInventoryItemAction(this).triggerAction(game);
+				new RemoveInventoryItemAction("", this).triggerAction(game);
 				if (partner instanceof InventoryItem) {
-					new RemoveInventoryItemAction((InventoryItem) partner)
+					new RemoveInventoryItemAction("", (InventoryItem) partner)
 							.triggerAction(game);
 				} else {
 					Logger.getLogger(this.getClass().getName())

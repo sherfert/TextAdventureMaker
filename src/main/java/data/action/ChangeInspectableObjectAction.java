@@ -3,6 +3,8 @@ package data.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -19,30 +21,28 @@ import data.InspectableObject;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Access(AccessType.PROPERTY)
 public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 
 	/**
 	 * All identifiers to be added.
 	 */
-	@ElementCollection
 	private List<String> identifiersToAdd;
 
 	/**
 	 * All identifiers to be removed.
 	 */
-	@ElementCollection
 	private List<String> identifiersToRemove;
 
 	/**
 	 * The new inspection text. If {@code null}, the old will not be changed.
 	 */
-	@Column(nullable = true)
 	private String newInspectionText;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #ChangeInspectableObjectAction(InspectableObject)}
+	 * @deprecated Use {@link #ChangeInspectableObjectAction(String, InspectableObject)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -50,24 +50,13 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 		init();
 	}
 
-	/**
+	/**@param name
+	 *            the name
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangeInspectableObjectAction(InspectableObject object) {
-		super(object);
-		init();
-	}
-
-	/**
-	 * @param object
-	 *            the object to be changed
-	 * @param enabled
-	 *            if the action should be enabled
-	 */
-	public ChangeInspectableObjectAction(InspectableObject object,
-			boolean enabled) {
-		super(object, enabled);
+	public ChangeInspectableObjectAction(String name, InspectableObject object) {
+		super(name, object);
 		init();
 	}
 
@@ -94,6 +83,7 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 	/**
 	 * @return the identifiersToAdd
 	 */
+	@ElementCollection
 	public List<String> getIdentifiersToAdd() {
 		return identifiersToAdd;
 	}
@@ -101,6 +91,7 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 	/**
 	 * @return the identifiersToRemove
 	 */
+	@ElementCollection
 	public List<String> getIdentifiersToRemove() {
 		return identifiersToRemove;
 	}
@@ -108,6 +99,7 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 	/**
 	 * @return the newInspectionText
 	 */
+	@Column(nullable = true)
 	public String getNewInspectionText() {
 		return newInspectionText;
 	}
@@ -199,8 +191,8 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 	}
 
 	@Override
-	public String getActionDescription() {
-		StringBuilder builder = new StringBuilder(super.getActionDescription());
+	public String actionDescription() {
+		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (newInspectionText != null) {
 			builder.append(" Setting inspection text to '")
 					.append(newInspectionText).append("'.");
