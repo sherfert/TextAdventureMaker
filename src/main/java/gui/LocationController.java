@@ -49,7 +49,9 @@ public class LocationController extends GameDataController {
 	 */
 	@Override
 	public Object controllerFactory(Class<?> type) {
-		if (type == NamedDescribedObjectController.class) {
+		if (type == NamedObjectController.class) {
+			return new NamedObjectController(currentGameManager, mwController, location);
+		} else if (type == NamedDescribedObjectController.class) {
 			return new NamedDescribedObjectController(currentGameManager, mwController, location);
 		} else {
 			return super.controllerFactory(type);

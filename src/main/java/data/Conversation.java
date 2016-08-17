@@ -9,8 +9,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -18,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import data.action.AbstractAction;
-import data.interfaces.HasId;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -33,12 +30,7 @@ import javafx.beans.property.StringProperty;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Conversation implements HasId {
-
-	/**
-	 * The id.
-	 */
-	private int id;
+public class Conversation extends NamedObject {
 
 	/**
 	 * The greeting from the Person.
@@ -50,13 +42,6 @@ public class Conversation implements HasId {
 	 * printed.
 	 */
 	private final StringProperty event;
-
-	/**
-	 * A name for the conversation. Only relevant for the GUI, not displayed
-	 * anywhere in the game. A conversation does not have a description and can
-	 * therefore not inherit from NamedObject.
-	 */
-	private final StringProperty name;
 
 	/**
 	 * If this conversation is enabled.
@@ -84,16 +69,14 @@ public class Conversation implements HasId {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #Conversation(String)} instead.
+	 * @deprecated Use {@link #Conversation(String, String)} instead.
 	 */
 	@Deprecated
 	public Conversation() {
 		this.event = new SimpleStringProperty();
 		this.greeting = new SimpleStringProperty();
-		this.name = new SimpleStringProperty();
 		this.enabled = new SimpleBooleanProperty();
-		this.layers = new ArrayList<>();
-		this.additionalActions = new ArrayList<>();
+		init();
 	}
 
 	/**
@@ -105,11 +88,11 @@ public class Conversation implements HasId {
 	 *            the greeting
 	 */
 	public Conversation(String name, String greeting) {
-		this();
-		this.name.set(name);
-		this.greeting.set(greeting);
-		this.event.set("");
-		this.enabled.set(true);
+		super(name);
+		this.event = new SimpleStringProperty("");
+		this.greeting = new SimpleStringProperty(greeting);
+		this.enabled = new SimpleBooleanProperty(true);
+		init();
 	}
 
 	/**
@@ -123,27 +106,19 @@ public class Conversation implements HasId {
 	 *            the event
 	 */
 	public Conversation(String name, String greeting, String event) {
-		this();
-		this.name.set(name);
-		this.greeting.set(greeting);
-		this.event.set(event);
-		this.enabled.set(true);
+		super(name);
+		this.event = new SimpleStringProperty(event);
+		this.greeting = new SimpleStringProperty(greeting);
+		this.enabled = new SimpleBooleanProperty(true);
+		init();
 	}
-
-	@Override
-	@Id
-	@GeneratedValue
-	public int getId() {
-		return id;
-	}
-
+	
 	/**
-	 * Just for the database.
+	 * Initializes the fields
 	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	private void setId(int id) {
-		this.id = id;
+	private final void init() {
+		this.layers = new ArrayList<>();
+		this.additionalActions = new ArrayList<>();
 	}
 
 	/**
@@ -190,29 +165,6 @@ public class Conversation implements HasId {
 	 */
 	public void setEvent(String event) {
 		this.event.set(event);
-	}
-
-	/**
-	 * @return the name
-	 */
-	@Column(nullable = false)
-	public String getName() {
-		return name.get();
-	}
-
-	/**
-	 * @return the name property
-	 */
-	public StringProperty nameProperty() {
-		return name;
-	}
-
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name.set(name);
 	}
 
 	/**
@@ -338,7 +290,7 @@ public class Conversation implements HasId {
 
 	@Override
 	public String toString() {
-		return "Conversation{id=" + id + ", greeting=" + greeting + ", event=" + event + ", enabled=" + enabled
+		return "Conversation{" + "greeting=" + greeting + ", event=" + event + ", enabled=" + enabled
 				+ ", additionalActionsIDs=" + NamedObject.getIDList(additionalActions) + ", layersIDs="
 				+ NamedObject.getIDList(layers) + ", startLayerID=" + (startLayer != null ? startLayer.getId() : "null")
 				+ "}";

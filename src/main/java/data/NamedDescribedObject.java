@@ -28,7 +28,7 @@ public abstract class NamedDescribedObject extends NamedObject {
 	
 	/**
 	 * No-arg constructor for the database. Use
-	 * {@link NamedDescribedObject#NamedDescribedObject(String, String)} instead.
+	 * {@link #NamedDescribedObject(String, String)} instead.
 	 */
 	@Deprecated
 	protected NamedDescribedObject() {

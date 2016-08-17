@@ -40,7 +40,6 @@ public class InspectableObjectController extends GameDataController {
 		// Create new bindings
 		editInspectionTextTA.textProperty().bindBidirectional(object.inspectionTextProperty());
 		editIdentifiersTA.setText(getListString(object.getIdentifiers()));
-
 		editIdentifiersTA.textProperty().addListener((f, o, n) -> updateList(n, object::setIdentifiers));
 	}
 }

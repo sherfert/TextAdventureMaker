@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
@@ -25,9 +24,6 @@ public class ConversationController extends GameDataController {
 
 	@FXML
 	private CheckBox editConversationEnabledCB;
-
-	@FXML
-	private TextField editNameTF;
 
 	@FXML
 	private TextArea editGreetingTA;
@@ -58,7 +54,6 @@ public class ConversationController extends GameDataController {
 		editConversationEnabledCB.setSelected(conversation.getEnabled());
 		editConversationEnabledCB.selectedProperty().addListener((f, o, n) -> conversation.setEnabled(n));
 
-		editNameTF.textProperty().bindBidirectional(conversation.nameProperty());
 		editGreetingTA.textProperty().bindBidirectional(conversation.greetingProperty());
 		editEventTA.textProperty().bindBidirectional(conversation.eventProperty());
 	}
@@ -68,6 +63,10 @@ public class ConversationController extends GameDataController {
 	 */
 	@Override
 	public Object controllerFactory(Class<?> type) {
-		return super.controllerFactory(type);
+		if (type == NamedObjectController.class) {
+			return new NamedObjectController(currentGameManager, mwController, conversation);
+		} else {
+			return super.controllerFactory(type);
+		}
 	}
 }

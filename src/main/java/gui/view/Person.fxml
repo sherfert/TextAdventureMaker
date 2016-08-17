@@ -13,8 +13,9 @@
 			<content>
 				<VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
 					<children>
-						<fx:include fx:id="namedObject" source="NamedObject.fxml" />
-						<fx:include fx:id="inspectableObject" source="InspectableObject.fxml" />
+						<fx:include source="NamedObject.fxml" />
+                  		<fx:include source="NamedDescribedObject.fxml" />
+						<fx:include source="InspectableObject.fxml" />
 						<Button fx:id="removeButton" minWidth="-Infinity"
 							mnemonicParsing="false" prefHeight="25.0" text="Delete this person" />
 					</children>

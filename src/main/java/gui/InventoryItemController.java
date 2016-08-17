@@ -45,7 +45,9 @@ public class InventoryItemController extends GameDataController {
 	 */
 	@Override
 	public Object controllerFactory(Class<?> type) {
-		if (type == NamedDescribedObjectController.class) {
+		if (type == NamedObjectController.class) {
+			return new NamedObjectController(currentGameManager, mwController, invitem);
+		} else if (type == NamedDescribedObjectController.class) {
 			return new NamedDescribedObjectController(currentGameManager, mwController, invitem);
 		} else if (type == InspectableObjectController.class) {
 			return new InspectableObjectController(currentGameManager, mwController, invitem);
