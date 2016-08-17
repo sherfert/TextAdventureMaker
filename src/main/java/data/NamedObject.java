@@ -20,7 +20,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Anything having a name and description.
+ * Anything having a name.
+ * 
+ * TODO overthink inhertitance strategy!
  *
  * @author Satia
  */
@@ -35,33 +37,26 @@ public abstract class NamedObject implements HasId {
 	private int id;
 
 	/**
-	 * The name.
+	 * The name. For classes that do not inherit from NamedDescribedObject, this
+	 * name is only relevant in the GUI, in will not be visible in the game.
 	 */
 	private final StringProperty name;
 
 	/**
-	 * The description. It is being displayed when the named object is e.g.
-	 * in the same location.
-	 */
-	private final StringProperty description;
-
-	/**
 	 * No-arg constructor for the database. Use
-	 * {@link NamedObject#NamedObject(String, String)} instead.
+	 * {@link NamedObject#NamedObject(String)} instead.
 	 */
 	@Deprecated
 	protected NamedObject() {
 		name = new SimpleStringProperty();
-		description = new SimpleStringProperty();
 	}
 
 	/**
-	 * @param name the name
-	 * @param description the description
+	 * @param name
+	 *            the name
 	 */
-	protected NamedObject(String name, String description) {
+	protected NamedObject(String name) {
 		this.name = new SimpleStringProperty(name);
-		this.description = new SimpleStringProperty(description);
 	}
 
 	@Override
@@ -70,7 +65,7 @@ public abstract class NamedObject implements HasId {
 	public int getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Just for the database.
 	 */
@@ -89,54 +84,34 @@ public abstract class NamedObject implements HasId {
 	}
 
 	/**
-	 * @return the description
-	 */
-	@Column(nullable = false)
-	public String getDescription() {
-		return description.get();
-	}
-
-	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name.set(name);
 	}
-	
+
 	/**
 	 * @return the name property
 	 */
 	public StringProperty nameProperty() {
-        return name;
-    }
-
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description.set(description);
+		return name;
 	}
-	
-	/**
-	 * @return the description property
-	 */
-	public StringProperty descriptionProperty() {
-        return description;
-    }
 
 	/**
 	 * @return a string representation of this object
 	 */
 	@Override
 	public String toString() {
-		return "NamedObject{" + "id=" + id + ", name=" + name + ", description=" + description + '}';
+		return "NamedObject{" + "id=" + id + ", name=" + name + '}';
 	}
 
 	/**
-	 * Helper function for toString methods. Instead of listing all members
-	 * of a list, only their IDs are Listed.
+	 * Helper function for toString methods. Instead of listing all members of a
+	 * list, only their IDs are Listed.
 	 *
-	 * @param originalList the original list
+	 * @param originalList
+	 *            the original list
 	 * @return the ID list
 	 */
 	@Transient
@@ -153,8 +128,10 @@ public abstract class NamedObject implements HasId {
 	 * Helper function for toString methods. Instead of listing the keys
 	 * directly, only their IDs are listed.
 	 *
-	 * @param <E> the  map value type
-	 * @param originalMap the original map
+	 * @param <E>
+	 *            the map value type
+	 * @param originalMap
+	 *            the original map
 	 * @return the ID map
 	 */
 	@Transient

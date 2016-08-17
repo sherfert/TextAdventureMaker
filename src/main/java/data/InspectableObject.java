@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Access(AccessType.PROPERTY)
-public abstract class InspectableObject extends NamedObject implements Inspectable {
+public abstract class InspectableObject extends NamedDescribedObject implements Inspectable {
 	
 	/**
 	 * All additional inspect actions.

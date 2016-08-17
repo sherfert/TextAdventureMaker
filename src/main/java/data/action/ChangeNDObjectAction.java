@@ -11,10 +11,10 @@ import javax.persistence.ManyToOne;
 
 import data.Game;
 import data.InspectableObject;
-import data.NamedObject;
+import data.NamedDescribedObject;
 
 /**
- * An action changing properties of a {@link NamedObject} .
+ * An action changing properties of a {@link NamedDescribedObject} .
  * 
  * FIXME not getting deleted, if the changed object is deleted (case: ChangeWayAction)
  * 
@@ -22,7 +22,7 @@ import data.NamedObject;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class ChangeNamedObjectAction extends AbstractAction {
+public class ChangeNDObjectAction extends AbstractAction {
 
 	/**
 	 * The new description. If {@code null}, the old will not be changed.
@@ -45,23 +45,23 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", //
 	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
-	private NamedObject object;
+	private NamedDescribedObject object;
 
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #ChangeNamedObjectAction(InspectableObject)}
+	 * @deprecated Use {@link #ChangeNDObjectAction(InspectableObject)}
 	 *             instead.
 	 */
 	@Deprecated
-	public ChangeNamedObjectAction() {
+	public ChangeNDObjectAction() {
 	}
 
 	/**
 	 * @param object
 	 *            the object to be changed
 	 */
-	public ChangeNamedObjectAction(NamedObject object) {
+	public ChangeNDObjectAction(NamedDescribedObject object) {
 		this.object = object;
 	}
 
@@ -71,7 +71,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	 * @param enabled
 	 *            if the action should be enabled
 	 */
-	public ChangeNamedObjectAction(NamedObject object, boolean enabled) {
+	public ChangeNDObjectAction(NamedDescribedObject object, boolean enabled) {
 		super(enabled);
 		this.object = object;
 	}
@@ -93,7 +93,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 	/**
 	 * @return the object
 	 */
-	public NamedObject getObject() {
+	public NamedDescribedObject getObject() {
 		return object;
 	}
 
@@ -126,7 +126,7 @@ public class ChangeNamedObjectAction extends AbstractAction {
 
 	@Override
 	public String toString() {
-		return "ChangeNamedObjectAction{" + "newDescription=" + newDescription
+		return "ChangeNDObjectAction{" + "newDescription=" + newDescription
 				+ ", newName=" + newName + ", objectID=" + object.getId() + " "
 				+ super.toString() + '}';
 	}

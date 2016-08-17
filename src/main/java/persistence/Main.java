@@ -22,7 +22,7 @@ import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeInvItemCombinationAction;
 import data.action.ChangeInvItemUsageAction;
 import data.action.ChangeItemAction;
-import data.action.ChangeNamedObjectAction;
+import data.action.ChangeNDObjectAction;
 import data.action.ChangePersonAction;
 import data.action.ChangeWayAction;
 import data.action.EndGameAction;
@@ -63,11 +63,11 @@ public class Main {
 		Location balcony = new Location("Balcony", "Your balcony. Sitting on the chair you can look at the sunset.");
 		Location voidLoc = new Location("Void", "You jump into the black hole and die. Well done!");
 
-		ChangeNamedObjectAction changeBalconyDescriptionAction = new ChangeNamedObjectAction(balcony);
+		ChangeNDObjectAction changeBalconyDescriptionAction = new ChangeNDObjectAction(balcony);
 		changeBalconyDescriptionAction
 				.setNewDescription("Your balcony. Standing around stupidly you can look at the sunset.");
 
-		ChangeNamedObjectAction changeFlatDescriptionAction = new ChangeNamedObjectAction(flat);
+		ChangeNDObjectAction changeFlatDescriptionAction = new ChangeNDObjectAction(flat);
 		changeFlatDescriptionAction.setNewDescription(
 				"Your little home. But now, that you know the answer to everything, you take a completely different look at things.");
 
@@ -452,7 +452,7 @@ public class Main {
 		///////////////////////
 		// Additional test data
 		Location locToDel = new Location("Del me", "pls");
-		ChangeNamedObjectAction cltd = new ChangeNamedObjectAction(locToDel);
+		ChangeNDObjectAction cltd = new ChangeNDObjectAction(locToDel);
 		cltd.setNewName("Did ja del me?");
 		Item thing = new Item(locToDel, "Thing", "useless");
 		

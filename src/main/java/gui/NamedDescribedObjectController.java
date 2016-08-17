@@ -1,20 +1,22 @@
 package gui;
 
-import data.NamedObject;
+import data.NamedDescribedObject;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
- * Controller for one named object
+ * Controller for one named object.
+ * 
+ * TODO also a NamedObjectController?
  * 
  * @author Satia
  */
-public class NamedObjectController extends GameDataController {
+public class NamedDescribedObjectController extends GameDataController {
 
-	/** The named object */
-	private NamedObject object;
+	/** The object */
+	private NamedDescribedObject object;
 
 	@FXML
 	private TextField editNameTF;
@@ -28,7 +30,7 @@ public class NamedObjectController extends GameDataController {
 	 * @param object
 	 *            the object to edit
 	 */
-	public NamedObjectController(CurrentGameManager currentGameManager, MainWindowController mwController, NamedObject object) {
+	public NamedDescribedObjectController(CurrentGameManager currentGameManager, MainWindowController mwController, NamedDescribedObject object) {
 		super(currentGameManager, mwController);
 		this.object = object;
 	}

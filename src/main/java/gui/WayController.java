@@ -69,8 +69,8 @@ public class WayController extends GameDataController {
 	 */
 	@Override
 	public Object controllerFactory(Class<?> type) {
-		if (type == NamedObjectController.class) {
-			return new NamedObjectController(currentGameManager, mwController, way);
+		if (type == NamedDescribedObjectController.class) {
+			return new NamedDescribedObjectController(currentGameManager, mwController, way);
 		} else if (type == InspectableObjectController.class) {
 			return new InspectableObjectController(currentGameManager, mwController, way);
 		} else {

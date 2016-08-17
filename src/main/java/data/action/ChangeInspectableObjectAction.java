@@ -19,7 +19,7 @@ import data.InspectableObject;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class ChangeInspectableObjectAction extends ChangeNamedObjectAction {
+public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 
 	/**
 	 * All identifiers to be added.

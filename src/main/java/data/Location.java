@@ -22,7 +22,7 @@ import data.interfaces.Inspectable;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Location extends NamedObject {
+public class Location extends NamedDescribedObject {
 
 	/**
 	 * The items located here.
