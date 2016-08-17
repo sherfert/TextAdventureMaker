@@ -11,8 +11,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -22,7 +20,6 @@ import javax.persistence.OneToOne;
 import data.action.AbstractAction;
 import data.action.AbstractAction.Enabling;
 import data.action.ChangeConversationOptionAction;
-import data.interfaces.HasId;
 
 /**
  * An option in a conversation. The player can choose between options to say in
@@ -32,12 +29,7 @@ import data.interfaces.HasId;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class ConversationOption implements HasId {
-
-	/**
-	 * The id.
-	 */
-	private int id;
+public class ConversationOption extends NamedObject {
 
 	/**
 	 * The text the player says when choosing that option.
@@ -84,7 +76,7 @@ public class ConversationOption implements HasId {
 	 * No ON CASCADE definitions, since this field is not accessible.
 	 */
 	// XXX why not unnullable?
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn
 	@Access(AccessType.FIELD)
 	private ChangeConversationOptionAction disableAction;
@@ -93,14 +85,12 @@ public class ConversationOption implements HasId {
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ConversationOption(String, String, ConversationLayer)}
+	 *             {@link #ConversationOption(String, String, String, ConversationLayer)}
 	 *             instead.
 	 */
 	@Deprecated
 	public ConversationOption() {
-		this.additionalActions = new ArrayList<>();
-		this.disableAction = new ChangeConversationOptionAction(this, false);
-		this.disableAction.setEnabling(Enabling.DISABLE);
+		init();
 	}
 
 	/**
@@ -108,6 +98,8 @@ public class ConversationOption implements HasId {
 	 * No event text. By default, the option will not disappear after being
 	 * chosen once.
 	 * 
+	 * @param name
+	 *            the name
 	 * @param text
 	 *            the text
 	 * @param answer
@@ -115,13 +107,14 @@ public class ConversationOption implements HasId {
 	 * @param target
 	 *            the target
 	 */
-	public ConversationOption(String text, String answer, ConversationLayer target) {
-		this();
+	public ConversationOption(String name, String text, String answer, ConversationLayer target) {
+		super(name);
 		this.text = text;
 		this.answer = answer;
 		this.event = "";
 		this.target = target;
 		this.enabled = true;
+		init();
 	}
 
 	/**
@@ -138,29 +131,23 @@ public class ConversationOption implements HasId {
 	 * @param target
 	 *            the target
 	 */
-	public ConversationOption(String text, String answer, String event, ConversationLayer target) {
-		this();
+	public ConversationOption(String name, String text, String answer, String event, ConversationLayer target) {
+		super(name);
 		this.text = text;
 		this.answer = answer;
 		this.event = event;
 		this.target = target;
 		this.enabled = true;
+		init();
 	}
-
-	@Override
-	@Id
-	@GeneratedValue
-	public int getId() {
-		return id;
-	}
-
+	
 	/**
-	 * Just for the database.
+	 * Initializes the fields
 	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	private void setId(int id) {
-		this.id = id;
+	private final void init() {
+		this.additionalActions = new ArrayList<>();
+		this.disableAction = new ChangeConversationOptionAction(this, false);
+		this.disableAction.setEnabling(Enabling.DISABLE);
 	}
 
 	/**
@@ -214,7 +201,7 @@ public class ConversationOption implements HasId {
 	/**
 	 * @return the additionalActions
 	 */
-	@ManyToMany(cascade = {CascadeType.PERSIST})
+	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "CONVOP_AA", foreignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_S", //
 	foreignKeyDefinition = "FOREIGN KEY (ConversationOption_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_D", //
@@ -321,9 +308,10 @@ public class ConversationOption implements HasId {
 
 	@Override
 	public String toString() {
-		return "ConversationOption{id=" + id + ", text=" + text + ", answer=" + answer + ", event=" + event
+		return "ConversationOption{" + "text=" + text + ", answer=" + answer + ", event=" + event
 				+ ", additionalActionsIDs=" + NamedObject.getIDList(additionalActions) + ", enabled=" + enabled
-				+ ", targetID=" + target.getId() + ", disableActionID=" + disableAction.getId() + "}";
+				+ ", targetID=" + target.getId() + ", disableActionID=" + disableAction.getId() + " " + super.toString()
+				+ "}";
 	}
 
 }

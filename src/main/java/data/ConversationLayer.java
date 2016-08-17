@@ -8,13 +8,9 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import data.interfaces.HasId;
 
 /**
  * A layer has a list of options to choose from.
@@ -23,12 +19,7 @@ import data.interfaces.HasId;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class ConversationLayer implements HasId {
-
-	/**
-	 * The id.
-	 */
-	private int id;
+public class ConversationLayer extends NamedObject {
 
 	/**
 	 * The options of this layer. Options can only belong to one layer.
@@ -36,32 +27,30 @@ public class ConversationLayer implements HasId {
 	private List<ConversationOption> options;
 
 	/**
-	 * Create a new conversation layer.
+	 * No-arg constructor for the database.
+	 * 
+	 * @deprecated Use {@link #ConversationLayer(String)} instead.
 	 */
+	@Deprecated
 	public ConversationLayer() {
 		this.options = new ArrayList<>();
 	}
 
-	@Id
-	@GeneratedValue
-	@Override
-	public int getId() {
-		return id;
-	}
-
 	/**
-	 * Just for the database.
+	 * Create a new conversation layer.
+	 * 
+	 * @param name
+	 *            the name
 	 */
-	@SuppressWarnings("unused")
-	@Deprecated
-	private void setId(int id) {
-		this.id = id;
+	public ConversationLayer(String name) {
+		super(name);
+		this.options = new ArrayList<>();
 	}
 
 	/**
 	 * @return the options
 	 */
-	@OneToMany(cascade = {CascadeType.PERSIST})
+	@OneToMany(cascade = { CascadeType.PERSIST })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CONVERSATIONLAYER_OPTIONS", //
 	foreignKeyDefinition = "FOREIGN KEY (OPTIONS_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE CASCADE") )
 	public List<ConversationOption> getOptions() {
@@ -143,8 +132,7 @@ public class ConversationLayer implements HasId {
 
 	@Override
 	public String toString() {
-		return "ConversationLayer{id=" + id + ", optionsIDs="
-				+ NamedObject.getIDList(options) + "}";
+		return "ConversationLayer{" + "optionsIDs=" + NamedObject.getIDList(options) + " " + super.toString() + "}";
 	}
 
 }

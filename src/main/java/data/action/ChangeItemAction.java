@@ -47,7 +47,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEITEMACTION_NEWLOCATION", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
+	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newLocation;
 
 	/**
@@ -76,7 +76,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	@JoinTable(name="CIA_PITA", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_S", //
 	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToAdd_D", //
-	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToAdd_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToAdd_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItemsToAdd;
 
 	/**
@@ -86,7 +86,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	@JoinTable(name="CIA_PITR", foreignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_S", //
 	foreignKeyDefinition = "FOREIGN KEY (ChangeItemAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CIA_pickUpItemsToRemove_D", //
-	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToRemove_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItemsToRemove_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItemsToRemove;
 
 	/**

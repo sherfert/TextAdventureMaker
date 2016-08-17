@@ -22,7 +22,7 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_REMOVEINVENTORYITEMACTION_ITEM", //
-	foreignKeyDefinition = "FOREIGN KEY (ITEM_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (ITEM_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem item;
 
 	/**

@@ -59,7 +59,7 @@ public class Way extends InspectableObject implements Travelable {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_DESTINATION", //
-	foreignKeyDefinition = "FOREIGN KEY (DESTINATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (DESTINATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Location destination;
 
@@ -68,7 +68,7 @@ public class Way extends InspectableObject implements Travelable {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_ORIGIN", //
-	foreignKeyDefinition = "FOREIGN KEY (ORIGIN_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (ORIGIN_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Location origin;
 
@@ -128,7 +128,7 @@ public class Way extends InspectableObject implements Travelable {
 	@Override
 	@ManyToMany(cascade = {CascadeType.PERSIST})
 	@JoinTable(name = "WAY_AMA",foreignKey = @ForeignKey(name = "FK_WAY_ADDITIONALMOVEACTIONS_S", //
-	foreignKeyDefinition = "FOREIGN KEY (Way_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (Way_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_WAY_ADDITIONALMOVEACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalMoveActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getAdditionalMoveActions() {

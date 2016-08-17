@@ -83,7 +83,7 @@ public class Conversation extends NamedObject {
 	 * An enabled conversation with no layers yet.
 	 * 
 	 * @param name
-	 *            the name 
+	 *            the name
 	 * @param greeting
 	 *            the greeting
 	 */
@@ -99,7 +99,7 @@ public class Conversation extends NamedObject {
 	 * An enabled conversation with no layers yet.
 	 * 
 	 * @param name
-	 *            the name 
+	 *            the name
 	 * @param greeting
 	 *            the greeting
 	 * @param event
@@ -112,7 +112,7 @@ public class Conversation extends NamedObject {
 		this.enabled = new SimpleBooleanProperty(true);
 		init();
 	}
-	
+
 	/**
 	 * Initializes the fields
 	 */
@@ -293,7 +293,7 @@ public class Conversation extends NamedObject {
 		return "Conversation{" + "greeting=" + greeting + ", event=" + event + ", enabled=" + enabled
 				+ ", additionalActionsIDs=" + NamedObject.getIDList(additionalActions) + ", layersIDs="
 				+ NamedObject.getIDList(layers) + ", startLayerID=" + (startLayer != null ? startLayer.getId() : "null")
-				+ "}";
+				+ " " + super.toString() + "}";
 	}
 
 }

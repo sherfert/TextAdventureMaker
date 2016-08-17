@@ -104,7 +104,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	@Override
 	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "USABLEOBJ_AUA",foreignKey = @ForeignKey(name = "FK_USABLEOBJECT_ADDITIONALUSEACTIONS_S", //
-	foreignKeyDefinition = "FOREIGN KEY (UsableObject_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (UsableObject_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_USABLEOBJECT_ADDITIONALUSEACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalUseActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getAdditionalUseActions() {

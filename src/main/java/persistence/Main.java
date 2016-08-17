@@ -145,47 +145,47 @@ public class Main {
 		/*
 		 * The normal conversation with Satia.
 		 */
-		ConversationLayer startLayer = new ConversationLayer();
-		ConversationLayer csLayer = new ConversationLayer();
+		ConversationLayer startLayer = new ConversationLayer("sL");
+		ConversationLayer csLayer = new ConversationLayer("csL");
 
 		startLayer.addOption(new ConversationOption("Why so hostile?",
 				"Just TextAdventureMaker is harder to code than I though!", "He looks really annoyed!", startLayer));
-		startLayer.addOption(new ConversationOption("Let's talk about computer science.", "Ask me anything.", csLayer));
-		startLayer.addOption(new ConversationOption("I'm gonne leave you now.", "Finally.", null));
+		startLayer.addOption(new ConversationOption("cs", "Let's talk about computer science.", "Ask me anything.", csLayer));
+		startLayer.addOption(new ConversationOption("bye", "I'm gonne leave you now.", "Finally.", null));
 		// An option that finishes the game
-		ConversationOption endGameOption = new ConversationOption("Fuck this. Ima quit!",
+		ConversationOption endGameOption = new ConversationOption("", "Fuck this. Ima quit!",
 				"Quit what? Don't tell me I ended up in a game! Please not!", null);
 		endGameOption.addAdditionalAction(new EndGameAction());
 		startLayer.addOption(endGameOption);
 
-		ConversationOption option42 = new ConversationOption(
+		ConversationOption option42 = new ConversationOption("FT", 
 				"What is the answer to the Ultimate Question of Life, the Universe, and Everything? "
 						+ "Additionally, here is some text to make it cover two lines.",
 				"42", csLayer);
 		option42.addAdditionalAction(changeFlatDescriptionAction);
 		csLayer.addOption(option42);
-		csLayer.addOption(new ConversationOption("Is Java also an island?", "That's just a rumor.", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like Java?", "Plenty", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like C#?", "It's OK", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like C++?", "I can accomodate", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like C?", "Not really", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like Assembler?", "It's cool, but I'm not crazy.", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like Python?", "I recommend you a gif a made", csLayer));
-		csLayer.addOption(new ConversationOption(
+		csLayer.addOption(new ConversationOption("JI", "Is Java also an island?", "That's just a rumor.", csLayer));
+		csLayer.addOption(new ConversationOption("J", "Do you like Java?", "Plenty", csLayer));
+		csLayer.addOption(new ConversationOption("CCC", "Do you like C#?", "It's OK", csLayer));
+		csLayer.addOption(new ConversationOption("CC", "Do you like C++?", "I can accomodate", csLayer));
+		csLayer.addOption(new ConversationOption("C", "Do you like C?", "Not really", csLayer));
+		csLayer.addOption(new ConversationOption("A", "Do you like Assembler?", "It's cool, but I'm not crazy.", csLayer));
+		csLayer.addOption(new ConversationOption("P", "Do you like Python?", "I recommend you a gif a made", csLayer));
+		csLayer.addOption(new ConversationOption("3L", 
 				"Do you like this threeliner that had to come somewhere "
 						+ "in order to test the conversation option chosing mechasnism for a hell of a lot of options properly "
 						+ "and also with options that are way too long and nobody will ever read them? Assholes! "
 						+ "Still not long enough - need to add some more bullshit. That should do it!",
 				"What!?!", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like Whitespace?", "I never find the code", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like Brainfuck?", "I prefer to fuck other things", csLayer));
-		csLayer.addOption(new ConversationOption("Do you like Perl?", "Hell no", csLayer));
-		ConversationOption disappearingOption = new ConversationOption("I am never gonna say this again.", "What!?",
+		csLayer.addOption(new ConversationOption("WS", "Do you like Whitespace?", "I never find the code", csLayer));
+		csLayer.addOption(new ConversationOption("BF", "Do you like Brainfuck?", "I prefer to fuck other things", csLayer));
+		csLayer.addOption(new ConversationOption("PL", "Do you like Perl?", "Hell no", csLayer));
+		ConversationOption disappearingOption = new ConversationOption("NV", "I am never gonna say this again.", "What!?",
 				csLayer);
 		disappearingOption.setDisablingOptionAfterChosen(true);
 		csLayer.addOption(disappearingOption);
 		csLayer.addOption(
-				new ConversationOption("Actually I don't like computer science so much.", "Well", startLayer));
+				new ConversationOption("NO", "Actually I don't like computer science so much.", "Well", startLayer));
 
 		satiaConversation.addLayer(startLayer);
 		satiaConversation.addLayer(csLayer);

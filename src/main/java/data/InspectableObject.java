@@ -91,7 +91,7 @@ public abstract class InspectableObject extends NamedDescribedObject implements 
 	@Override
 	@ManyToMany(cascade = {CascadeType.PERSIST})
 	@JoinTable(name = "INSPOBJ_AIA", foreignKey = @ForeignKey(name = "FK_INSPECTABLEOBJECT_ADDITIONAINSPECTACTIONS_S", //
-	foreignKeyDefinition = "FOREIGN KEY (InspectableObject_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (InspectableObject_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_INSPECTABLEOBJECT_ADDITIONAINSPECTACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalInspectActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getAdditionalInspectActions() {

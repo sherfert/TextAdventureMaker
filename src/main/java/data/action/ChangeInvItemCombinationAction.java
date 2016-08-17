@@ -34,7 +34,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM1", //
-	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM1_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM1_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem inventoryItem1;
 
 	/**
@@ -42,7 +42,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM2", //
-	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM2_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM2_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private InventoryItem inventoryItem2;
 
 	/**
@@ -66,7 +66,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	@JoinTable(name="CIICA_CTA", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_S", //
 	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_D", //
-	foreignKeyDefinition = "FOREIGN KEY (combinablesToAdd_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (combinablesToAdd_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> combinablesToAdd;
 
 	/**
@@ -76,7 +76,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	@JoinTable(name="CIICA_CTR", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_S", //
 	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_D", //
-	foreignKeyDefinition = "FOREIGN KEY (combinablesToRemove_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (combinablesToRemove_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> combinablesToRemove;
 
 	/**

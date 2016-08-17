@@ -64,7 +64,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_ITEM_LOCATION", //
-	foreignKeyDefinition = "FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
+	foreignKeyDefinition = "FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	@Access(AccessType.FIELD)
 	private Location location;
 
@@ -159,7 +159,7 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "ITEM_ATA", foreignKey = @ForeignKey(name = "FK_ITEM_ADDITIONALTAKEACTIONS_S", //
-	foreignKeyDefinition = "FOREIGN KEY (Item_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (Item_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_ITEM_ADDITIONALTAKEACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalTakeActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	public List<AbstractAction> getAdditionalTakeActions() {

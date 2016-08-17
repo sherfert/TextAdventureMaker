@@ -36,7 +36,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_PERSON_LOCATION", foreignKeyDefinition = //
-	"FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
+	"FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	@Access(AccessType.FIELD)
 	private Location location;
 

@@ -44,7 +44,7 @@ public class ChangeNDObjectAction extends AbstractAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", //
-	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private NamedDescribedObject object;
 
 	/**

@@ -42,7 +42,7 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEPERSONACTION_NEWLOCATION", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
+	foreignKeyDefinition = "FOREIGN KEY (NEWLOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newLocation;
 
 	/**

@@ -23,7 +23,7 @@ public class MoveAction extends AbstractAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, foreignKey=@ForeignKey(name="FK_MOVEACTION_TARGET", //
-	foreignKeyDefinition="FOREIGN KEY (TARGET_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE"))
+	foreignKeyDefinition="FOREIGN KEY (TARGET_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE"))
 	private Location target;
 
 	/**

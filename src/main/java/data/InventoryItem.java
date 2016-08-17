@@ -258,11 +258,11 @@ public class InventoryItem extends UsableObject implements
 	 */
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_S", //
-	foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_D", //
 	foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_KEY) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
 
@@ -276,9 +276,9 @@ public class InventoryItem extends UsableObject implements
 	 */
 	@OneToMany(cascade = {CascadeType.PERSIST})
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands", //
-	foreignKeyDefinition = "FOREIGN KEY (ADDITIONALCOMBINECOMMANDS_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (ADDITIONALCOMBINECOMMANDS_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (additionalCombineCommands_KEY) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (additionalCombineCommands_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombineCommands> additionalCombineCommands;
 
@@ -291,9 +291,9 @@ public class InventoryItem extends UsableObject implements
 	 */
 	@OneToMany(cascade = {CascadeType.PERSIST})
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usableItems", //
-	foreignKeyDefinition = "FOREIGN KEY (usableItems_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (usableItems_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usableItems_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (usableItems_KEY) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (usableItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<Item, UsableHasLocation> usableItems;
 
@@ -306,9 +306,9 @@ public class InventoryItem extends UsableObject implements
 	 */
 	@OneToMany(cascade = {CascadeType.PERSIST})
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usablePersons", //
-	foreignKeyDefinition = "FOREIGN KEY (usablePersons_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (usablePersons_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usablePersons_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (usablePersons_KEY) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (usablePersons_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<Person, UsableHasLocation> usablePersons;
 

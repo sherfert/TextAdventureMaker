@@ -28,7 +28,7 @@ public class AddInventoryItemsAction extends AbstractAction {
 	@JoinTable(name = "AIIA_PI", foreignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_S", //
 	foreignKeyDefinition = "FOREIGN KEY (AddInventoryItemsAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_D", //
-	foreignKeyDefinition = "FOREIGN KEY (pickUpItems_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (pickUpItems_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private List<InventoryItem> pickUpItems;
 
 	/**

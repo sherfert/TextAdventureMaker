@@ -39,7 +39,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWORIGIN", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWORIGIN_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
+	foreignKeyDefinition = "FOREIGN KEY (NEWORIGIN_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newOrigin;
 	
 	/**
@@ -47,7 +47,7 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CHANGEWAYACTION_NEWDESTINATION", //
-	foreignKeyDefinition = "FOREIGN KEY (NEWDESTINATION_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE SET NULL") )
+	foreignKeyDefinition = "FOREIGN KEY (NEWDESTINATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	private Location newDestination;
 
 	/**

@@ -2,7 +2,7 @@ package data.action;
 
 import data.Game;
 import data.InventoryItem;
-import data.NamedObject;
+import data.NamedDescribedObject;
 import data.interfaces.HasLocation;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,16 +28,16 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_INVENTORYITEM", //
-	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )	
+	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )	
 	private InventoryItem inventoryItem;
 
-	// Specify the common supertype
+	// Specify the common supertype: NamedDescribedObject
 	/**
 	 * The person or item.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedObject.class)
+	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedDescribedObject.class)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", //
-	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	private HasLocation object;
 
 	/**
