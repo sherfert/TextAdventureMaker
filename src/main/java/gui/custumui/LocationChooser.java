@@ -21,7 +21,6 @@ import logic.CurrentGameManager;
  * {@link LocationChooser#initialize(List, Location, CurrentGameManager, Consumer)}
  * , otherwise it behaves just as a normal TextField.
  * 
- * 
  * @author satia
  */
 public class LocationChooser extends TextField {
@@ -38,6 +37,9 @@ public class LocationChooser extends TextField {
 	/** The action executed when a new location is chosen */
 	private Consumer<Location> newLocationChosenAction;
 
+	/** Whether null is an allowed location in the given context */
+	private boolean allowNull;
+
 	/**
 	 * Converts between locations and Strings
 	 */
@@ -45,7 +47,7 @@ public class LocationChooser extends TextField {
 		@Override
 		public String toString(Location loc) {
 			if (loc == null) {
-				return "";
+				return "(no location)";
 			} else {
 				return loc.getName() + " - ID: " + loc.getId();
 			}
@@ -53,6 +55,9 @@ public class LocationChooser extends TextField {
 
 		@Override
 		public Location fromString(String s) {
+			if (s.equals("(no location)")) {
+				return null;
+			}
 			Pattern regex = Pattern.compile(".*?(\\d+)$");
 			Matcher matcher = regex.matcher(s);
 
@@ -61,7 +66,8 @@ public class LocationChooser extends TextField {
 
 				int id = Integer.parseInt(match);
 				try {
-					return currentGameManager.getPersistenceManager().getAllObjectsManager().getObject(Location.class, id);
+					return currentGameManager.getPersistenceManager().getAllObjectsManager().getObject(Location.class,
+							id);
 				} catch (DBClosedException e) {
 					Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
 							"Cannot convert string to location: DB closed");
@@ -78,31 +84,38 @@ public class LocationChooser extends TextField {
 	 * 
 	 * @param initialLocation
 	 *            the initial location to choose
+	 * @param allowNull
+	 *            whether null is an allowed location in the given context
 	 * @param currentGameManager
 	 *            the current game manager
 	 * @param newLocationChosenAction
 	 *            the action executed when a new location is chosen
 	 */
-	public void initialize(Location initialLocation,
-			CurrentGameManager currentGameManager, Consumer<Location> newLocationChosenAction) {
+	public void initialize(Location initialLocation, boolean allowNull, CurrentGameManager currentGameManager,
+			Consumer<Location> newLocationChosenAction) {
 		this.currentGameManager = currentGameManager;
 		this.newLocationChosenAction = newLocationChosenAction;
-		
+		this.allowNull = allowNull;
+
 		// Retrieve all available locations
 		try {
-			this.availableLocations = this.currentGameManager.getPersistenceManager().getLocationManager().getAllLocations();
+			this.availableLocations = this.currentGameManager.getPersistenceManager().getLocationManager()
+					.getAllLocations();
 		} catch (DBClosedException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"Abort: DB closed");
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 			return;
+		}
+		// If we allow null, we must add it to the list
+		if (this.allowNull) {
+			this.availableLocations.add(0, null);
 		}
 
 		// Enable autocompletion with all available locations
 		TextFields.bindAutoCompletion(this,
 				(isr) -> this.availableLocations.stream()
-						.filter(loc -> loc.getName().toLowerCase().contains(isr.getUserText().toLowerCase()))
-						.collect(Collectors.toList()),
-				locationConverter);
+						.filter(loc -> (loc == null && isr.getUserText().isEmpty()) || (loc != null
+								&& loc.getName().toLowerCase().contains(isr.getUserText().toLowerCase())))
+				.collect(Collectors.toList()), locationConverter);
 
 		// Set initial location
 		this.currentSelection = initialLocation;
@@ -111,7 +124,7 @@ public class LocationChooser extends TextField {
 		// Listen for text changes
 		this.textProperty().addListener((f, o, n) -> {
 			Location newLoc = locationConverter.fromString(n);
-			if (newLoc != null) {
+			if (newLoc != null || this.allowNull) {
 				this.currentSelection = newLoc;
 				// Execute the action when a new location is chosen
 				this.newLocationChosenAction.accept(newLoc);
@@ -124,13 +137,12 @@ public class LocationChooser extends TextField {
 			if (!n) {
 				// textField lost focus
 				Location newLoc = locationConverter.fromString(this.getText());
-				if (newLoc == null) {
+				if (newLoc == null && !this.allowNull) {
 					// No valid location, restore the old selection
 					this.setText(locationConverter.toString(currentSelection));
 				} else {
 					// Valid location, but the user might have typed just the
-					// id:
-					// Put the correct string in place
+					// id: Put the correct string in place
 					this.setText(locationConverter.toString(newLoc));
 				}
 			}

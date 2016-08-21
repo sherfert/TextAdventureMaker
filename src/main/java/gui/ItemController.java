@@ -1,6 +1,7 @@
 package gui;
 
 import data.Item;
+import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -11,7 +12,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one item.
  * 
- * TODO Support to change removeItem, location, additionalTakeActions,
+ * TODO Support to change removeItem, additionalTakeActions,
  * pickUpItems
  * 
  * @author Satia
@@ -20,6 +21,9 @@ public class ItemController extends GameDataController {
 
 	/** The item */
 	private Item item;
+
+	@FXML
+	private LocationChooser locationChooser;
 
 	@FXML
 	private Button removeButton;
@@ -53,6 +57,10 @@ public class ItemController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
+		locationChooser.initialize(
+				item.getLocation(),
+				true, currentGameManager, item::setLocation);
+		
 		removeButton.setOnMouseClicked(
 				(e) -> removeObject(item, "Deleting an item", "Do you really want to delete this item?",
 						"This will delete the item, usage information of inventory items with this item, "
