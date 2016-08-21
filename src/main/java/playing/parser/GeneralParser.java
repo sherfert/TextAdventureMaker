@@ -1,10 +1,10 @@
 package playing.parser;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -52,72 +52,61 @@ public class GeneralParser {
 	 * @author Satia
 	 */
 	public enum CommandType {
-		// FIXME use function refs!
 		/** Use one item with another or combine two items */
-		USEWITHCOMBINE("getUseWithCombineCommands",
-				"getUseWithCombineHelpText", UseWithCombine.class, 2), //
+		USEWITHCOMBINE(Game::getUseWithCombineCommands, Game::getUseWithCombineHelpText, UseWithCombine.class, 2), //
 		/** Move around */
-		MOVE("getMoveCommands", "getMoveHelpText", Move.class, 1), //
+		MOVE(Game::getMoveCommands, Game::getMoveHelpText, Move.class, 1), //
 		/** Take something */
-		TAKE("getTakeCommands", "getTakeHelpText", Take.class, 1), //
+		TAKE(Game::getTakeCommands, Game::getTakeHelpText, Take.class, 1), //
 		/** Use something */
-		USE("getUseCommands", "getUseHelpText", Use.class, 1), //
+		USE(Game::getUseCommands, Game::getUseHelpText, Use.class, 1), //
 		/** Talk to someone */
-		TALKTO("getTalkToCommands", "getTalkToHelpText", TalkTo.class, 1), //
+		TALKTO(Game::getTalkToCommands, Game::getTalkToHelpText, TalkTo.class, 1), //
 		/** Look around */
-		LOOKAROUND("getLookAroundCommands", "getLookAroundHelpText",
-				LookAround.class, 0), //
+		LOOKAROUND(Game::getLookAroundCommands, Game::getLookAroundHelpText, LookAround.class, 0), //
 		/** Inspect something */
-		INSPECT("getInspectCommands", "getInspectHelpText", Inspect.class, 1), //
+		INSPECT(Game::getInspectCommands, Game::getInspectHelpText, Inspect.class, 1), //
 		/** Look into the inventory */
-		INVENTORY("getInventoryCommands", "getInventoryHelpText",
-				Inventory.class, 0), //
+		INVENTORY(Game::getInventoryCommands, Game::getInventoryHelpText, Inventory.class, 0), //
 		/** Get help */
-		HELP("getHelpCommands", "getHelpHelpText", Help.class, 0);
+		HELP(Game::getHelpCommands, Game::getHelpHelpText, Help.class, 0);
 
 		/**
-		 * The name of the method that gets the valid commands. Must be a method
-		 * of the class {@link Game} with no parameters and List of String as
-		 * return type.
+		 * The method that gets the valid commands.
 		 */
-		public final String commandMethodName;
+		public final Function<Game, List<String>> commandMethod;
 
 		/**
-		 * The name of the method that gets the help text for that commandType.
-		 * Must be a method of the class {@link Game} with no parameters and
-		 * String as return type.
+		 * The method that gets the help text for that commandType.
 		 */
-		public final String helpTextMethodName;
+		public final Function<Game, String> helpTextMethod;
 
 		/**
 		 * The concrete class of the command implementing the functionality of
 		 * this command type.
 		 */
 		public final Class<? extends Command> commandClass;
-		
+
 		/**
 		 * The number of parameters the command expects.
 		 */
 		public final int numberOfParameters;
 
 		/**
-		 * @param commandMethodName
-		 *            The name of the method that gets the valid commands. Must
-		 *            be a method of the class {@link Game} with no parameters
-		 *            and List of Strings as return type.
-		 * @param helpTextMethodName
-		 *            the name of the method that gets the help text for that
-		 *            commandType. Must be a method of the class {@link Game}
-		 *            with no parameters and String as return type.
+		 * @param commandMethod
+		 *            The method that gets the valid commands.
+		 * @param helpTextMethod
+		 *            The method that gets the help text for that commandType.
 		 * @param commandClass
 		 *            the concrete class of the command implementing the
 		 *            functionality of this command type.
-		 * @param numberOfParameters the number of parameters the command expects.
+		 * @param numberOfParameters
+		 *            the number of parameters the command expects.
 		 */
-		private CommandType(String commandMethodName,
-				String helpTextMethodName, Class<? extends Command> commandClass, int numberOfParameters) {
-			this.commandMethodName = commandMethodName;
-			this.helpTextMethodName = helpTextMethodName;
+		private CommandType(Function<Game, List<String>> commandMethod, Function<Game, String> helpTextMethod,
+				Class<? extends Command> commandClass, int numberOfParameters) {
+			this.commandMethod = commandMethod;
+			this.helpTextMethod = helpTextMethod;
 			this.commandClass = commandClass;
 			this.numberOfParameters = numberOfParameters;
 		}
@@ -164,38 +153,23 @@ public class GeneralParser {
 		 * @param commandType
 		 *            the commandType
 		 */
-		@SuppressWarnings("unchecked")
 		public CommandRecExec(CommandType commandType) {
 			this.commandType = commandType;
 			this.command = gamePlayer.getCommand(commandType.commandClass);
 
+			this.textualCommands = commandType.commandMethod.apply(gamePlayer.getGame());
+			this.pattern = PatternGenerator.getPattern(this.textualCommands);
+
+			Set<String> commands;
 			try {
-				this.textualCommands = (List<String>) Game.class
-						.getDeclaredMethod(commandType.commandMethodName)
-						.invoke(gamePlayer.getGame());
-				this.pattern = PatternGenerator
-						.getPattern(this.textualCommands);
-
-				Set<String> commands;
-				try {
-					commands = command.getAdditionalCommands();
-				} catch (DBClosedException e) {
-					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-							"Operating on a closed DB");
-					commands = new HashSet<>();
-				}
-				additionalCommandsPattern = PatternGenerator
-						.getPattern(commands);
-
-				commandHelpText = (String) Game.class.getDeclaredMethod(
-						commandType.helpTextMethodName).invoke(
-						gamePlayer.getGame());
-			} catch (ClassCastException | NoSuchMethodException
-					| SecurityException | IllegalAccessException
-					| IllegalArgumentException | InvocationTargetException e) {
-				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-						"Problems finding one of the required methods:", e);
+				commands = command.getAdditionalCommands();
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Operating on a closed DB");
+				commands = new HashSet<>();
 			}
+			additionalCommandsPattern = PatternGenerator.getPattern(commands);
+
+			commandHelpText = commandType.helpTextMethod.apply(gamePlayer.getGame());
 		}
 
 		/**
@@ -208,8 +182,7 @@ public class GeneralParser {
 		 */
 		private boolean recognizeAndExecute(String input) {
 			Matcher matcher = pattern.matcher(input);
-			Matcher additionalCommandsMatcher = additionalCommandsPattern
-					.matcher(input);
+			Matcher additionalCommandsMatcher = additionalCommandsPattern.matcher(input);
 
 			boolean matchFound = false;
 			boolean originalCommand = false;
@@ -218,14 +191,14 @@ public class GeneralParser {
 				params = getParameters(matcher, commandType.numberOfParameters);
 				matchFound = true;
 				originalCommand = true;
-				
+
 				// Save the pattern in the replacer
 				gamePlayer.setPattern(matcher.pattern().toString());
 			} else if (additionalCommandsMatcher.matches()) {
 				params = getParameters(additionalCommandsMatcher, commandType.numberOfParameters);
 				matchFound = true;
 				originalCommand = false;
-				
+
 				// Save the pattern in the replacer
 				gamePlayer.setPattern(additionalCommandsMatcher.pattern().toString());
 			}
@@ -271,8 +244,7 @@ public class GeneralParser {
 	 *            the expected number of parameters
 	 * @return an array with the typed parameters
 	 */
-	public static Parameter[] getParameters(Matcher matcher,
-			int numberOfParameters) {
+	public static Parameter[] getParameters(Matcher matcher, int numberOfParameters) {
 		/*
 		 * By convention, all capturing groups that denote parameters must be
 		 * named with o0, o1, o2, and so on, without leaving gaps. This can be
@@ -323,8 +295,7 @@ public class GeneralParser {
 	public GeneralParser(GamePlayer gamePlayer) {
 		this.gamePlayer = gamePlayer;
 		// Build exit pattern
-		exitPattern = PatternGenerator.getPattern(gamePlayer.getGame()
-				.getExitCommands());
+		exitPattern = PatternGenerator.getPattern(gamePlayer.getGame().getExitCommands());
 		// Build CommandRecExecs
 		CommandType[] commands = CommandType.values();
 		this.commandRecExecs = new ArrayList<>(commands.length);
@@ -345,11 +316,9 @@ public class GeneralParser {
 	 *         {@code false} otherwise.
 	 */
 	public boolean parse(String input) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Parsing input: {0}", input);
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Parsing input: {0}", input);
 		// Trimmed, lower case, no multiple spaces, no punctuation
-		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ")
-				.replaceAll("\\p{Punct}", "");
+		input = input.trim().toLowerCase().replaceAll("\\p{Blank}+", " ").replaceAll("\\p{Punct}", "");
 
 		// Is it an exit commandType?
 		if (exitPattern.matcher(input).matches()) {
