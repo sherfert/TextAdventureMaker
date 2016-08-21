@@ -12,6 +12,8 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 
+import exception.DBClosedException;
+
 /**
  * Manages connections to database files.
  * 
@@ -132,9 +134,12 @@ public class PersistenceManager {
 	 * data.
 	 */
 	public void updateChanges() {
-		if (entityManager != null) {
+		if (entityManager != null && entityManager.isOpen()) {
 			entityManager.getTransaction().begin();
 			entityManager.getTransaction().commit();
+		} else {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Trying to update changes on a closed entity manager.");
 		}
 	}
 
@@ -146,10 +151,15 @@ public class PersistenceManager {
 	}
 
 	/**
-	 * @return the entityManager. Only classes in the persistence package have access.
+	 * @return the entityManager. Only classes in the persistence package have
+	 *         access.
 	 */
-	EntityManager getEntityManager() {
+	EntityManager getEntityManager() throws DBClosedException {
+		if(entityManager.isOpen()) {
 		return entityManager;
+		} else {
+			throw new DBClosedException();
+		}
 	}
 
 	/**
@@ -228,7 +238,7 @@ public class PersistenceManager {
 	public WayManager getWayManager() {
 		return wayManager;
 	}
-	
+
 	/**
 	 * @return the conversationManager
 	 */

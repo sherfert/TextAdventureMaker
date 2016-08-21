@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.InventoryItem;
+import exception.DBClosedException;
 
 /**
  * Managing access to the inventory items in the database.
@@ -31,8 +32,9 @@ public class InventoryItemManager {
 	/**
 	 * @return a set of all additional combine commands defined anywhere in the
 	 *         game.
+	 * @throws DBClosedException 
 	 */
-	public Set<String> getAllAdditionaCombineCommands() {
+	public Set<String> getAllAdditionaCombineCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
 		List<String> resultList = persistenceManager
 				.getEntityManager()
@@ -46,8 +48,9 @@ public class InventoryItemManager {
 	/**
 	 * @return a set of all additional use with commands defined anywhere in the
 	 *         game.
+	 * @throws DBClosedException 
 	 */
-	public Set<String> getAllAdditionaUseWithCommands() {
+	public Set<String> getAllAdditionaUseWithCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
 		List<String> resultList = persistenceManager
 				.getEntityManager()
@@ -60,8 +63,9 @@ public class InventoryItemManager {
 	
 	/**
 	 * @return all inventory items in the game.
+	 * @throws DBClosedException 
 	 */
-	public List<InventoryItem> getAllInventoryItems() {
+	public List<InventoryItem> getAllInventoryItems() throws DBClosedException {
 		CriteriaQuery<InventoryItem> query = persistenceManager
 				.getCriteriaBuilder().createQuery(InventoryItem.class);
 		Root<InventoryItem> root = query.from(InventoryItem.class);

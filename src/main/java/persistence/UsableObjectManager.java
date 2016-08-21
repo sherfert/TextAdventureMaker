@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import exception.DBClosedException;
+
 /**
  * Managing access to the usable objects in the database.
  * 
@@ -26,8 +28,9 @@ public class UsableObjectManager {
 	/**
 	 * @return a set of all additional use commands defined anywhere in the
 	 *         game.
+	 * @throws DBClosedException 
 	 */
-	public Set<String> getAllAdditionalUseCommands() {
+	public Set<String> getAllAdditionalUseCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
 		List<String> resultList = persistenceManager
 				.getEntityManager()

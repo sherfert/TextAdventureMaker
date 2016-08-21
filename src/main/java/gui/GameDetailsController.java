@@ -8,6 +8,7 @@ import javax.persistence.PersistenceException;
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
+import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import gui.custumui.LocationChooser;
 import gui.utility.StringUtils;
@@ -147,11 +148,11 @@ public class GameDetailsController extends GameDataController {
 	}
 
 	@FXML
-	private void initialize() throws DBIncompatibleException {
+	private void initialize() throws DBIncompatibleException, DBClosedException {
 		// Obtain the game
 		try {
 			game = currentGameManager.getPersistenceManager().getGameManager().getGame();
-		} catch (DBIncompatibleException | PersistenceException e) {
+		} catch (DBIncompatibleException | PersistenceException | DBClosedException e) {
 			// This means the database is incompatible with the model.
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Could not get the game. Database incompatible.", e);

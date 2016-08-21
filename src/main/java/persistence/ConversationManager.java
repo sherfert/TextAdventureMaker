@@ -6,6 +6,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.Conversation;
+import exception.DBClosedException;
 
 /**
  * Managing access to the conversations in the database.
@@ -28,8 +29,9 @@ public class ConversationManager {
 	
 	/**
 	 * @return all conversations in the game.
+	 * @throws DBClosedException 
 	 */
-	public List<Conversation> getAllConversations() {
+	public List<Conversation> getAllConversations() throws DBClosedException {
 		CriteriaQuery<Conversation> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Conversation.class);
 		Root<Conversation> root = query.from(Conversation.class);

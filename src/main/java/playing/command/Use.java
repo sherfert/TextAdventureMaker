@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import data.Game;
 import data.interfaces.Inspectable;
 import data.interfaces.Usable;
+import exception.DBClosedException;
+import exception.DBIncompatibleException;
 import playing.GamePlayer;
 import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
@@ -27,7 +29,7 @@ public class Use extends Command {
 	}
 
 	@Override
-	public Set<String> getAdditionalCommands() {
+	public Set<String> getAdditionalCommands() throws DBClosedException {
 		return persistenceManager.getUsableObjectManager().getAllAdditionalUseCommands();
 	}
 
@@ -60,8 +62,15 @@ public class Use extends Command {
 		Game game = gamePlayer.getGame();
 
 		// Collect all objects, whether they are usable or not.
-		Inspectable objectI = persistenceManager.getInspectableObjectManager()
-				.getInspectable(identifier);
+		Inspectable objectI;
+		try {
+			objectI = persistenceManager.getInspectableObjectManager()
+					.getInspectable(identifier);
+		} catch (DBClosedException | DBIncompatibleException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Operating on a closed/incompatible DB", e);
+			return;
+		}
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 

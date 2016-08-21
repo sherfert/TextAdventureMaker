@@ -1,6 +1,10 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import data.Person;
+import exception.DBClosedException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,8 +73,14 @@ public class PersonsController extends GameDataController {
 		// Get all persons and store in observable list, unless the list is
 		// already propagated
 		if (personsOL == null) {
-			personsOL = FXCollections.observableArrayList(
-					currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+			try {
+				personsOL = FXCollections.observableArrayList(
+						currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+			} catch (DBClosedException e1) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 
 		// Fill table
@@ -88,7 +98,13 @@ public class PersonsController extends GameDataController {
 	@Override
 	public void update() {
 		if (personsOL != null) {
-			personsOL.setAll(currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+			try {
+				personsOL.setAll(currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 	}
 
@@ -98,7 +114,13 @@ public class PersonsController extends GameDataController {
 	private void saveNewPerson() {
 		Person p = new Person(newNameTF.getText(), newDescriptionTA.getText());
 		// Add item to DB
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(p);
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(p);
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Abort: DB closed");
+			return;
+		}
 		currentGameManager.getPersistenceManager().updateChanges();
 		// Add location to our table
 		personsOL.add(p);

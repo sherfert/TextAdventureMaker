@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.Person;
+import exception.DBClosedException;
 
 /**
  * Managing access to the persons in the database.
@@ -31,8 +32,9 @@ public class PersonManager {
 	/**
 	 * @return a set of all additional talk to commands defined anywhere in the
 	 *         game.
+	 * @throws DBClosedException 
 	 */
-	public Set<String> getAllAdditionalTalkToCommands() {
+	public Set<String> getAllAdditionalTalkToCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
 		List<String> resultList = persistenceManager
 				.getEntityManager()
@@ -45,8 +47,9 @@ public class PersonManager {
 	
 	/**
 	 * @return all persons in the game.
+	 * @throws DBClosedException 
 	 */
-	public List<Person> getAllPersons() {
+	public List<Person> getAllPersons() throws DBClosedException {
 		// Find all items
 		CriteriaQuery<Person> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Person.class);

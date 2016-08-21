@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 
 import data.Location;
 import data.Way;
+import exception.DBClosedException;
 
 /**
  * Managing access to the ways in the database.
@@ -46,8 +47,9 @@ public class WayManager {
 	/**
 	 * @return a set of all additional travel commands defined anywhere in the
 	 *         game.
+	 * @throws DBClosedException 
 	 */
-	public Set<String> getAllAdditionalTravelCommands() {
+	public Set<String> getAllAdditionalTravelCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
 		List<String> resultList = persistenceManager.getEntityManager()
 				.createNativeQuery("SELECT DISTINCT c.ADDITIONALTRAVELCOMMANDS FROM WAY_ADDITIONALTRAVELCOMMANDS c")
@@ -58,8 +60,9 @@ public class WayManager {
 	
 	/**
 	 * @return all ways in the game.
+	 * @throws DBClosedException 
 	 */
-	public List<Way> getAllWays() {
+	public List<Way> getAllWays() throws DBClosedException {
 		// Find all items
 		CriteriaQuery<Way> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Way.class);

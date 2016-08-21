@@ -6,6 +6,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.Location;
+import exception.DBClosedException;
 
 /**
  * Managing access to the locations in the database.
@@ -28,8 +29,9 @@ public class LocationManager {
 	
 	/**
 	 * @return all locations in the game.
+	 * @throws DBClosedException 
 	 */
-	public List<Location> getAllLocations() {
+	public List<Location> getAllLocations() throws DBClosedException {
 		// Find all locations
 		CriteriaQuery<Location> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Location.class);

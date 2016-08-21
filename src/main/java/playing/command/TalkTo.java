@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 import data.Game;
 import data.interfaces.HasConversation;
 import data.interfaces.Inspectable;
+import exception.DBClosedException;
+import exception.DBIncompatibleException;
 import playing.ConversationPlayer;
 import playing.GamePlayer;
 import playing.parser.Parameter;
@@ -28,7 +30,7 @@ public class TalkTo extends Command {
 	}
 
 	@Override
-	public Set<String> getAdditionalCommands() {
+	public Set<String> getAdditionalCommands() throws DBClosedException {
 		return persistenceManager.getPersonManager().getAllAdditionalTalkToCommands();
 	}
 
@@ -58,7 +60,14 @@ public class TalkTo extends Command {
 
 		Game game = gamePlayer.getGame();
 
-		Inspectable object = persistenceManager.getInspectableObjectManager().getInspectable(identifier);
+		Inspectable object;
+		try {
+			object = persistenceManager.getInspectableObjectManager().getInspectable(identifier);
+		} catch (DBClosedException | DBIncompatibleException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Operating on a closed/incompatible DB", e);
+			return;
+		}
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);
 

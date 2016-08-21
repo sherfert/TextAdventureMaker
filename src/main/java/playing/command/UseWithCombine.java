@@ -13,6 +13,8 @@ import data.interfaces.Combinable;
 import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
 import data.interfaces.UsableWithHasLocation;
+import exception.DBClosedException;
+import exception.DBIncompatibleException;
 import persistence.InspectableObjectManager;
 import persistence.InventoryItemManager;
 import playing.GamePlayer;
@@ -36,7 +38,7 @@ public class UseWithCombine extends Command {
 	}
 
 	@Override
-	public Set<String> getAdditionalCommands() {
+	public Set<String> getAdditionalCommands() throws DBClosedException {
 		InventoryItemManager iim = persistenceManager.getInventoryItemManager();
 
 		Set<String> result = iim.getAllAdditionaCombineCommands();
@@ -81,9 +83,17 @@ public class UseWithCombine extends Command {
 		Game game = gamePlayer.getGame();
 
 		InspectableObjectManager iom = persistenceManager.getInspectableObjectManager();
-		
-		Inspectable object1 = iom.getInspectable(identifier1);
-		Inspectable object2 = iom.getInspectable(identifier2);
+
+		Inspectable object1;
+		Inspectable object2;
+		try {
+			object1 = iom.getInspectable(identifier1);
+			object2 = iom.getInspectable(identifier2);
+		} catch (DBClosedException | DBIncompatibleException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Operating on a closed/incompatible DB", e);
+			return;
+		}
 		// Save identifiers
 		currentReplacer.setIdentifier(identifier1);
 		currentReplacer.setIdentifier2(identifier2);

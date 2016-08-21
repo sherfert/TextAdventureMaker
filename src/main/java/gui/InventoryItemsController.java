@@ -1,6 +1,10 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import data.InventoryItem;
+import exception.DBClosedException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,8 +73,14 @@ public class InventoryItemsController extends GameDataController {
 		// Get all items and store in observable list, unless the list is
 		// already propagated
 		if (invitemsOL == null) {
-			invitemsOL = FXCollections.observableArrayList(
-					currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems());
+			try {
+				invitemsOL = FXCollections.observableArrayList(
+						currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems());
+			} catch (DBClosedException e1) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 
 		// Fill table
@@ -88,7 +98,13 @@ public class InventoryItemsController extends GameDataController {
 	@Override
 	public void update() {
 		if (invitemsOL != null) {
-			invitemsOL.setAll(currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems());
+			try {
+				invitemsOL.setAll(currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems());
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 	}
 
@@ -98,7 +114,13 @@ public class InventoryItemsController extends GameDataController {
 	private void saveNewInvItem() {
 		InventoryItem i = new InventoryItem(newNameTF.getText(), newDescriptionTA.getText());
 		// Add item to DB
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(i);
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(i);
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Abort: DB closed");
+			return;
+		}
 		currentGameManager.getPersistenceManager().updateChanges();
 		// Add location to our table
 		invitemsOL.add(i);

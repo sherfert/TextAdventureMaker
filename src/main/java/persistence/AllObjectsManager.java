@@ -3,6 +3,8 @@ package persistence;
 import data.Game;
 import data.Player;
 import data.interfaces.HasId;
+import exception.DBClosedException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,15 +26,18 @@ public class AllObjectsManager {
 	public AllObjectsManager(PersistenceManager persistenceManager) {
 		this.persistenceManager = persistenceManager;
 	}
-	
+
 	/**
 	 * Obtain any object in the DB by ID.
 	 * 
-	 * @param clazz the expected class of the object
-	 * @param id the id
+	 * @param clazz
+	 *            the expected class of the object
+	 * @param id
+	 *            the id
 	 * @return the object, or null, if not found or unexpected type
+	 * @throws DBClosedException
 	 */
-	public <E extends HasId> E getObject(Class<E > clazz, int id) {
+	public <E extends HasId> E getObject(Class<E> clazz, int id) throws DBClosedException {
 		return persistenceManager.getEntityManager().find(clazz, id);
 	}
 
@@ -41,17 +46,18 @@ public class AllObjectsManager {
 	 *
 	 * @param object
 	 *            the object
+	 * @throws DBClosedException
 	 */
-	public void removeObject(HasId object) {
+	public void removeObject(HasId object) throws DBClosedException {
 
 		// It is not permitted to delete Game or Player objects
 		if (object instanceof Player || object instanceof Game) {
-			Logger.getLogger(AllObjectsManager.class.getName()).log(Level.WARNING,
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
 					"It is not permitted to delete an object of type {0}", object.getClass().getName());
 			return;
 		}
 
-		Logger.getLogger(AllObjectsManager.class.getName()).log(Level.INFO,
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO,
 				"Deleting object with ID {0} type {1} from database",
 				new Object[] { object.getId(), object.getClass().getName() });
 		persistenceManager.getEntityManager().remove(object);
@@ -62,16 +68,17 @@ public class AllObjectsManager {
 	 * 
 	 * @param object
 	 *            the object
+	 * @throws DBClosedException
 	 */
-	public void addObject(HasId object) {
+	public void addObject(HasId object) throws DBClosedException {
 		// It is not permitted to add Game or Player objects
 		if (object instanceof Player || object instanceof Game) {
-			Logger.getLogger(AllObjectsManager.class.getName()).log(Level.WARNING,
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
 					"It is not permitted to add an object of type {0}", object.getClass().getName());
 			return;
 		}
 
-		Logger.getLogger(AllObjectsManager.class.getName()).log(Level.INFO, "Adding object of type {0} to database",
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Adding object of type {0} to database",
 				new Object[] { object.getClass().getName() });
 		persistenceManager.getEntityManager().persist(object);
 	}

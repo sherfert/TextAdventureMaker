@@ -2,6 +2,7 @@ package playing.parser;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -9,6 +10,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 import data.Game;
+import exception.DBClosedException;
 import playing.GamePlayer;
 import playing.command.Command;
 import playing.command.Help;
@@ -50,6 +52,7 @@ public class GeneralParser {
 	 * @author Satia
 	 */
 	public enum CommandType {
+		// FIXME use function refs!
 		/** Use one item with another or combine two items */
 		USEWITHCOMBINE("getUseWithCombineCommands",
 				"getUseWithCombineHelpText", UseWithCombine.class, 2), //
@@ -173,7 +176,14 @@ public class GeneralParser {
 				this.pattern = PatternGenerator
 						.getPattern(this.textualCommands);
 
-				Set<String> commands = command.getAdditionalCommands();
+				Set<String> commands;
+				try {
+					commands = command.getAdditionalCommands();
+				} catch (DBClosedException e) {
+					Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+							"Operating on a closed DB");
+					commands = new HashSet<>();
+				}
 				additionalCommandsPattern = PatternGenerator
 						.getPattern(commands);
 

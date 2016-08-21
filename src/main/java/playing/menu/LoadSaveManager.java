@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils;
 import persistence.PersistenceManager;
 import playing.GamePlayer;
 import configuration.PropertiesReader;
+import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import exception.LoadSaveException;
 
@@ -111,7 +112,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 		try {
 			this.persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
 			this.gameName = persistenceManager.getGameManager().getGameTitle();
-		} catch (DBIncompatibleException | IOException e) {
+		} catch (DBIncompatibleException | IOException | DBClosedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Aborting init.", e);
 			return;
 		}
@@ -257,7 +258,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			persistenceManager.connect(path.substring(0, path.length() - H2_ENDING.length()), false);
 			// Set the game for the game player
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
-		} catch (DBIncompatibleException | IOException e) {
+		} catch (DBIncompatibleException | IOException | DBClosedException e) {
 			// This means the database could not be loaded
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Error loading", e);
 			// Show some error message
@@ -296,7 +297,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			disconnectDoReconnect(() -> copyFromTempDB(file), path.substring(0, path.length() - H2_ENDING.length()));
 			// We must set the reference to the game again
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
-		} catch (DBIncompatibleException|IOException e) {
+		} catch (DBIncompatibleException|IOException | DBClosedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error saving", e);
 			// Show some error message
 			gamePlayer.getIo().println(e.getMessage());

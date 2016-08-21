@@ -1,6 +1,10 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import data.Way;
+import exception.DBClosedException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,8 +80,14 @@ public class WaysController extends GameDataController {
 		// Get all ways and store in observable list, unless the list is
 		// already propagated
 		if (waysOL == null) {
-			waysOL = FXCollections.observableArrayList(
-					currentGameManager.getPersistenceManager().getWayManager().getAllWays());
+			try {
+				waysOL = FXCollections.observableArrayList(
+						currentGameManager.getPersistenceManager().getWayManager().getAllWays());
+			} catch (DBClosedException e1) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 
 		// Fill table
@@ -95,7 +105,13 @@ public class WaysController extends GameDataController {
 	@Override
 	public void update() {
 		if (waysOL != null) {
-			waysOL.setAll(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
+			try {
+				waysOL.setAll(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 	}
 

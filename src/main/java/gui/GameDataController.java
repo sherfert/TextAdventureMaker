@@ -335,7 +335,13 @@ public abstract class GameDataController {
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
 				// Remove item from DB
-				currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(object);
+				try {
+					currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(object);
+				} catch (Exception e) {
+					Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+							"Abort: DB closed");
+					return;
+				}
 				currentGameManager.getPersistenceManager().updateChanges();
 
 				// Switch back to previous view

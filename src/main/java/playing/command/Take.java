@@ -10,6 +10,8 @@ import playing.parser.PatternGenerator;
 import data.Game;
 import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
+import exception.DBClosedException;
+import exception.DBIncompatibleException;
 
 /**
  * Command to take an item.
@@ -27,7 +29,7 @@ public class Take extends Command {
 	}
 
 	@Override
-	public Set<String> getAdditionalCommands() {
+	public Set<String> getAdditionalCommands() throws DBClosedException {
 		return persistenceManager.getItemManager().getAllAdditionaTakeCommands();
 	}
 
@@ -44,7 +46,7 @@ public class Take extends Command {
 	/**
 	 * Tries to take the object with the given name. The connected actions will
 	 * be performed if the item is takeable (additional actions will be
-	 * performed even if not). If not, a meaningful message will be displayed.
+	 * performed even if it is not). If not, a meaningful message will be displayed.
 	 * 
 	 * @param originalCommand
 	 *            if the command was original (or else additional). Used to test
@@ -60,8 +62,15 @@ public class Take extends Command {
 		Game game = gamePlayer.getGame();
 
 		// Collect all objects, whether they are takeable or not.
-		Inspectable object = persistenceManager.getInspectableObjectManager()
-				.getInspectable(identifier);
+		Inspectable object;
+		try {
+			object = persistenceManager.getInspectableObjectManager()
+					.getInspectable(identifier);
+		} catch (DBClosedException | DBIncompatibleException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
+					"Operating on a closed/incompatible DB", e);
+			return;
+		}
 
 		// Save identifier
 		currentReplacer.setIdentifier(identifier);

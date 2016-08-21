@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import data.Item;
+import exception.DBClosedException;
 
 /**
  * Managing access to the items in the database.
@@ -31,8 +32,9 @@ public class ItemManager {
 	/**
 	 * @return a set of all additional take commands defined anywhere in the
 	 *         game.
+	 * @throws DBClosedException 
 	 */
-	public Set<String> getAllAdditionaTakeCommands() {
+	public Set<String> getAllAdditionaTakeCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
 		List<String> resultList = persistenceManager
 				.getEntityManager()
@@ -45,8 +47,9 @@ public class ItemManager {
 	
 	/**
 	 * @return all items in the game.
+	 * @throws DBClosedException 
 	 */
-	public List<Item> getAllItems() {
+	public List<Item> getAllItems() throws DBClosedException {
 		// Find all items
 		CriteriaQuery<Item> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Item.class);

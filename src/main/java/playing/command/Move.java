@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import data.Game;
 import data.interfaces.Travelable;
+import exception.DBClosedException;
 import playing.GamePlayer;
 import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
@@ -26,7 +27,7 @@ public class Move extends Command {
 	}
 
 	@Override
-	public Set<String> getAdditionalCommands() {
+	public Set<String> getAdditionalCommands() throws DBClosedException {
 		return persistenceManager.getWayManager().getAllAdditionalTravelCommands();
 	}
 

@@ -12,6 +12,7 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
 import data.Game;
 import data.Location;
 import data.Player;
+import exception.DBClosedException;
 import exception.DBIncompatibleException;
 
 /**
@@ -53,10 +54,12 @@ public class GameManager {
 	 * 
 	 * @return the game
 	 * 
-	 * @throws Exception
-	 *             (unchecked) if the database is not compatible with the model.
+	 * @throws DBIncompatibleException
+	 *             if the database is not compatible with the model.
+	 * @throws DBClosedException
+	 *             if the DB is closed
 	 */
-	public Game getGame() throws DBIncompatibleException {
+	public Game getGame() throws DBIncompatibleException, DBClosedException {
 		if (game != null) {
 			return game;
 		}
@@ -83,8 +86,9 @@ public class GameManager {
 	 * game.
 	 * 
 	 * @return the game title.
+	 * @throws DBClosedException 
 	 */
-	public String getGameTitle() throws DBIncompatibleException {
+	public String getGameTitle() throws DBIncompatibleException, DBClosedException {
 		if (game != null) {
 			return game.getGameTitle();
 		}
@@ -107,16 +111,17 @@ public class GameManager {
 	/**
 	 * This method places a minimal default game in the Database. It is only
 	 * supposed to be called on an empty database.
+	 * @throws DBClosedException 
 	 */
-	public void loadDefaultGame() {
+	public void loadDefaultGame() throws DBClosedException {
 		Player player = new Player();
 		Game game = new Game();
 		Location startLocation = new Location("Default location", "This is where your adventure starts.");
 		game.setPlayer(player);
 		game.setStartLocation(startLocation);
-		
+
 		game.setStartText("This text is being displayed at the beginning of the game.");
-		
+
 		// Default commands and messages
 		// TODO configurable
 		game.setNoCommandText("I don't understand you.");
@@ -177,8 +182,8 @@ public class GameManager {
 		game.addTalkToCommand("speak with (?<o0>.+?)");
 
 		// Random game title from 0 to 999999
-		game.setGameTitle("Adventure-" + (int)(Math.random() * 1000000));
-		
+		game.setGameTitle("Adventure-" + (int) (Math.random() * 1000000));
+
 		// Save the game
 		persistenceManager.getEntityManager().persist(game);
 		persistenceManager.updateChanges();

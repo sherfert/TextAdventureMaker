@@ -1,6 +1,10 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import data.Conversation;
+import exception.DBClosedException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -66,11 +70,16 @@ public class ConversationsController extends GameDataController {
 		});
 
 		// Get all conversations and store in observable list, unless the list
-		// is
-		// already propagated
+		// is already propagated
 		if (conversationsOL == null) {
-			conversationsOL = FXCollections.observableArrayList(
-					currentGameManager.getPersistenceManager().getConversationManager().getAllConversations());
+			try {
+				conversationsOL = FXCollections.observableArrayList(
+						currentGameManager.getPersistenceManager().getConversationManager().getAllConversations());
+			} catch (DBClosedException e1) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 
 		// Fill table
@@ -91,8 +100,14 @@ public class ConversationsController extends GameDataController {
 	@Override
 	public void update() {
 		if (conversationsOL != null) {
-			conversationsOL
-					.setAll(currentGameManager.getPersistenceManager().getConversationManager().getAllConversations());
+			try {
+				conversationsOL
+						.setAll(currentGameManager.getPersistenceManager().getConversationManager().getAllConversations());
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 	}
 
@@ -102,7 +117,13 @@ public class ConversationsController extends GameDataController {
 	private void saveNewConversation() {
 		Conversation c = new Conversation(newNameTF.getText(), newGreetingTA.getText(), newEventTA.getText());
 		// Add item to DB
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(c);
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(c);
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Abort: DB closed");
+			return;
+		}
 		currentGameManager.getPersistenceManager().updateChanges();
 		// Add location to our table
 		conversationsOL.add(c);

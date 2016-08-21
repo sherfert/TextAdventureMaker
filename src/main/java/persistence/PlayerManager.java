@@ -1,9 +1,7 @@
 package persistence;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import data.Player;
+import exception.DBClosedException;
 import exception.DBIncompatibleException;
 
 /**
@@ -26,19 +24,12 @@ public class PlayerManager {
 	}
 
 	/**
-	 * 
 	 * @return the player
+	 * @throws DBClosedException 
+	 * @throws DBIncompatibleException 
 	 */
-	public Player getPlayer() {
+	public Player getPlayer() throws DBClosedException, DBIncompatibleException {
 		// Return the game's player
-		try {
-			return persistenceManager.getGameManager().getGame().getPlayer();
-		} catch (DBIncompatibleException e) {
-			// This means the database is incompatible with the model.
-			// This should never happen at this point!
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Could not get the game. Database incompatible.", e);
-		}
-		return null;
+		return persistenceManager.getGameManager().getGame().getPlayer();
 	}
 }

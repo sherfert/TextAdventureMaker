@@ -1,6 +1,10 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import data.Item;
+import exception.DBClosedException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,8 +73,14 @@ public class ItemsController extends GameDataController {
 		// Get all items and store in observable list, unless the list is
 		// already propagated
 		if (itemsOL == null) {
-			itemsOL = FXCollections.observableArrayList(
-					currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+			try {
+				itemsOL = FXCollections.observableArrayList(
+						currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+			} catch (DBClosedException e1) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 
 		// Fill table
@@ -88,7 +98,13 @@ public class ItemsController extends GameDataController {
 	@Override
 	public void update() {
 		if (itemsOL != null) {
-			itemsOL.setAll(currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+			try {
+				itemsOL.setAll(currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 	}
 
@@ -98,7 +114,13 @@ public class ItemsController extends GameDataController {
 	private void saveNewItem() {
 		Item i = new Item(newNameTF.getText(), newDescriptionTA.getText());
 		// Add item to DB
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(i);
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(i);
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Abort: DB closed");
+			return;
+		}
 		currentGameManager.getPersistenceManager().updateChanges();
 		// Add location to our table
 		itemsOL.add(i);

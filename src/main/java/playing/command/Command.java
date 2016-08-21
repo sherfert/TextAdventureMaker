@@ -2,6 +2,7 @@ package playing.command;
 
 import java.util.Set;
 
+import exception.DBClosedException;
 import persistence.PersistenceManager;
 import playing.GamePlayer;
 import playing.InputOutput;
@@ -55,8 +56,9 @@ public abstract class Command {
 	 * command, defined anywhere in the game.
 	 * 
 	 * @return all additional commands.
+	 * @throws DBClosedException 
 	 */
-	public abstract Set<String> getAdditionalCommands();
+	public abstract Set<String> getAdditionalCommands() throws DBClosedException;
 
 	/**
 	 * Executes the command.

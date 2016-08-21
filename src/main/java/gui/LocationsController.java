@@ -1,6 +1,10 @@
 package gui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import data.Location;
+import exception.DBClosedException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,8 +73,14 @@ public class LocationsController extends GameDataController {
 		// Get all locations and store in observable list, unless the list is
 		// already propagated
 		if (locationsOL == null) {
-			locationsOL = FXCollections.observableArrayList(
-					currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+			try {
+				locationsOL = FXCollections.observableArrayList(
+						currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+			} catch (DBClosedException e1) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 
 		// Fill table
@@ -88,7 +98,13 @@ public class LocationsController extends GameDataController {
 	@Override
 	public void update() {
 		if (locationsOL != null) {
-			locationsOL.setAll(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+			try {
+				locationsOL.setAll(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+						"Abort: DB closed");
+				return;
+			}
 		}
 	}
 
@@ -98,7 +114,13 @@ public class LocationsController extends GameDataController {
 	private void saveNewLocation() {
 		Location l = new Location(newNameTF.getText(), newDescriptionTA.getText());
 		// Add location to DB
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(l);
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(l);
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Abort: DB closed");
+			return;
+		}
 		currentGameManager.getPersistenceManager().updateChanges();
 		// Add location to our table
 		locationsOL.add(l);

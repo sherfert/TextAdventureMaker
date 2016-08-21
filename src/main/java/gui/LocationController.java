@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import data.Location;
+import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -87,7 +88,7 @@ public class LocationController extends GameDataController {
 		try {
 			return currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation().getId() == l
 					.getId();
-		} catch (DBIncompatibleException e) {
+		} catch (DBIncompatibleException | DBClosedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not get Game.", e);
 		}
 		return false;

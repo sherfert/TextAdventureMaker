@@ -5,6 +5,8 @@ import java.util.List;
 
 import data.Player;
 import data.interfaces.Inspectable;
+import exception.DBClosedException;
+import exception.DBIncompatibleException;
 
 /**
  * Managing access to the inspectable objects in the database.
@@ -33,8 +35,10 @@ public class InspectableObjectManager {
 	 *            an identifier of the item
 	 * 
 	 * @return the corresponding item or {@code null}.
+	 * @throws DBIncompatibleException 
+	 * @throws DBClosedException 
 	 */
-	public Inspectable getInspectable(String identifier) {
+	public Inspectable getInspectable(String identifier) throws DBClosedException, DBIncompatibleException {
 		Player player = persistenceManager.getPlayerManager().getPlayer();
 
 		List<Inspectable> inspectables = new ArrayList<>();

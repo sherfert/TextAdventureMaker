@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import exception.DBClosedException;
 import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
 
@@ -65,10 +66,15 @@ public class CurrentGameManager {
 		String fileName = openFile.getAbsolutePath();
 		persistenceManager.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()),
 				create);
-		
-		if(create) {
+
+		if (create) {
 			// Place some default contents in the DB
-			persistenceManager.getGameManager().loadDefaultGame();
+			try {
+				persistenceManager.getGameManager().loadDefaultGame();
+			} catch (DBClosedException e) {
+				// We just connected, so the DB is NOT closed at this point.
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "DB closed", e);
+			}
 		}
 	}
 

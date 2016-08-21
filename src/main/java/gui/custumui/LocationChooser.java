@@ -2,6 +2,8 @@ package gui.custumui;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -9,6 +11,7 @@ import java.util.stream.Collectors;
 import org.controlsfx.control.textfield.TextFields;
 
 import data.Location;
+import exception.DBClosedException;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 import logic.CurrentGameManager;
@@ -57,7 +60,13 @@ public class LocationChooser extends TextField {
 				String match = matcher.group(1);
 
 				int id = Integer.parseInt(match);
-				return currentGameManager.getPersistenceManager().getAllObjectsManager().getObject(Location.class, id);
+				try {
+					return currentGameManager.getPersistenceManager().getAllObjectsManager().getObject(Location.class, id);
+				} catch (DBClosedException e) {
+					Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+							"Cannot convert string to location: DB closed");
+					return null;
+				}
 			} else {
 				return null;
 			}
@@ -80,7 +89,13 @@ public class LocationChooser extends TextField {
 		this.newLocationChosenAction = newLocationChosenAction;
 		
 		// Retrieve all available locations
-		this.availableLocations = this.currentGameManager.getPersistenceManager().getLocationManager().getAllLocations();
+		try {
+			this.availableLocations = this.currentGameManager.getPersistenceManager().getLocationManager().getAllLocations();
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Abort: DB closed");
+			return;
+		}
 
 		// Enable autocompletion with all available locations
 		TextFields.bindAutoCompletion(this,
