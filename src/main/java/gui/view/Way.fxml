@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
+<?import gui.custumui.LocationChooser?>
 
 <TabPane prefHeight="500.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
@@ -15,7 +16,11 @@
                   <fx:include source="NamedObject.fxml" />
                   <fx:include source="NamedDescribedObject.fxml" />
                   <fx:include source="InspectableObject.fxml" />
-                  <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" text="Delete this way" />
+                  <Label text="Origin" />
+                  <LocationChooser fx:id="originChooser"  />
+                  <Label text="Destination" />
+                  <LocationChooser fx:id="destinationChooser"  />
+                  <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" text="Delete this way" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

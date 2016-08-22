@@ -1,6 +1,7 @@
 package gui;
 
 import data.Way;
+import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -11,7 +12,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one way.
  * 
- * TODO Support to change origin, destination, additionalMoveActions
+ * TODO Support to change additionalMoveActions
  * 
  * @author Satia
  */
@@ -19,6 +20,12 @@ public class WayController extends GameDataController {
 
 	/** The way */
 	private Way way;
+
+	@FXML
+	private LocationChooser originChooser;
+
+	@FXML
+	private LocationChooser destinationChooser;
 
 	@FXML
 	private Button removeButton;
@@ -49,7 +56,13 @@ public class WayController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		// alert.setTitle("Deleting a way");
+		originChooser.initialize(
+				way.getOrigin(),
+				false, currentGameManager, way::setOrigin);
+		destinationChooser.initialize(
+				way.getDestination(),
+				false, currentGameManager, way::setDestination);
+		
 		removeButton
 				.setOnMouseClicked((e) -> removeObject(way, "Deleting a way", "Do you really want to delete this way?",
 						"This will delete the way, and actions associated with any of the deleted entities."));

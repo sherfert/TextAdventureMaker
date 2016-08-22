@@ -21,9 +21,9 @@
             <Label text="Name" />
             <TextField fx:id="newNameTF" />
             <Label text="Greeting" />
-            <TextArea fx:id="newGreetingTA" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+            <TextArea fx:id="newGreetingTA" prefHeight="200.0" wrapText="true" />
             <Label text="Event" />
-            <TextArea fx:id="newEventTA" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+            <TextArea fx:id="newEventTA" prefHeight="200.0" wrapText="true" />
             <Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
          </children>
          <padding>

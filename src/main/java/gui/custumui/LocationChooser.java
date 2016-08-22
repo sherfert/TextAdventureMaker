@@ -28,7 +28,7 @@ public class LocationChooser extends TextField {
 	/** All available location to choose from */
 	private List<Location> availableLocations;
 
-	/** The curret game manager */
+	/** The current game manager */
 	private CurrentGameManager currentGameManager;
 
 	/** The currently selected location */
@@ -83,7 +83,8 @@ public class LocationChooser extends TextField {
 	 * Initializes this location chooser.
 	 * 
 	 * @param initialLocation
-	 *            the initial location to choose
+	 *            the initial location to choose. {@code null} allowed, even if
+	 *            {@code allowNull} is set to false
 	 * @param allowNull
 	 *            whether null is an allowed location in the given context
 	 * @param currentGameManager
@@ -139,14 +140,34 @@ public class LocationChooser extends TextField {
 				Location newLoc = locationConverter.fromString(this.getText());
 				if (newLoc == null && !this.allowNull) {
 					// No valid location, restore the old selection
-					this.setText(locationConverter.toString(currentSelection));
+					this.setText(this.locationConverter.toString(this.currentSelection));
 				} else {
 					// Valid location, but the user might have typed just the
 					// id: Put the correct string in place
-					this.setText(locationConverter.toString(newLoc));
+					this.setText(this.locationConverter.toString(newLoc));
 				}
 			}
 		});
+	}
+
+	/**
+	 * @return the current value as a location
+	 */
+	public Location getLocationValue() {
+		return this.currentSelection;
+	}
+
+	/**
+	 * Sets the new location value. Accepts {@code null} even if
+	 * {@code allowNull} was set to false. Note that in this case, the
+	 * newLocationChosenAction will NOT be executed for {@code null} values.
+	 * 
+	 * @param l
+	 *            the new location.
+	 */
+	public void setLocationValue(Location l) {
+		this.currentSelection = l;
+		this.setText(locationConverter.toString(this.currentSelection));
 	}
 
 }

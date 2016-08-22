@@ -1,10 +1,12 @@
 package gui;
 
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import data.Way;
 import exception.DBClosedException;
+import gui.custumui.LocationChooser;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +22,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for the ways view.
  * 
- * TODO Adding ways.
  * TODO MapView (as another tab)
  * 
  * @author Satia
@@ -41,7 +42,7 @@ public class WaysController extends GameDataController {
 
 	@FXML
 	private TableColumn<Way, String> originCol;
-	
+
 	@FXML
 	private TableColumn<Way, String> destinationCol;
 
@@ -50,6 +51,12 @@ public class WaysController extends GameDataController {
 
 	@FXML
 	private TextArea newDescriptionTA;
+
+	@FXML
+	private LocationChooser newOriginChooser;
+
+	@FXML
+	private LocationChooser newDestinationChooser;
 
 	@FXML
 	private Button saveButton;
@@ -65,12 +72,12 @@ public class WaysController extends GameDataController {
 		nameCol.setCellValueFactory((p) -> p.getValue().nameProperty());
 		originCol.setCellValueFactory((p) -> p.getValue().getOrigin().nameProperty());
 		destinationCol.setCellValueFactory((p) -> p.getValue().getDestination().nameProperty());
-		
+
 		// A listener for row double-clicks
 		table.setRowFactory(tv -> {
 			TableRow<Way> row = new TableRow<>();
-			row.setOnMouseClicked(event ->  {
-				if(event.getClickCount() == 2) {
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2) {
 					waySelected(row.getItem());
 				}
 			});
@@ -81,11 +88,10 @@ public class WaysController extends GameDataController {
 		// already propagated
 		if (waysOL == null) {
 			try {
-				waysOL = FXCollections.observableArrayList(
-						currentGameManager.getPersistenceManager().getWayManager().getAllWays());
+				waysOL = FXCollections
+						.observableArrayList(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
 			} catch (DBClosedException e1) {
-				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-						"Abort: DB closed");
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 				return;
 			}
 		}
@@ -93,23 +99,32 @@ public class WaysController extends GameDataController {
 		// Fill table
 		table.setItems(waysOL);
 
+		newOriginChooser.initialize(null, false, currentGameManager, (l) -> {
+		});
+		newDestinationChooser.initialize(null, false, currentGameManager, (l) -> {
+		});
+
 		// Disable buttons at beginning
 		saveButton.setDisable(true);
 
-		// Assure save is only enabled if there is a name
-		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
+		// Assure save is only enabled if there is a name, origin and
+		// destination
+		Supplier<Boolean> anyRequiredFieldEmpty = () -> newNameTF.textProperty().get().isEmpty()
+				|| newOriginChooser.getLocationValue() == null || newDestinationChooser.getLocationValue() == null;
+		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
+		newOriginChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
+		newDestinationChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		// Save button handler
 		saveButton.setOnMouseClicked((e) -> saveNewWay());
 	}
-	
+
 	@Override
 	public void update() {
 		if (waysOL != null) {
 			try {
 				waysOL.setAll(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
 			} catch (DBClosedException e) {
-				Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-						"Abort: DB closed");
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 				return;
 			}
 		}
@@ -119,18 +134,26 @@ public class WaysController extends GameDataController {
 	 * Saves a new way to both DB and table.
 	 */
 	private void saveNewWay() {
-//		Way w = new Item(newNameTF.getText(), newDescriptionTA.getText());
-//		// Add item to DB
-//		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(w);
-//		currentGameManager.getPersistenceManager().updateChanges();
-//		// Add location to our table
-//		waysOL.add(w);
-//
-//		// Reset the form values
-//		newNameTF.setText("");
-//		newDescriptionTA.setText("");
+		Way w = new Way(newNameTF.getText(), newDescriptionTA.getText(), newOriginChooser.getLocationValue(),
+				newDestinationChooser.getLocationValue());
+		// Add item to DB
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(w);
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+			return;
+		}
+		currentGameManager.getPersistenceManager().updateChanges();
+		// Add location to our table
+		waysOL.add(w);
+
+		// Reset the form values
+		newNameTF.setText("");
+		newDescriptionTA.setText("");
+		newOriginChooser.setLocationValue(null);
+		newDestinationChooser.setLocationValue(null);
 	}
-	
+
 	/**
 	 * Opens this way for editing.
 	 * 
@@ -144,7 +167,7 @@ public class WaysController extends GameDataController {
 
 		// Open the way view
 		WayController wayController = new WayController(currentGameManager, mwController, w);
-		mwController.pushCenterContent(w.getName(),"view/Way.fxml", wayController, wayController::controllerFactory);
+		mwController.pushCenterContent(w.getName(), "view/Way.fxml", wayController, wayController::controllerFactory);
 	}
 
 }

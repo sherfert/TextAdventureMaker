@@ -15,7 +15,7 @@
                   <fx:include source="NamedObject.fxml" />
                   <fx:include source="NamedDescribedObject.fxml" />
                   <fx:include source="InspectableObject.fxml" />
-                  <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" text="Delete this item" />
+                  <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" text="Delete this item" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
