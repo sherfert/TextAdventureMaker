@@ -7,7 +7,7 @@ import logic.CurrentGameManager;
 
 /**
  * Custom TextField for choosing conversations. Must be initialized with
- * {@link ConversationChooser#initialize(Conversation, boolean, CurrentGameManager, Consumer)}
+ * {@link ConversationChooser#initialize(Conversation, boolean, boolean, CurrentGameManager, Consumer)}
  * , otherwise it behaves just as a normal TextField.
  * 
  * @author satia

@@ -56,9 +56,8 @@ public class ItemController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		locationChooser.initialize(item.getLocation(), true, 
-				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
-				item::setLocation);
+		locationChooser.initialize(item.getLocation(), true, false,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, item::setLocation);
 
 		removeButton.setOnMouseClicked(
 				(e) -> removeObject(item, "Deleting an item", "Do you really want to delete this item?",

@@ -48,11 +48,11 @@ public class PersonController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		locationChooser.initialize(person.getLocation(), true,
+		locationChooser.initialize(person.getLocation(), true, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				person::setLocation);
 
-		conversationChooser.initialize(person.getConversation(), true,
+		conversationChooser.initialize(person.getConversation(), true, false,
 				this.currentGameManager.getPersistenceManager().getConversationManager()::getAllConversations,
 				person::setConversation);
 

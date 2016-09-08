@@ -26,29 +26,11 @@ import javafx.util.StringConverter;
  */
 public abstract class NamedObjectChooser<E extends NamedObject> extends TextField {
 
-	/**
-	 * Supplier of a list of values, that can be chosen from.
-	 * 
-	 * @author Satia
-	 *
-	 * @param <E>
-	 *            the type
-	 */
-	public interface ValuesSupplier<E extends NamedObject> {
-		public List<E> get() throws DBClosedException;
-	}
-
 	/** All available values to choose from */
 	private List<E> availableValues;
 
 	/** The currently selected value */
 	private E currentSelection;
-
-	/** Whether null is an allowed value in the given context */
-	private boolean allowNull;
-
-	/** The action executed when a new value is chosen */
-	private Consumer<E> newValueChosenAction;
 
 	/** The String to display if no value is chosen. */
 	private String noValueString;
@@ -116,7 +98,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	 */
 	public void setObjectValue(E e) {
 		this.currentSelection = e;
-		this.setText(valueConverter.toString(this.currentSelection));
+		this.setText(this.valueConverter.toString(this.currentSelection));
 	}
 
 	/**
@@ -127,15 +109,16 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	 *            {@code allowNull} is set to false
 	 * @param allowNull
 	 *            whether null is an allowed value in the given context
+	 * @param updateAvailableValuesOnFocus
+	 *            whether the available values should be re-obtained each time
+	 *            the chooser gets focused.
 	 * @param getAvailableValues
 	 *            a method to supply the available values
 	 * @param newValueChosenAction
 	 *            the action executed when a new location is chosen
 	 */
-	public void initialize(E initialValue, boolean allowNull, ValuesSupplier<E> getAvailableValues,
-			Consumer<E> newValueChosenAction) {
-		this.newValueChosenAction = newValueChosenAction;
-		this.allowNull = allowNull;
+	public void initialize(E initialValue, boolean allowNull, boolean updateAvailableValuesOnFocus,
+			ValuesSupplier<E> getAvailableValues, Consumer<E> newValueChosenAction) {
 
 		// Retrieve all available values
 		try {
@@ -145,7 +128,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 			return;
 		}
 		// If we allow null, we must add it to the list
-		if (this.allowNull) {
+		if (allowNull) {
 			this.availableValues.add(0, null);
 		}
 
@@ -154,35 +137,44 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 				(isr) -> this.availableValues.stream()
 						.filter(val -> (val == null && isr.getUserText().isEmpty()) || (val != null
 								&& val.getName().toLowerCase().contains(isr.getUserText().toLowerCase())))
-				.collect(Collectors.toList()), valueConverter);
+				.collect(Collectors.toList()), this.valueConverter);
 
 		// Set initial location
 		this.currentSelection = initialValue;
-		this.setText(valueConverter.toString(initialValue));
+		this.setText(this.valueConverter.toString(initialValue));
 
 		// Listen for text changes
 		this.textProperty().addListener((f, o, n) -> {
-			E newVal = valueConverter.fromString(n);
-			if (newVal != null || this.allowNull) {
+			E newVal = this.valueConverter.fromString(n);
+			if (newVal != null || allowNull) {
 				this.currentSelection = newVal;
 				// Execute the action when a new value is chosen
-				this.newValueChosenAction.accept(newVal);
+				newValueChosenAction.accept(newVal);
 			}
 		});
 
-		// If the text field loses focus, make sure a value is currently
-		// typed
 		this.focusedProperty().addListener((f, o, n) -> {
 			if (!n) {
 				// textField lost focus
-				E newVal = valueConverter.fromString(this.getText());
-				if (newVal == null && !this.allowNull) {
+				// Make sure a value is currently typed
+				E newVal = this.valueConverter.fromString(this.getText());
+				if (newVal == null && !allowNull) {
 					// No valid value, restore the old selection
 					this.setText(this.valueConverter.toString(this.currentSelection));
 				} else {
 					// Valid value, but the user might have typed just the
 					// id: Put the correct string in place
 					this.setText(this.valueConverter.toString(newVal));
+				}
+			} else {
+				// textField got focus
+				// Update available values if specified
+				if(updateAvailableValuesOnFocus) {
+					try {
+						this.availableValues = getAvailableValues.get();
+					} catch (DBClosedException e) {
+						Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+					}
 				}
 			}
 		});

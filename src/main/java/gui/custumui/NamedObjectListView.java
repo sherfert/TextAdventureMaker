@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import data.NamedObject;
 import gui.MainWindowController;
@@ -20,7 +21,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 /**
- * TODO
+ * A view that combines a list of objects with 4 controls, to add, remove and
+ * change the order of the items. It must be extended by a concrete class that
+ * provides a concrete implementation of an NamedObjectChooser matching the
+ * generic type.
+ * 
+ * Initialize must be called to enable the functionality.
  * 
  * @author Satia
  */
@@ -40,14 +46,20 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 
 	@FXML
 	private Button downButton;
-	
+
 	@FXML
 	private HBox addHBox;
 
+	/** The items displayed in the list. */
 	private ObservableList<E> listItems;
-	
+
+	/** The chooser for adding values. */
 	private NamedObjectChooser<E> addValueChooser;
 
+	/**
+	 * @param addValueChooser
+	 *            a concrete value chooser
+	 */
 	protected NamedObjectListView(NamedObjectChooser<E> addValueChooser) {
 		try {
 			// Load layout from fxml file.
@@ -69,14 +81,30 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		this.addValueChooser = addValueChooser;
 	}
 
-	public void initialize(List<E> initialList, Consumer<List<E>> orderChanged, Consumer<E> valueAdded,
-			Consumer<E> valueRemoved) {
+	/**
+	 * Initialize this list view.
+	 * 
+	 * @param initialList
+	 *            the list of values to place in the list initially
+	 * @param getAllValues
+	 *            a method returning all applicable values
+	 * @param orderChanged
+	 *            called when the order of list items has changed
+	 * @param valueAdded
+	 *            called when a value was added to the list
+	 * @param valueRemoved
+	 *            called when a value was removed from the list
+	 */
+	public void initialize(List<E> initialList, ValuesSupplier<E> getAllValues, Consumer<List<E>> orderChanged,
+			Consumer<E> valueAdded, Consumer<E> valueRemoved) {
 		// Set initial list
 		listItems = FXCollections.observableArrayList(initialList);
 		listView.setItems(listItems);
-		
+
 		// Initialize chooser
-		//addValueChooser.initialize(null, false, getAvailableValues, newValueChosenAction);
+		addValueChooser.initialize(null, false, true, () -> {
+			return getAllValues.get().stream().filter((v) -> !listItems.contains(v)).collect(Collectors.toList());
+		} , (v) -> addButton.setDisable(false));
 
 		// Disable buttons by default and if no value is chosen
 		addButton.setDisable(true);
@@ -89,11 +117,13 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 			downButton.setDisable(n == null || listView.getSelectionModel().getSelectedIndex() == listItems.size() - 1);
 		});
 
-		// TODO enable "+ button" if a value is chosen in NamedObjectChooser
-		// testTF.textProperty().addListener((f, o, n) ->
-		// saveButton.setDisable(n.isEmpty()));
-
 		// Button handlers
+		addButton.setOnMouseClicked((e) -> {
+			E selectedItem = addValueChooser.getObjectValue();
+			addValueChooser.setObjectValue(null);
+			listItems.add(selectedItem);
+			valueAdded.accept(selectedItem);
+		});
 		removeButton.setOnMouseClicked((e) -> {
 			E selectedItem = listView.getSelectionModel().getSelectedItem();
 			listItems.remove(selectedItem);
@@ -102,15 +132,15 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		upButton.setOnMouseClicked((e) -> {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			Collections.swap(listItems, index, index - 1);
+			listView.getSelectionModel().selectPrevious();
 			orderChanged.accept(listItems);
 		});
 		downButton.setOnMouseClicked((e) -> {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			Collections.swap(listItems, index, index + 1);
+			listView.getSelectionModel().selectNext();
 			orderChanged.accept(listItems);
 		});
-
-		// TODO + handler
 	}
 
 }

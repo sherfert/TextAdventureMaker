@@ -7,7 +7,7 @@ import logic.CurrentGameManager;
 
 /**
  * Custom TextField for choosing items. Must be initialized with
- * {@link ItemChooser#initialize(Item, boolean, CurrentGameManager, Consumer)}
+ * {@link ItemChooser#initialize(Item, boolean, boolean, CurrentGameManager, Consumer)}
  * , otherwise it behaves just as a normal TextField.
  * 
  * @author satia

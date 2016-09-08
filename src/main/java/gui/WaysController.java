@@ -99,10 +99,10 @@ public class WaysController extends GameDataController {
 		// Fill table
 		table.setItems(waysOL);
 
-		newOriginChooser.initialize(null, false,
+		newOriginChooser.initialize(null, false, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (l) -> {
 				});
-		newDestinationChooser.initialize(null, false,
+		newDestinationChooser.initialize(null, false, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (l) -> {
 				});
 

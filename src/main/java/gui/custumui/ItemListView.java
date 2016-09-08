@@ -3,7 +3,7 @@ package gui.custumui;
 import data.Item;
 
 /**
- * TODO
+ * ListView to manage items.
  * 
  * @author Satia
  */

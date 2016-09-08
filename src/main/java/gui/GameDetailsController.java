@@ -172,7 +172,7 @@ public class GameDetailsController extends GameDataController {
 
 		startLocationChooser.initialize(
 				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(), false,
-				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (loc) -> {
+				false, this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (loc) -> {
 					try {
 						currentGameManager.getPersistenceManager().getGameManager().getGame().setStartLocation(loc);
 					} catch (Exception e) {

@@ -7,7 +7,7 @@ import logic.CurrentGameManager;
 
 /**
  * Custom TextField for choosing locations. Must be initialized with
- * {@link LocationChooser#initialize(Location, boolean, CurrentGameManager, Consumer)}
+ * {@link LocationChooser#initialize(Location, boolean, boolean, CurrentGameManager, Consumer)}
  * , otherwise it behaves just as a normal TextField.
  * 
  * @author satia

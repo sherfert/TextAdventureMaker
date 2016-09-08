@@ -16,7 +16,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one location.
  * 
- * TODO Support to change list of items/persons/waysIn/waysOut.
+ * TODO Support to change list of persons/waysIn/waysOut.
  * 
  * @author Satia
  */
@@ -48,8 +48,9 @@ public class LocationController extends GameDataController {
 		// Create new bindings
 		removeButton.setOnMouseClicked((e) -> removeLocation());
 
-		itemListView.initialize(location.getItems(), location::updateItems, (item) -> item.setLocation(location),
-				(item) -> item.setLocation(null));
+		itemListView.initialize(location.getItems(),
+				this.currentGameManager.getPersistenceManager().getItemManager()::getAllItems, location::updateItems,
+				(item) -> item.setLocation(location), (item) -> item.setLocation(null));
 	}
 
 	/**

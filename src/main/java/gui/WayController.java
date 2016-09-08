@@ -56,9 +56,9 @@ public class WayController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		originChooser.initialize(way.getOrigin(), false,
+		originChooser.initialize(way.getOrigin(), false, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, way::setOrigin);
-		destinationChooser.initialize(way.getDestination(), false,
+		destinationChooser.initialize(way.getDestination(), false, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				way::setDestination);
 

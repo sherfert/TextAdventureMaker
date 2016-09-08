@@ -17,7 +17,6 @@
             <HBox fx:id="addHBox" spacing="2.0">
                <children>
                   <Button fx:id="addButton" mnemonicParsing="false" prefWidth="25.0" text="+" />
-                  <!--  <TextField fx:id="testTF" HBox.hgrow="ALWAYS" />-->
                </children>
             </HBox>
             <Button fx:id="removeButton" mnemonicParsing="false" prefWidth="25.0" text="-" />
