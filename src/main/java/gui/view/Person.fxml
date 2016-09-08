@@ -6,21 +6,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.LocationChooser?>
+<?import gui.custumui.ConversationChooser?>
 
-<TabPane prefHeight="500.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE"
+<TabPane tabClosingPolicy="UNAVAILABLE"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<tabs>
 		<Tab text="Basic properties">
 			<content>
-				<VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+				<VBox spacing="2.0">
 					<children>
 						<fx:include source="NamedObject.fxml" />
                   		<fx:include source="NamedDescribedObject.fxml" />
 						<fx:include source="InspectableObject.fxml" />
-                  		<Label prefHeight="17.0" prefWidth="250.0" text="Location" />
-                  		<LocationChooser fx:id="locationChooser" prefHeight="25.0" prefWidth="250.0" HBox.hgrow="ALWAYS"  />
-						<Button fx:id="removeButton" minWidth="-Infinity"
-							mnemonicParsing="false" prefHeight="25.0" text="Delete this person" />
+                  		<Label text="Location" />
+                  		<LocationChooser fx:id="locationChooser" />
+						<Button fx:id="removeButton" 
+							mnemonicParsing="false"  text="Delete this person" />
 					</children>
 					<padding>
 						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -30,13 +31,14 @@
 		</Tab>
 		<Tab text="Talking to the person">
 			<content>
-				<VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+				<VBox spacing="2.0">
 					<children>
+						<Label text="Conversation" />
+						<ConversationChooser fx:id="conversationChooser"  />
 						<Label text="Talk Forbidden Text" />
 						<TextField fx:id="editTalkForbiddenTextTF" />
 						<Label text="Talk commands" />
-						<TextArea fx:id="editTalkCommandsTA" prefHeight="100.0"
-							prefWidth="198.0" wrapText="true" />
+						<TextArea fx:id="editTalkCommandsTA" prefHeight="100.0" wrapText="true" />
 					</children>
 					<padding>
 						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

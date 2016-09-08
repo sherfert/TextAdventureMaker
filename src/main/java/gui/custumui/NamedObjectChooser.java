@@ -45,12 +45,18 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	/** The class of the generic type argument */
 	private Class<E> valueClass;
 
+	/** The String to display if no value is chosen. */
+	private String noValueString;
+
 	/**
 	 * @param valueClass
 	 *            the concrete class to manage
+	 * @param noValueString
+	 *            the String to display if no value is chosen.
 	 */
-	public NamedObjectChooser(Class<E> valueClass) {
+	public NamedObjectChooser(Class<E> valueClass, String noValueString) {
 		this.valueClass = valueClass;
+		this.noValueString = noValueString;
 	}
 
 	/**
@@ -60,8 +66,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 		@Override
 		public String toString(E loc) {
 			if (loc == null) {
-				// TODO E
-				return "(no location)";
+				return noValueString;
 			} else {
 				return loc.getName() + " - ID: " + loc.getId();
 			}
@@ -69,7 +74,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 
 		@Override
 		public E fromString(String s) {
-			if (s.equals("(no location)")) {
+			if (s.equals(noValueString)) {
 				return null;
 			}
 			Pattern regex = Pattern.compile(".*?(\\d+)$");

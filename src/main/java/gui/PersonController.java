@@ -1,6 +1,7 @@
 package gui;
 
 import data.Person;
+import gui.custumui.ConversationChooser;
 import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,8 +12,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for one person.
  * 
- * TODO Support to change conversation
- * 
  * @author Satia
  */
 public class PersonController extends GameDataController {
@@ -22,6 +21,9 @@ public class PersonController extends GameDataController {
 
 	@FXML
 	private LocationChooser locationChooser;
+	
+	@FXML
+	private ConversationChooser conversationChooser;
 
 	@FXML
 	private Button removeButton;
@@ -49,6 +51,10 @@ public class PersonController extends GameDataController {
 		locationChooser.initialize(
 				person.getLocation(),
 				true, currentGameManager, person::setLocation);
+		
+		conversationChooser.initialize(
+				person.getConversation(),
+				true, currentGameManager, person::setConversation);
 		
 		removeButton.setOnMouseClicked(
 				(e) -> removeObject(person, "Deleting a person", "Do you really want to delete this person?",
