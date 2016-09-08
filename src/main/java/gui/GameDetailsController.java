@@ -30,8 +30,6 @@ import logic.CurrentGameManager;
  * 
  * TODO Support to change start items
  * 
- * TODO scrollview for the different accordion panes
- * 
  * XXX Warnings for empty fields
  * 
  * XXX placeholder checking for success fields

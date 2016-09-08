@@ -6,563 +6,566 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.LocationChooser?>
+<?import javafx.scene.control.ScrollPane?>
 
 <Accordion xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<panes>
 		<TitledPane animated="false" text="Basic Properties">
 			<content>
-				<VBox>
-					<children>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Game title" />
-								<TextField fx:id="gameTitleField" prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-							<VBox.margin>
-								<Insets />
-							</VBox.margin>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Starting text" />
-								<TextArea fx:id="startingTextField" prefHeight="200.0"
-									prefWidth="250.0" wrapText="true" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefHeight="17.0" prefWidth="250.0" text="Starting location" />
-								<LocationChooser fx:id="startLocationChooser"
-									prefHeight="25.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-					</children>
-				</VBox>
+				<ScrollPane fitToWidth="true">
+					<VBox>
+						<children>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Game title" />
+									<TextField fx:id="gameTitleField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Starting text" />
+									<TextArea fx:id="startingTextField" prefHeight="200.0"
+										prefWidth="250.0" wrapText="true" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefHeight="17.0" prefWidth="250.0" text="Starting location" />
+									<LocationChooser fx:id="startLocationChooser"
+										prefHeight="25.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+						</children>
+						<padding>
+							<Insets left="10" right="10" top="10" bottom="10" />
+						</padding>
+					</VBox>
+				</ScrollPane>
 			</content>
 		</TitledPane>
 		<TitledPane animated="false" text="Help Texts">
 			<content>
-				<VBox>
-					<children>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Use something with something else" />
-								<TextField fx:id="useWithHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<VBox.margin>
-								<Insets />
-							</VBox.margin>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Move somewhere" />
-								<TextField fx:id="moveHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Take something" />
-								<TextField fx:id="takeHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Use something" />
-								<TextField fx:id="useHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Talk to someone" />
-								<TextField fx:id="talkHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Look around" />
-								<TextField fx:id="lookAroundHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Inspect something" />
-								<TextField fx:id="inspectHelpTextField" 
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Inventory" />
-								<TextField fx:id="inventoryHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Display help" />
-								<TextField fx:id="helpHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Exit game" />
-								<TextField fx:id="exitHelpTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-					</children>
-				</VBox>
+				<ScrollPane fitToWidth="true">
+					<VBox>
+						<children>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something with something else" />
+									<TextField fx:id="useWithHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Move somewhere" />
+									<TextField fx:id="moveHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Take something" />
+									<TextField fx:id="takeHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something" />
+									<TextField fx:id="useHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Talk to someone" />
+									<TextField fx:id="talkHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Look around" />
+									<TextField fx:id="lookAroundHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Inspect something" />
+									<TextField fx:id="inspectHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Inventory" />
+									<TextField fx:id="inventoryHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Display help" />
+									<TextField fx:id="helpHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Exit game" />
+									<TextField fx:id="exitHelpTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+						</children>
+						<padding>
+							<Insets left="10" right="10" top="10" bottom="10" />
+						</padding>
+					</VBox>
+				</ScrollPane>
 			</content>
 		</TitledPane>
 		<TitledPane animated="false" text="Success Default Texts">
 			<content>
-				<VBox>
-					<children>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Use something with something else" />
-								<TextField fx:id="useWithSuccessTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-							<VBox.margin>
-								<Insets />
-							</VBox.margin>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Take something" />
-								<TextField fx:id="takeSuccessTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Use something" />
-								<TextField fx:id="useSuccessTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label  prefWidth="250.0" text="Inspect something" />
-								<TextField fx:id="inspectSuccessTextField" 
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox prefHeight="20.0">
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Empty inventory" />
-								<TextField fx:id="emptyInvSuccessTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Non-empty inventory" />
-								<TextField fx:id="invSuccessTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-					</children>
-				</VBox>
+				<ScrollPane fitToWidth="true">
+					<VBox>
+						<children>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something with something else" />
+									<TextField fx:id="useWithSuccessTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Take something" />
+									<TextField fx:id="takeSuccessTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something" />
+									<TextField fx:id="useSuccessTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Inspect something" />
+									<TextField fx:id="inspectSuccessTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox prefHeight="20.0">
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Empty inventory" />
+									<TextField fx:id="emptyInvSuccessTextField"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Non-empty inventory" />
+									<TextField fx:id="invSuccessTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+						</children>
+						<padding>
+							<Insets left="10" right="10" top="10" bottom="10" />
+						</padding>
+					</VBox>
+				</ScrollPane>
 			</content>
 		</TitledPane>
 		<TitledPane animated="false" text="Failure Default Texts">
 			<content>
-				<VBox>
-					<children>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Use something with something else" />
-								<TextField fx:id="useWithFailureTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-							<VBox.margin>
-								<Insets />
-							</VBox.margin>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Move somewhere" />
-								<TextField fx:id="moveFailureTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Take something" />
-								<TextField fx:id="takeFailureTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Use something" />
-								<TextField fx:id="useFailureTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Talk to someone" />
-								<TextField fx:id="talkFailureTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox prefHeight="20.0">
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="No such item" />
-								<TextField fx:id="noSuchItemTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="No such inventory item" />
-								<TextField fx:id="noSuchInventoryItemTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="No such person" />
-								<TextField fx:id="noSuchPersonTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="No such way" />
-								<TextField fx:id="noSuchWayTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox prefHeight="20.0">
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="No valid command" />
-								<TextField fx:id="noValidCommandTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Not sensible command" />
-								<TextField fx:id="notSensibleCommandTextField"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-					</children>
-				</VBox>
+				<ScrollPane fitToWidth="true">
+					<VBox>
+						<children>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something with something else" />
+									<TextField fx:id="useWithFailureTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Move somewhere" />
+									<TextField fx:id="moveFailureTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Take something" />
+									<TextField fx:id="takeFailureTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something" />
+									<TextField fx:id="useFailureTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Talk to someone" />
+									<TextField fx:id="talkFailureTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox prefHeight="20.0">
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="No such item" />
+									<TextField fx:id="noSuchItemTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="No such inventory item" />
+									<TextField fx:id="noSuchInventoryItemTextField"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="No such person" />
+									<TextField fx:id="noSuchPersonTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="No such way" />
+									<TextField fx:id="noSuchWayTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox prefHeight="20.0">
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="No valid command" />
+									<TextField fx:id="noValidCommandTextField" prefWidth="250.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Not sensible command" />
+									<TextField fx:id="notSensibleCommandTextField"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+						</children>
+						<padding>
+							<Insets left="10" right="10" top="10" bottom="10" />
+						</padding>
+					</VBox>
+				</ScrollPane>
 			</content>
 		</TitledPane>
 		<TitledPane animated="false" text="Commands">
 			<content>
-				<VBox>
-					<children>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Use something with something else" />
-								<TextArea fx:id="useWithCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-							<VBox.margin>
-								<Insets />
-							</VBox.margin>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Move somewhere" />
-								<TextArea fx:id="moveCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Take something" />
-								<TextArea fx:id="takeCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Use something" />
-								<TextArea fx:id="useCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Talk to someone" />
-								<TextArea fx:id="talkCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Look around" />
-								<TextArea fx:id="lookAroundCommandsTextField"
-									prefHeight="200.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Inspect something" />
-								<TextArea fx:id="inspectCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Inventory" />
-								<TextArea fx:id="inventoryCommandsTextField"
-									prefHeight="200.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Display help" />
-								<TextArea fx:id="helpCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0" text="Exit game" />
-								<TextArea fx:id="exitCommandsTextField" prefHeight="200.0"
-									prefWidth="250.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-					</children>
-				</VBox>
+				<ScrollPane fitToWidth="true">
+					<VBox>
+						<children>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something with something else" />
+									<TextArea fx:id="useWithCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Move somewhere" />
+									<TextArea fx:id="moveCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Take something" />
+									<TextArea fx:id="takeCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Use something" />
+									<TextArea fx:id="useCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Talk to someone" />
+									<TextArea fx:id="talkCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Look around" />
+									<TextArea fx:id="lookAroundCommandsTextField"
+										prefHeight="100.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Inspect something" />
+									<TextArea fx:id="inspectCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Inventory" />
+									<TextArea fx:id="inventoryCommandsTextField"
+										prefHeight="100.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Display help" />
+									<TextArea fx:id="helpCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Exit game" />
+									<TextArea fx:id="exitCommandsTextField" prefHeight="100.0"
+										prefWidth="250.0" HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+						</children>
+						<padding>
+							<Insets left="10" right="10" top="10" bottom="10" />
+						</padding>
+					</VBox>
+				</ScrollPane>
 			</content>
 		</TitledPane>
 		<TitledPane animated="false" text="Console Properties">
 			<content>
-				<VBox>
-					<children>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Number of option lines" />
-								<Spinner fx:id="optionLinesSpinner" prefWidth="150.0" HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-							<VBox.margin>
-								<Insets />
-							</VBox.margin>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Successful foreground color" />
-								<ComboBox fx:id="successfulFGColorPicker" prefWidth="150.0"
-									HBox.hgrow="ALWAYS" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox >
-							<children>
-								<Label  prefWidth="250.0"
-									text="Successful background color" />
-								<ComboBox fx:id="successfulBGColorPicker" prefWidth="150.0" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox >
-							<children>
-								<Label prefWidth="250.0"
-									text="Neutral foreground color" />
-								<ComboBox fx:id="neutralFGColorPicker" prefWidth="150.0" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Neutral background color" />
-								<ComboBox fx:id="neutralBGColorPicker" prefWidth="150.0" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label  prefWidth="250.0"
-									text="Failure foreground color" />
-								<ComboBox fx:id="failureFGColorPicker" prefWidth="150.0" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-						<HBox>
-							<children>
-								<Label prefWidth="250.0"
-									text="Failure background color" />
-								<ComboBox fx:id="failureBGColorPicker" prefWidth="150.0" />
-							</children>
-							<padding>
-								<Insets bottom="2.0" top="2.0" />
-							</padding>
-						</HBox>
-					</children>
-				</VBox>
+				<ScrollPane fitToWidth="true">
+					<VBox>
+						<children>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Number of option lines" />
+									<Spinner fx:id="optionLinesSpinner" prefWidth="150.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Successful foreground color" />
+									<ComboBox fx:id="successfulFGColorPicker" prefWidth="150.0"
+										HBox.hgrow="ALWAYS" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Successful background color" />
+									<ComboBox fx:id="successfulBGColorPicker" prefWidth="150.0" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Neutral foreground color" />
+									<ComboBox fx:id="neutralFGColorPicker" prefWidth="150.0" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Neutral background color" />
+									<ComboBox fx:id="neutralBGColorPicker" prefWidth="150.0" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Failure foreground color" />
+									<ComboBox fx:id="failureFGColorPicker" prefWidth="150.0" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+							<HBox>
+								<children>
+									<Label prefWidth="250.0" text="Failure background color" />
+									<ComboBox fx:id="failureBGColorPicker" prefWidth="150.0" />
+								</children>
+								<padding>
+									<Insets bottom="2.0" top="2.0" />
+								</padding>
+							</HBox>
+						</children>
+						<padding>
+							<Insets left="10" right="10" top="10" bottom="10" />
+						</padding>
+					</VBox>
+				</ScrollPane>
 			</content>
 		</TitledPane>
 	</panes>
