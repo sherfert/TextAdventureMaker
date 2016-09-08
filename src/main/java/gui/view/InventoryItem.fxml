@@ -6,16 +6,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<TabPane prefHeight="500.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab text="Basic properties">
          <content>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+            <VBox spacing="2.0">
                <children>
                   <fx:include source="NamedObject.fxml" />
                   <fx:include source="NamedDescribedObject.fxml" />
                   <fx:include source="InspectableObject.fxml" />
-                  <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" text="Delete this item" />
+                  <Button fx:id="removeButton"  mnemonicParsing="false" text="Delete this item" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -25,7 +25,7 @@
       </Tab>
     <Tab text="Using the inventory item">
          <content>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+            <VBox spacing="2.0">
                <children>
                   <fx:include source="UsableObject.fxml" />
                </children>

@@ -36,8 +36,6 @@ import data.action.RemoveInventoryItemAction;
  * 
  * TODO GUI
  * 
- * XXX go over FXML and remove unnecessary specs
- * 
  * TODO Tooltips everywhere!
  * 
  * TODO Test suite for deleting items

@@ -8,14 +8,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<VBox id="sidebar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0" styleClass="vbox" stylesheets="@sidebar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox id="sidebar" prefWidth="200.0" styleClass="vbox" stylesheets="@sidebar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Hyperlink fx:id="gameConfigHL" maxWidth="1.7976931348623157E308" text="Game configuration" VBox.vgrow="ALWAYS" />
-      <Hyperlink fx:id="locationsHL" maxWidth="1.7976931348623157E308" text="Locations" VBox.vgrow="ALWAYS" />
-      <Hyperlink fx:id="waysHL" maxWidth="1.7976931348623157E308" text="Ways" VBox.vgrow="ALWAYS" />
-      <Hyperlink fx:id="itemsHL" maxWidth="1.7976931348623157E308" text="Items" VBox.vgrow="ALWAYS" />
-      <Hyperlink fx:id="inventoryItemsHL" maxWidth="1.7976931348623157E308" text="Inventory items" VBox.vgrow="ALWAYS" />
-      <Hyperlink fx:id="personsHL" maxWidth="1.7976931348623157E308" text="Persons" VBox.vgrow="ALWAYS" />
-      <Hyperlink fx:id="conversationsHL" maxWidth="1.7976931348623157E308" text="Conversations" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="gameConfigHL" text="Game configuration" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="locationsHL" text="Locations" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="waysHL" text="Ways" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="itemsHL" text="Items" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="inventoryItemsHL" text="Inventory items" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="personsHL" text="Persons" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="conversationsHL" text="Conversations" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>

@@ -9,6 +9,6 @@
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.NamedDescribedObjectController">
    <children>
       <Label text="Description" />
-      <TextArea fx:id="editDescriptionTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
+      <TextArea fx:id="editDescriptionTA" prefHeight="100.0" wrapText="true" />
    </children>
 </VBox>

@@ -28,7 +28,9 @@ import logic.CurrentGameManager;
 /**
  * Controller for the game details view.
  * 
- * TODO Support to change starting location, start items
+ * TODO Support to change start items
+ * 
+ * TODO scrollview for the different accordion panes
  * 
  * XXX Warnings for empty fields
  * 

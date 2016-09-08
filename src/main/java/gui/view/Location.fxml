@@ -10,8 +10,8 @@
 	<children>
 		<fx:include source="NamedObject.fxml" />
 		<fx:include source="NamedDescribedObject.fxml" />
-		<Button fx:id="removeButton" minWidth="-Infinity"
-			mnemonicParsing="false" prefHeight="25.0" text="Delete this location" />
+		<Button fx:id="removeButton"
+			mnemonicParsing="false" text="Delete this location" />
 	</children>
 	<padding>
 		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.LocationChooser?>
 
-<TabPane prefHeight="500.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab text="Basic properties">
          <content>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+            <VBox spacing="2.0">
                <children>
                   <fx:include source="NamedObject.fxml" />
                   <fx:include source="NamedDescribedObject.fxml" />
@@ -20,7 +20,7 @@
                   <LocationChooser fx:id="originChooser"  />
                   <Label text="Destination" />
                   <LocationChooser fx:id="destinationChooser"  />
-                  <Button fx:id="removeButton" minWidth="-Infinity" mnemonicParsing="false" text="Delete this way" />
+                  <Button fx:id="removeButton" mnemonicParsing="false" text="Delete this way" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -30,7 +30,7 @@
       </Tab>
     <Tab text="Using the way">
          <content>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="2.0">
+            <VBox spacing="2.0">
                <children>
                   <CheckBox fx:id="editMovingEnabledCB" mnemonicParsing="false" text="Using enabled?" />
 			      <Label text="Move Successful Text" />
@@ -38,7 +38,7 @@
 			      <Label text="Move Forbidden Text" />
 			      <TextField fx:id="editMoveForbiddenTextTF" />
 			      <Label text="Move commands" />
-			      <TextArea fx:id="editMoveCommandsTA" prefHeight="100.0" prefWidth="198.0" wrapText="true" />
+			      <TextArea fx:id="editMoveCommandsTA" prefHeight="100.0" wrapText="true" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

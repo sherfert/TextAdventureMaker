@@ -9,4 +9,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<HBox id="navbar" fx:id="box" prefHeight="28.0" prefWidth="500.0" styleClass="hbox" stylesheets="@navbar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+<HBox id="navbar" fx:id="box" prefHeight="25.0"
+	styleClass="hbox" stylesheets="@navbar.css" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1" />
