@@ -36,7 +36,7 @@ import data.action.RemoveInventoryItemAction;
  * 
  * TODO GUI
  * 
- * TODO go over FXML and remove unnecessary specs
+ * XXX go over FXML and remove unnecessary specs
  * 
  * TODO Tooltips everywhere!
  * 

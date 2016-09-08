@@ -110,7 +110,7 @@ public class WaysController extends GameDataController {
 		// Assure save is only enabled if there is a name, origin and
 		// destination
 		Supplier<Boolean> anyRequiredFieldEmpty = () -> newNameTF.textProperty().get().isEmpty()
-				|| newOriginChooser.getLocationValue() == null || newDestinationChooser.getLocationValue() == null;
+				|| newOriginChooser.getObjectValue() == null || newDestinationChooser.getObjectValue() == null;
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newOriginChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newDestinationChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
@@ -134,8 +134,8 @@ public class WaysController extends GameDataController {
 	 * Saves a new way to both DB and table.
 	 */
 	private void saveNewWay() {
-		Way w = new Way(newNameTF.getText(), newDescriptionTA.getText(), newOriginChooser.getLocationValue(),
-				newDestinationChooser.getLocationValue());
+		Way w = new Way(newNameTF.getText(), newDescriptionTA.getText(), newOriginChooser.getObjectValue(),
+				newDestinationChooser.getObjectValue());
 		// Add item to DB
 		try {
 			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(w);

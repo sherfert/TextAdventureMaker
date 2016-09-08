@@ -20,7 +20,7 @@ import javafx.beans.property.StringProperty;
 /**
  * Anything having a name.
  * 
- * TODO overthink inhertitance strategy!
+ * XXX overthink inheritance strategy!
  *
  * @author Satia
  */
