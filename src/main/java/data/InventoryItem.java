@@ -683,13 +683,4 @@ public class InventoryItem extends UsableObject implements
 		combinableInventoryItems = new HashMap<>();
 		additionalCombineCommands = new HashMap<>();
 	}
-
-	@Override
-	public String toString() {
-		return "InventoryItem{" + "combinableInventoryItems="
-				+ NamedObject.getIDMap(combinableInventoryItems)
-				+ ", usableItems=" + NamedObject.getIDMap(usableItems)
-				+ ", usablePersons=" + NamedObject.getIDMap(usablePersons)
-				+ " " + super.toString() + '}';
-	}
 }

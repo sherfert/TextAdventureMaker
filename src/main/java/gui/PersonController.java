@@ -21,7 +21,7 @@ public class PersonController extends GameDataController {
 
 	@FXML
 	private LocationChooser locationChooser;
-	
+
 	@FXML
 	private ConversationChooser conversationChooser;
 
@@ -48,14 +48,14 @@ public class PersonController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		locationChooser.initialize(
-				person.getLocation(),
-				true, currentGameManager, person::setLocation);
-		
-		conversationChooser.initialize(
-				person.getConversation(),
-				true, currentGameManager, person::setConversation);
-		
+		locationChooser.initialize(person.getLocation(), true,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
+				person::setLocation);
+
+		conversationChooser.initialize(person.getConversation(), true,
+				this.currentGameManager.getPersistenceManager().getConversationManager()::getAllConversations,
+				person::setConversation);
+
 		removeButton.setOnMouseClicked(
 				(e) -> removeObject(person, "Deleting a person", "Do you really want to delete this person?",
 						"This will delete the person, and actions associated with any of the deleted entities."));

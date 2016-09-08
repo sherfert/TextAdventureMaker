@@ -5,7 +5,6 @@ import java.util.List;
 
 import data.Game;
 import data.InventoryItem;
-import data.NamedObject;
 import data.interfaces.HasLocation;
 
 import javax.persistence.Access;
@@ -319,16 +318,6 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 		for (InventoryItem item : combinablesToRemove) {
 			inventoryItem1.removeNewCombinableWhenCombinedWith(inventoryItem2, item);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "ChangeInvItemCombinationAction{inventoryItem1ID=" + inventoryItem1.getId() + ", inventoryItem2ID="
-				+ inventoryItem2.getId() + ", newCombineWithForbiddenText=" + newCombineWithForbiddenText
-				+ ", newCombineWithSuccessfulText=" + newCombineWithSuccessfulText + ", combinablesToAddIDs="
-				+ NamedObject.getIDList(combinablesToAdd) + ", combinablesToRemoveIDs="
-				+ NamedObject.getIDList(combinablesToRemove) + ", enablingCombinable=" + enablingCombinable
-				+ ", enablingRemoveCombinables=" + enablingRemoveCombinables + " " + super.toString() + "}";
 	}
 
 	@Override

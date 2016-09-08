@@ -45,9 +45,4 @@ public class EndGameAction extends AbstractAction {
 		return "Ends the game.";
 	}
 
-	@Override
-	public String toString() {
-		return "EndGameAction{ " + super.toString() + "}";
-	}
-
 }

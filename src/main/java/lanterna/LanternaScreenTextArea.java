@@ -17,6 +17,8 @@ import java.util.Stack;
  * area of the screen. This class will only update the screen, if it handles the
  * input itself.
  * 
+ * FIXME the Terminal still crashes often - either on Windows (now) or on Linux (previosly)
+ * 
  * @author Satia Herfert
  */
 public class LanternaScreenTextArea {

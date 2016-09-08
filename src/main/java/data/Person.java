@@ -148,11 +148,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	}
 
 	@Override
-	public String toString() {
-		return "Person{" + "locationID=" + location.getId() + " " + super.toString() + '}';
-	}
-
-	@Override
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_PERSON_CONVERSATION", foreignKeyDefinition = //
 	"FOREIGN KEY (CONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE SET NULL") )

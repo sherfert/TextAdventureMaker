@@ -95,11 +95,6 @@ public abstract class AbstractAction extends NamedObject {
 		this.enabled = enabled;
 	}
 
-	@Override
-	public String toString() {
-		return "AbstractAction{" + "enabled=" + enabled + " " + super.toString() + '}';
-	}
-
 	/**
 	 * Triggers the associated action. This logs, calls doAction if enabled, and
 	 * updates changes.

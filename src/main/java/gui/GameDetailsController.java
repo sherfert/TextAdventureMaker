@@ -171,8 +171,8 @@ public class GameDetailsController extends GameDataController {
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
 
 		startLocationChooser.initialize(
-				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(),
-				false, currentGameManager, (loc) -> {
+				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(), false,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (loc) -> {
 					try {
 						currentGameManager.getPersistenceManager().getGameManager().getGame().setStartLocation(loc);
 					} catch (Exception e) {

@@ -72,11 +72,6 @@ public class RemoveInventoryItemAction extends AbstractAction {
 	}
 
 	@Override
-	public String toString() {
-		return "RemoveInventoryItemAction{" + "itemID=" + item.getId() + " " + super.toString() + '}';
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Removing  ").append(item.getName()).append(".");

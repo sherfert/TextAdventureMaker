@@ -99,10 +99,12 @@ public class WaysController extends GameDataController {
 		// Fill table
 		table.setItems(waysOL);
 
-		newOriginChooser.initialize(null, false, currentGameManager, (l) -> {
-		});
-		newDestinationChooser.initialize(null, false, currentGameManager, (l) -> {
-		});
+		newOriginChooser.initialize(null, false,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (l) -> {
+				});
+		newDestinationChooser.initialize(null, false,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (l) -> {
+				});
 
 		// Disable buttons at beginning
 		saveButton.setDisable(true);
@@ -113,7 +115,8 @@ public class WaysController extends GameDataController {
 				|| newOriginChooser.getObjectValue() == null || newDestinationChooser.getObjectValue() == null;
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newOriginChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		newDestinationChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
+		newDestinationChooser.textProperty()
+				.addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		// Save button handler
 		saveButton.setOnMouseClicked((e) -> saveNewWay());
 	}
@@ -150,8 +153,8 @@ public class WaysController extends GameDataController {
 		// Reset the form values
 		newNameTF.setText("");
 		newDescriptionTA.setText("");
-		newOriginChooser.setLocationValue(null);
-		newDestinationChooser.setLocationValue(null);
+		newOriginChooser.setObjectValue(null);
+		newDestinationChooser.setObjectValue(null);
 	}
 
 	/**

@@ -19,7 +19,7 @@ public interface HasLocation extends UsableOrPassivelyUsable {
 	/**
 	 * Sets a new location for this thing. If the location manages a list of
 	 * these things, it should take care of removing it from the old location's
-	 * list and add it to the new one.
+	 * list and adding it to the new one.
 	 * 
 	 * @param location
 	 *            the location to set

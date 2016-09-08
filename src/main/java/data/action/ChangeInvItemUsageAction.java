@@ -190,13 +190,6 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangeInvItemUsageAction{inventoryItemID=" + inventoryItem.getId() + ", objectID=" + object.getId()
-				+ ", newUseWithForbiddenText=" + newUseWithForbiddenText + ", newUseWithSuccessfulText="
-				+ newUseWithSuccessfulText + ", enabling=" + enabling + " " + super.toString() + "]";
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Changing usage of ").append(inventoryItem.getName()).append(" with ").append(object.getName())

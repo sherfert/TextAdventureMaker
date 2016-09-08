@@ -14,7 +14,6 @@ import data.NamedObject;
 import exception.DBClosedException;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
-import logic.CurrentGameManager;
 
 /**
  * Abstract superclass for all Choosers of a single NamedObject from the
@@ -27,8 +26,17 @@ import logic.CurrentGameManager;
  */
 public abstract class NamedObjectChooser<E extends NamedObject> extends TextField {
 
-	/** The current game manager */
-	protected CurrentGameManager currentGameManager;
+	/**
+	 * Supplier of a list of values, that can be chosen from.
+	 * 
+	 * @author Satia
+	 *
+	 * @param <E>
+	 *            the type
+	 */
+	public interface ValuesSupplier<E extends NamedObject> {
+		public List<E> get() throws DBClosedException;
+	}
 
 	/** All available values to choose from */
 	private List<E> availableValues;
@@ -42,20 +50,14 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	/** The action executed when a new value is chosen */
 	private Consumer<E> newValueChosenAction;
 
-	/** The class of the generic type argument */
-	private Class<E> valueClass;
-
 	/** The String to display if no value is chosen. */
 	private String noValueString;
 
 	/**
-	 * @param valueClass
-	 *            the concrete class to manage
 	 * @param noValueString
 	 *            the String to display if no value is chosen.
 	 */
-	public NamedObjectChooser(Class<E> valueClass, String noValueString) {
-		this.valueClass = valueClass;
+	public NamedObjectChooser(String noValueString) {
 		this.noValueString = noValueString;
 	}
 
@@ -64,11 +66,12 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	 */
 	protected StringConverter<E> valueConverter = new StringConverter<E>() {
 		@Override
-		public String toString(E loc) {
-			if (loc == null) {
+		public String toString(E e) {
+			if (e == null) {
 				return noValueString;
 			} else {
-				return loc.getName() + " - ID: " + loc.getId();
+				/** See the implementation of NamedObject.toString() */
+				return e.toString();
 			}
 		}
 
@@ -84,16 +87,15 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 				String match = matcher.group(1);
 
 				int id = Integer.parseInt(match);
-				try {
-					return currentGameManager.getPersistenceManager().getAllObjectsManager().getObject(valueClass, id);
-				} catch (DBClosedException e) {
-					Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-							"Cannot convert string to value: DB closed");
-					return null;
+				// Go through the available values and select the one with the
+				// found ID
+				for (E val : availableValues) {
+					if (val != null && val.getId() == id) {
+						return val;
+					}
 				}
-			} else {
-				return null;
 			}
+			return null;
 		}
 	};
 
@@ -112,7 +114,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	 * @param e
 	 *            the new value.
 	 */
-	public void setLocationValue(E e) {
+	public void setObjectValue(E e) {
 		this.currentSelection = e;
 		this.setText(valueConverter.toString(this.currentSelection));
 	}
@@ -125,20 +127,19 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	 *            {@code allowNull} is set to false
 	 * @param allowNull
 	 *            whether null is an allowed value in the given context
-	 * @param currentGameManager
-	 *            the current game manager
+	 * @param getAvailableValues
+	 *            a method to supply the available values
 	 * @param newValueChosenAction
 	 *            the action executed when a new location is chosen
 	 */
-	public void initialize(E initialValue, boolean allowNull, CurrentGameManager currentGameManager,
+	public void initialize(E initialValue, boolean allowNull, ValuesSupplier<E> getAvailableValues,
 			Consumer<E> newValueChosenAction) {
-		this.currentGameManager = currentGameManager;
 		this.newValueChosenAction = newValueChosenAction;
 		this.allowNull = allowNull;
 
 		// Retrieve all available values
 		try {
-			this.availableValues = getAvailableValues();
+			this.availableValues = getAvailableValues.get();
 		} catch (DBClosedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 			return;
@@ -186,14 +187,5 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 			}
 		});
 	}
-
-	/**
-	 * Retrieve all available values from the Database.
-	 * 
-	 * @return the values to choose from.
-	 * @throws DBClosedException
-	 *             of the Database is closed.
-	 */
-	protected abstract List<E> getAvailableValues() throws DBClosedException;
 
 }

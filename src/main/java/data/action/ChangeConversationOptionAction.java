@@ -214,13 +214,6 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangeConversationOptionAction{optionID=" + option.getId() + ", enabling=" + enabling
-				+ ",enablingDisableOption=" + enablingDisableOption + ", newText=" + newText + ", newAnswer="
-				+ newAnswer + ", newEvent=" + newEvent + " " + super.toString() + "}";
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Changing conversation option ").append(option.getId());

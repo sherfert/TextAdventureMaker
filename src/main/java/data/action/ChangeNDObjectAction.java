@@ -132,12 +132,6 @@ public class ChangeNDObjectAction extends AbstractAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangeNDObjectAction{" + "newDescription=" + newDescription + ", newName=" + newName + ", objectID="
-				+ object.getId() + " " + super.toString() + '}';
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Changing ").append(object.getName()).append(".");

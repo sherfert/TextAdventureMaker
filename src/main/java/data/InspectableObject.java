@@ -158,10 +158,4 @@ public abstract class InspectableObject extends NamedDescribedObject implements 
 		additionalInspectActions = new ArrayList<>();
 		identifiers = new ArrayList<>();
 	}
-
-	@Override
-	public String toString() {
-		return "InspectableObject{" + "additionalInspectActionsIDs=" + NamedObject.getIDList(additionalInspectActions)
-				+ ", identifiers=" + identifiers + ", inspectionText=" + inspectionText + " " + super.toString() + '}';
-	}
 }

@@ -65,13 +65,5 @@ public abstract class NamedDescribedObject extends NamedObject {
 	public StringProperty descriptionProperty() {
         return description;
     }
-	
-	/**
-	 * @return a string representation of this object
-	 */
-	@Override
-	public String toString() {
-		return "NamedDescribedObject{" + "description=" + description + " " + super.toString() + '}';
-	}
 
 }

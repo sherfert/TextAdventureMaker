@@ -267,12 +267,4 @@ public class Way extends InspectableObject implements Travelable {
 		this.additionalMoveActions = new ArrayList<>();
 		this.additionalTravelCommands = new ArrayList<>();
 	}
-
-	@Override
-	public String toString() {
-		return "Way{" + "additionalMoveActionsIDs=" + NamedObject.getIDList(additionalMoveActions) + ", moveActionID="
-				+ moveAction.getId() + ", destinationID=" + destination.getId() + ", originID=" + origin.getId()
-				+ ", moveForbiddenText=" + moveForbiddenText + ", moveSuccessfulText=" + moveSuccessfulText + " "
-				+ super.toString() + '}';
-	}
 }

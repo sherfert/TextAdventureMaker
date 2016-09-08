@@ -13,7 +13,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import data.Game;
-import data.NamedObject;
 
 /**
  * A MultiAction simply combines multiple actions into one. One should only
@@ -118,12 +117,6 @@ public class MultiAction extends AbstractAction {
 			// there are no multiple entries
 			action.doAction(game);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "MultiAction{actionsIDs=" + NamedObject.getIDList(actions) + " "
-				+ super.toString() + "}";
 	}
 
 	/**

@@ -307,12 +307,4 @@ public class ConversationOption extends NamedObject {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "ConversationOption{" + "text=" + text + ", answer=" + answer + ", event=" + event
-				+ ", additionalActionsIDs=" + NamedObject.getIDList(additionalActions) + ", enabled=" + enabled
-				+ ", targetID=" + target.getId() + ", disableActionID=" + disableAction.getId() + " " + super.toString()
-				+ "}";
-	}
-
 }

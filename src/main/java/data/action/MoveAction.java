@@ -70,11 +70,6 @@ public class MoveAction extends AbstractAction {
 	}
 
 	@Override
-	public String toString() {
-		return "MoveAction{" + "targetID=" + target.getId() + " " + super.toString() + '}';
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Moving to ").append(target.getName()).append(".");

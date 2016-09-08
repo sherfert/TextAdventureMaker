@@ -195,13 +195,6 @@ public class ChangeWayAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangeWayAction{" + "newMoveForbiddenText=" + newMoveForbiddenText + ", newMoveSuccessfulText="
-				+ newMoveSuccessfulText + ", newOriginID=" + newOrigin.getId() + ", enabling=" + enabling
-				+ ", newDestinationID=" + newDestination.getId() + " " + super.toString() + '}';
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (enabling != Enabling.DO_NOT_CHANGE) {

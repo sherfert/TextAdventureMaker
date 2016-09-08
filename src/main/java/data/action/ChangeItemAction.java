@@ -20,7 +20,6 @@ import data.Game;
 import data.InventoryItem;
 import data.Item;
 import data.Location;
-import data.NamedObject;
 
 /**
  * An action changing attributes of an {@link Item}.
@@ -330,16 +329,6 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 		for (InventoryItem item : pickUpItemsToRemove) {
 			getObject().removePickUpItem(item);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "ChangeItemAction{changeLocation=" + changeLocation + ", newLocationID="
-				+ (newLocation != null ? newLocation.getId() : "null") + ", newTakeForbiddenText="
-				+ newTakeForbiddenText + ", newTakeSuccessfulText=" + newTakeSuccessfulText + ", enablingTakeable="
-				+ enablingTakeable + ", pickUpItemsToAddIDs=" + NamedObject.getIDList(pickUpItemsToAdd)
-				+ ", pickUpItemsToRemoveIDs=" + NamedObject.getIDList(pickUpItemsToRemove) + ", enablingRemoveItem="
-				+ enablingRemoveItem + " " + super.toString() + "}";
 	}
 
 	@Override

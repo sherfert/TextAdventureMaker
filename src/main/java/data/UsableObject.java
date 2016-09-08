@@ -209,11 +209,4 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 		additionalUseCommands = new ArrayList<>();
 		usingEnabled.set(false);
 	}
-
-	@Override
-	public String toString() {
-		return "UsableObject{" + "additionalUseActionsIDs=" + NamedObject.getIDList(additionalUseActions)
-				+ ", useForbiddenText=" + useForbiddenText + ", useSuccessfulText=" + useSuccessfulText
-				+ ", usingEnabled=" + usingEnabled + " " + super.toString() + '}';
-	}
 }

@@ -99,8 +99,8 @@ public abstract class NamedObject implements HasId {
 	 * @return a string representation of this object
 	 */
 	@Override
-	public String toString() {
-		return "NamedObject{" + "id=" + id + ", name=" + name + '}';
+	public final String toString() {
+		return getName() + " - ID: " + getId();
 	}
 
 	/**

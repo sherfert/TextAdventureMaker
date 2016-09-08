@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import data.Location;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
+import gui.custumui.ItemListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -27,6 +28,9 @@ public class LocationController extends GameDataController {
 	@FXML
 	private Button removeButton;
 
+	@FXML
+	private ItemListView itemListView;
+
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -43,6 +47,9 @@ public class LocationController extends GameDataController {
 	private void initialize() {
 		// Create new bindings
 		removeButton.setOnMouseClicked((e) -> removeLocation());
+
+		itemListView.initialize(location.getItems(), location::updateItems, (item) -> item.setLocation(location),
+				(item) -> item.setLocation(null));
 	}
 
 	/**

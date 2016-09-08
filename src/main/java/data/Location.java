@@ -35,8 +35,8 @@ public class Location extends NamedDescribedObject {
 	private List<Person> persons;
 
 	/**
-	 * The ways leading inside this location. They get deleted when the
-	 * location is deleted.
+	 * The ways leading inside this location. They get deleted when the location
+	 * is deleted.
 	 */
 	private List<Way> waysIn;
 
@@ -57,8 +57,10 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * @param name the name
-	 * @param description the description
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
 	 */
 	public Location(String name, String description) {
 		super(name, description);
@@ -66,10 +68,11 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * Adds an item to this location. Package visibility, so that from
-	 * outside the Item methods are used instead.
+	 * Adds an item to this location. Package visibility, so that from outside
+	 * the Item methods are used instead.
 	 *
-	 * @param item the item
+	 * @param item
+	 *            the item
 	 */
 	void addItem(Item item) {
 		if (!this.items.contains(item)) {
@@ -78,10 +81,11 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * Adds a person to this location. Package visibility, so that from
-	 * outside the Person methods are used instead.
+	 * Adds a person to this location. Package visibility, so that from outside
+	 * the Person methods are used instead.
 	 *
-	 * @param person the person
+	 * @param person
+	 *            the person
 	 */
 	void addPerson(Person person) {
 		if (!this.persons.contains(person)) {
@@ -90,10 +94,11 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * Adds a way in. Package visibility, so that from outside the Way
-	 * methods are used instead.
+	 * Adds a way in. Package visibility, so that from outside the Way methods
+	 * are used instead.
 	 *
-	 * @param wayIn the way
+	 * @param wayIn
+	 *            the way
 	 */
 	void addWayIn(Way wayIn) {
 		if (!this.waysIn.contains(wayIn)) {
@@ -102,10 +107,11 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * Adds a way out. Package visibility, so that from outside the Way
-	 * methods are used instead.
+	 * Adds a way out. Package visibility, so that from outside the Way methods
+	 * are used instead.
 	 *
-	 * @param wayOut the way
+	 * @param wayOut
+	 *            the way
 	 */
 	void addWayOut(Way wayOut) {
 		if (!this.waysOut.contains(wayOut)) {
@@ -116,8 +122,8 @@ public class Location extends NamedDescribedObject {
 	/**
 	 * This String is being displayed when the player enters the location
 	 *
-	 * @return the short description plus the short descriptions of
-	 * everything here.
+	 * @return the short description plus the short descriptions of everything
+	 *         here.
 	 */
 	@Transient
 	public String getEnteredText() {
@@ -138,13 +144,11 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * @return a list containing the {@link HasLocation}s: Persons and
-	 * Items.
+	 * @return a list containing the {@link HasLocation}s: Persons and Items.
 	 */
 	@Transient
 	public List<HasLocation> getHasLocations() {
-		List<HasLocation> result = new ArrayList<>(persons.size()
-			+ items.size());
+		List<HasLocation> result = new ArrayList<>(persons.size() + items.size());
 		// The persons
 		result.addAll(persons);
 		// The items
@@ -154,7 +158,7 @@ public class Location extends NamedDescribedObject {
 
 	/**
 	 * @return a list containing everything that can be inspected in this
-	 * location.
+	 *         location.
 	 */
 	@Transient
 	public List<Inspectable> getInspectables() {
@@ -171,11 +175,27 @@ public class Location extends NamedDescribedObject {
 	/**
 	 * @return the items
 	 * 
-	 * FIXME why get items deleted
+	 *         FIXME why get items deleted
 	 */
 	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	public List<Item> getItems() {
 		return items;
+	}
+
+	/**
+	 * Updates the list of items of this location. This method must only be
+	 * called if the elements of the passed list and the current list are the
+	 * same, except for the order.
+	 * 
+	 * FIXME This does not persist the new order.
+	 * 
+	 * @param newItems
+	 *            the permutated list of items
+	 */
+	public void updateItems(List<Item> newItems) {
+		// Set items list, so that the order of the passed list is preserved
+		items.clear();
+		items.addAll(newItems);
 	}
 
 	/**
@@ -189,7 +209,7 @@ public class Location extends NamedDescribedObject {
 	/**
 	 * @return the waysOut
 	 */
-	@OneToMany(mappedBy = "origin", cascade = {CascadeType.PERSIST})
+	@OneToMany(mappedBy = "origin", cascade = { CascadeType.PERSIST })
 	public List<Way> getWaysOut() {
 		return waysOut;
 	}
@@ -197,7 +217,7 @@ public class Location extends NamedDescribedObject {
 	/**
 	 * @return the waysIn
 	 */
-	@OneToMany(mappedBy = "destination", cascade = {CascadeType.PERSIST})
+	@OneToMany(mappedBy = "destination", cascade = { CascadeType.PERSIST })
 	public List<Way> getWaysIn() {
 		return waysIn;
 	}
@@ -252,7 +272,8 @@ public class Location extends NamedDescribedObject {
 	 * Removes an item from this location. Package visibility, so that from
 	 * outside the Item methods are used instead.
 	 *
-	 * @param item the item
+	 * @param item
+	 *            the item
 	 */
 	void removeItem(Item item) {
 		this.items.remove(item);
@@ -262,7 +283,8 @@ public class Location extends NamedDescribedObject {
 	 * Removes a person from this location. Package visibility, so that from
 	 * outside the Person methods are used instead.
 	 *
-	 * @param person the person
+	 * @param person
+	 *            the person
 	 */
 	void removePerson(Person person) {
 		this.persons.remove(person);
@@ -272,7 +294,8 @@ public class Location extends NamedDescribedObject {
 	 * Removes a way in. Package visibility, so that from outside the Way
 	 * methods are used instead.
 	 *
-	 * @param wayIn the way
+	 * @param wayIn
+	 *            the way
 	 */
 	void removeWayIn(Way wayIn) {
 		this.waysIn.remove(wayIn);
@@ -282,19 +305,11 @@ public class Location extends NamedDescribedObject {
 	 * Removes a way out. Package visibility, so that from outside the Way
 	 * methods are used instead.
 	 *
-	 * @param wayOut the way
+	 * @param wayOut
+	 *            the way
 	 */
 	void removeWayOut(Way wayOut) {
 		this.waysOut.remove(wayOut);
-	}
-
-	@Override
-	public String toString() {
-		return "Location{" + "itemsIDs=" + NamedObject.getIDList(items)
-			+ ", personsIDs=" + NamedObject.getIDList(persons)
-			+ ", waysInIDs=" + NamedObject.getIDList(waysIn)
-			+ ", waysOutIDs=" + NamedObject.getIDList(waysOut) + " "
-			+ super.toString() + '}';
 	}
 
 }

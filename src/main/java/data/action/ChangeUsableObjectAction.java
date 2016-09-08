@@ -140,14 +140,6 @@ public class ChangeUsableObjectAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangeUsableObjectAction{" + "newUseForbiddenText="
-				+ newUseForbiddenText + ", newUseSuccessfulText="
-				+ newUseSuccessfulText + ", enabling=" + enabling + " "
-				+ super.toString() + '}';
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (enabling != Enabling.DO_NOT_CHANGE) {

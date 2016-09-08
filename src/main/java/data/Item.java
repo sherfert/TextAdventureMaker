@@ -312,12 +312,4 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		this.additionalTakeCommands = new ArrayList<>();
 		setRemoveItem(true);
 	}
-
-	@Override
-	public String toString() {
-		return "Item{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId() + ", additionalTakeActionsIDs="
-				+ NamedObject.getIDList(additionalTakeActions) + ", locationID=" + location.getId()
-				+ ", removeActionID=" + removeAction.getId() + ", takeForbiddenText=" + takeForbiddenText
-				+ ", takeSuccessfulText=" + takeSuccessfulText + " " + super.toString() + '}';
-	}
 }

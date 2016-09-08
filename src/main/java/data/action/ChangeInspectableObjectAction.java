@@ -183,14 +183,6 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangeInspectableObjectAction{" + "identifiersToAdd="
-				+ identifiersToAdd + ", identifiersToRemove="
-				+ identifiersToRemove + ", newInspectionText="
-				+ newInspectionText + " " + super.toString() + '}';
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (newInspectionText != null) {

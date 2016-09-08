@@ -1,10 +1,8 @@
 package gui.custumui;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import data.Conversation;
-import exception.DBClosedException;
 import logic.CurrentGameManager;
 
 /**
@@ -20,12 +18,7 @@ public class ConversationChooser extends NamedObjectChooser<Conversation> {
 	 * Create a new ConversationChooser
 	 */
 	public ConversationChooser() {
-		super(Conversation.class, "(no conversation)");
-	}
-
-	@Override
-	protected List<Conversation> getAvailableValues() throws DBClosedException {
-		return this.currentGameManager.getPersistenceManager().getConversationManager().getAllConversations();
+		super("(no conversation)");
 	}
 
 }

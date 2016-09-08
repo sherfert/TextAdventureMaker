@@ -186,14 +186,6 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangePersonAction{newTalkingToForbiddenText=" + newTalkingToForbiddenText + ", changeLocation="
-				+ changeLocation + ", newLocationID=" + (newLocation != null ? newLocation.getId() : "null")
-				+ ", changeConversation=" + changeConversation + ", newConversationID="
-				+ (newConversation != null ? newConversation.getId() : "null") + " " + super.toString() + "}";
-	}
-
-	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (changeConversation) {

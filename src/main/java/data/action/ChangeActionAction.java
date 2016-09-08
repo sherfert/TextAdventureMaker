@@ -109,12 +109,6 @@ public class ChangeActionAction extends AbstractAction {
 	}
 
 	@Override
-	public String toString() {
-		return "ChangeActionAction{" + "actionID=" + action.getId() + ", enabling=" + enabling + " " + super.toString()
-				+ '}';
-	}
-
-	@Override
 	public String actionDescription() {
 		return enabling.description + " action " + action.getId();
 	}

@@ -154,20 +154,6 @@ public class ChangeConversationAction extends AbstractAction {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "ChangeConversationAction{conversationID="
-				+ conversation.getId() + ", enabling=" + enabling
-				+ ", newGreeting=" + newGreeting + ", newEvent=" + newEvent
-				+ " " + super.toString() 
-				+ "}";
-	}
-
 	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();

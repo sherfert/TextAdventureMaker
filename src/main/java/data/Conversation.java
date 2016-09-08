@@ -288,12 +288,4 @@ public class Conversation extends NamedObject {
 		additionalActions.remove(action);
 	}
 
-	@Override
-	public String toString() {
-		return "Conversation{" + "greeting=" + greeting + ", event=" + event + ", enabled=" + enabled
-				+ ", additionalActionsIDs=" + NamedObject.getIDList(additionalActions) + ", layersIDs="
-				+ NamedObject.getIDList(layers) + ", startLayerID=" + (startLayer != null ? startLayer.getId() : "null")
-				+ " " + super.toString() + "}";
-	}
-
 }

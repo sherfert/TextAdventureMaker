@@ -13,7 +13,6 @@ import javax.persistence.ManyToMany;
 
 import data.Game;
 import data.InventoryItem;
-import data.NamedObject;
 
 /**
  * None, one or multiple {@link InventoryItem}s may be added to the inventory.
@@ -103,13 +102,6 @@ public class AddInventoryItemsAction extends AbstractAction {
 		for (InventoryItem item : pickUpItems) {
 			game.getPlayer().addInventoryItem(item);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "AddInventoryItemsAction{" + "pickUpItemsIDs="
-				+ NamedObject.getIDList(pickUpItems) + " " + super.toString()
-				+ '}';
 	}
 
 	@Override

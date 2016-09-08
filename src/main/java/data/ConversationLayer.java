@@ -130,9 +130,4 @@ public class ConversationLayer extends NamedObject {
 		return false;
 	}
 
-	@Override
-	public String toString() {
-		return "ConversationLayer{" + "optionsIDs=" + NamedObject.getIDList(options) + " " + super.toString() + "}";
-	}
-
 }

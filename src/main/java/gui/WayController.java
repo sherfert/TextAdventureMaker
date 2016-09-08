@@ -56,13 +56,12 @@ public class WayController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		originChooser.initialize(
-				way.getOrigin(),
-				false, currentGameManager, way::setOrigin);
-		destinationChooser.initialize(
-				way.getDestination(),
-				false, currentGameManager, way::setDestination);
-		
+		originChooser.initialize(way.getOrigin(), false,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, way::setOrigin);
+		destinationChooser.initialize(way.getDestination(), false,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
+				way::setDestination);
+
 		removeButton
 				.setOnMouseClicked((e) -> removeObject(way, "Deleting a way", "Do you really want to delete this way?",
 						"This will delete the way, and actions associated with any of the deleted entities."));
