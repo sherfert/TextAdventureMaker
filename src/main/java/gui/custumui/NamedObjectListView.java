@@ -96,13 +96,21 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 	 *            called when a value was added to the list
 	 * @param valueRemoved
 	 *            called when a value was removed from the list
+	 * @param valueClicked
+	 *            called when a value was double-clicked in the list
 	 */
 	public void initialize(List<E> initialList, ValuesSupplier<E> getAllValues, Consumer<List<E>> orderChanged,
-			Consumer<E> valueAdded, Consumer<E> valueRemoved) {
+			Consumer<E> valueAdded, Consumer<E> valueRemoved, Consumer<E> valueClicked) {		
 		// Set initial list
 		listItems = FXCollections.observableArrayList(initialList);
 		listView.setItems(listItems);
-
+		
+		listView.setOnMouseClicked((e) -> {
+			if(e.getClickCount() == 2) {
+				valueClicked.accept(listView.getSelectionModel().getSelectedItem());
+			}
+		});		
+		
 		// Initialize chooser
 		addValueChooser.initialize(null, false, true, () -> {
 			return getAllValues.get().stream().filter((v) -> !listItems.contains(v)).collect(Collectors.toList());

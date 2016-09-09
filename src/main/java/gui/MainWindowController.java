@@ -99,20 +99,6 @@ public class MainWindowController {
 	public void setWindow(Window window) {
 		this.window = window;
 	}
-	
-	/**
-	 * Load the view given by the fxml into the center of the main window's
-	 * border pane. With that fxml must be associated a controller implementing
-	 * {@link GameDataController}.
-	 * 
-	 * @param fxml
-	 *            The fxml file to load
-	 * @param controller
-	 *            the controller
-	 */
-	public void setCenterContent(String fxml, GameDataController controller) {
-		setCenterContent(fxml, controller, null);
-	}
 
 	/**
 	 * Load the view given by the fxml into the center of the main window's
@@ -184,20 +170,6 @@ public class MainWindowController {
 		// Load game details as first view
 		loadGameDetails();
 	}
-	
-	/**
-	 * Pushes a new view onto the center.
-	 * 
-	 * @param linkTitle
-	 *            the title for the link to this view in the navbar
-	 * @param fxml
-	 *            the FXML
-	 * @param controller
-	 *            the controller
-	 */
-	public void pushCenterContent(String linkTitle, String fxml, GameDataController controller) {
-		pushCenterContent(linkTitle, fxml, controller, null);
-	}
 
 	/**
 	 * Pushes a new view onto the center.
@@ -214,7 +186,7 @@ public class MainWindowController {
 	public void pushCenterContent(String linkTitle, String fxml, GameDataController controller,
 			Callback<Class<?>, Object> controllerFactory) {
 		// Push to the navbar
-		navbarController.push(linkTitle, controller, fxml);
+		navbarController.push(linkTitle, fxml, controller, controllerFactory);
 		// Set the content
 		setCenterContent(fxml, controller, controllerFactory);
 	}
@@ -234,9 +206,8 @@ public class MainWindowController {
 		String fxml = "view/GameDetails.fxml";
 		// Reset the navbar
 		navbarController.reset();
-		navbarController.push("Game Configuration", gameDetailsController, fxml);
 		// Load the content
-		setCenterContent(fxml, gameDetailsController);
+		pushCenterContent("Game Configuration", fxml, gameDetailsController,  gameDetailsController::controllerFactory);
 	}
 
 	/**
@@ -246,9 +217,8 @@ public class MainWindowController {
 		String fxml = "view/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
-		navbarController.push("Locations", locationsController, fxml);
 		// Load the content
-		setCenterContent(fxml, locationsController);
+		pushCenterContent("Locations", fxml, locationsController,  locationsController::controllerFactory);
 	}
 
 	/**
@@ -258,9 +228,8 @@ public class MainWindowController {
 		String fxml = "view/Ways.fxml";
 		// Reset the navbar
 		navbarController.reset();
-		navbarController.push("Ways", waysController, fxml);
 		// Load the content
-		setCenterContent(fxml, waysController);
+		pushCenterContent("Ways", fxml, waysController,  waysController::controllerFactory);
 	}
 
 	/**
@@ -270,9 +239,8 @@ public class MainWindowController {
 		String fxml = "view/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
-		navbarController.push("Items", itemsController, fxml);
 		// Load the content
-		setCenterContent(fxml, itemsController);
+		pushCenterContent("Items", fxml, itemsController,  itemsController::controllerFactory);
 	}
 
 	/**
@@ -282,9 +250,8 @@ public class MainWindowController {
 		String fxml = "view/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
-		navbarController.push("Inventory items", inventoryItemsController, fxml);
 		// Load the content
-		setCenterContent(fxml, inventoryItemsController);
+		pushCenterContent("Inventory items", fxml, inventoryItemsController,  inventoryItemsController::controllerFactory);
 	}
 	
 	/**
@@ -294,9 +261,8 @@ public class MainWindowController {
 		String fxml = "view/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
-		navbarController.push("Persons", personsController, fxml);
 		// Load the content
-		setCenterContent(fxml, personsController);
+		pushCenterContent("Persons", fxml, personsController,  personsController::controllerFactory);
 	}
 	
 	/**
@@ -306,9 +272,8 @@ public class MainWindowController {
 		String fxml = "view/Conversations.fxml";
 		// Reset the navbar
 		navbarController.reset();
-		navbarController.push("Conversations", conversationsController, fxml);
 		// Load the content
-		setCenterContent(fxml, conversationsController);
+		pushCenterContent("Conversations", fxml, conversationsController,  conversationsController::controllerFactory);
 	}
 
 	/**

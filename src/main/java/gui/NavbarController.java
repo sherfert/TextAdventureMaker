@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 
 /**
  * The navbar controller.
@@ -21,14 +22,17 @@ public class NavbarController {
 	 * @author Satia
 	 */
 	private class NavbarItem {
-		GameDataController controller;
 		String fxml;
+		GameDataController controller;
+		Callback<Class<?>, Object> controllerFactory;
 		Hyperlink link;
 		Label arrow;
 
-		public NavbarItem(String title, GameDataController controller, String fxml) {
-			this.controller = controller;
+		public NavbarItem(String title, String fxml, GameDataController controller,
+				Callback<Class<?>, Object> controllerFactory) {
 			this.fxml = fxml;
+			this.controller = controller;
+			this.controllerFactory = controllerFactory;
 			this.link = new Hyperlink(title);
 			this.arrow = new Label("⇒");
 			this.link.setOnAction(NavbarController.this::linkClicked);
@@ -74,7 +78,7 @@ public class NavbarController {
 				found = (clicked == item.link);
 				if (found) {
 					// Load the controller
-					mwController.setCenterContent(item.fxml, item.controller);
+					mwController.setCenterContent(item.fxml, item.controller, item.controllerFactory);
 				}
 			} else {
 				// Remove everything after the found link
@@ -94,13 +98,15 @@ public class NavbarController {
 	 * 
 	 * @param title
 	 *            the title for the link
-	 * @param c
-	 *            the controller
 	 * @param fxml
 	 *            the fxml
+	 * @param c
+	 *            the controller
+	 * @param controllerFactory
+	 *            a controller factory or {@code null}
 	 */
-	public void push(String title, GameDataController c, String fxml) {
-		NavbarItem item = new NavbarItem(title, c, fxml);
+	public void push(String title, String fxml, GameDataController c, Callback<Class<?>, Object> controllerFactory) {
+		NavbarItem item = new NavbarItem(title, fxml, c, controllerFactory);
 		if (!box.getChildren().isEmpty()) {
 			// Only add the arrow starting from the second item
 			box.getChildren().add(item.arrow);
@@ -119,7 +125,7 @@ public class NavbarController {
 
 		// Navigate to the top entry
 		NavbarItem top = items.peek();
-		mwController.setCenterContent(top.fxml, top.controller);
+		mwController.setCenterContent(top.fxml, top.controller, top.controllerFactory);
 	}
 
 	/**

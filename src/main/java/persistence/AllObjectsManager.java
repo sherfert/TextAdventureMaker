@@ -49,7 +49,6 @@ public class AllObjectsManager {
 	 * @throws DBClosedException
 	 */
 	public void removeObject(HasId object) throws DBClosedException {
-
 		// It is not permitted to delete Game or Player objects
 		if (object instanceof Player || object instanceof Game) {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,

@@ -98,11 +98,13 @@ public abstract class GameDataController {
 	 * In an else branch, they should return
 	 * {@code super.controllerFactory(type)}.
 	 * 
+	 * Or they don't override it if they don't have any nested controllers in the FXML.
+	 * 
 	 * @param type
 	 *            the type of the object
 	 * @return the new controller
 	 */
-	protected Object controllerFactory(Class<?> type) {
+	public Object controllerFactory(Class<?> type) {
 		try {
 			return type.newInstance();
 		} catch (Exception e) {
@@ -334,6 +336,9 @@ public abstract class GameDataController {
 		alert.setContentText(content);
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
+				// Update any previous changes first, otherwise the deletion may not work
+				currentGameManager.getPersistenceManager().updateChanges();
+				
 				// Remove item from DB
 				try {
 					currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(object);
@@ -342,6 +347,7 @@ public abstract class GameDataController {
 							"Abort: DB closed");
 					return;
 				}
+				// Update the deletion
 				currentGameManager.getPersistenceManager().updateChanges();
 
 				// Switch back to previous view

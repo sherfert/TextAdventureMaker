@@ -3,6 +3,7 @@ package gui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import data.Item;
 import data.Location;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
@@ -50,7 +51,7 @@ public class LocationController extends GameDataController {
 
 		itemListView.initialize(location.getItems(),
 				this.currentGameManager.getPersistenceManager().getItemManager()::getAllItems, location::updateItems,
-				(item) -> item.setLocation(location), (item) -> item.setLocation(null));
+				(item) -> item.setLocation(location), (item) -> item.setLocation(null), this::itemSelected);
 	}
 
 	/**
@@ -100,6 +101,22 @@ public class LocationController extends GameDataController {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not get Game.", e);
 		}
 		return false;
+	}
+	
+	/**
+	 * Opens an item for editing. Invoked when an item from the item list is double clicked.
+	 * 
+	 * @param i
+	 *            the item
+	 */
+	private void itemSelected(Item i) {
+		if (i == null) {
+			return;
+		}
+
+		// Open the item view
+		ItemController itemController = new ItemController(currentGameManager, mwController, i);
+		mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
 	}
 
 }

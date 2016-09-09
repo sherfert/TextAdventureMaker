@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import data.action.AbstractAction;
@@ -259,6 +260,17 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	@Override
 	public void setAdditionalTakeCommands(List<String> additionalTakeCommands) {
 		this.additionalTakeCommands = additionalTakeCommands;
+	}
+	
+	/**
+	 * Called to remove an item from its location prior to deletion.
+	 * 
+	 * TODO Add other PreRemoves, for OneToMany relationships. Test out first.
+	 * This should be just Conversation->Layer and Layer->Option
+	 */
+	@PreRemove
+	private void removeFromLocation() {
+		setLocation(null);
 	}
 
 	// final as called in constructor.

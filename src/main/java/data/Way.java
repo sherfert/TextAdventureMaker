@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import data.action.AbstractAction;
@@ -230,6 +231,19 @@ public class Way extends InspectableObject implements Travelable {
 		moveAction.triggerAction(game);
 		for (AbstractAction abstractAction : additionalMoveActions) {
 			abstractAction.triggerAction(game);
+		}
+	}
+	
+	/**
+	 * Called to remove a way from its origin and destination prior to deletion.
+	 */
+	@PreRemove
+	private void removeFromLocation() {
+		if (this.origin != null) {
+			this.origin.removeWayOut(this);
+		}
+		if (this.destination != null) {
+			this.destination.removeWayIn(this);
 		}
 	}
 

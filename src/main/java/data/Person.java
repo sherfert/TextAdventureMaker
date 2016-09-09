@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import data.action.AbstractAction;
@@ -130,6 +131,14 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	@Transient
 	public Location getLocation() {
 		return location;
+	}
+	
+	/**
+	 * Called to remove a person from its location prior to deletion.
+	 */
+	@PreRemove
+	private void removeFromLocation() {
+		setLocation(null);
 	}
 
 	// final as called in constructor
