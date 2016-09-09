@@ -33,6 +33,17 @@ import java.util.logging.Logger;
 public class Person extends InspectableObject implements HasLocation, HasConversation {
 
 	/**
+	 * All additional talk to commands.
+	 */
+	private List<String> additionalTalkToCommands;
+	
+	/**
+	 * The persons conversation. If {@code null}, or the conversation is
+	 * disabled, you cannot talk to the person. A conversation can be used by
+	 * more than one person.
+	 */
+	private Conversation conversation;
+	/**
 	 * The current location of the person. May be {@code null}.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
@@ -40,13 +51,13 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	"FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	@Access(AccessType.FIELD)
 	private Location location;
-
+	
 	/**
-	 * The persons conversation. If {@code null}, or the conversation is
-	 * disabled, you cannot talk to the person. A conversation can be used by
-	 * more than one person.
+	 * This defines the order in which persons appear in a location. It is managed
+	 * by the methods of the location automatically and should not be set
+	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
 	 */
-	private Conversation conversation;
+	private int locationOrder;
 
 	/**
 	 * The text displayed when trying to talk to, but this is disabled. There is
@@ -54,11 +65,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 * Suggests the default text to be displayed if {@code null}.
 	 */
 	private final StringProperty talkingToForbiddenText;
-
-	/**
-	 * All additional talk to commands.
-	 */
-	private List<String> additionalTalkToCommands;
 
 	/**
 	 * No-arg constructor for the database.
@@ -99,13 +105,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 		init();
 	}
 
-	/**
-	 * Initializes the fields.
-	 */
-	private final void init() {
-		this.additionalTalkToCommands = new ArrayList<>();
-	}
-
 	@Override
 	public void addAdditionalTalkToCommand(String command) {
 		additionalTalkToCommands.add(command);
@@ -118,13 +117,11 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	}
 
 	@Override
-	public void setAdditionalTalkToCommands(List<String> additionalTalkToCommands) {
-		this.additionalTalkToCommands = additionalTalkToCommands;
-	}
-
-	@Override
-	public void removeAdditionalTalkToCommand(String command) {
-		additionalTalkToCommands.remove(command);
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_PERSON_CONVERSATION", foreignKeyDefinition = //
+	"FOREIGN KEY (CONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE SET NULL") )
+	public Conversation getConversation() {
+		return conversation;
 	}
 
 	@Override
@@ -132,13 +129,55 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	public Location getLocation() {
 		return location;
 	}
+
+	/**
+	 * @return the locationOrder
+	 */
+	@Column(nullable = false)
+	int getLocationOrder() {
+		return locationOrder;
+	}
+
+	@Override
+	@Column(nullable = true)
+	public String getTalkingToForbiddenText() {
+		return talkingToForbiddenText.get();
+	}
+
+	/**
+	 * Initializes the fields.
+	 */
+	private final void init() {
+		this.additionalTalkToCommands = new ArrayList<>();
+	}
+
+	@Override
+	@Transient
+	public boolean isTalkingEnabled() {
+		return conversation != null && conversation.getEnabled();
+	}
 	
+	@Override
+	public void removeAdditionalTalkToCommand(String command) {
+		additionalTalkToCommands.remove(command);
+	}
+
 	/**
 	 * Called to remove a person from its location prior to deletion.
 	 */
 	@PreRemove
 	private void removeFromLocation() {
 		setLocation(null);
+	}
+
+	@Override
+	public void setAdditionalTalkToCommands(List<String> additionalTalkToCommands) {
+		this.additionalTalkToCommands = additionalTalkToCommands;
+	}
+
+	@Override
+	public void setConversation(Conversation conversation) {
+		this.conversation = conversation;
 	}
 
 	// final as called in constructor
@@ -156,17 +195,24 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 		this.location = location;
 	}
 
+	/**
+	 * @param locationOrder
+	 *            the locationOrder to set
+	 */
+	void setLocationOrder(int locationOrder) {
+		this.locationOrder = locationOrder;
+	}
+	
 	@Override
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_PERSON_CONVERSATION", foreignKeyDefinition = //
-	"FOREIGN KEY (CONVERSATION_ID) REFERENCES CONVERSATION (ID) ON DELETE SET NULL") )
-	public Conversation getConversation() {
-		return conversation;
+	public void setTalkingToForbiddenText(String text) {
+		talkingToForbiddenText.set(text);
 	}
 
-	@Override
-	public void setConversation(Conversation conversation) {
-		this.conversation = conversation;
+	/**
+	 * @return the talk to forbidden text property
+	 */
+	public StringProperty talkingToForbiddenTextProperty() {
+		return talkingToForbiddenText;
 	}
 
 	@Override
@@ -180,30 +226,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 				abstractAction.triggerAction(game);
 			}
 		}
-	}
-
-	@Override
-	@Transient
-	public boolean isTalkingEnabled() {
-		return conversation != null && conversation.getEnabled();
-	}
-	
-	/**
-	 * @return the talk to forbidden text property
-	 */
-	public StringProperty talkingToForbiddenTextProperty() {
-		return talkingToForbiddenText;
-	}
-
-	@Override
-	@Column(nullable = true)
-	public String getTalkingToForbiddenText() {
-		return talkingToForbiddenText.get();
-	}
-
-	@Override
-	public void setTalkingToForbiddenText(String text) {
-		talkingToForbiddenText.set(text);
 	}
 
 }

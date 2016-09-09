@@ -79,8 +79,10 @@ public class Location extends NamedDescribedObject {
 	void addItem(Item item) {
 		if (!this.items.contains(item)) {
 			this.items.add(item);
-			// Give the item the highest locationOrder, so it appears last in the list
-			int newOrder = this.items.stream().map(Item::getLocationOrder).max(Comparator.<Integer>naturalOrder()).orElse(-1) + 1;
+			// Give the item the highest locationOrder, so it appears last in
+			// the list
+			int newOrder = this.items.stream().map(Item::getLocationOrder).max(Comparator.<Integer> naturalOrder())
+					.orElse(-1) + 1;
 			item.setLocationOrder(newOrder);
 		}
 	}
@@ -95,6 +97,11 @@ public class Location extends NamedDescribedObject {
 	void addPerson(Person person) {
 		if (!this.persons.contains(person)) {
 			this.persons.add(person);
+			// Give the item the highest locationOrder, so it appears last in
+			// the list
+			int newOrder = this.persons.stream().map(Person::getLocationOrder).max(Comparator.<Integer> naturalOrder())
+					.orElse(-1) + 1;
+			person.setLocationOrder(newOrder);
 		}
 	}
 
@@ -201,7 +208,7 @@ public class Location extends NamedDescribedObject {
 		items.clear();
 		items.addAll(newItems);
 		// Update the location order on all items
-		for(int i = 0; i < items.size(); i++) {
+		for (int i = 0; i < items.size(); i++) {
 			items.get(i).setLocationOrder(i);
 		}
 	}
@@ -210,8 +217,27 @@ public class Location extends NamedDescribedObject {
 	 * @return the persons
 	 */
 	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
+	@OrderBy("locationOrder ASC, getId ASC")
 	public List<Person> getPersons() {
 		return persons;
+	}
+
+	/**
+	 * Updates the list of persons of this location. This method must only be
+	 * called if the elements of the passed list and the current list are the
+	 * same, except for the order.
+	 * 
+	 * @param newPersons
+	 *            the permutated list of persons
+	 */
+	public void updatePersons(List<Person> newPersons) {
+		// Set items list, so that the order of the passed list is preserved
+		persons.clear();
+		persons.addAll(newPersons);
+		// Update the location order on all items
+		for (int i = 0; i < persons.size(); i++) {
+			persons.get(i).setLocationOrder(i);
+		}
 	}
 
 	/**

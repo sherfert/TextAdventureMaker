@@ -5,9 +5,11 @@ import java.util.logging.Logger;
 
 import data.Item;
 import data.Location;
+import data.Person;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import gui.custumui.ItemListView;
+import gui.custumui.PersonListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -17,7 +19,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one location.
  * 
- * TODO Support to change list of persons/waysIn/waysOut.
+ * TODO Support to change list of waysIn/waysOut.
  * 
  * @author Satia
  */
@@ -31,6 +33,9 @@ public class LocationController extends GameDataController {
 
 	@FXML
 	private ItemListView itemListView;
+
+	@FXML
+	private PersonListView personListView;
 
 	/**
 	 * @param currentGameManager
@@ -52,6 +57,10 @@ public class LocationController extends GameDataController {
 		itemListView.initialize(location.getItems(),
 				this.currentGameManager.getPersistenceManager().getItemManager()::getAllItems, location::updateItems,
 				(item) -> item.setLocation(location), (item) -> item.setLocation(null), this::itemSelected);
+		
+		personListView.initialize(location.getPersons(),
+				this.currentGameManager.getPersistenceManager().getPersonManager()::getAllPersons, location::updatePersons,
+				(person) -> person.setLocation(location), (person) -> person.setLocation(null), this::personSelected);
 	}
 
 	/**
@@ -104,7 +113,7 @@ public class LocationController extends GameDataController {
 	}
 	
 	/**
-	 * Opens an item for editing. Invoked when an item from the item list is double clicked.
+	 * Opens an item for editing. Invoked when an item from the list is double clicked.
 	 * 
 	 * @param i
 	 *            the item
@@ -117,6 +126,24 @@ public class LocationController extends GameDataController {
 		// Open the item view
 		ItemController itemController = new ItemController(currentGameManager, mwController, i);
 		mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
+	}
+	
+
+	
+	/**
+	 * Opens a person for editing. Invoked when a person from the list is double clicked.
+	 * 
+	 * @param p
+	 *            the person
+	 */
+	private void personSelected(Person p) {
+		if (p == null) {
+			return;
+		}
+
+		// Open the item view
+		PersonController personController = new PersonController(currentGameManager, mwController, p);
+		mwController.pushCenterContent(p.getName(),"view/Person.fxml", personController, personController::controllerFactory);
 	}
 
 }
