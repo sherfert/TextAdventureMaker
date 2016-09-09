@@ -28,8 +28,6 @@ import javafx.scene.layout.Priority;
  * 
  * Initialize must be called to enable the functionality.
  * 
- * TODO on doubleclick: edit NamedObject
- * 
  * @author Satia
  */
 public abstract class NamedObjectListView<E extends NamedObject> extends BorderPane {

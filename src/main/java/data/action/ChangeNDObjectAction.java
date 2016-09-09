@@ -85,8 +85,6 @@ public class ChangeNDObjectAction extends AbstractAction {
 	 * dependencies.
 	 * 
 	 * @return the object
-	 * 
-	 * FIXME should the overridden getObjects be  @Transient ?
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CHANGENAMEDOBJECTACTION_OBJECT", //

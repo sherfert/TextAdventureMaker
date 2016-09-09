@@ -14,5 +14,12 @@ import exception.DBClosedException;
  *            the type
  */
 public interface ValuesSupplier<E extends NamedObject> {
+	/**
+	 * Get the values.
+	 * 
+	 * @return the values
+	 * @throws DBClosedException
+	 *             if the DB was closed.
+	 */
 	public List<E> get() throws DBClosedException;
 }

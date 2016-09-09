@@ -207,14 +207,15 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting preferred dimension to {0}", prefSize);
 		
+		// FIXME the Terminal still crashes often - either on Windows (now) or on Linux (previosly)
 		// Sometimes the resize does not take effect when calling pack immediately.
 		// Therefore we wait a little and then pack
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		frame.pack();
+//		try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//		frame.pack();
 		// Not resizable
 		frame.setResizable(false);
 

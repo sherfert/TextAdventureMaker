@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
+<?import gui.custumui.ConversationLayerChooser?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
@@ -20,6 +21,8 @@
 						<TextArea fx:id="editGreetingTA" prefHeight="100.0" wrapText="true" />
 						<Label text="Event" />
 						<TextArea fx:id="editEventTA" prefHeight="100.0" wrapText="true" />
+						<Label text="Start layer" />
+                  		<ConversationLayerChooser fx:id="startLayerChooser" />
 						<Button fx:id="removeButton" 
 							mnemonicParsing="false" text="Delete this conversation" />
 					</children>

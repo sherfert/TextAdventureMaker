@@ -1,6 +1,7 @@
 package gui;
 
 import data.Conversation;
+import gui.custumui.ConversationLayerChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -10,7 +11,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one conversation.
  * 
- * TODO Support to change layers, startLayer, additionalActions
+ * TODO Support to change layers, additionalActions
  * 
  * @author Satia
  */
@@ -30,6 +31,9 @@ public class ConversationController extends GameDataController {
 
 	@FXML
 	private TextArea editEventTA;
+	
+	@FXML
+	private ConversationLayerChooser startLayerChooser;
 
 	/**
 	 * @param currentGameManager
@@ -56,6 +60,10 @@ public class ConversationController extends GameDataController {
 
 		editGreetingTA.textProperty().bindBidirectional(conversation.greetingProperty());
 		editEventTA.textProperty().bindBidirectional(conversation.eventProperty());
+		
+		// Initialize startLayerChooser, with only the layers of this conversation to choose from.
+		startLayerChooser.initialize(conversation.getStartLayer(), true, true,
+				conversation::getLayers, conversation::setStartLayer);
 	}
 
 	/**
