@@ -7,8 +7,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.ConversationLayerChooser?>
 
-<TabPane tabClosingPolicy="UNAVAILABLE"
-	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
 	<tabs>
 		<Tab text="Basic properties">
 			<content>
@@ -16,20 +16,48 @@
 					<children>
 						<CheckBox fx:id="editConversationEnabledCB"
 							mnemonicParsing="false" text="Conversation enabled?" />
-                  		<fx:include source="NamedObject.fxml" />
+						<fx:include source="NamedObject.fxml" />
 						<Label text="Greeting" />
-						<TextArea fx:id="editGreetingTA" prefHeight="100.0" wrapText="true" />
+						<TextArea fx:id="editGreetingTA" prefHeight="100.0"
+							wrapText="true" />
 						<Label text="Event" />
-						<TextArea fx:id="editEventTA" prefHeight="100.0" wrapText="true" />
+						<TextArea fx:id="editEventTA" prefHeight="100.0"
+							wrapText="true" />
 						<Label text="Start layer" />
-                  		<ConversationLayerChooser fx:id="startLayerChooser" />
-						<Button fx:id="removeButton" 
-							mnemonicParsing="false" text="Delete this conversation" />
+						<ConversationLayerChooser fx:id="startLayerChooser" />
+						<Button fx:id="removeButton" mnemonicParsing="false"
+							text="Delete this conversation" />
 					</children>
 					<padding>
 						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
 					</padding>
 				</VBox>
+			</content>
+		</Tab>
+		<Tab text="Layers">
+			<content>
+				<BorderPane>
+					<center>
+						<TableView fx:id="table">
+							<columns>
+								<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
+								<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
+							</columns>
+						</TableView>
+					</center>
+					<right>
+						<VBox prefWidth="200.0" spacing="2.0">
+							<children>
+								<Label text="Name" />
+								<TextField fx:id="newNameTF" />
+								<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
+							</children>
+							<padding>
+								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+							</padding>
+						</VBox>
+					</right>
+				</BorderPane>
 			</content>
 		</Tab>
 	</tabs>

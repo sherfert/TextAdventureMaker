@@ -1,5 +1,6 @@
 package gui.custumui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -122,7 +123,8 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 
 		// Retrieve all available values
 		try {
-			this.availableValues = getAvailableValues.get();
+			// Copy into another list, so that changes we make, or others make, are not reflected somewhere else.
+			this.availableValues = new ArrayList<E>(getAvailableValues.get());
 		} catch (DBClosedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 			return;
@@ -171,7 +173,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 				// Update available values if specified
 				if(updateAvailableValuesOnFocus) {
 					try {
-						this.availableValues = getAvailableValues.get();
+						this.availableValues = new ArrayList<E>(getAvailableValues.get());
 					} catch (DBClosedException e) {
 						Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 					}

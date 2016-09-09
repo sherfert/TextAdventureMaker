@@ -124,7 +124,7 @@ public class ItemsController extends GameDataController {
 			return;
 		}
 		currentGameManager.getPersistenceManager().updateChanges();
-		// Add location to our table
+		// Add item to our table
 		itemsOL.add(i);
 
 		// Reset the form values
