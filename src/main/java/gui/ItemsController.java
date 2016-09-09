@@ -20,6 +20,8 @@ import logic.CurrentGameManager;
 /**
  * Controller for the items view.
  * 
+ * TODO in this and in similar views: A filter text field
+ * 
  * @author Satia
  */
 public class ItemsController extends GameDataController {

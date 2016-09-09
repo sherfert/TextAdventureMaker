@@ -1,6 +1,7 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.Access;
@@ -8,6 +9,7 @@ import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import data.interfaces.HasLocation;
@@ -77,6 +79,9 @@ public class Location extends NamedDescribedObject {
 	void addItem(Item item) {
 		if (!this.items.contains(item)) {
 			this.items.add(item);
+			// Give the item the highest locationOrder, so it appears last in the list
+			int newOrder = this.items.stream().map(Item::getLocationOrder).max(Comparator.<Integer>naturalOrder()).orElse(-1) + 1;
+			item.setLocationOrder(newOrder);
 		}
 	}
 
@@ -178,6 +183,7 @@ public class Location extends NamedDescribedObject {
 	 *         FIXME why get items deleted
 	 */
 	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
+	@OrderBy("locationOrder ASC, getId ASC")
 	public List<Item> getItems() {
 		return items;
 	}
@@ -187,8 +193,6 @@ public class Location extends NamedDescribedObject {
 	 * called if the elements of the passed list and the current list are the
 	 * same, except for the order.
 	 * 
-	 * FIXME This does not persist the new order.
-	 * 
 	 * @param newItems
 	 *            the permutated list of items
 	 */
@@ -196,6 +200,10 @@ public class Location extends NamedDescribedObject {
 		// Set items list, so that the order of the passed list is preserved
 		items.clear();
 		items.addAll(newItems);
+		// Update the location order on all items
+		for(int i = 0; i < items.size(); i++) {
+			items.get(i).setLocationOrder(i);
+		}
 	}
 
 	/**

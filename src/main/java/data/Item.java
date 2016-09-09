@@ -69,6 +69,13 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	private Location location;
 
 	/**
+	 * This defines the order in which items appear in a location. It is managed
+	 * by the methods of the location automatically and should not be set
+	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
+	 */
+	private int locationOrder;
+
+	/**
 	 * The {@link ChangeItemAction} which would set the location to {@code null}
 	 * .
 	 * 
@@ -157,6 +164,11 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
+	public void addPickUpItem(InventoryItem item) {
+		addInventoryItemsAction.addPickUpItem(item);
+	}
+
+	@Override
 	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "ITEM_ATA", foreignKey = @ForeignKey(name = "FK_ITEM_ADDITIONALTAKEACTIONS_S", //
 	foreignKeyDefinition = "FOREIGN KEY (Item_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
@@ -167,19 +179,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	public void setAdditionalTakeActions(List<AbstractAction> additionalTakeActions) {
-		this.additionalTakeActions = additionalTakeActions;
-	}
-
-	@Override
 	@ElementCollection
 	public List<String> getAdditionalTakeCommands() {
 		return additionalTakeCommands;
-	}
-
-	@Override
-	public void setAdditionalTakeCommands(List<String> additionalTakeCommands) {
-		this.additionalTakeCommands = additionalTakeCommands;
 	}
 
 	@Override
@@ -187,12 +189,13 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	public Location getLocation() {
 		return location;
 	}
-	
+
 	/**
-	 * @return the take forbidden text property
+	 * @return the locationOrder
 	 */
-	public StringProperty takeForbiddenTextProperty() {
-		return takeForbiddenText;
+	@Column(nullable = false)
+	int getLocationOrder() {
+		return locationOrder;
 	}
 
 	@Override
@@ -200,18 +203,25 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	public String getTakeForbiddenText() {
 		return takeForbiddenText.get();
 	}
-	
-	/**
-	 * @return the take successful text property
-	 */
-	public StringProperty takeSuccessfulTextProperty() {
-		return takeSuccessfulText;
-	}
 
 	@Override
 	@Column(nullable = true)
 	public String getTakeSuccessfulText() {
 		return takeSuccessfulText.get();
+	}
+
+	/**
+	 * Initializes the fields.
+	 */
+	private final void init() {
+		this.addInventoryItemsAction = new AddInventoryItemsAction("");
+		this.addInventoryItemsAction.setEnabled(false);
+		this.removeAction = new ChangeItemAction("", this);
+		this.removeAction.setNewLocation(null);
+		this.removeAction.setChangeLocation(true);
+		this.additionalTakeActions = new ArrayList<>();
+		this.additionalTakeCommands = new ArrayList<>();
+		setRemoveItem(true);
 	}
 
 	@Override
@@ -236,6 +246,21 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 		additionalTakeCommands.remove(command);
 	}
 
+	@Override
+	public void removePickUpItem(InventoryItem item) {
+		addInventoryItemsAction.removePickUpItem(item);
+	}
+
+	@Override
+	public void setAdditionalTakeActions(List<AbstractAction> additionalTakeActions) {
+		this.additionalTakeActions = additionalTakeActions;
+	}
+
+	@Override
+	public void setAdditionalTakeCommands(List<String> additionalTakeCommands) {
+		this.additionalTakeCommands = additionalTakeCommands;
+	}
+
 	// final as called in constructor.
 	@Override
 	public final void setLocation(Location location) {
@@ -249,6 +274,19 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 			location.addItem(this);
 		}
 		this.location = location;
+	}
+
+	/**
+	 * @param locationOrder
+	 *            the locationOrder to set
+	 */
+	void setLocationOrder(int locationOrder) {
+		this.locationOrder = locationOrder;
+	}
+
+	@Override
+	public void setPickUpItems(List<InventoryItem> pickUpItems) {
+		addInventoryItemsAction.setPickUpItems(pickUpItems);
 	}
 
 	@Override
@@ -272,21 +310,6 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	@Override
-	public void setPickUpItems(List<InventoryItem> pickUpItems) {
-		addInventoryItemsAction.setPickUpItems(pickUpItems);
-	}
-
-	@Override
-	public void addPickUpItem(InventoryItem item) {
-		addInventoryItemsAction.addPickUpItem(item);
-	}
-
-	@Override
-	public void removePickUpItem(InventoryItem item) {
-		addInventoryItemsAction.removePickUpItem(item);
-	}
-
-	@Override
 	public void take(Game game) {
 		if (isTakingEnabled()) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Taking {0}", this);
@@ -300,16 +323,16 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	}
 
 	/**
-	 * Initializes the fields.
+	 * @return the take forbidden text property
 	 */
-	private final void init() {
-		this.addInventoryItemsAction = new AddInventoryItemsAction("");
-		this.addInventoryItemsAction.setEnabled(false);
-		this.removeAction = new ChangeItemAction("", this);
-		this.removeAction.setNewLocation(null);
-		this.removeAction.setChangeLocation(true);
-		this.additionalTakeActions = new ArrayList<>();
-		this.additionalTakeCommands = new ArrayList<>();
-		setRemoveItem(true);
+	public StringProperty takeForbiddenTextProperty() {
+		return takeForbiddenText;
+	}
+
+	/**
+	 * @return the take successful text property
+	 */
+	public StringProperty takeSuccessfulTextProperty() {
+		return takeSuccessfulText;
 	}
 }
