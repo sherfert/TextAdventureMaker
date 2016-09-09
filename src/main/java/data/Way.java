@@ -46,16 +46,6 @@ public class Way extends InspectableObject implements Travelable {
 	private List<String> additionalTravelCommands;
 
 	/**
-	 * The move action.
-	 * 
-	 * No ON CASCADE definitions, since this field is not accessible.
-	 */
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-	@JoinColumn(nullable = false)
-	@Access(AccessType.FIELD)
-	private MoveAction moveAction;
-
-	/**
 	 * The destination.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
@@ -65,13 +55,21 @@ public class Way extends InspectableObject implements Travelable {
 	private Location destination;
 
 	/**
-	 * The origin.
+	 * This defines the order in which waysIn appear in a location. It is managed
+	 * by the methods of the location automatically and should not be set
+	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
 	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_ORIGIN", //
-	foreignKeyDefinition = "FOREIGN KEY (ORIGIN_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	private int destinationOrder;
+	
+	/**
+	 * The move action.
+	 * 
+	 * No ON CASCADE definitions, since this field is not accessible.
+	 */
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@JoinColumn(nullable = false)
 	@Access(AccessType.FIELD)
-	private Location origin;
+	private MoveAction moveAction;
 
 	/**
 	 * A personalized error message displayed if moving this way was forbidden.
@@ -86,6 +84,22 @@ public class Way extends InspectableObject implements Travelable {
 	private final StringProperty moveSuccessfulText;
 
 	/**
+	 * The origin.
+	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_ORIGIN", //
+	foreignKeyDefinition = "FOREIGN KEY (ORIGIN_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	@Access(AccessType.FIELD)
+	private Location origin;
+
+	/**
+	 * This defines the order in which waysOut appear in a location. It is managed
+	 * by the methods of the location automatically and should not be set
+	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
+	 */
+	private int originOrder;
+
+	/**
 	 * No-arg constructor for the database. Use
 	 * {@link Way#Way(String, String, Location, Location)} instead.
 	 */
@@ -95,7 +109,7 @@ public class Way extends InspectableObject implements Travelable {
 		moveForbiddenText = new SimpleStringProperty();
 		moveSuccessfulText = new SimpleStringProperty();
 	}
-
+	
 	/**
 	 * @param name
 	 *            the name
@@ -137,19 +151,9 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	@Override
-	public void setAdditionalMoveActions(List<AbstractAction> additionalMoveActions) {
-		this.additionalMoveActions = additionalMoveActions;
-	}
-
-	@Override
 	@ElementCollection
 	public List<String> getAdditionalTravelCommands() {
 		return additionalTravelCommands;
-	}
-
-	@Override
-	public void setAdditionalTravelCommands(List<String> additionalTravelCommands) {
-		this.additionalTravelCommands = additionalTravelCommands;
 	}
 
 	@Override
@@ -158,30 +162,24 @@ public class Way extends InspectableObject implements Travelable {
 		return destination;
 	}
 
+	/**
+	 * @return the destinationOrder
+	 */
+	@Column(nullable = false)
+	int getDestinationOrder() {
+		return destinationOrder;
+	}
+
 	@Override
 	@Column(nullable = true)
 	public String getMoveForbiddenText() {
 		return moveForbiddenText.get();
-	}
-	
-	/**
-	 * @return the move forbidden text property
-	 */
-	public StringProperty moveForbiddenTextProperty() {
-		return moveForbiddenText;
 	}
 
 	@Override
 	@Column(nullable = true)
 	public String getMoveSuccessfulText() {
 		return moveSuccessfulText.get();
-	}
-	
-	/**
-	 * @return the move successful text property
-	 */
-	public StringProperty moveSuccessfulTextProperty() {
-		return moveSuccessfulText;
 	}
 
 	/**
@@ -192,12 +190,42 @@ public class Way extends InspectableObject implements Travelable {
 		return origin;
 	}
 
+	/**
+	 * @return the originOrder
+	 */
+	@Column(nullable = false)
+	int getOriginOrder() {
+		return originOrder;
+	}
+
+	/**
+	 * Initializes the fields
+	 */
+	private final void init() {
+		this.additionalMoveActions = new ArrayList<>();
+		this.additionalTravelCommands = new ArrayList<>();
+	}
+
 	@Override
 	@Transient
 	public boolean isMovingEnabled() {
 		return moveAction.getEnabled();
 	}
+	
+	/**
+	 * @return the move forbidden text property
+	 */
+	public StringProperty moveForbiddenTextProperty() {
+		return moveForbiddenText;
+	}
 
+	/**
+	 * @return the move successful text property
+	 */
+	public StringProperty moveSuccessfulTextProperty() {
+		return moveSuccessfulText;
+	}
+	
 	@Override
 	public void removeAdditionalActionFromMove(AbstractAction action) {
 		additionalMoveActions.remove(action);
@@ -208,32 +236,6 @@ public class Way extends InspectableObject implements Travelable {
 		additionalTravelCommands.remove(command);
 	}
 
-	@Override
-	public void setMoveForbiddenText(String forbiddenText) {
-		moveForbiddenText.set(forbiddenText);
-	}
-
-	@Override
-	public void setMoveSuccessfulText(String successfulText) {
-		moveSuccessfulText.set(successfulText);
-	}
-
-	@Override
-	public void setMovingEnabled(boolean enabled) {
-		moveAction.setEnabled(enabled);
-	}
-
-	@Override
-	public void travel(Game game) {
-		// MoveAction is either enabled or not, no need to check here
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Travelling (if enabled) over {0}", this);
-
-		moveAction.triggerAction(game);
-		for (AbstractAction abstractAction : additionalMoveActions) {
-			abstractAction.triggerAction(game);
-		}
-	}
-	
 	/**
 	 * Called to remove a way from its origin and destination prior to deletion.
 	 */
@@ -247,6 +249,16 @@ public class Way extends InspectableObject implements Travelable {
 		}
 	}
 
+	@Override
+	public void setAdditionalMoveActions(List<AbstractAction> additionalMoveActions) {
+		this.additionalMoveActions = additionalMoveActions;
+	}
+
+	@Override
+	public void setAdditionalTravelCommands(List<String> additionalTravelCommands) {
+		this.additionalTravelCommands = additionalTravelCommands;
+	}
+
 	// final as called in constructor
 	@Override
 	public final void setDestination(Location destination) {
@@ -257,6 +269,28 @@ public class Way extends InspectableObject implements Travelable {
 		destination.addWayIn(this);
 		this.destination = destination;
 		this.moveAction.setTarget(destination);
+	}
+
+	/**
+	 * @param destinationOrder the destinationOrder to set
+	 */
+	void setDestinationOrder(int destinationOrder) {
+		this.destinationOrder = destinationOrder;
+	}
+
+	@Override
+	public void setMoveForbiddenText(String forbiddenText) {
+		moveForbiddenText.set(forbiddenText);
+	}
+
+	@Override
+	public void setMoveSuccessfulText(String successfulText) {
+		moveSuccessfulText.set(successfulText);
+	}
+	
+	@Override
+	public void setMovingEnabled(boolean enabled) {
+		moveAction.setEnabled(enabled);
 	}
 
 	// final as called in constructor
@@ -275,10 +309,20 @@ public class Way extends InspectableObject implements Travelable {
 	}
 
 	/**
-	 * Initializes the fields
+	 * @param originOrder the originOrder to set
 	 */
-	private final void init() {
-		this.additionalMoveActions = new ArrayList<>();
-		this.additionalTravelCommands = new ArrayList<>();
+	void setOriginOrder(int originOrder) {
+		this.originOrder = originOrder;
+	}
+
+	@Override
+	public void travel(Game game) {
+		// MoveAction is either enabled or not, no need to check here
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Travelling (if enabled) over {0}", this);
+
+		moveAction.triggerAction(game);
+		for (AbstractAction abstractAction : additionalMoveActions) {
+			abstractAction.triggerAction(game);
+		}
 	}
 }

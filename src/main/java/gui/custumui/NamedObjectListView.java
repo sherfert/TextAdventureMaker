@@ -84,7 +84,7 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 	}
 
 	/**
-	 * Initialize this list view.
+	 * Initialize this list view. This method does not allow deletion of values.
 	 * 
 	 * @param initialList
 	 *            the list of values to place in the list initially
@@ -92,25 +92,44 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 	 *            a method returning all applicable values
 	 * @param orderChanged
 	 *            called when the order of list items has changed
+	 * @param valueClicked
+	 *            called when a value was double-clicked in the list
+	 * @param valueAdded
+	 *            called when a value was added to the list
+	 */
+	public void initialize(List<E> initialList, ValuesSupplier<E> getAllValues, Consumer<List<E>> orderChanged,
+			Consumer<E> valueClicked, Consumer<E> valueAdded) {
+		initialize(initialList, getAllValues, orderChanged, valueClicked, valueAdded, null);
+	}
+
+	/**
+	 * Initialize this list view. This method allows deletion of values.
+	 * 
+	 * @param initialList
+	 *            the list of values to place in the list initially
+	 * @param getAllValues
+	 *            a method returning all applicable values
+	 * @param orderChanged
+	 *            called when the order of list items has changed
+	 * @param valueClicked
+	 *            called when a value was double-clicked in the list
 	 * @param valueAdded
 	 *            called when a value was added to the list
 	 * @param valueRemoved
 	 *            called when a value was removed from the list
-	 * @param valueClicked
-	 *            called when a value was double-clicked in the list
 	 */
 	public void initialize(List<E> initialList, ValuesSupplier<E> getAllValues, Consumer<List<E>> orderChanged,
-			Consumer<E> valueAdded, Consumer<E> valueRemoved, Consumer<E> valueClicked) {		
+			Consumer<E> valueClicked, Consumer<E> valueAdded, Consumer<E> valueRemoved) {
 		// Set initial list
 		listItems = FXCollections.observableArrayList(initialList);
 		listView.setItems(listItems);
-		
+
 		listView.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) {
+			if (e.getClickCount() == 2) {
 				valueClicked.accept(listView.getSelectionModel().getSelectedItem());
 			}
-		});		
-		
+		});
+
 		// Initialize chooser
 		addValueChooser.initialize(null, false, true, () -> {
 			return getAllValues.get().stream().filter((v) -> !listItems.contains(v)).collect(Collectors.toList());
@@ -122,23 +141,29 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		upButton.setDisable(true);
 		downButton.setDisable(true);
 		listView.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
-			removeButton.setDisable(n == null);
 			upButton.setDisable(n == null || listView.getSelectionModel().getSelectedIndex() == 0);
 			downButton.setDisable(n == null || listView.getSelectionModel().getSelectedIndex() == listItems.size() - 1);
 		});
+		
 
-		// Button handlers
 		addButton.setOnMouseClicked((e) -> {
 			E selectedItem = addValueChooser.getObjectValue();
 			addValueChooser.setObjectValue(null);
 			listItems.add(selectedItem);
 			valueAdded.accept(selectedItem);
 		});
-		removeButton.setOnMouseClicked((e) -> {
-			E selectedItem = listView.getSelectionModel().getSelectedItem();
-			listItems.remove(selectedItem);
-			valueRemoved.accept(selectedItem);
-		});
+		// Only if deletion is allowed
+		if (valueRemoved != null) {
+			listView.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
+				removeButton.setDisable(n == null);
+			});
+			
+			removeButton.setOnMouseClicked((e) -> {
+				E selectedItem = listView.getSelectionModel().getSelectedItem();
+				listItems.remove(selectedItem);
+				valueRemoved.accept(selectedItem);
+			});
+		}
 		upButton.setOnMouseClicked((e) -> {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			Collections.swap(listItems, index, index - 1);

@@ -6,10 +6,12 @@ import java.util.logging.Logger;
 import data.Item;
 import data.Location;
 import data.Person;
+import data.Way;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import gui.custumui.ItemListView;
 import gui.custumui.PersonListView;
+import gui.custumui.WayListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -18,8 +20,6 @@ import logic.CurrentGameManager;
 
 /**
  * Controller for one location.
- * 
- * TODO Support to change list of waysIn/waysOut.
  * 
  * @author Satia
  */
@@ -36,6 +36,12 @@ public class LocationController extends GameDataController {
 
 	@FXML
 	private PersonListView personListView;
+
+	@FXML
+	private WayListView waysInListView;
+
+	@FXML
+	private WayListView waysOutListView;
 
 	/**
 	 * @param currentGameManager
@@ -56,11 +62,20 @@ public class LocationController extends GameDataController {
 
 		itemListView.initialize(location.getItems(),
 				this.currentGameManager.getPersistenceManager().getItemManager()::getAllItems, location::updateItems,
-				(item) -> item.setLocation(location), (item) -> item.setLocation(null), this::itemSelected);
-		
+				this::itemSelected, (item) -> item.setLocation(location), (item) -> item.setLocation(null));
+
 		personListView.initialize(location.getPersons(),
-				this.currentGameManager.getPersistenceManager().getPersonManager()::getAllPersons, location::updatePersons,
-				(person) -> person.setLocation(location), (person) -> person.setLocation(null), this::personSelected);
+				this.currentGameManager.getPersistenceManager().getPersonManager()::getAllPersons,
+				location::updatePersons, this::personSelected, (person) -> person.setLocation(location),
+				(person) -> person.setLocation(null));
+
+		waysInListView.initialize(location.getWaysIn(),
+				this.currentGameManager.getPersistenceManager().getWayManager()::getAllWays, location::updateWaysIn,
+				this::waySelected, (way) -> way.setDestination(location));
+		
+		waysOutListView.initialize(location.getWaysOut(),
+				this.currentGameManager.getPersistenceManager().getWayManager()::getAllWays, location::updateWaysOut,
+				this::waySelected, (way) -> way.setOrigin(location));
 	}
 
 	/**
@@ -111,9 +126,10 @@ public class LocationController extends GameDataController {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Opens an item for editing. Invoked when an item from the list is double clicked.
+	 * Opens an item for editing. Invoked when an item from the list is double
+	 * clicked.
 	 * 
 	 * @param i
 	 *            the item
@@ -125,13 +141,13 @@ public class LocationController extends GameDataController {
 
 		// Open the item view
 		ItemController itemController = new ItemController(currentGameManager, mwController, i);
-		mwController.pushCenterContent(i.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
+		mwController.pushCenterContent(i.getName(), "view/Item.fxml", itemController,
+				itemController::controllerFactory);
 	}
-	
 
-	
 	/**
-	 * Opens a person for editing. Invoked when a person from the list is double clicked.
+	 * Opens a person for editing. Invoked when a person from the list is double
+	 * clicked.
 	 * 
 	 * @param p
 	 *            the person
@@ -141,9 +157,28 @@ public class LocationController extends GameDataController {
 			return;
 		}
 
-		// Open the item view
+		// Open the person view
 		PersonController personController = new PersonController(currentGameManager, mwController, p);
-		mwController.pushCenterContent(p.getName(),"view/Person.fxml", personController, personController::controllerFactory);
+		mwController.pushCenterContent(p.getName(), "view/Person.fxml", personController,
+				personController::controllerFactory);
+	}
+
+	/**
+	 * Opens a way for editing. Invoked when a way from the list is double
+	 * clicked.
+	 * 
+	 * @param w
+	 *            the way
+	 */
+	private void waySelected(Way w) {
+		if (w == null) {
+			return;
+		}
+
+		// Open the way view
+		WayController wayController = new WayController(currentGameManager, mwController, w);
+		mwController.pushCenterContent(w.getName(), "view/Way.fxml", wayController,
+				wayController::controllerFactory);
 	}
 
 }

@@ -115,6 +115,11 @@ public class Location extends NamedDescribedObject {
 	void addWayIn(Way wayIn) {
 		if (!this.waysIn.contains(wayIn)) {
 			this.waysIn.add(wayIn);
+			// Give the item the highest destinationOrder, so it appears last in
+			// the list
+			int newOrder = this.waysIn.stream().map(Way::getDestinationOrder).max(Comparator.<Integer> naturalOrder())
+					.orElse(-1) + 1;
+			wayIn.setDestinationOrder(newOrder);
 		}
 	}
 
@@ -128,6 +133,11 @@ public class Location extends NamedDescribedObject {
 	void addWayOut(Way wayOut) {
 		if (!this.waysOut.contains(wayOut)) {
 			this.waysOut.add(wayOut);
+			// Give the item the highest originOrder, so it appears last in
+			// the list
+			int newOrder = this.waysOut.stream().map(Way::getOriginOrder).max(Comparator.<Integer> naturalOrder())
+					.orElse(-1) + 1;
+			wayOut.setOriginOrder(newOrder);
 		}
 	}
 
@@ -231,10 +241,10 @@ public class Location extends NamedDescribedObject {
 	 *            the permutated list of persons
 	 */
 	public void updatePersons(List<Person> newPersons) {
-		// Set items list, so that the order of the passed list is preserved
+		// Set persons list, so that the order of the passed list is preserved
 		persons.clear();
 		persons.addAll(newPersons);
-		// Update the location order on all items
+		// Update the location order on all persons
 		for (int i = 0; i < persons.size(); i++) {
 			persons.get(i).setLocationOrder(i);
 		}
@@ -244,16 +254,54 @@ public class Location extends NamedDescribedObject {
 	 * @return the waysOut
 	 */
 	@OneToMany(mappedBy = "origin", cascade = { CascadeType.PERSIST })
+	@OrderBy("originOrder ASC, getId ASC")
 	public List<Way> getWaysOut() {
 		return waysOut;
+	}
+
+	/**
+	 * Updates the list of waysOut of this location. This method must only be
+	 * called if the elements of the passed list and the current list are the
+	 * same, except for the order.
+	 * 
+	 * @param newWays
+	 *            the permutated list of ways
+	 */
+	public void updateWaysOut(List<Way> newWays) {
+		// Set ways list, so that the order of the passed list is preserved
+		waysOut.clear();
+		waysOut.addAll(newWays);
+		// Update the origin order on all ways
+		for (int i = 0; i < waysOut.size(); i++) {
+			waysOut.get(i).setOriginOrder(i);
+		}
 	}
 
 	/**
 	 * @return the waysIn
 	 */
 	@OneToMany(mappedBy = "destination", cascade = { CascadeType.PERSIST })
+	@OrderBy("destinationOrder ASC, getId ASC")
 	public List<Way> getWaysIn() {
 		return waysIn;
+	}
+
+	/**
+	 * Updates the list of waysIn of this location. This method must only be
+	 * called if the elements of the passed list and the current list are the
+	 * same, except for the order.
+	 * 
+	 * @param newWays
+	 *            the permutated list of ways
+	 */
+	public void updateWaysIn(List<Way> newWays) {
+		// Set ways list, so that the order of the passed list is preserved
+		waysIn.clear();
+		waysIn.addAll(newWays);
+		// Update the destination order on all items
+		for (int i = 0; i < waysIn.size(); i++) {
+			waysIn.get(i).setDestinationOrder(i);
+		}
 	}
 
 	/**
