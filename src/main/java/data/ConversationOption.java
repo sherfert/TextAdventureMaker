@@ -122,6 +122,8 @@ public class ConversationOption extends NamedObject {
 	 * target. By default, the option will not disappear after being chosen
 	 * once.
 	 * 
+	 * @param name
+	 *            the name
 	 * @param text
 	 *            the text
 	 * @param answer
@@ -140,7 +142,7 @@ public class ConversationOption extends NamedObject {
 		this.enabled = true;
 		init();
 	}
-	
+
 	/**
 	 * Initializes the fields
 	 */

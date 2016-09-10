@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+<?import gui.custumui.ConversationLayerChooser?>
+
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<tabs>
+		<Tab text="Basic properties">
+			<content>
+				<VBox spacing="2.0">
+					<children>
+						<fx:include source="NamedObject.fxml" />
+						<Button fx:id="removeButton" mnemonicParsing="false"
+							text="Delete this conversation" />
+					</children>
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+				</VBox>
+			</content>
+		</Tab>
+		<Tab text="Options">
+			<content>
+				<BorderPane>
+					<center>
+						<TableView fx:id="table">
+							<columns>
+								<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
+								<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
+							</columns>
+						</TableView>
+					</center>
+					<right>
+						<VBox prefWidth="200.0" spacing="2.0">
+							<children>
+								<Label text="Name" />
+								<TextField fx:id="newNameTF" />
+								<Label text="Text" />
+								<TextField fx:id="newTextTF" />
+								<Label text="Answer" />
+            					<TextArea fx:id="newAnswerTA" prefHeight="200.0" wrapText="true" />
+            					<Label text="Event" />
+            					<TextArea fx:id="newEventTA" prefHeight="200.0" wrapText="true" />
+            					<ConversationLayerChooser fx:id="targetChooser" />
+								<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
+							</children>
+							<padding>
+								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+							</padding>
+						</VBox>
+					</right>
+				</BorderPane>
+			</content>
+		</Tab>
+	</tabs>
+</TabPane>

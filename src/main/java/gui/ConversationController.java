@@ -42,8 +42,8 @@ public class ConversationController extends NamedObjectsController<ConversationL
 	/**
 	 * @param currentGameManager
 	 *            the game manager
-	 * @param item
-	 *            the item to edit
+	 * @param conversation
+	 *            the conversation to edit
 	 */
 	public ConversationController(CurrentGameManager currentGameManager, MainWindowController mwController,
 			Conversation conversation) {
@@ -103,7 +103,6 @@ public class ConversationController extends NamedObjectsController<ConversationL
 
 	@Override
 	protected GameDataController getObjectController(ConversationLayer selectedObject) {
-		// TODO
-		return null;// new ConversationLayerController(currentGameManager, mwController, selectedObject);
+		return new ConversationLayerController(currentGameManager, mwController, selectedObject);
 	}
 }
