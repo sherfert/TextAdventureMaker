@@ -20,6 +20,8 @@ import javafx.util.StringConverter;
  * Abstract superclass for all Choosers of a single NamedObject from the
  * Database.
  * 
+ * TODO remove "(no xxx)" when clicked
+ * 
  * @author Satia
  *
  * @param <E>

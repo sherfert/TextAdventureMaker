@@ -1,39 +1,28 @@
 package gui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 import data.Conversation;
 import data.ConversationLayer;
 import exception.DBClosedException;
 import gui.custumui.ConversationLayerChooser;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
  * Controller for one conversation.
  * 
- * TODO Support to additionalActions
+ * TODO Support to change additionalActions
  * 
  * @author Satia
  */
-public class ConversationController extends GameDataController {
+public class ConversationController extends NamedObjectsController<ConversationLayer> {
 
 	/** The conversation */
 	private Conversation conversation;
-
-	/** An observable list with the layers. */
-	private ObservableList<ConversationLayer> layersOL;
 
 	@FXML
 	private Button removeButton;
@@ -50,21 +39,6 @@ public class ConversationController extends GameDataController {
 	@FXML
 	private ConversationLayerChooser startLayerChooser;
 
-	@FXML
-	private TableView<ConversationLayer> table;
-
-	@FXML
-	private TableColumn<ConversationLayer, Integer> idCol;
-
-	@FXML
-	private TableColumn<ConversationLayer, String> nameCol;
-
-	@FXML
-	private TextField newNameTF;
-
-	@FXML
-	private Button saveButton;
-
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -73,12 +47,14 @@ public class ConversationController extends GameDataController {
 	 */
 	public ConversationController(CurrentGameManager currentGameManager, MainWindowController mwController,
 			Conversation conversation) {
-		super(currentGameManager, mwController);
+		super(currentGameManager, mwController, "view/ConversationLayer.fxml");
 		this.conversation = conversation;
 	}
 
 	@FXML
-	private void initialize() {
+	@Override
+	protected void initialize() {
+		super.initialize();
 		// Create new bindings
 		removeButton.setOnMouseClicked((e) -> removeObject(conversation, "Deleting a conversation",
 				"Do you really want to delete this conversation?",
@@ -96,46 +72,8 @@ public class ConversationController extends GameDataController {
 		startLayerChooser.initialize(conversation.getStartLayer(), true, true, conversation::getLayers,
 				conversation::setStartLayer);
 
-		// Layers tab
-		// Set cell value factories for the columns
-		idCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<Integer>(p.getValue().getId()));
-		nameCol.setCellValueFactory((p) -> p.getValue().nameProperty());
-
-		// A listener for row double-clicks
-		table.setRowFactory(tv -> {
-			TableRow<ConversationLayer> row = new TableRow<>();
-			row.setOnMouseClicked(event -> {
-				if (event.getClickCount() == 2) {
-					layerSelected(row.getItem());
-				}
-			});
-			return row;
-		});
-
-		// FIXME there is always null in the list of layers !?
-		// Get all layers and store in observable list, unless the list is
-		// already propagated
-		if (layersOL == null) {
-			layersOL = FXCollections.observableArrayList(conversation.getLayers());
-		}
-
-		// Fill table
-		table.setItems(layersOL);
-
-		// Disable buttons at beginning
-		saveButton.setDisable(true);
-
 		// Assure save is only enabled if there is a name
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
-		// Save button handler
-		saveButton.setOnMouseClicked((e) -> saveNewLayer());
-	}
-
-	@Override
-	public void update() {
-		if (layersOL != null) {
-			layersOL.setAll(conversation.getLayers());
-		}
 	}
 
 	/**
@@ -150,43 +88,22 @@ public class ConversationController extends GameDataController {
 		}
 	}
 	
-	/**
-	 * Saves a new layer to both DB and table.
-	 */
-	private void saveNewLayer() {
-		ConversationLayer l = new ConversationLayer(newNameTF.getText());
-		// Add item to DB
-		try {
-			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(l);
-		} catch (DBClosedException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"Abort: DB closed");
-			return;
-		}
-		// Add the layer to this conversation
-		conversation.addLayer(l);
-		// Update
-		currentGameManager.getPersistenceManager().updateChanges();
-		// Add layer to our table
-		layersOL.add(l);
-
-		// Reset the form values
-		newNameTF.setText("");
+	@Override
+	protected List<ConversationLayer> getAllObjects() throws DBClosedException {
+		return conversation.getLayers();
 	}
-	
-	/**
-	 * Opens this layer for editing.
-	 * 
-	 * @param l
-	 *            the layer
-	 */
-	private void layerSelected(ConversationLayer l) {
-		if (l == null) {
-			return;
-		}
 
-		// TODO Open the layer view
-		//ItemController itemController = new ItemController(currentGameManager, mwController, l);
-		//mwController.pushCenterContent(l.getName(),"view/Item.fxml", itemController, itemController::controllerFactory);
+	@Override
+	protected ConversationLayer createNewObject(String name) {
+		ConversationLayer result = new ConversationLayer(name);
+		// Also add the layer to this conversation
+		conversation.addLayer(result);
+		return result;
+	}
+
+	@Override
+	protected GameDataController getObjectController(ConversationLayer selectedObject) {
+		// TODO
+		return null;// new ConversationLayerController(currentGameManager, mwController, selectedObject);
 	}
 }
