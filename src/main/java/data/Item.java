@@ -264,9 +264,6 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	
 	/**
 	 * Called to remove an item from its location prior to deletion.
-	 * 
-	 * TODO Add other PreRemoves, for OneToMany relationships. Test out first.
-	 * This should be just Conversation->Layer and Layer->Option
 	 */
 	@PreRemove
 	private void removeFromLocation() {

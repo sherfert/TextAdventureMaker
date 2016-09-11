@@ -16,9 +16,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PreRemove;
+import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.action.AbstractAction.Enabling;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import data.action.ChangeConversationOptionAction;
 
 /**
@@ -30,22 +36,28 @@ import data.action.ChangeConversationOptionAction;
 @Entity
 @Access(AccessType.PROPERTY)
 public class ConversationOption extends NamedObject {
+	
+	/**
+	 * The layer this option belongs to. This is fixed and cannot be
+	 * changed. 
+	 */
+	private ConversationLayer layer;
 
 	/**
 	 * The text the player says when choosing that option.
 	 */
-	private String text;
+	private final StringProperty text;
 
 	/**
 	 * The answer the player gets when choosing that option.
 	 */
-	private String answer;
+	private final StringProperty answer;
 
 	/**
 	 * A text describing what is going on additionally. If empty, nothing is
 	 * printed.
 	 */
-	private String event;
+	private final StringProperty event;
 
 	/**
 	 * All additional actions.
@@ -55,7 +67,7 @@ public class ConversationOption extends NamedObject {
 	/**
 	 * Only enabled options from a layer are listed.
 	 */
-	private boolean enabled;
+	private final BooleanProperty enabled;
 
 	/**
 	 * The target layer, which the player gets to after choosing that option. If
@@ -90,6 +102,10 @@ public class ConversationOption extends NamedObject {
 	 */
 	@Deprecated
 	public ConversationOption() {
+		this.text = new SimpleStringProperty();
+		this.answer = new SimpleStringProperty();
+		this.event = new SimpleStringProperty();
+		this.enabled = new SimpleBooleanProperty();
 		init();
 	}
 
@@ -109,11 +125,11 @@ public class ConversationOption extends NamedObject {
 	 */
 	public ConversationOption(String name, String text, String answer, ConversationLayer target) {
 		super(name);
-		this.text = text;
-		this.answer = answer;
-		this.event = "";
+		this.text = new SimpleStringProperty(text);
+		this.answer = new SimpleStringProperty(answer);
+		this.event = new SimpleStringProperty("");
+		this.enabled = new SimpleBooleanProperty(true);
 		this.target = target;
-		this.enabled = true;
 		init();
 	}
 
@@ -135,11 +151,11 @@ public class ConversationOption extends NamedObject {
 	 */
 	public ConversationOption(String name, String text, String answer, String event, ConversationLayer target) {
 		super(name);
-		this.text = text;
-		this.answer = answer;
-		this.event = event;
+		this.text = new SimpleStringProperty(text);
+		this.answer = new SimpleStringProperty(answer);
+		this.event = new SimpleStringProperty(event);
+		this.enabled = new SimpleBooleanProperty(true);
 		this.target = target;
-		this.enabled = true;
 		init();
 	}
 
@@ -154,10 +170,34 @@ public class ConversationOption extends NamedObject {
 	}
 
 	/**
+	 * @return the layer
+	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_OPTIONS_LAYER", //
+	foreignKeyDefinition = "FOREIGN KEY (OPTIONS_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE CASCADE") )
+	public ConversationLayer getLayer() {
+		return layer;
+	}
+
+	/**
+	 * @param layer the layer to set
+	 */
+	void setLayer(ConversationLayer layer) {
+		this.layer = layer;
+	}
+
+	/**
 	 * @return the text
 	 */
 	@Column(nullable = false)
 	public String getText() {
+		return text.get();
+	}
+	
+	/**
+	 * @return the text property
+	 */
+	public StringProperty textProperty() {
 		return text;
 	}
 
@@ -166,7 +206,7 @@ public class ConversationOption extends NamedObject {
 	 *            the text to set
 	 */
 	public void setText(String text) {
-		this.text = text;
+		this.text.set(text);
 	}
 
 	/**
@@ -174,6 +214,13 @@ public class ConversationOption extends NamedObject {
 	 */
 	@Column(nullable = false)
 	public String getAnswer() {
+		return answer.get();
+	}
+	
+	/**
+	 * @return the answer property
+	 */
+	public StringProperty answerProperty() {
 		return answer;
 	}
 
@@ -182,7 +229,7 @@ public class ConversationOption extends NamedObject {
 	 *            the answer to set
 	 */
 	public void setAnswer(String answer) {
-		this.answer = answer;
+		this.answer.set(answer);
 	}
 
 	/**
@@ -190,6 +237,13 @@ public class ConversationOption extends NamedObject {
 	 */
 	@Column(nullable = false)
 	public String getEvent() {
+		return event.get();
+	}
+	
+	/**
+	 * @return the event property
+	 */
+	public StringProperty eventProperty() {
 		return event;
 	}
 
@@ -198,7 +252,7 @@ public class ConversationOption extends NamedObject {
 	 *            the event to set
 	 */
 	public void setEvent(String event) {
-		this.event = event;
+		this.event.set(event);
 	}
 
 	/**
@@ -226,6 +280,13 @@ public class ConversationOption extends NamedObject {
 	 */
 	@Column(nullable = false)
 	public boolean getEnabled() {
+		return enabled.get();
+	}
+	
+	/**
+	 * @return the enabled property
+	 */
+	public BooleanProperty enabledProperty() {
 		return enabled;
 	}
 
@@ -234,7 +295,7 @@ public class ConversationOption extends NamedObject {
 	 *            the enabled to set
 	 */
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		this.enabled.set(enabled);
 	}
 
 	/**
@@ -289,8 +350,17 @@ public class ConversationOption extends NamedObject {
 	 * @return whether this action should be disabled (permanently) after being
 	 *         chosen once.
 	 */
+	@Transient
 	public boolean isDisablingOptionAfterChosen() {
 		return disableAction.getEnabled();
+	}
+	
+	/**
+	 * Called to remove an option from its layer prior to deletion.
+	 */
+	@PreRemove
+	private void removeFromLayer() {
+		layer.removeOption(this);
 	}
 
 	/**

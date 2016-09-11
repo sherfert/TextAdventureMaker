@@ -1,6 +1,5 @@
 package gui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -63,19 +62,24 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 				"This will delete the conversation layer and options of the layer, "
 						+ "and actions associated with any of the deleted entities."));
 
-		// TODO getSiblingLayers !?!
-		targetChooser.initialize(null, false, false, () -> new ArrayList<ConversationLayer>(), (l) -> {
+		targetChooser.initialize(null, true, false, () -> layer.getConversation().getLayers(), (l) -> {
 		});
 
-		// Assure save is only enabled if there is a name, text, answer and
-		// target
+		// Assure save is only enabled if there is a name, text and answer
 		Supplier<Boolean> anyRequiredFieldEmpty = () -> newNameTF.textProperty().get().isEmpty()
-				|| newTextTF.textProperty().get().isEmpty() || newAnswerTA.textProperty().get().isEmpty()
-				|| targetChooser.getObjectValue() == null;
+				|| newTextTF.textProperty().get().isEmpty() || newAnswerTA.textProperty().get().isEmpty();
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newTextTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newAnswerTA.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		targetChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
+	}
+	
+	@Override
+	protected void resetFormValues() {
+		super.resetFormValues();
+		newAnswerTA.setText("");
+		newEventTA.setText("");
+		newTextTF.setText("");
+		targetChooser.setObjectValue(null);
 	}
 
 	/**
@@ -106,8 +110,7 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 
 	@Override
 	protected GameDataController getObjectController(ConversationOption selectedObject) {
-		// TODO
-		return null;// new ConversationOptionController(currentGameManager,
-					// mwController, selectedObject);
+		return new ConversationOptionController(currentGameManager,
+					mwController, selectedObject);
 	}
 }

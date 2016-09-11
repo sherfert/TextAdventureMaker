@@ -195,18 +195,17 @@ public class Conversation extends NamedObject {
 	/**
 	 * @return the layers
 	 */
-	@OneToMany(cascade = { CascadeType.PERSIST })
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CONVERSATION_LAYERS", //
-	foreignKeyDefinition = "FOREIGN KEY (LAYERS_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") )
+	@OneToMany(mappedBy = "getConversation", cascade = { CascadeType.PERSIST })
 	public List<ConversationLayer> getLayers() {
 		return layers;
 	}
 
 	/**
-	 * @param layers
-	 *            the layers to set
+	 * Just for the database.
 	 */
-	public void setLayers(List<ConversationLayer> layers) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setLayers(List<ConversationLayer> layers) {
 		this.layers = layers;
 	}
 
@@ -256,15 +255,17 @@ public class Conversation extends NamedObject {
 	 */
 	public void addLayer(ConversationLayer layer) {
 		layers.add(layer);
+		// Set the conversation in the layer
+		layer.setConversation(this);
 	}
 
 	/**
-	 * Removes a layer.
+	 * Removes a layer. Can only be called by the layer when the layer is deleted.
 	 * 
 	 * @param layer
 	 *            the layer to remove
 	 */
-	public void removeLayer(ConversationLayer layer) {
+	void removeLayer(ConversationLayer layer) {
 		layers.remove(layer);
 	}
 

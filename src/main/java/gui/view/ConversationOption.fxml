@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+<?import gui.custumui.ConversationLayerChooser?>
+
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <tabs>
+    <Tab text="Basic properties">
+         <content>
+            <VBox spacing="2.0">
+               <children>
+                  <fx:include source="NamedObject.fxml" />
+                  <CheckBox fx:id="editEnabledCB" mnemonicParsing="false" text="Option enabled?" />
+                  <CheckBox fx:id="editRemoveOptionEnabledCB" mnemonicParsing="false" text="Remove the option from the layer after choosing it?" />
+                  <Label text="Text" />
+                  <TextField fx:id="editTextTF" />
+                  <Label text="Answer" />
+                  <TextArea fx:id="editAnswerTA" prefHeight="100.0" wrapText="true" />
+                  <Label text="Event" />
+                  <TextArea fx:id="editEventTA" prefHeight="100.0" wrapText="true" />
+                  <Label text="Target layer" />
+                  <ConversationLayerChooser fx:id="targetChooser" />
+                  <Button fx:id="removeButton"  mnemonicParsing="false" text="Delete this item" />
+               </children>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </VBox>
+         </content>
+      </Tab>
+  </tabs>
+</TabPane>

@@ -9,7 +9,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 /**
@@ -20,6 +22,12 @@ import javax.persistence.Transient;
 @Entity
 @Access(AccessType.PROPERTY)
 public class ConversationLayer extends NamedObject {
+
+	/**
+	 * The conversation this layer belongs to. This is fixed and cannot be
+	 * changed.
+	 */
+	private Conversation conversation;
 
 	/**
 	 * The options of this layer. Options can only belong to one layer.
@@ -48,20 +56,37 @@ public class ConversationLayer extends NamedObject {
 	}
 
 	/**
+	 * @return the conversation
+	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_LAYER_CONVERSATION", //
+	foreignKeyDefinition = "FOREIGN KEY (LAYERS_ID) REFERENCES CONVERSATION (ID) ON DELETE CASCADE") )
+	public Conversation getConversation() {
+		return conversation;
+	}
+
+	/**
+	 * @param conversation
+	 *            the conversation to set
+	 */
+	void setConversation(Conversation conversation) {
+		this.conversation = conversation;
+	}
+
+	/**
 	 * @return the options
 	 */
-	@OneToMany(cascade = { CascadeType.PERSIST })
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_CONVERSATIONLAYER_OPTIONS", //
-	foreignKeyDefinition = "FOREIGN KEY (OPTIONS_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE CASCADE") )
+	@OneToMany(mappedBy = "getLayer", cascade = { CascadeType.PERSIST })
 	public List<ConversationOption> getOptions() {
 		return options;
 	}
 
 	/**
-	 * @param options
-	 *            the options to set
+	 * Just for the database.
 	 */
-	public void setOptions(List<ConversationOption> options) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setOptions(List<ConversationOption> options) {
 		this.options = options;
 	}
 
@@ -73,16 +98,27 @@ public class ConversationLayer extends NamedObject {
 	 */
 	public void addOption(ConversationOption option) {
 		options.add(option);
+		// Set the layer in the option
+		option.setLayer(this);
 	}
 
 	/**
-	 * Removes an option.
+	 * Removes an option. Can only be called by the layer when the layer is
+	 * deleted.
 	 * 
 	 * @param option
 	 *            the option to remove
 	 */
-	public void removeOption(ConversationOption option) {
+	void removeOption(ConversationOption option) {
 		options.remove(option);
+	}
+
+	/**
+	 * Called to remove a layer from its conversation prior to deletion.
+	 */
+	@PreRemove
+	private void removeFromConversation() {
+		conversation.removeLayer(this);
 	}
 
 	/**
