@@ -19,7 +19,7 @@ public class ConversationLayerChooser extends NamedObjectChooser<ConversationLay
 	 * Create a new ConversationChooser
 	 */
 	public ConversationLayerChooser() {
-		super("(no conversation layer)");
+		super("(ends conversation)");
 	}
 
 }

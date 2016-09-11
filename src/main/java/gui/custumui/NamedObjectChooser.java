@@ -21,6 +21,7 @@ import javafx.util.StringConverter;
  * Database.
  * 
  * TODO remove "(no xxx)" when clicked
+ * TODO on click "no xxx" put that text there!
  * 
  * @author Satia
  *
@@ -178,6 +179,10 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 						this.availableValues = new ArrayList<E>(getAvailableValues.get());
 					} catch (DBClosedException e) {
 						Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+					}
+					// If we allow null, we must add it to the list
+					if (allowNull) {
+						this.availableValues.add(0, null);
 					}
 				}
 			}

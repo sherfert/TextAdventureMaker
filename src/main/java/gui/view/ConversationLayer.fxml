@@ -32,6 +32,8 @@
 							<columns>
 								<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
 								<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
+								<TableColumn fx:id="targetCol" prefWidth="150.0" text="Target Layer" />
+								<TableColumn fx:id="textCol" prefWidth="250.0" text="Text" />
 							</columns>
 						</TableView>
 					</center>

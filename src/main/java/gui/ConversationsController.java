@@ -50,7 +50,7 @@ public class ConversationsController extends NamedObjectsController<Conversation
 
 	@Override
 	protected Conversation createNewObject(String name) {
-		return new Conversation(name, newGreetingTA.getText());
+		return new Conversation(name, newGreetingTA.getText(), newEventTA.getText());
 	}
 
 	@Override

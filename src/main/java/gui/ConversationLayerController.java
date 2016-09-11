@@ -8,8 +8,10 @@ import data.ConversationLayer;
 import data.ConversationOption;
 import exception.DBClosedException;
 import gui.custumui.ConversationLayerChooser;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -23,6 +25,12 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 
 	/** The conversation layer */
 	private ConversationLayer layer;
+	
+	@FXML
+	private TableColumn<ConversationOption, String> targetCol;
+	
+	@FXML
+	private TableColumn<ConversationOption, String> textCol;
 
 	@FXML
 	private Button removeButton;
@@ -62,12 +70,23 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 	protected void initialize() {
 		super.initialize();
 		// Create new bindings
+		targetCol.setCellValueFactory((p) -> {
+			ConversationLayer target = p.getValue().getTarget();
+			if(target != null) {
+				return target.nameProperty();
+			} else {
+				return new ReadOnlyObjectWrapper<String>("(ends conversation)");
+			}
+			
+		});
+		textCol.setCellValueFactory((p) -> p.getValue().textProperty());
+		
 		removeButton.setOnMouseClicked((e) -> removeObject(layer, "Deleting a conversation layer",
 				"Do you really want to delete this conversation layer?",
 				"This will delete the conversation layer and options of the layer, "
 						+ "and actions associated with any of the deleted entities."));
 
-		targetChooser.initialize(null, true, false, () -> layer.getConversation().getLayers(), (l) -> {
+		targetChooser.initialize(layer, true, false, () -> layer.getConversation().getLayers(), (l) -> {
 		});
 
 		// Assure save is only enabled if there is a name, text and answer
