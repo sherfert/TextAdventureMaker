@@ -8,8 +8,10 @@ import javax.persistence.PersistenceException;
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
+import data.InventoryItem;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
+import gui.custumui.InventoryItemListView;
 import gui.custumui.LocationChooser;
 import gui.utility.StringUtils;
 import javafx.beans.property.Property;
@@ -27,8 +29,6 @@ import logic.CurrentGameManager;
 
 /**
  * Controller for the game details view.
- * 
- * TODO Support to change start items
  * 
  * XXX Warnings for empty fields
  * 
@@ -52,6 +52,8 @@ public class GameDetailsController extends GameDataController {
 	private TextArea startingTextField;
 	@FXML
 	private LocationChooser startLocationChooser;
+	@FXML
+	private InventoryItemListView startItemsListView;	
 	@FXML
 	private TextField useWithHelpTextField;
 	@FXML
@@ -180,6 +182,11 @@ public class GameDetailsController extends GameDataController {
 								e);
 					}
 				});
+		
+		startItemsListView.initialize(game.getStartItems(),
+				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
+				this::startItemSelected, (item) -> game.addStartItem(item), (item) -> game.removeStartItem(item));
+
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
@@ -290,5 +297,22 @@ public class GameDetailsController extends GameDataController {
 			// Set the value in the game
 			game.setGameTitle(newTitle);
 		}
+	}
+	
+	/**
+	 * Opens an item for editing. Invoked when an item from the list is double
+	 * clicked.
+	 * 
+	 * @param i
+	 *            the item
+	 */
+	private void startItemSelected(InventoryItem i) {
+		if (i == null) {
+			return;
+		}
+
+		InventoryItemController itemController = new InventoryItemController(currentGameManager, mwController, i);
+		mwController.pushCenterContent(i.getName(), "view/InventoryItem.fxml", itemController,
+				itemController::controllerFactory);
 	}
 }

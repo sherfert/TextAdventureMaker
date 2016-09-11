@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -87,25 +88,6 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 	}
 
 	/**
-	 * Initialize this list view. This method does not allow deletion of values.
-	 * 
-	 * @param initialList
-	 *            the list of values to place in the list initially
-	 * @param getAllValues
-	 *            a method returning all applicable values
-	 * @param orderChanged
-	 *            called when the order of list items has changed
-	 * @param valueClicked
-	 *            called when a value was double-clicked in the list
-	 * @param valueAdded
-	 *            called when a value was added to the list
-	 */
-	public void initialize(List<E> initialList, ValuesSupplier<E> getAllValues, Consumer<List<E>> orderChanged,
-			Consumer<E> valueClicked, Consumer<E> valueAdded) {
-		initialize(initialList, getAllValues, orderChanged, valueClicked, valueAdded, null);
-	}
-
-	/**
 	 * Initialize this list view. This method allows deletion of values.
 	 * 
 	 * @param initialList
@@ -113,16 +95,30 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 	 * @param getAllValues
 	 *            a method returning all applicable values
 	 * @param orderChanged
-	 *            called when the order of list items has changed
+	 *            called when the order of list items has changed. If
+	 *            {@code null} up/down buttons will be disabled.
 	 * @param valueClicked
 	 *            called when a value was double-clicked in the list
 	 * @param valueAdded
 	 *            called when a value was added to the list
 	 * @param valueRemoved
-	 *            called when a value was removed from the list
+	 *            called when a value was removed from the list. If {@code null}
+	 *            removal button will be disabled.
 	 */
 	public void initialize(List<E> initialList, ValuesSupplier<E> getAllValues, Consumer<List<E>> orderChanged,
 			Consumer<E> valueClicked, Consumer<E> valueAdded, Consumer<E> valueRemoved) {
+
+		// Predicates to see if the buttons should be enabled
+		Supplier<Boolean> addEnabled = () -> (filterTF.getText().isEmpty() && addValueChooser.getObjectValue() != null);
+		Supplier<Boolean> removeEnabled = () -> (valueRemoved != null
+				&& listView.getSelectionModel().getSelectedItem() != null);
+		Supplier<Boolean> upEnabled = () -> (orderChanged != null && filterTF.getText().isEmpty()
+				&& listView.getSelectionModel().getSelectedItem() != null
+				&& listView.getSelectionModel().getSelectedIndex() != 0);
+		Supplier<Boolean> downEnabled = () -> (orderChanged != null && filterTF.getText().isEmpty()
+				&& listView.getSelectionModel().getSelectedItem() != null
+				&& listView.getSelectionModel().getSelectedIndex() != listItems.size() - 1);
+
 		// Set initial list
 		listItems = FXCollections.observableArrayList(initialList);
 
@@ -139,12 +135,10 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 				// Compare name of every E with filter text.
 				return obj.getName().toLowerCase().contains(n.toLowerCase());
 			});
-			// Disable buttons for non-empty textfield
-			if(!n.isEmpty()) {
-				upButton.setDisable(true);
-				downButton.setDisable(true);
-			}
-			addButton.setDisable(!n.isEmpty() || addValueChooser.getObjectValue() == null);
+			// Refresh buttons
+			upButton.setDisable(!upEnabled.get());
+			downButton.setDisable(!downEnabled.get());
+			addButton.setDisable(!addEnabled.get());
 		});
 
 		listView.setItems(filteredData);
@@ -158,7 +152,7 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		// Initialize chooser
 		addValueChooser.initialize(null, false, true, () -> {
 			return getAllValues.get().stream().filter((v) -> !listItems.contains(v)).collect(Collectors.toList());
-		} , (v) -> addButton.setDisable(!filterTF.getText().isEmpty()));
+		} , (v) -> addButton.setDisable(!addEnabled.get()));
 
 		// Disable buttons by default and if no value is chosen
 		addButton.setDisable(true);
@@ -166,10 +160,9 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		upButton.setDisable(true);
 		downButton.setDisable(true);
 		listView.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
-			upButton.setDisable(
-					n == null || !filterTF.getText().isEmpty() || listView.getSelectionModel().getSelectedIndex() == 0);
-			downButton.setDisable(n == null || !filterTF.getText().isEmpty()
-					|| listView.getSelectionModel().getSelectedIndex() == listItems.size() - 1);
+			upButton.setDisable(!upEnabled.get());
+			downButton.setDisable(!downEnabled.get());
+			removeButton.setDisable(!removeEnabled.get());
 		});
 
 		addButton.setOnMouseClicked((e) -> {
@@ -178,18 +171,11 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 			listItems.add(selectedItem);
 			valueAdded.accept(selectedItem);
 		});
-		// Only if deletion is allowed
-		if (valueRemoved != null) {
-			listView.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
-				removeButton.setDisable(n == null);
-			});
-
-			removeButton.setOnMouseClicked((e) -> {
-				E selectedItem = listView.getSelectionModel().getSelectedItem();
-				listItems.remove(selectedItem);
-				valueRemoved.accept(selectedItem);
-			});
-		}
+		removeButton.setOnMouseClicked((e) -> {
+			E selectedItem = listView.getSelectionModel().getSelectedItem();
+			listItems.remove(selectedItem);
+			valueRemoved.accept(selectedItem);
+		});
 		upButton.setOnMouseClicked((e) -> {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			Collections.swap(listItems, index, index - 1);
@@ -202,6 +188,7 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 			listView.getSelectionModel().selectNext();
 			orderChanged.accept(listItems);
 		});
+
 	}
 
 }

@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.LocationChooser?>
 <?import javafx.scene.control.ScrollPane?>
+<?import gui.custumui.InventoryItemListView?>
 
 <Accordion xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<panes>
@@ -51,6 +52,11 @@
 						</padding>
 					</VBox>
 				</ScrollPane>
+			</content>
+		</TitledPane>
+		<TitledPane animated="false" text="Start inventory items">
+			<content>
+				<InventoryItemListView fx:id="startItemsListView" />
 			</content>
 		</TitledPane>
 		<TitledPane animated="false" text="Help Texts">

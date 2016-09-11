@@ -80,6 +80,14 @@ public class Game implements HasId {
 	@JoinColumn(nullable = false)
 	@Access(AccessType.FIELD)
 	private AddInventoryItemsAction addInventoryItemsAction;
+	
+	/**
+	 * @return the start items
+	 */
+	@Transient
+	public List<InventoryItem> getStartItems() {
+		return addInventoryItemsAction.getPickUpItems();
+	}
 
 	/**
 	 * @param startItems

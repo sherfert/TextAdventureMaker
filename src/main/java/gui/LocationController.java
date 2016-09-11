@@ -71,11 +71,11 @@ public class LocationController extends GameDataController {
 
 		waysInListView.initialize(location.getWaysIn(),
 				this.currentGameManager.getPersistenceManager().getWayManager()::getAllWays, location::updateWaysIn,
-				this::waySelected, (way) -> way.setDestination(location));
+				this::waySelected, (way) -> way.setDestination(location), null);
 		
 		waysOutListView.initialize(location.getWaysOut(),
 				this.currentGameManager.getPersistenceManager().getWayManager()::getAllWays, location::updateWaysOut,
-				this::waySelected, (way) -> way.setOrigin(location));
+				this::waySelected, (way) -> way.setOrigin(location), null);
 	}
 
 	/**

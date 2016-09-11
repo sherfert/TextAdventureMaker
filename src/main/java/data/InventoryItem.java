@@ -35,6 +35,8 @@ import data.interfaces.UsableWithHasLocation;
 /**
  * Any item that can appear in your inventory. These items are not in locations.
  * 
+ * FIXME an inventory Item still is the list of start items (pickupitems, etc.) after deletion.
+ * 
  * @author Satia
  */
 @Entity

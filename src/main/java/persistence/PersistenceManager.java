@@ -77,6 +77,7 @@ public class PersistenceManager {
 	/**
 	 * Connects to the database.
 	 * 
+	 * TODO some backwards compatibility stuff
 	 * TODO verify that the model is the same!
 	 * 
 	 * @param dropTables
