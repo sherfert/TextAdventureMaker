@@ -6,26 +6,40 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <ListView fx:id="listView">
-      </ListView>
-   </center>
-   <right>
-      <VBox prefWidth="200.0" spacing="2.0">
-         <children>
-            <HBox fx:id="addHBox" spacing="2.0">
-               <children>
-                  <Button fx:id="addButton" mnemonicParsing="false" prefWidth="25.0" text="+" />
-               </children>
-            </HBox>
-            <Button fx:id="removeButton" mnemonicParsing="false" prefWidth="25.0" text="-" />
-            <Button fx:id="upButton" mnemonicParsing="false" prefWidth="25.0" text="⇑" />
-            <Button fx:id="downButton" mnemonicParsing="false" prefWidth="25.0" text="⇓" />
-         </children>
-         <padding>
-            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-         </padding>
-      </VBox>
-   </right>
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<ListView fx:id="listView">
+		</ListView>
+	</center>
+	<right>
+		<VBox prefWidth="200.0" spacing="2.0">
+			<children>
+				<HBox fx:id="addHBox" spacing="2.0">
+					<children>
+						<Button fx:id="addButton" mnemonicParsing="false"
+							prefWidth="25.0" text="+" />
+					</children>
+				</HBox>
+				<Button fx:id="removeButton" mnemonicParsing="false"
+					prefWidth="25.0" text="-" />
+				<Button fx:id="upButton" mnemonicParsing="false" prefWidth="25.0"
+					text="⇑" />
+				<Button fx:id="downButton" mnemonicParsing="false" prefWidth="25.0"
+					text="⇓" />
+			</children>
+			<padding>
+				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+			</padding>
+		</VBox>
+	</right>
+	<bottom>
+		<HBox spacing="10.0">
+			<Label text="Filter:" />
+			<TextField fx:id="filterTF" />
+			<padding>
+				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+			</padding>
+		</HBox>
+	</bottom>
 </fx:root>

@@ -12,10 +12,12 @@ import data.NamedObject;
 import gui.MainWindowController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -34,6 +36,9 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 
 	@FXML
 	private ListView<E> listView;
+
+	@FXML
+	protected TextField filterTF;
 
 	@FXML
 	private Button addButton;
@@ -120,7 +125,29 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 			Consumer<E> valueClicked, Consumer<E> valueAdded, Consumer<E> valueRemoved) {
 		// Set initial list
 		listItems = FXCollections.observableArrayList(initialList);
-		listView.setItems(listItems);
+
+		// Filter
+		FilteredList<E> filteredData = new FilteredList<>(listItems, p -> true);
+
+		filterTF.textProperty().addListener((f, o, n) -> {
+			filteredData.setPredicate(obj -> {
+				// If filter text is empty, display all objects.
+				if (n == null || n.isEmpty()) {
+					return true;
+				}
+
+				// Compare name of every E with filter text.
+				return obj.getName().toLowerCase().contains(n.toLowerCase());
+			});
+			// Disable buttons for non-empty textfield
+			if(!n.isEmpty()) {
+				upButton.setDisable(true);
+				downButton.setDisable(true);
+			}
+			addButton.setDisable(!n.isEmpty() || addValueChooser.getObjectValue() == null);
+		});
+
+		listView.setItems(filteredData);
 
 		listView.setOnMouseClicked((e) -> {
 			if (e.getClickCount() == 2) {
@@ -131,7 +158,7 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		// Initialize chooser
 		addValueChooser.initialize(null, false, true, () -> {
 			return getAllValues.get().stream().filter((v) -> !listItems.contains(v)).collect(Collectors.toList());
-		} , (v) -> addButton.setDisable(false));
+		} , (v) -> addButton.setDisable(!filterTF.getText().isEmpty()));
 
 		// Disable buttons by default and if no value is chosen
 		addButton.setDisable(true);
@@ -139,10 +166,11 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		upButton.setDisable(true);
 		downButton.setDisable(true);
 		listView.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
-			upButton.setDisable(n == null || listView.getSelectionModel().getSelectedIndex() == 0);
-			downButton.setDisable(n == null || listView.getSelectionModel().getSelectedIndex() == listItems.size() - 1);
+			upButton.setDisable(
+					n == null || !filterTF.getText().isEmpty() || listView.getSelectionModel().getSelectedIndex() == 0);
+			downButton.setDisable(n == null || !filterTF.getText().isEmpty()
+					|| listView.getSelectionModel().getSelectedIndex() == listItems.size() - 1);
 		});
-		
 
 		addButton.setOnMouseClicked((e) -> {
 			E selectedItem = addValueChooser.getObjectValue();
@@ -155,7 +183,7 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 			listView.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
 				removeButton.setDisable(n == null);
 			});
-			
+
 			removeButton.setOnMouseClicked((e) -> {
 				E selectedItem = listView.getSelectionModel().getSelectedItem();
 				listItems.remove(selectedItem);

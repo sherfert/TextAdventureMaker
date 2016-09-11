@@ -9,6 +9,8 @@ import exception.DBClosedException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -20,8 +22,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for the a view with NamedObjects in a table, and the
  * possibility to add them.
- * 
- * TODO in this and in similar views: A filter text field
  * 
  * @author Satia
  */
@@ -49,6 +49,9 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 
 	@FXML
 	protected Button saveButton;
+	
+	@FXML
+	protected TextField filterTF;
 
 	/**
 	 * 
@@ -92,9 +95,30 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 				return;
 			}
 		}
+		
+		// Filter
+		FilteredList<E> filteredData = new FilteredList<>(objectsOL, p -> true);
+		
+		filterTF.textProperty().addListener((f, o , n) -> {
+            filteredData.setPredicate(obj -> {
+                // If filter text is empty, display all objects.
+                if (n == null || n.isEmpty()) {
+                    return true;
+                }
+
+                // Compare name of every E with filter text.
+                return obj.getName().toLowerCase().contains(n.toLowerCase());
+            });
+        });
+		
+		// Sort filtered data
+		SortedList<E> sortedData = new SortedList<>(filteredData);
+		
+		// Bind the SortedList comparator to the TableView comparator.
+        sortedData.comparatorProperty().bind(table.comparatorProperty());
 
 		// Fill table
-		table.setItems(objectsOL);
+		table.setItems(sortedData);
 
 		// Disable buttons at beginning
 		saveButton.setDisable(true);
