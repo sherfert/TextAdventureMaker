@@ -38,46 +38,15 @@ import data.action.ChangeConversationOptionAction;
 public class ConversationOption extends NamedObject {
 	
 	/**
-	 * The layer this option belongs to. This is fixed and cannot be
-	 * changed. 
+	 * All additional actions.
 	 */
-	private ConversationLayer layer;
-
-	/**
-	 * The text the player says when choosing that option.
-	 */
-	private final StringProperty text;
-
+	private List<AbstractAction> additionalActions;
+	
 	/**
 	 * The answer the player gets when choosing that option.
 	 */
 	private final StringProperty answer;
-
-	/**
-	 * A text describing what is going on additionally. If empty, nothing is
-	 * printed.
-	 */
-	private final StringProperty event;
-
-	/**
-	 * All additional actions.
-	 */
-	private List<AbstractAction> additionalActions;
-
-	/**
-	 * Only enabled options from a layer are listed.
-	 */
-	private final BooleanProperty enabled;
-
-	/**
-	 * The target layer, which the player gets to after choosing that option. If
-	 * this is {@code null}, the option will end the conversation. By default,
-	 * this should be the owning layer.
-	 * 
-	 * This should only point to layers of the same conversation.
-	 */
-	private ConversationLayer target;
-
+	
 	/**
 	 * The {@link ChangeConversationOptionAction} which would disable this
 	 * option.
@@ -92,6 +61,44 @@ public class ConversationOption extends NamedObject {
 	@JoinColumn
 	@Access(AccessType.FIELD)
 	private ChangeConversationOptionAction disableAction;
+
+	/**
+	 * Only enabled options from a layer are listed.
+	 */
+	private final BooleanProperty enabled;
+
+	/**
+	 * A text describing what is going on additionally. If empty, nothing is
+	 * printed.
+	 */
+	private final StringProperty event;
+
+	/**
+	 * The layer this option belongs to. This is fixed and cannot be
+	 * changed. 
+	 */
+	private ConversationLayer layer;
+
+	/**
+	 * This defines the order in which options appear in a layer. It is managed
+	 * by the methods of the layer automatically and should not be set
+	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
+	 */
+	private int layerOrder;
+
+	/**
+	 * The target layer, which the player gets to after choosing that option. If
+	 * this is {@code null}, the option will end the conversation. By default,
+	 * this should be the owning layer.
+	 * 
+	 * This should only point to layers of the same conversation.
+	 */
+	private ConversationLayer target;
+
+	/**
+	 * The text the player says when choosing that option.
+	 */
+	private final StringProperty text;
 
 	/**
 	 * No-arg constructor for the database.
@@ -160,163 +167,6 @@ public class ConversationOption extends NamedObject {
 	}
 
 	/**
-	 * Initializes the fields
-	 */
-	private final void init() {
-		this.additionalActions = new ArrayList<>();
-		this.disableAction = new ChangeConversationOptionAction("", this);
-		this.disableAction.setEnabled(false);
-		this.disableAction.setEnabling(Enabling.DISABLE);
-	}
-
-	/**
-	 * @return the layer
-	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_OPTIONS_LAYER", //
-	foreignKeyDefinition = "FOREIGN KEY (OPTIONS_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE CASCADE") )
-	public ConversationLayer getLayer() {
-		return layer;
-	}
-
-	/**
-	 * @param layer the layer to set
-	 */
-	void setLayer(ConversationLayer layer) {
-		this.layer = layer;
-	}
-
-	/**
-	 * @return the text
-	 */
-	@Column(nullable = false)
-	public String getText() {
-		return text.get();
-	}
-	
-	/**
-	 * @return the text property
-	 */
-	public StringProperty textProperty() {
-		return text;
-	}
-
-	/**
-	 * @param text
-	 *            the text to set
-	 */
-	public void setText(String text) {
-		this.text.set(text);
-	}
-
-	/**
-	 * @return the answer
-	 */
-	@Column(nullable = false)
-	public String getAnswer() {
-		return answer.get();
-	}
-	
-	/**
-	 * @return the answer property
-	 */
-	public StringProperty answerProperty() {
-		return answer;
-	}
-
-	/**
-	 * @param answer
-	 *            the answer to set
-	 */
-	public void setAnswer(String answer) {
-		this.answer.set(answer);
-	}
-
-	/**
-	 * @return the event
-	 */
-	@Column(nullable = false)
-	public String getEvent() {
-		return event.get();
-	}
-	
-	/**
-	 * @return the event property
-	 */
-	public StringProperty eventProperty() {
-		return event;
-	}
-
-	/**
-	 * @param event
-	 *            the event to set
-	 */
-	public void setEvent(String event) {
-		this.event.set(event);
-	}
-
-	/**
-	 * @return the additionalActions
-	 */
-	@ManyToMany(cascade = { CascadeType.PERSIST })
-	@JoinTable(name = "CONVOP_AA", foreignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_S", //
-	foreignKeyDefinition = "FOREIGN KEY (ConversationOption_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_D", //
-	foreignKeyDefinition = "FOREIGN KEY (additionalActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
-	public List<AbstractAction> getAdditionalActions() {
-		return additionalActions;
-	}
-
-	/**
-	 * @param additionalActions
-	 *            the additionalActions to set
-	 */
-	public void setAdditionalActions(List<AbstractAction> additionalActions) {
-		this.additionalActions = additionalActions;
-	}
-
-	/**
-	 * @return the enabled
-	 */
-	@Column(nullable = false)
-	public boolean getEnabled() {
-		return enabled.get();
-	}
-	
-	/**
-	 * @return the enabled property
-	 */
-	public BooleanProperty enabledProperty() {
-		return enabled;
-	}
-
-	/**
-	 * @param enabled
-	 *            the enabled to set
-	 */
-	public void setEnabled(boolean enabled) {
-		this.enabled.set(enabled);
-	}
-
-	/**
-	 * @return the target
-	 */
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_TARGET", //
-	foreignKeyDefinition = "FOREIGN KEY (TARGET_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE SET NULL") )
-	public ConversationLayer getTarget() {
-		return target;
-	}
-
-	/**
-	 * @param target
-	 *            the target to set
-	 */
-	public void setTarget(ConversationLayer target) {
-		this.target = target;
-	}
-
-	/**
 	 * Adds an additional action.
 	 * 
 	 * @param action
@@ -327,40 +177,10 @@ public class ConversationOption extends NamedObject {
 	}
 
 	/**
-	 * Removes an additional action.
-	 * 
-	 * @param action
-	 *            the action to remove.
+	 * @return the answer property
 	 */
-	public void removeAdditionalAction(AbstractAction action) {
-		additionalActions.remove(action);
-	}
-
-	/**
-	 * Sets whether this action should be disabled (permanently) after being
-	 * chosen once.
-	 * 
-	 * @param disabling
-	 */
-	public void setDisablingOptionAfterChosen(boolean disabling) {
-		disableAction.setEnabled(disabling);
-	}
-
-	/**
-	 * @return whether this action should be disabled (permanently) after being
-	 *         chosen once.
-	 */
-	@Transient
-	public boolean isDisablingOptionAfterChosen() {
-		return disableAction.getEnabled();
-	}
-	
-	/**
-	 * Called to remove an option from its layer prior to deletion.
-	 */
-	@PreRemove
-	private void removeFromLayer() {
-		layer.removeOption(this);
+	public StringProperty answerProperty() {
+		return answer;
 	}
 
 	/**
@@ -377,6 +197,208 @@ public class ConversationOption extends NamedObject {
 		for (AbstractAction abstractAction : additionalActions) {
 			abstractAction.triggerAction(game);
 		}
+	}
+
+	/**
+	 * @return the enabled property
+	 */
+	public BooleanProperty enabledProperty() {
+		return enabled;
+	}
+
+	/**
+	 * @return the event property
+	 */
+	public StringProperty eventProperty() {
+		return event;
+	}
+
+	/**
+	 * @return the additionalActions
+	 */
+	@ManyToMany(cascade = { CascadeType.PERSIST })
+	@JoinTable(name = "CONVOP_AA", foreignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_S", //
+	foreignKeyDefinition = "FOREIGN KEY (ConversationOption_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") , //
+	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_D", //
+	foreignKeyDefinition = "FOREIGN KEY (additionalActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
+	public List<AbstractAction> getAdditionalActions() {
+		return additionalActions;
+	}
+	
+	/**
+	 * @return the answer
+	 */
+	@Column(nullable = false)
+	public String getAnswer() {
+		return answer.get();
+	}
+
+	/**
+	 * @return the enabled
+	 */
+	@Column(nullable = false)
+	public boolean getEnabled() {
+		return enabled.get();
+	}
+
+	/**
+	 * @return the event
+	 */
+	@Column(nullable = false)
+	public String getEvent() {
+		return event.get();
+	}
+	
+	/**
+	 * @return the layer
+	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_OPTIONS_LAYER", //
+	foreignKeyDefinition = "FOREIGN KEY (OPTIONS_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE CASCADE") )
+	public ConversationLayer getLayer() {
+		return layer;
+	}
+
+	/**
+	 * @return the layerOrder
+	 */
+	@Column(nullable = false)
+	int getLayerOrder() {
+		return layerOrder;
+	}
+
+	/**
+	 * @return the target
+	 */
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(nullable = true, foreignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_TARGET", //
+	foreignKeyDefinition = "FOREIGN KEY (TARGET_ID) REFERENCES CONVERSATIONLAYER (ID) ON DELETE SET NULL") )
+	public ConversationLayer getTarget() {
+		return target;
+	}
+	
+	/**
+	 * @return the text
+	 */
+	@Column(nullable = false)
+	public String getText() {
+		return text.get();
+	}
+
+	/**
+	 * Initializes the fields
+	 */
+	private final void init() {
+		this.additionalActions = new ArrayList<>();
+		this.disableAction = new ChangeConversationOptionAction("", this);
+		this.disableAction.setEnabled(false);
+		this.disableAction.setEnabling(Enabling.DISABLE);
+	}
+
+	/**
+	 * @return whether this action should be disabled (permanently) after being
+	 *         chosen once.
+	 */
+	@Transient
+	public boolean isDisablingOptionAfterChosen() {
+		return disableAction.getEnabled();
+	}
+
+	/**
+	 * Removes an additional action.
+	 * 
+	 * @param action
+	 *            the action to remove.
+	 */
+	public void removeAdditionalAction(AbstractAction action) {
+		additionalActions.remove(action);
+	}
+
+	/**
+	 * Called to remove an option from its layer prior to deletion.
+	 */
+	@PreRemove
+	private void removeFromLayer() {
+		layer.removeOption(this);
+	}
+	
+	/**
+	 * @param additionalActions
+	 *            the additionalActions to set
+	 */
+	public void setAdditionalActions(List<AbstractAction> additionalActions) {
+		this.additionalActions = additionalActions;
+	}
+
+	/**
+	 * @param answer
+	 *            the answer to set
+	 */
+	public void setAnswer(String answer) {
+		this.answer.set(answer);
+	}
+
+	/**
+	 * Sets whether this action should be disabled (permanently) after being
+	 * chosen once.
+	 * 
+	 * @param disabling
+	 */
+	public void setDisablingOptionAfterChosen(boolean disabling) {
+		disableAction.setEnabled(disabling);
+	}
+
+	/**
+	 * @param enabled
+	 *            the enabled to set
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled.set(enabled);
+	}
+
+	/**
+	 * @param event
+	 *            the event to set
+	 */
+	public void setEvent(String event) {
+		this.event.set(event);
+	}
+
+	/**
+	 * @param layer the layer to set
+	 */
+	void setLayer(ConversationLayer layer) {
+		this.layer = layer;
+	}
+
+	/**
+	 * @param layerOrder the layerOrder to set
+	 */
+	void setLayerOrder(int layerOrder) {
+		this.layerOrder = layerOrder;
+	}
+
+	/**
+	 * @param target
+	 *            the target to set
+	 */
+	public void setTarget(ConversationLayer target) {
+		this.target = target;
+	}
+	
+	/**
+	 * @param text
+	 *            the text to set
+	 */
+	public void setText(String text) {
+		this.text.set(text);
+	}
+
+	/**
+	 * @return the text property
+	 */
+	public StringProperty textProperty() {
+		return text;
 	}
 
 }

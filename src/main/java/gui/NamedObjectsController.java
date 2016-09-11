@@ -33,7 +33,7 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 	private String objectControllerFXML;
 
 	/** An observable list with the objects. */
-	private ObservableList<E> objectsOL;
+	protected ObservableList<E> objectsOL;
 
 	@FXML
 	protected TableView<E> table;

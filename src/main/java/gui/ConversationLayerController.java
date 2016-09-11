@@ -1,5 +1,6 @@
 package gui;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -16,8 +17,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for one conversation layer.
  * 
- * TODO Support to reorder options.
- * 
  * @author Satia
  */
 public class ConversationLayerController extends NamedObjectsController<ConversationOption> {
@@ -27,6 +26,12 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 
 	@FXML
 	private Button removeButton;
+
+	@FXML
+	private Button upButton;
+
+	@FXML
+	private Button downButton;
 
 	@FXML
 	private TextField newTextTF;
@@ -71,6 +76,27 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newTextTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newAnswerTA.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
+		
+		// Disable buttons by default and if no value is chosen
+		upButton.setDisable(true);
+		downButton.setDisable(true);
+		table.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
+			upButton.setDisable(n == null || table.getSelectionModel().getSelectedIndex() == 0);
+			downButton.setDisable(n == null || table.getSelectionModel().getSelectedIndex() == table.getItems().size() - 1);
+		});
+		
+		upButton.setOnMouseClicked((e) -> {
+			int index = table.getSelectionModel().getSelectedIndex();
+			Collections.swap(objectsOL, index, index - 1);
+			table.getSelectionModel().selectPrevious();
+			layer.updateOptions(objectsOL);
+		});
+		downButton.setOnMouseClicked((e) -> {
+			int index = table.getSelectionModel().getSelectedIndex();
+			Collections.swap(objectsOL, index, index + 1);
+			table.getSelectionModel().selectNext();
+			layer.updateOptions(objectsOL);
+		});
 	}
 	
 	@Override

@@ -14,8 +14,6 @@ import logic.CurrentGameManager;
  * 
  * TODO Support to change additionalTakeActions, pickUpItems
  * 
- * TODO reorganize table/new FXML
- * 
  * @author Satia
  */
 public class ItemController extends GameDataController {
