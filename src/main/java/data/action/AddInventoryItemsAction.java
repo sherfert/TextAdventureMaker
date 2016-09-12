@@ -62,14 +62,16 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 * @param item
 	 *            the item
 	 */
+	@SuppressWarnings("deprecation")
 	public void addPickUpItem(InventoryItem item) {
 		this.pickUpItems.add(item);
+		item.getAddIIActions().add(this);
 	}
 
 	/**
 	 * @return the pickUpItems.
 	 */
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = {CascadeType.PERSIST})
 	@JoinTable(name = "AIIA_PI", foreignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_S", //
 	foreignKeyDefinition = "FOREIGN KEY (AddInventoryItemsAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_AddInventoryItemsAction_pickUpItems_D", //
@@ -79,10 +81,11 @@ public class AddInventoryItemsAction extends AbstractAction {
 	}
 
 	/**
-	 * @param pickUpItems
-	 *            the pickUpItems to set
+	 * Just for the database.
 	 */
-	public void setPickUpItems(List<InventoryItem> pickUpItems) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setPickUpItems(List<InventoryItem> pickUpItems) {
 		this.pickUpItems = pickUpItems;
 	}
 
@@ -93,8 +96,10 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 * @param item
 	 *            the item
 	 */
+	@SuppressWarnings("deprecation")
 	public void removePickUpItem(InventoryItem item) {
 		this.pickUpItems.remove(item);
+		item.getAddIIActions().remove(this);
 	}
 
 	@Override

@@ -36,12 +36,6 @@ public interface Takeable extends Identifiable {
 	public List<String> getAdditionalTakeCommands();
 
 	/**
-	 * @param pickUpItems
-	 *            the pickUpItems to set
-	 */
-	public void setPickUpItems(List<InventoryItem> pickUpItems);
-
-	/**
 	 * Adds an {@link InventoryItem} to the items to be added to the inventory.
 	 *
 	 * @param item

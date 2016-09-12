@@ -22,6 +22,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import data.action.AbstractAction;
@@ -35,14 +36,11 @@ import data.interfaces.UsableWithHasLocation;
 /**
  * Any item that can appear in your inventory. These items are not in locations.
  * 
- * FIXME an inventory Item still is the list of start items (pickupitems, etc.) after deletion.
- * 
  * @author Satia
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class InventoryItem extends UsableObject implements
-		UsableWithHasLocation, Combinable<InventoryItem> {
+public class InventoryItem extends UsableObject implements UsableWithHasLocation, Combinable<InventoryItem> {
 
 	/**
 	 * Attributes of an {@link InventoryItem} that can be used with an
@@ -58,7 +56,7 @@ public class InventoryItem extends UsableObject implements
 		 * 
 		 * No ON CASCADE definitions, since this field is not accessible.
 		 */
-		@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+		@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 		@JoinColumn(nullable = false)
 		private final AddInventoryItemsAction addInventoryItemsAction;
 
@@ -66,7 +64,7 @@ public class InventoryItem extends UsableObject implements
 		 * All actions triggered when the two {@link InventoryItem}s are
 		 * combined. They are triggered regardless of the enabled status.
 		 */
-		@ManyToMany(cascade = {CascadeType.PERSIST})
+		@ManyToMany(cascade = { CascadeType.PERSIST })
 		@JoinTable(name = "CII_ACWA", foreignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_S", //
 		foreignKeyDefinition = "FOREIGN KEY (InventoryItem$CombinableInventoryItem_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") , //
 		inverseForeignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_D", //
@@ -123,15 +121,11 @@ public class InventoryItem extends UsableObject implements
 
 		@Override
 		public String toString() {
-			return "CombinableInventoryItem{" + "addInventoryItemsActionID="
-					+ addInventoryItemsAction.getId()
-					+ ", additionalCombineWithActionsIDs="
-					+ NamedObject.getIDList(additionalCombineWithActions)
-					+ ", combineWithForbiddenText=" + combineWithForbiddenText
-					+ ", combineWithSuccessfulText="
-					+ combineWithSuccessfulText + ", enabled=" + enabled
-					+ ", id=" + id + ", removeCombinables=" + removeCombinables
-					+ '}';
+			return "CombinableInventoryItem{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId()
+					+ ", additionalCombineWithActionsIDs=" + NamedObject.getIDList(additionalCombineWithActions)
+					+ ", combineWithForbiddenText=" + combineWithForbiddenText + ", combineWithSuccessfulText="
+					+ combineWithSuccessfulText + ", enabled=" + enabled + ", id=" + id + ", removeCombinables="
+					+ removeCombinables + '}';
 		}
 
 		@Override
@@ -181,7 +175,7 @@ public class InventoryItem extends UsableObject implements
 		 * mapped {@link HasLocation}. They are triggered regardless of the
 		 * enabled status.
 		 */
-		@ManyToMany(cascade = {CascadeType.PERSIST})
+		@ManyToMany(cascade = { CascadeType.PERSIST })
 		@JoinTable(name = "UHL_AUWA", foreignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_S", //
 		foreignKeyDefinition = "FOREIGN KEY (InventoryItem$UsableHasLocation_ID) REFERENCES INVENTORYITEM$USABLEHASLOCATION (ID) ON DELETE CASCADE") , //
 		inverseForeignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_D", //
@@ -236,10 +230,9 @@ public class InventoryItem extends UsableObject implements
 		@Override
 		public String toString() {
 			return "UsableHasLocation{" + "additionalUseWithActionsIDs="
-					+ NamedObject.getIDList(additionalUseWithActions)
-					+ ", enabled=" + enabled + ", id=" + id
-					+ ", useWithForbiddenText=" + useWithForbiddenText
-					+ ", useWithSuccessfulText=" + useWithSuccessfulText + '}';
+					+ NamedObject.getIDList(additionalUseWithActions) + ", enabled=" + enabled + ", id=" + id
+					+ ", useWithForbiddenText=" + useWithForbiddenText + ", useWithSuccessfulText="
+					+ useWithSuccessfulText + '}';
 		}
 
 		@Override
@@ -252,19 +245,19 @@ public class InventoryItem extends UsableObject implements
 	 * An inventory item can be combined with others. For each inventory item
 	 * there is additional information about the usability, etc. The method
 	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key and
-	 * value, if it was not stored before. The other inventory items map will
-	 * be synchronized, too.
+	 * value, if it was not stored before. The other inventory items map will be
+	 * synchronized, too.
 	 * 
 	 * ManyToMany since exactly TWO InventoryItems store this
 	 * CombinableInventoryItem in their map.
 	 */
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_S", //
 	foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_D", //
 	foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
 
@@ -276,11 +269,11 @@ public class InventoryItem extends UsableObject implements
 	 * OneToMany since each InventoryItem has its own CombineCommands (they are
 	 * not shared).
 	 */
-	@OneToMany(cascade = {CascadeType.PERSIST})
+	@OneToMany(cascade = { CascadeType.PERSIST })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands", //
 	foreignKeyDefinition = "FOREIGN KEY (ADDITIONALCOMBINECOMMANDS_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (additionalCombineCommands_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (additionalCombineCommands_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombineCommands> additionalCombineCommands;
 
@@ -291,11 +284,11 @@ public class InventoryItem extends UsableObject implements
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
 	 */
-	@OneToMany(cascade = {CascadeType.PERSIST})
+	@OneToMany(cascade = { CascadeType.PERSIST })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usableItems", //
 	foreignKeyDefinition = "FOREIGN KEY (usableItems_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usableItems_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (usableItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (usableItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<Item, UsableHasLocation> usableItems;
 
@@ -306,13 +299,22 @@ public class InventoryItem extends UsableObject implements
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
 	 */
-	@OneToMany(cascade = {CascadeType.PERSIST})
+	@OneToMany(cascade = { CascadeType.PERSIST })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usablePersons", //
 	foreignKeyDefinition = "FOREIGN KEY (usablePersons_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usablePersons_KEY", //
-			foreignKeyDefinition = "FOREIGN KEY (usablePersons_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (usablePersons_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<Person, UsableHasLocation> usablePersons;
+
+	/**
+	 * This field is declared here just to ensure deletion from the list. It is
+	 * kept consistent by the mappedBy entity. Without the definition here the
+	 * ON DELETE CASCADE has no effect. Only used in PreRemove.
+	 */
+	@ManyToMany(cascade = { CascadeType.PERSIST }, mappedBy = "getPickUpItems")
+	@Access(AccessType.FIELD)
+	private List<AddInventoryItemsAction> addIIActions;
 
 	/**
 	 * No-arg constructor for the database.
@@ -344,7 +346,7 @@ public class InventoryItem extends UsableObject implements
 		for (String identifier : item.getIdentifiers()) {
 			addIdentifier(identifier);
 		}
-		
+
 		init();
 	}
 
@@ -360,28 +362,22 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void addAdditionalActionToCombineWith(
-			Combinable<InventoryItem> partner, AbstractAction action) {
-		getCombinableInventoryItem(partner).additionalCombineWithActions
-				.add(action);
+	public void addAdditionalActionToCombineWith(Combinable<InventoryItem> partner, AbstractAction action) {
+		getCombinableInventoryItem(partner).additionalCombineWithActions.add(action);
 	}
 
 	@Override
-	public void addAdditionalActionToUseWith(HasLocation object,
-			AbstractAction action) {
+	public void addAdditionalActionToUseWith(HasLocation object, AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.add(action);
 	}
 
 	@Override
-	public void addNewCombinableWhenCombinedWith(
-			Combinable<InventoryItem> partner, InventoryItem newItem) {
-		getCombinableInventoryItem(partner).addInventoryItemsAction
-				.addPickUpItem(newItem);
+	public void addNewCombinableWhenCombinedWith(Combinable<InventoryItem> partner, InventoryItem newItem) {
+		getCombinableInventoryItem(partner).addInventoryItemsAction.addPickUpItem(newItem);
 	}
 
 	@Override
-	public void addAdditionalCombineCommand(Combinable<InventoryItem> partner,
-			String command) {
+	public void addAdditionalCombineCommand(Combinable<InventoryItem> partner, String command) {
 		getCombineCommands(partner).commands.add(command);
 	}
 
@@ -394,8 +390,8 @@ public class InventoryItem extends UsableObject implements
 	public void combineWith(Combinable<InventoryItem> partner, Game game) {
 		CombinableInventoryItem combination = getCombinableInventoryItem(partner);
 		if (combination.enabled) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-					"Combining {0} with {1}", new Object[] { this, partner });
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Combining {0} with {1}",
+					new Object[] { this, partner });
 
 			// Add new inventory items
 			combination.addInventoryItemsAction.triggerAction(game);
@@ -406,13 +402,11 @@ public class InventoryItem extends UsableObject implements
 				 */
 				new RemoveInventoryItemAction("", this).triggerAction(game);
 				if (partner instanceof InventoryItem) {
-					new RemoveInventoryItemAction("", (InventoryItem) partner)
-							.triggerAction(game);
+					new RemoveInventoryItemAction("", (InventoryItem) partner).triggerAction(game);
 				} else {
-					Logger.getLogger(this.getClass().getName())
-							.log(Level.WARNING,
-									"Not supported Combinable subclass: {0} Cannot remove it from inventory thus.",
-									partner.getClass().getName());
+					Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+							"Not supported Combinable subclass: {0} Cannot remove it from inventory thus.",
+							partner.getClass().getName());
 				}
 
 			}
@@ -425,15 +419,13 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	@Transient
-	public List<AbstractAction> getAdditionalActionsFromCombineWith(
-			Combinable<InventoryItem> partner) {
+	public List<AbstractAction> getAdditionalActionsFromCombineWith(Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).additionalCombineWithActions;
 	}
 
 	@Override
 	@Transient
-	public List<AbstractAction> getAdditionalActionsFromUseWith(
-			HasLocation object) {
+	public List<AbstractAction> getAdditionalActionsFromUseWith(HasLocation object) {
 		return getUsableHasLocation(object).additionalUseWithActions;
 	}
 
@@ -451,16 +443,13 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	@Transient
-	public List<InventoryItem> getNewCombinablesWhenCombinedWith(
-			Combinable<InventoryItem> partner) {
-		return getCombinableInventoryItem(partner).addInventoryItemsAction
-				.getPickUpItems();
+	public List<InventoryItem> getNewCombinablesWhenCombinedWith(Combinable<InventoryItem> partner) {
+		return getCombinableInventoryItem(partner).addInventoryItemsAction.getPickUpItems();
 	}
 
 	@Override
 	@Transient
-	public List<String> getAdditionalCombineCommands(
-			Combinable<InventoryItem> partner) {
+	public List<String> getAdditionalCombineCommands(Combinable<InventoryItem> partner) {
 		return getCombineCommands(partner).commands;
 	}
 
@@ -472,8 +461,7 @@ public class InventoryItem extends UsableObject implements
 
 	@Override
 	@Transient
-	public boolean getRemoveCombinablesWhenCombinedWith(
-			Combinable<InventoryItem> partner) {
+	public boolean getRemoveCombinablesWhenCombinedWith(Combinable<InventoryItem> partner) {
 		return getCombinableInventoryItem(partner).removeCombinables;
 	}
 
@@ -502,58 +490,47 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void removeAdditionalActionFromCombineWith(
-			Combinable<InventoryItem> partner, AbstractAction action) {
-		getCombinableInventoryItem(partner).additionalCombineWithActions
-				.remove(action);
+	public void removeAdditionalActionFromCombineWith(Combinable<InventoryItem> partner, AbstractAction action) {
+		getCombinableInventoryItem(partner).additionalCombineWithActions.remove(action);
 	}
 
 	@Override
-	public void removeAdditionalActionFromUseWith(HasLocation object,
-			AbstractAction action) {
+	public void removeAdditionalActionFromUseWith(HasLocation object, AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.remove(action);
 	}
 
 	@Override
-	public void removeAdditionalCombineCommand(
-			Combinable<InventoryItem> partner, String command) {
+	public void removeAdditionalCombineCommand(Combinable<InventoryItem> partner, String command) {
 		getCombineCommands(partner).commands.remove(command);
 	}
 
 	@Override
-	public void removeAdditionalUseWithCommand(HasLocation object,
-			String command) {
+	public void removeAdditionalUseWithCommand(HasLocation object, String command) {
 		getUsableHasLocation(object).additionalUseWithCommands.remove(command);
 	}
 
 	@Override
-	public void removeNewCombinableWhenCombinedWith(
-			Combinable<InventoryItem> partner, InventoryItem newItem) {
-		getCombinableInventoryItem(partner).addInventoryItemsAction
-				.removePickUpItem(newItem);
+	public void removeNewCombinableWhenCombinedWith(Combinable<InventoryItem> partner, InventoryItem newItem) {
+		getCombinableInventoryItem(partner).addInventoryItemsAction.removePickUpItem(newItem);
 	}
 
 	@Override
-	public void setCombineWithForbiddenText(Combinable<InventoryItem> partner,
-			String forbiddenText) {
+	public void setCombineWithForbiddenText(Combinable<InventoryItem> partner, String forbiddenText) {
 		getCombinableInventoryItem(partner).combineWithForbiddenText = forbiddenText;
 	}
 
 	@Override
-	public void setCombineWithSuccessfulText(Combinable<InventoryItem> partner,
-			String successfulText) {
+	public void setCombineWithSuccessfulText(Combinable<InventoryItem> partner, String successfulText) {
 		getCombinableInventoryItem(partner).combineWithSuccessfulText = successfulText;
 	}
 
 	@Override
-	public void setCombiningEnabledWith(Combinable<InventoryItem> partner,
-			boolean enabled) {
+	public void setCombiningEnabledWith(Combinable<InventoryItem> partner, boolean enabled) {
 		getCombinableInventoryItem(partner).enabled = enabled;
 	}
 
 	@Override
-	public void setRemoveCombinablesWhenCombinedWith(
-			Combinable<InventoryItem> partner, boolean remove) {
+	public void setRemoveCombinablesWhenCombinedWith(Combinable<InventoryItem> partner, boolean remove) {
 		getCombinableInventoryItem(partner).removeCombinables = remove;
 	}
 
@@ -563,8 +540,7 @@ public class InventoryItem extends UsableObject implements
 	}
 
 	@Override
-	public void setUseWithSuccessfulText(HasLocation object,
-			String successfulText) {
+	public void setUseWithSuccessfulText(HasLocation object, String successfulText) {
 		getUsableHasLocation(object).useWithSuccessfulText = successfulText;
 	}
 
@@ -576,8 +552,8 @@ public class InventoryItem extends UsableObject implements
 	@Override
 	public void useWith(HasLocation object, Game game) {
 		// There is no "primary" action, so no "isEnabled" check
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Using {0} with {1}", new Object[] { this, object });
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Using {0} with {1}",
+				new Object[] { this, object });
 
 		// Trigger all additional actions
 		for (AbstractAction abstractAction : getUsableHasLocation(object).additionalUseWithActions) {
@@ -595,23 +571,18 @@ public class InventoryItem extends UsableObject implements
 	 * @return the associated {@link CombinableInventoryItem}.
 	 */
 	@Transient
-	private CombinableInventoryItem getCombinableInventoryItem(
-			Combinable<InventoryItem> item) {
+	private CombinableInventoryItem getCombinableInventoryItem(Combinable<InventoryItem> item) {
 		if (item instanceof InventoryItem) {
-			CombinableInventoryItem result = combinableInventoryItems
-					.get((InventoryItem) item);
+			CombinableInventoryItem result = combinableInventoryItems.get((InventoryItem) item);
 			if (result == null) {
 				// Create a new mapping
-				combinableInventoryItems.put((InventoryItem) item,
-						result = new CombinableInventoryItem());
+				combinableInventoryItems.put((InventoryItem) item, result = new CombinableInventoryItem());
 				// And synchronize other map
-				((InventoryItem) item).combinableInventoryItems.put(this,
-						result);
+				((InventoryItem) item).combinableInventoryItems.put(this, result);
 			}
 			return result;
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"Not supported Combinable subclass: {0}",
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Not supported Combinable subclass: {0}",
 					item.getClass().getName());
 			return null;
 		}
@@ -631,13 +602,11 @@ public class InventoryItem extends UsableObject implements
 			CombineCommands result = additionalCombineCommands.get(item);
 			if (result == null) {
 				// Create a new mapping
-				additionalCombineCommands.put((InventoryItem) item,
-						result = new CombineCommands());
+				additionalCombineCommands.put((InventoryItem) item, result = new CombineCommands());
 			}
 			return result;
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"Not supported Combinable subclass: {0}",
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Not supported Combinable subclass: {0}",
 					item.getClass().getName());
 			return null;
 		}
@@ -658,22 +627,36 @@ public class InventoryItem extends UsableObject implements
 		if (object instanceof Item) {
 			result = usableItems.get(object);
 			if (result == null) {
-				usableItems
-						.put((Item) object, result = new UsableHasLocation());
+				usableItems.put((Item) object, result = new UsableHasLocation());
 			}
 		} else if (object instanceof Person) {
 			result = usablePersons.get(object);
 			if (result == null) {
-				usablePersons.put((Person) object,
-						result = new UsableHasLocation());
+				usablePersons.put((Person) object, result = new UsableHasLocation());
 			}
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-					"Not supported HasLocation subclass: {0}",
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Not supported HasLocation subclass: {0}",
 					object.getClass().getName());
 			return null;
 		}
 		return result;
+	}
+	
+	/**
+	 * Only used by {@link AddInventoryItemsAction}
+	 */
+	@Deprecated
+	@Transient
+	public List<AddInventoryItemsAction> getAddIIActions() {
+		return addIIActions;
+	}
+	
+	@PreRemove
+	private void preRemove() {
+		// Remove from all AddInventoryItemsActions
+		for(AddInventoryItemsAction a : new ArrayList<>(addIIActions)) {
+			a.removePickUpItem(this);
+		}
 	}
 
 	/**
@@ -684,5 +667,6 @@ public class InventoryItem extends UsableObject implements
 		usablePersons = new HashMap<>();
 		combinableInventoryItems = new HashMap<>();
 		additionalCombineCommands = new HashMap<>();
+		addIIActions = new ArrayList<>();
 	}
 }

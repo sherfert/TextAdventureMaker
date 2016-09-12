@@ -90,14 +90,6 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @param startItems
-	 *            the start items
-	 */
-	public void setStartItems(List<InventoryItem> startItems) {
-		addInventoryItemsAction.setPickUpItems(startItems);
-	}
-
-	/**
 	 * Adds a start item.
 	 * 
 	 * @param item
