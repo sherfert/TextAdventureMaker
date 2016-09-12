@@ -123,7 +123,6 @@ public class GameManager {
 		game.setStartText("This text is being displayed at the beginning of the game.");
 
 		// Default commands and messages
-		// TODO configurable
 		game.setNoCommandText("I don't understand you.");
 		game.setInvalidCommandText("This doesn't make sense.");
 		game.setNoSuchInventoryItemText("You do not have a <identifier>.");

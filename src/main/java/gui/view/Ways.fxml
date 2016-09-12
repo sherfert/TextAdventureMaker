@@ -6,45 +6,63 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.LocationChooser?>
+<?import javafx.scene.layout.Pane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<center>
-		<TableView fx:id="table">
-			<columns>
-				<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
-				<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
-				<TableColumn fx:id="originCol" prefWidth="100.0" text="Origin" />
-				<TableColumn fx:id="destinationCol" prefWidth="100.0"
-					text="Destination" />
-			</columns>
-		</TableView>
-	</center>
-	<right>
-		<VBox prefWidth="200.0" spacing="2.0">
-			<children>
-				<Label text="Name" />
-				<TextField fx:id="newNameTF" />
-				<Label text="Description" />
-				<TextArea fx:id="newDescriptionTA" prefHeight="200.0"
-					wrapText="true" />
-				<Label text="Origin" />
-				<LocationChooser fx:id="newOriginChooser" />
-				<Label text="Destination" />
-				<LocationChooser fx:id="newDestinationChooser" />
-				<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
-			</children>
-			<padding>
-				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-			</padding>
-		</VBox>
-	</right>
-	<bottom>
-		<HBox spacing="10.0">
-			<Label text="Filter:" />
-			<TextField fx:id="filterTF" />
-			<padding>
-				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-			</padding>
-		</HBox>
-	</bottom>
-</BorderPane>
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<tabs>
+		<Tab text="Table">
+			<content>
+				<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+					<center>
+						<TableView fx:id="table">
+							<columns>
+								<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
+								<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
+								<TableColumn fx:id="originCol" prefWidth="100.0"
+									text="Origin" />
+								<TableColumn fx:id="destinationCol" prefWidth="100.0"
+									text="Destination" />
+							</columns>
+						</TableView>
+					</center>
+					<right>
+						<VBox prefWidth="200.0" spacing="2.0">
+							<children>
+								<Label text="Name" />
+								<TextField fx:id="newNameTF" />
+								<Label text="Description" />
+								<TextArea fx:id="newDescriptionTA" prefHeight="200.0"
+									wrapText="true" />
+								<Label text="Origin" />
+								<LocationChooser fx:id="newOriginChooser" />
+								<Label text="Destination" />
+								<LocationChooser fx:id="newDestinationChooser" />
+								<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
+							</children>
+							<padding>
+								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+							</padding>
+						</VBox>
+					</right>
+					<bottom>
+						<HBox spacing="10.0">
+							<Label text="Filter:" />
+							<TextField fx:id="filterTF" />
+							<padding>
+								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+							</padding>
+						</HBox>
+					</bottom>
+				</BorderPane>
+			</content>
+		</Tab>
+		<Tab text="Map">
+			<content>
+				<Pane fx:id="mapPane" />
+			</content>
+		</Tab>
+	</tabs>
+</TabPane>
+
+

@@ -9,6 +9,9 @@ import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import logic.CurrentGameManager;
 
 /**
@@ -37,6 +40,9 @@ public class WaysController extends NamedObjectsController<Way> {
 
 	@FXML
 	private LocationChooser newDestinationChooser;
+
+	@FXML
+	private Pane mapPane;
 
 	public WaysController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/Way.fxml");
@@ -72,8 +78,10 @@ public class WaysController extends NamedObjectsController<Way> {
 		newOriginChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newDestinationChooser.textProperty()
 				.addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
+
+		initializeMap();
 	}
-	
+
 	@Override
 	protected List<Way> getAllObjects() throws DBClosedException {
 		return currentGameManager.getPersistenceManager().getWayManager().getAllWays();
@@ -88,6 +96,48 @@ public class WaysController extends NamedObjectsController<Way> {
 	@Override
 	protected GameDataController getObjectController(Way selectedObject) {
 		return new WayController(currentGameManager, mwController, selectedObject);
+	}
+
+	// TODO
+	double orgSceneX, orgSceneY;
+	double orgTranslateX, orgTranslateY;
+
+	private void initializeMap() {
+		Rectangle rectangle = new Rectangle(100, 100, Color.RED);
+
+		rectangle.setTranslateX(70);
+		rectangle.setTranslateY(70);
+
+		mapPane.getChildren().add(rectangle);
+
+		rectangle.setOnMousePressed((t) -> {
+			orgSceneX = t.getSceneX();
+			orgSceneY = t.getSceneY();
+			orgTranslateX = ((Rectangle) (t.getSource())).getTranslateX();
+			orgTranslateY = ((Rectangle) (t.getSource())).getTranslateY();
+
+
+			
+			System.out.printf("w %f h %f\n", mapPane.getWidth(), mapPane.getHeight());
+			System.out.printf("orgSceneX %f orgSceneY %f orgTranslateX %f orgTranslateY %f\n", orgSceneX, orgSceneY,
+					orgTranslateX, orgTranslateY);
+		});
+
+		rectangle.setOnMouseDragged((t) -> {
+			Rectangle r = ((Rectangle) (t.getSource()));
+			
+			double offsetX = t.getSceneX() - orgSceneX;
+			double newTranslateX = orgTranslateX + offsetX;
+			if (newTranslateX >= 0 && newTranslateX + r.getWidth() <= mapPane.getWidth()) {
+				r.setTranslateX(newTranslateX);
+			}
+
+			double offsetY = t.getSceneY() - orgSceneY;
+			double newTranslateY = orgTranslateY + offsetY;
+			if (newTranslateY >= 0 && newTranslateY + r.getHeight() <= mapPane.getHeight()) {
+				r.setTranslateY(newTranslateY);
+			}
+		});
 	}
 
 }
