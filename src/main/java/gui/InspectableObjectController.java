@@ -8,7 +8,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one inspectable object.
  * 
- * TODO additionalInspectActions
+ * TODO Support to change additionalInspectActions
  * 
  * @author Satia
  */

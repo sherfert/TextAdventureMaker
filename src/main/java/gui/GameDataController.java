@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import data.interfaces.HasId;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -46,6 +47,7 @@ public abstract class GameDataController {
 	}
 
 	private static final String NODE_PROPERTIES_KEY_ERROR_TOOLTIP = "Error-Tooltip";
+	private static final String NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER = "Error-Tooltip-FocusListener";
 
 	private static final String COMMAND_MULTI_WHITESPACE = "A command must not have mutiple white spaces";
 	private static final String COMMAND_WHITESPACE_BEGINNING_END = "A command must not have white space in the beginning or end";
@@ -86,8 +88,6 @@ public abstract class GameDataController {
 	 * Updates the view by synchronizing with the database. Should be called
 	 * each time the view is loaded again into the scene. This implementation
 	 * does nothing and should be appropriately overridden by subclasses.
-	 * 
-	 * TODO overthink if this should be abstract
 	 */
 	public void update() {
 	}
@@ -120,8 +120,6 @@ public abstract class GameDataController {
 	 * message right below the node. This tooltip cannot be hidden, until
 	 * {@link #hideError(Node)} is called.
 	 * 
-	 * TODO if you switch view while the error is visible, it doesn't disappear
-	 * 
 	 * @param node
 	 *            the node with the erroneous input
 	 * @param errorMessage
@@ -148,9 +146,21 @@ public abstract class GameDataController {
 			// Show tooltip immediately below the input field
 			Point2D p = node.localToScreen(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMaxY());
 			tooltip.show(node, p.getX(), p.getY());
+			
+			ChangeListener<? super Boolean> focusListener = (f, o, n) -> {
+				if(n) {
+					Point2D p2 = node.localToScreen(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMaxY());
+					tooltip.show(node, p2.getX(), p2.getY());
+				} else {
+					tooltip.hide();
+				}
+			};
+			
+			node.focusedProperty().addListener(focusListener);
 
-			// Save tooltip in node properties to access it later
+			// Save tooltip and focusListener in node properties to access it later
 			node.getProperties().put(NODE_PROPERTIES_KEY_ERROR_TOOLTIP, tooltip);
+			node.getProperties().put(NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER, focusListener);
 		}
 	}
 
@@ -171,6 +181,12 @@ public abstract class GameDataController {
 			tooltip.hide();
 			// Unset tooltip property
 			node.getProperties().remove(NODE_PROPERTIES_KEY_ERROR_TOOLTIP);
+			
+			// Remove focus listener
+			@SuppressWarnings("unchecked")
+			ChangeListener<? super Boolean> focusListener = (ChangeListener<? super Boolean>) node.getProperties()
+					.get(NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER);
+			node.focusedProperty().removeListener(focusListener);
 		}
 	}
 

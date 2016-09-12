@@ -10,7 +10,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one usable object.
  * 
- * TODO additionalUseActions
+ * TODO Support to change additionalUseActions
  * 
  * @author Satia
  */
