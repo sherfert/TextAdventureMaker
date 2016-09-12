@@ -20,9 +20,6 @@ import javafx.util.StringConverter;
  * Abstract superclass for all Choosers of a single NamedObject from the
  * Database.
  * 
- * TODO remove "(no xxx)" when clicked
- * TODO on click "no xxx" put that text there!
- * 
  * @author Satia
  *
  * @param <E>
@@ -39,6 +36,12 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	/** The String to display if no value is chosen. */
 	private String noValueString;
 
+	/** Whether null is an allowed value in the given context */
+	private boolean allowNull;
+
+	/** A method to supply the available values */
+	private ValuesSupplier<E> getAvailableValues;
+
 	/**
 	 * @param noValueString
 	 *            the String to display if no value is chosen.
@@ -50,7 +53,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	/**
 	 * Converts between values and Strings
 	 */
-	protected StringConverter<E> valueConverter = new StringConverter<E>() {
+	private StringConverter<E> valueConverter = new StringConverter<E>() {
 		@Override
 		public String toString(E e) {
 			if (e == null) {
@@ -123,18 +126,19 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 	 */
 	public void initialize(E initialValue, boolean allowNull, boolean updateAvailableValuesOnFocus,
 			ValuesSupplier<E> getAvailableValues, Consumer<E> newValueChosenAction) {
+		this.allowNull = allowNull;
+		this.getAvailableValues = getAvailableValues;
+
+		// Set initial location
+		this.currentSelection = initialValue;
+		this.setText(this.valueConverter.toString(initialValue));
 
 		// Retrieve all available values
 		try {
-			// Copy into another list, so that changes we make, or others make, are not reflected somewhere else.
-			this.availableValues = new ArrayList<E>(getAvailableValues.get());
+			setAvailableValues();
 		} catch (DBClosedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 			return;
-		}
-		// If we allow null, we must add it to the list
-		if (allowNull) {
-			this.availableValues.add(0, null);
 		}
 
 		// Enable autocompletion with all available values
@@ -143,10 +147,6 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 						.filter(val -> (val == null && isr.getUserText().isEmpty()) || (val != null
 								&& val.getName().toLowerCase().contains(isr.getUserText().toLowerCase())))
 				.collect(Collectors.toList()), this.valueConverter);
-
-		// Set initial location
-		this.currentSelection = initialValue;
-		this.setText(this.valueConverter.toString(initialValue));
 
 		// Listen for text changes
 		this.textProperty().addListener((f, o, n) -> {
@@ -158,6 +158,7 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 			}
 		});
 
+		// Listen for focus changes
 		this.focusedProperty().addListener((f, o, n) -> {
 			if (!n) {
 				// textField lost focus
@@ -174,19 +175,35 @@ public abstract class NamedObjectChooser<E extends NamedObject> extends TextFiel
 			} else {
 				// textField got focus
 				// Update available values if specified
-				if(updateAvailableValuesOnFocus) {
+				if (updateAvailableValuesOnFocus) {
 					try {
-						this.availableValues = new ArrayList<E>(getAvailableValues.get());
+						setAvailableValues();
 					} catch (DBClosedException e) {
 						Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 					}
-					// If we allow null, we must add it to the list
-					if (allowNull) {
-						this.availableValues.add(0, null);
-					}
+				}
+				// In case the current value is null, we want to clear the field
+				if (this.currentSelection == null) {
+					this.setText("");
 				}
 			}
 		});
+	}
+
+	/**
+	 * Sets the list of available values.
+	 * 
+	 * @throws DBClosedException
+	 *             if the DB is closed.
+	 */
+	private void setAvailableValues() throws DBClosedException {
+		// Copy into another list, so that changes we make, or others make,
+		// are not reflected somewhere else.
+		this.availableValues = new ArrayList<E>(getAvailableValues.get());
+		// If we allow null, we must add it to the list
+		if (allowNull) {
+			this.availableValues.add(0, null);
+		}
 	}
 
 }
