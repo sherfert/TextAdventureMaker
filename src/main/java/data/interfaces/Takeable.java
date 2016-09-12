@@ -148,4 +148,11 @@ public interface Takeable extends Identifiable {
 	 *            the additionalTakeActions to set
 	 */
 	public void setAdditionalTakeActions(List<AbstractAction> additionalTakeActions);
+
+	/**
+	 * Gets the {@link InventoryItem}s to to be added to the inventory.
+	 * 
+	 * @return the pickUpItems
+	 */
+	public List<InventoryItem> getPickUpItems();
 }

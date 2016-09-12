@@ -168,6 +168,7 @@ public abstract class NamedObjectListView<E extends NamedObject> extends BorderP
 		addButton.setOnMouseClicked((e) -> {
 			E selectedItem = addValueChooser.getObjectValue();
 			addValueChooser.setObjectValue(null);
+			addButton.setDisable(!addEnabled.get());
 			listItems.add(selectedItem);
 			valueAdded.accept(selectedItem);
 		});

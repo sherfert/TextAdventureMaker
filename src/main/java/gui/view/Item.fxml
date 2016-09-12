@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.LocationChooser?>
+<?import gui.custumui.InventoryItemListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
@@ -50,6 +51,8 @@
                   <TextField fx:id="editTakeForbiddenTextTF" />
                   <Label text="Take commands" />
                   <TextArea fx:id="editTakeCommandsTA" prefHeight="100.0" wrapText="true" />
+                  <Label text="Inventory items added to the inventory when picked up" />
+                  <InventoryItemListView fx:id="pickUpItemsListView" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

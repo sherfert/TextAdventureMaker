@@ -1,6 +1,8 @@
 package gui;
 
+import data.InventoryItem;
 import data.Item;
+import gui.custumui.InventoryItemListView;
 import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,7 +14,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one item.
  * 
- * TODO Support to change additionalTakeActions, pickUpItems
+ * TODO Support to change additionalTakeActions
  * 
  * @author Satia
  */
@@ -41,6 +43,8 @@ public class ItemController extends GameDataController {
 
 	@FXML
 	private TextArea editTakeCommandsTA;
+	@FXML
+	private InventoryItemListView pickUpItemsListView;
 
 	/**
 	 * @param currentGameManager
@@ -57,7 +61,8 @@ public class ItemController extends GameDataController {
 	private void initialize() {
 		// Create new bindings
 		locationChooser.initialize(item.getLocation(), true, false,
-				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, item::setLocation);
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
+				item::setLocation);
 
 		removeButton.setOnMouseClicked(
 				(e) -> removeObject(item, "Deleting an item", "Do you really want to delete this item?",
@@ -75,6 +80,10 @@ public class ItemController extends GameDataController {
 		editTakeCommandsTA.setText(getCommandString(item.getAdditionalTakeCommands()));
 		editTakeCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, editTakeCommandsTA, item::setAdditionalTakeCommands));
+
+		pickUpItemsListView.initialize(item.getPickUpItems(),
+				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
+				this::pickUpItemSelected, (ii) -> item.addPickUpItem(ii), (ii) -> item.removePickUpItem(ii));
 	}
 
 	/**
@@ -93,5 +102,22 @@ public class ItemController extends GameDataController {
 		} else {
 			return super.controllerFactory(type);
 		}
+	}
+
+	/**
+	 * Opens an item for editing. Invoked when an item from the list is double
+	 * clicked.
+	 * 
+	 * @param i
+	 *            the item
+	 */
+	private void pickUpItemSelected(InventoryItem i) {
+		if (i == null) {
+			return;
+		}
+
+		InventoryItemController itemController = new InventoryItemController(currentGameManager, mwController, i);
+		mwController.pushCenterContent(i.getName(), "view/InventoryItem.fxml", itemController,
+				itemController::controllerFactory);
 	}
 }

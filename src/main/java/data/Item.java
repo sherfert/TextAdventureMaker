@@ -168,6 +168,12 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	public void addPickUpItem(InventoryItem item) {
 		addInventoryItemsAction.addPickUpItem(item);
 	}
+	
+	@Override
+	@Transient
+	public List<InventoryItem> getPickUpItems() {
+		return addInventoryItemsAction.getPickUpItems();
+	}
 
 	@Override
 	@ManyToMany(cascade = { CascadeType.PERSIST })
