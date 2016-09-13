@@ -1,18 +1,25 @@
 package gui;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import data.Location;
 import data.Way;
 import exception.DBClosedException;
 import gui.custumui.LocationChooser;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -24,11 +31,49 @@ import logic.CurrentGameManager;
  * We extend NamedObjectsController instead of NamedDescribedObjectsController,
  * since we do not have a description column.
  * 
- * TODO MapView (as another tab)
- * 
  * @author Satia
  */
 public class WaysController extends NamedObjectsController<Way> {
+
+	/**
+	 * A special StackPane for displaying locations as a rectangle with their
+	 * name inside.
+	 * 
+	 * @author Satia
+	 */
+	private class LocationRectangle extends StackPane {
+		/**
+		 * The location of this rectangle
+		 */
+		Location location;
+
+		/**
+		 * The center on the X axis.
+		 */
+		DoubleBinding centerX = layoutXProperty().add(rectDim / 2);
+
+		/**
+		 * The center on the Y axis.
+		 */
+		DoubleBinding centerY = layoutYProperty().add(rectDim / 2);
+	}
+
+	/**
+	 * The height and width of LocationRectangles.
+	 */
+	private static final double rectDim = 120;
+
+	// These values are used by the dragHandlers to position rectangles
+	// correctly
+	private double orgSceneX;
+	private double orgSceneY;
+	private double orgX;
+	private double orgY;
+
+	/**
+	 * A map with all LocationRectangles.
+	 */
+	private Map<Location, LocationRectangle> rectangles = new HashMap<>();
 
 	@FXML
 	private TableColumn<Way, String> originCol;
@@ -48,6 +93,53 @@ public class WaysController extends NamedObjectsController<Way> {
 	@FXML
 	private Pane mapPane;
 
+	/**
+	 * Handler for pressing (start drag) on a LocationRectangle.
+	 */
+	private EventHandler<MouseEvent> pressHandler = (t) -> {
+		orgSceneX = t.getSceneX();
+		orgSceneY = t.getSceneY();
+		orgX = ((LocationRectangle) (t.getSource())).getLayoutX();
+		orgY = ((LocationRectangle) (t.getSource())).getLayoutY();
+	};
+
+	/**
+	 * Handler for dragging a LocationRectangle.
+	 */
+	private EventHandler<MouseEvent> dragHandler = (t) -> {
+		LocationRectangle r = ((LocationRectangle) (t.getSource()));
+
+		double offsetX = t.getSceneX() - orgSceneX;
+		double newX = orgX + offsetX;
+		if (newX >= 0) {
+			r.setLayoutX(newX);
+			r.location.setxCoordinate(newX);
+		}
+
+		double offsetY = t.getSceneY() - orgSceneY;
+		double newY = orgY + offsetY;
+		if (newY >= 0) {
+			r.setLayoutY(newY);
+			r.location.setyCoordinate(newY);
+		}
+	};
+
+	/**
+	 * Handler for clicking a LocationRectangle.
+	 */
+	private EventHandler<MouseEvent> clickHandler = (t) -> {
+		LocationRectangle r = ((LocationRectangle) (t.getSource()));
+		if (t.getClickCount() == 2) {
+			locationSelected(r.location);
+		}
+	};
+
+	/**
+	 * Constructor
+	 * 
+	 * @param currentGameManager
+	 * @param mwController
+	 */
 	public WaysController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/Way.fxml");
 	}
@@ -103,59 +195,115 @@ public class WaysController extends NamedObjectsController<Way> {
 	}
 
 	// TODO
-	double orgSceneX, orgSceneY;
-	double orgTranslateX, orgTranslateY;
 
-	private void initializeMap() {
-		Rectangle rectangle = new Rectangle(100, 100, Color.RED);
-		rectangle.setTranslateX(70);
-		rectangle.setTranslateY(70);
-		DoubleBinding rCenterX = rectangle.translateXProperty().add(rectangle.getWidth() / 2);
-		DoubleBinding rCenterY = rectangle.translateYProperty().add(rectangle.getHeight() / 2);
+	/**
+	 * Opens this location for editing.
+	 * 
+	 * @param l
+	 *            the location
+	 */
+	private void locationSelected(Location l) {
+		if (l == null) {
+			return;
+		}
 
-		Rectangle rectangle2 = new Rectangle(100, 100, Color.BLUE);
-		rectangle2.setTranslateX(100);
-		rectangle2.setTranslateY(400);
-		DoubleBinding r2CenterX = rectangle2.translateXProperty().add(rectangle2.getWidth() / 2);
-		DoubleBinding r2CenterY = rectangle2.translateYProperty().add(rectangle2.getHeight() / 2);
-		
+		GameDataController c = new LocationController(currentGameManager, mwController, l);
+		mwController.pushCenterContent(l.getName(), "view/Location.fxml", c, c::controllerFactory);
+	}
+
+	/**
+	 * Creates a new LocationRectangle, and saves it in the rectangles Map.
+	 * 
+	 * @param location
+	 *            the location
+	 * @return the LocationRectangle
+	 */
+	private LocationRectangle createLocationNode(Location location) {
+		LocationRectangle sp = new LocationRectangle();
+
+		// The rectangle
+		Rectangle rectangle = new Rectangle(rectDim, rectDim);
+		rectangle.setFill(Color.LIGHTGRAY);
+		rectangle.setStroke(Color.BLACK);
+
+		// The label
+		Label label = new Label(location.toString());
+
+		// Placing the node
+		sp.setLayoutX(location.getxCoordinate());
+		sp.setLayoutY(location.getyCoordinate());
+		sp.setMaxSize(rectDim, rectDim);
+
+		// Handling dragging
+		sp.setOnMousePressed(pressHandler);
+		sp.setOnMouseDragged(dragHandler);
+
+		// Handling clicking
+		sp.setOnMouseClicked(clickHandler);
+
+		sp.location = location;
+		sp.getChildren().addAll(rectangle, label);
+
+		// Save in map
+		rectangles.put(location, sp);
+
+		return sp;
+	}
+
+	/**
+	 * Creates a line Line to represent a Way
+	 * 
+	 * TODO special class for WayLine, collection to manage, no dups returned
+	 * here.
+	 * 
+	 * TODO on click line, display a popup (if more than one) that lets
+	 * you select which way to edit.
+	 * 
+	 * @param w
+	 *            the Way
+	 * @return the Line
+	 */
+	private Line createWayNode(Way w) {
+		// TODO no dups
 		Line line = new Line();
-		
-		line.startXProperty().bind(rCenterX);
-		line.startYProperty().bind(rCenterY);
-		line.endXProperty().bind(r2CenterX);
-		line.endYProperty().bind(r2CenterY);
 
-		mapPane.getChildren().addAll(line, rectangle, rectangle2);
+		line.startXProperty().bind(rectangles.get(w.getOrigin()).centerX);
+		line.startYProperty().bind(rectangles.get(w.getOrigin()).centerY);
+		line.endXProperty().bind(rectangles.get(w.getDestination()).centerX);
+		line.endYProperty().bind(rectangles.get(w.getDestination()).centerY);
 
-		EventHandler<MouseEvent> pressHandler = (t) -> {
-			orgSceneX = t.getSceneX();
-			orgSceneY = t.getSceneY();
-			orgTranslateX = ((Rectangle) (t.getSource())).getTranslateX();
-			orgTranslateY = ((Rectangle) (t.getSource())).getTranslateY();
-		};
+		return line;
+	}
 
-		EventHandler<MouseEvent> dragHandler = (t) -> {
-			Rectangle r = ((Rectangle) (t.getSource()));
+	/**
+	 * Initializes the MapView.
+	 * 
+	 * TODO possibility to add new Ways here.
+	 */
+	private void initializeMap() {
 
-			double offsetX = t.getSceneX() - orgSceneX;
-			double newTranslateX = orgTranslateX + offsetX;
-			if (newTranslateX >= 0 && newTranslateX + r.getWidth() <= mapPane.getWidth()) {
-				r.setTranslateX(newTranslateX);
-			}
+		// Obtain all locations
+		List<Location> locations;
+		try {
+			locations = currentGameManager.getPersistenceManager().getLocationManager().getAllLocations();
+		} catch (DBClosedException e1) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+			return;
+		}
 
-			double offsetY = t.getSceneY() - orgSceneY;
-			double newTranslateY = orgTranslateY + offsetY;
-			if (newTranslateY >= 0 && newTranslateY + r.getHeight() <= mapPane.getHeight()) {
-				r.setTranslateY(newTranslateY);
-			}
-		};
+		// Create rectangles
+		for (Location l : locations) {
+			LocationRectangle lr = createLocationNode(l);
+			mapPane.getChildren().add(lr);
+		}
 
-		rectangle.setOnMousePressed(pressHandler);
-		rectangle.setOnMouseDragged(dragHandler);
-		
-		rectangle2.setOnMousePressed(pressHandler);
-		rectangle2.setOnMouseDragged(dragHandler);
+		// Create lines
+		for (Way w : objectsOL) {
+			Line line = createWayNode(w);
+
+			mapPane.getChildren().add(line);
+			line.toBack();
+		}
 	}
 
 }

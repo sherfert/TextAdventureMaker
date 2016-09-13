@@ -59,7 +59,9 @@
 		</Tab>
 		<Tab text="Map">
 			<content>
-				<Pane fx:id="mapPane" />
+				<ScrollPane >
+					<Pane fx:id="mapPane" />
+				</ScrollPane>
 			</content>
 		</Tab>
 	</tabs>

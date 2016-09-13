@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -47,6 +48,16 @@ public class Location extends NamedDescribedObject {
 	 * location is deleted.
 	 */
 	private List<Way> waysOut;
+	
+	/**
+	 * The x coordinate when displaying this location in the map view. Not relevant for the game.
+	 */
+	private double xCoordinate;
+
+	/**
+	 * The x coordinate when displaying this location in the map view. Not relevant for the game.
+	 */
+	private double yCoordinate;
 
 	/**
 	 * No-arg constructor for the database.
@@ -203,6 +214,36 @@ public class Location extends NamedDescribedObject {
 	@OrderBy("locationOrder ASC, getId ASC")
 	public List<Item> getItems() {
 		return items;
+	}
+
+	/**
+	 * @return the xCoordinate
+	 */
+	@Column(nullable = false)
+	public double getxCoordinate() {
+		return xCoordinate;
+	}
+
+	/**
+	 * @param xCoordinate the xCoordinate to set
+	 */
+	public void setxCoordinate(double xCoordinate) {
+		this.xCoordinate = xCoordinate;
+	}
+
+	/**
+	 * @return the yCoordinate
+	 */
+	@Column(nullable = false)
+	public double getyCoordinate() {
+		return yCoordinate;
+	}
+
+	/**
+	 * @param yCoordinate the yCoordinate to set
+	 */
+	public void setyCoordinate(double yCoordinate) {
+		this.yCoordinate = yCoordinate;
 	}
 
 	/**
