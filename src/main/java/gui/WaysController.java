@@ -11,14 +11,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.controlsfx.control.PopOver;
+
 import data.Location;
 import data.Way;
 import exception.DBClosedException;
 import gui.custumui.LocationChooser;
 import javafx.beans.binding.DoubleBinding;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -123,6 +127,7 @@ public class WaysController extends NamedObjectsController<Way> {
 			rectangle.setFill(Color.LIGHTGRAY);
 			rectangle.setStroke(Color.BLACK);
 
+
 			// The label
 			Label label = new Label(location.toString());
 
@@ -132,6 +137,9 @@ public class WaysController extends NamedObjectsController<Way> {
 			setMaxSize(rectDim, rectDim);
 
 			getChildren().addAll(rectangle, label);
+			
+			// Styling
+			getStyleClass().add("mapelement");
 		}
 	}
 
@@ -151,15 +159,34 @@ public class WaysController extends NamedObjectsController<Way> {
 
 		/**
 		 * Handler for clicking a WayLine.
-		 * 
-		 * TODO on click line, display a popup (if more than one) that lets you
-		 * select which way to edit.
 		 */
 		private EventHandler<MouseEvent> clickHandler = (t) -> {
 			WayLine l = ((WayLine) (t.getSource()));
+			
 			if (t.getClickCount() == 2) {
 				if (l.ways.size() == 1) {
 					objectSelected(l.ways.get(0));
+				} else {
+					// Create a listView
+					ListView<Way> listView = new ListView<>();
+					listView.setItems(FXCollections.observableArrayList(ways));
+					listView.setPrefHeight(0);
+					
+					// Create the popup
+					PopOver popOver = new PopOver(listView);
+					
+					// On click of listview items
+					listView.setOnMouseClicked((e) -> {
+						if (e.getClickCount() == 2) {
+							objectSelected((listView.getSelectionModel().getSelectedItem()));
+							// Hide popup
+							popOver.hide();
+						}
+					});
+					
+					// Show the popup
+					popOver.setDetachable(false);
+					popOver.show(l);
 				}
 			}
 		};
@@ -184,6 +211,9 @@ public class WaysController extends NamedObjectsController<Way> {
 
 			// Handling clicking
 			setOnMouseClicked(clickHandler);
+			
+			// Styling
+			getStyleClass().add("mapelement");
 		}
 	}
 
@@ -279,8 +309,18 @@ public class WaysController extends NamedObjectsController<Way> {
 
 	@Override
 	protected Way createNewObject(String name) {
-		return new Way(name, newDescriptionTA.getText(), newOriginChooser.getObjectValue(),
+		Way w = new Way(name, newDescriptionTA.getText(), newOriginChooser.getObjectValue(),
 				newDestinationChooser.getObjectValue());
+		
+		// A line describing this way needs to be added to the Map
+		Line line = createWayNode(w);
+		if (line != null) {
+			mapPane.getChildren().add(line);
+			// Place lines behind rectangles
+			line.toBack();
+		}
+		
+		return w;
 	}
 
 	@Override
@@ -324,7 +364,7 @@ public class WaysController extends NamedObjectsController<Way> {
 	 * 
 	 * @param w
 	 *            the Way
-	 * @return the Line
+	 * @return the Line or {@code null}
 	 */
 	private WayLine createWayNode(Way w) {
 		List<Location> endpoints = Arrays.asList(w.getOrigin(), w.getDestination()).stream()
