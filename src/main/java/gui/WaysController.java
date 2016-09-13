@@ -1,11 +1,15 @@
 package gui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import data.Location;
 import data.Way;
@@ -56,6 +60,131 @@ public class WaysController extends NamedObjectsController<Way> {
 		 * The center on the Y axis.
 		 */
 		DoubleBinding centerY = layoutYProperty().add(rectDim / 2);
+
+		/**
+		 * Handler for pressing (start drag) on a LocationRectangle.
+		 */
+		private EventHandler<MouseEvent> pressHandler = (t) -> {
+			orgSceneX = t.getSceneX();
+			orgSceneY = t.getSceneY();
+			orgX = ((LocationRectangle) (t.getSource())).getLayoutX();
+			orgY = ((LocationRectangle) (t.getSource())).getLayoutY();
+		};
+
+		/**
+		 * Handler for dragging a LocationRectangle.
+		 */
+		private EventHandler<MouseEvent> dragHandler = (t) -> {
+			LocationRectangle r = ((LocationRectangle) (t.getSource()));
+
+			double offsetX = t.getSceneX() - orgSceneX;
+			double newX = orgX + offsetX;
+			if (newX >= 0) {
+				r.setLayoutX(newX);
+				r.location.setxCoordinate(newX);
+			}
+
+			double offsetY = t.getSceneY() - orgSceneY;
+			double newY = orgY + offsetY;
+			if (newY >= 0) {
+				r.setLayoutY(newY);
+				r.location.setyCoordinate(newY);
+			}
+		};
+
+		/**
+		 * Handler for clicking a LocationRectangle.
+		 */
+		private EventHandler<MouseEvent> clickHandler = (t) -> {
+			LocationRectangle r = ((LocationRectangle) (t.getSource()));
+			if (t.getClickCount() == 2) {
+				locationSelected(r.location);
+			}
+		};
+
+		/**
+		 * Create a new LocationRectangle
+		 * 
+		 * @param location
+		 *            the location
+		 */
+		public LocationRectangle(Location location) {
+			this.location = location;
+
+			// Handling dragging
+			setOnMousePressed(pressHandler);
+			setOnMouseDragged(dragHandler);
+
+			// Handling clicking
+			setOnMouseClicked(clickHandler);
+
+			// The rectangle
+			Rectangle rectangle = new Rectangle(rectDim, rectDim);
+			rectangle.setFill(Color.LIGHTGRAY);
+			rectangle.setStroke(Color.BLACK);
+
+			// The label
+			Label label = new Label(location.toString());
+
+			// Placing the node
+			setLayoutX(location.getxCoordinate());
+			setLayoutY(location.getyCoordinate());
+			setMaxSize(rectDim, rectDim);
+
+			getChildren().addAll(rectangle, label);
+		}
+	}
+
+	/**
+	 * A special Line for displaying ways connection LocationRectangles.
+	 * 
+	 * 
+	 * 
+	 * @author Satia
+	 */
+	private class WayLine extends Line {
+
+		/**
+		 * The ways represented by this line
+		 */
+		List<Way> ways;
+
+		/**
+		 * Handler for clicking a WayLine.
+		 * 
+		 * TODO on click line, display a popup (if more than one) that lets you
+		 * select which way to edit.
+		 */
+		private EventHandler<MouseEvent> clickHandler = (t) -> {
+			WayLine l = ((WayLine) (t.getSource()));
+			if (t.getClickCount() == 2) {
+				if (l.ways.size() == 1) {
+					objectSelected(l.ways.get(0));
+				}
+			}
+		};
+
+		/**
+		 * Creates a new WayLine
+		 * 
+		 * @param w
+		 *            the way
+		 */
+		public WayLine(Way w) {
+			ways = new ArrayList<>();
+			ways.add(w);
+
+			startXProperty().bind(rectangles.get(w.getOrigin()).centerX);
+			startYProperty().bind(rectangles.get(w.getOrigin()).centerY);
+			endXProperty().bind(rectangles.get(w.getDestination()).centerX);
+			endYProperty().bind(rectangles.get(w.getDestination()).centerY);
+
+			// Thicker lines
+			setStrokeWidth(5);
+
+			// Handling clicking
+			setOnMouseClicked(clickHandler);
+		}
 	}
 
 	/**
@@ -75,6 +204,12 @@ public class WaysController extends NamedObjectsController<Way> {
 	 */
 	private Map<Location, LocationRectangle> rectangles = new HashMap<>();
 
+	/**
+	 * A map with all WayLines. Maps a list of origin and destination to the
+	 * line.
+	 */
+	private Map<List<Location>, WayLine> lines = new HashMap<>();
+
 	@FXML
 	private TableColumn<Way, String> originCol;
 
@@ -92,47 +227,6 @@ public class WaysController extends NamedObjectsController<Way> {
 
 	@FXML
 	private Pane mapPane;
-
-	/**
-	 * Handler for pressing (start drag) on a LocationRectangle.
-	 */
-	private EventHandler<MouseEvent> pressHandler = (t) -> {
-		orgSceneX = t.getSceneX();
-		orgSceneY = t.getSceneY();
-		orgX = ((LocationRectangle) (t.getSource())).getLayoutX();
-		orgY = ((LocationRectangle) (t.getSource())).getLayoutY();
-	};
-
-	/**
-	 * Handler for dragging a LocationRectangle.
-	 */
-	private EventHandler<MouseEvent> dragHandler = (t) -> {
-		LocationRectangle r = ((LocationRectangle) (t.getSource()));
-
-		double offsetX = t.getSceneX() - orgSceneX;
-		double newX = orgX + offsetX;
-		if (newX >= 0) {
-			r.setLayoutX(newX);
-			r.location.setxCoordinate(newX);
-		}
-
-		double offsetY = t.getSceneY() - orgSceneY;
-		double newY = orgY + offsetY;
-		if (newY >= 0) {
-			r.setLayoutY(newY);
-			r.location.setyCoordinate(newY);
-		}
-	};
-
-	/**
-	 * Handler for clicking a LocationRectangle.
-	 */
-	private EventHandler<MouseEvent> clickHandler = (t) -> {
-		LocationRectangle r = ((LocationRectangle) (t.getSource()));
-		if (t.getClickCount() == 2) {
-			locationSelected(r.location);
-		}
-	};
 
 	/**
 	 * Constructor
@@ -194,8 +288,6 @@ public class WaysController extends NamedObjectsController<Way> {
 		return new WayController(currentGameManager, mwController, selectedObject);
 	}
 
-	// TODO
-
 	/**
 	 * Opens this location for editing.
 	 * 
@@ -219,31 +311,7 @@ public class WaysController extends NamedObjectsController<Way> {
 	 * @return the LocationRectangle
 	 */
 	private LocationRectangle createLocationNode(Location location) {
-		LocationRectangle sp = new LocationRectangle();
-
-		// The rectangle
-		Rectangle rectangle = new Rectangle(rectDim, rectDim);
-		rectangle.setFill(Color.LIGHTGRAY);
-		rectangle.setStroke(Color.BLACK);
-
-		// The label
-		Label label = new Label(location.toString());
-
-		// Placing the node
-		sp.setLayoutX(location.getxCoordinate());
-		sp.setLayoutY(location.getyCoordinate());
-		sp.setMaxSize(rectDim, rectDim);
-
-		// Handling dragging
-		sp.setOnMousePressed(pressHandler);
-		sp.setOnMouseDragged(dragHandler);
-
-		// Handling clicking
-		sp.setOnMouseClicked(clickHandler);
-
-		sp.location = location;
-		sp.getChildren().addAll(rectangle, label);
-
+		LocationRectangle sp = new LocationRectangle(location);
 		// Save in map
 		rectangles.put(location, sp);
 
@@ -251,28 +319,27 @@ public class WaysController extends NamedObjectsController<Way> {
 	}
 
 	/**
-	 * Creates a line Line to represent a Way
-	 * 
-	 * TODO special class for WayLine, collection to manage, no dups returned
-	 * here.
-	 * 
-	 * TODO on click line, display a popup (if more than one) that lets
-	 * you select which way to edit.
+	 * Creates a line to represent a Way or returns {@code null}, if a
+	 * previously created line already covers this way
 	 * 
 	 * @param w
 	 *            the Way
 	 * @return the Line
 	 */
-	private Line createWayNode(Way w) {
-		// TODO no dups
-		Line line = new Line();
+	private WayLine createWayNode(Way w) {
+		List<Location> endpoints = Arrays.asList(w.getOrigin(), w.getDestination()).stream()
+				.sorted(Comparator.comparing(Location::getId)).collect(Collectors.toList());
 
-		line.startXProperty().bind(rectangles.get(w.getOrigin()).centerX);
-		line.startYProperty().bind(rectangles.get(w.getOrigin()).centerY);
-		line.endXProperty().bind(rectangles.get(w.getDestination()).centerX);
-		line.endYProperty().bind(rectangles.get(w.getDestination()).centerY);
-
-		return line;
+		WayLine line;
+		if ((line = lines.get(endpoints)) == null) {
+			line = new WayLine(w);
+			lines.put(endpoints, line);
+			return line;
+		} else {
+			// Save the new way in the lines list
+			line.ways.add(w);
+			return null;
+		}
 	}
 
 	/**
@@ -281,6 +348,10 @@ public class WaysController extends NamedObjectsController<Way> {
 	 * TODO possibility to add new Ways here.
 	 */
 	private void initializeMap() {
+		
+		// Empty the maps
+		rectangles.clear();
+		lines.clear();
 
 		// Obtain all locations
 		List<Location> locations;
@@ -300,9 +371,11 @@ public class WaysController extends NamedObjectsController<Way> {
 		// Create lines
 		for (Way w : objectsOL) {
 			Line line = createWayNode(w);
-
-			mapPane.getChildren().add(line);
-			line.toBack();
+			if (line != null) {
+				mapPane.getChildren().add(line);
+				// Place lines behind rectangles
+				line.toBack();
+			}
 		}
 	}
 

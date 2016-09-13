@@ -173,7 +173,7 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 	 * @param o
 	 *            the object
 	 */
-	private void objectSelected(E e) {
+	protected void objectSelected(E e) {
 		if (e == null) {
 			return;
 		}
