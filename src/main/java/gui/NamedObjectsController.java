@@ -87,13 +87,16 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 
 		// Get all objects and store in observable list, unless the list is
 		// already propagated
-		if (objectsOL == null) {
-			try {
+
+		try {
+			if (objectsOL == null) {
 				objectsOL = FXCollections.observableArrayList(getAllObjects());
-			} catch (DBClosedException e1) {
-				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
-				return;
+			} else {
+				objectsOL.setAll(getAllObjects());
 			}
+		} catch (DBClosedException e1) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+			return;
 		}
 
 		// Filter
@@ -125,18 +128,6 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 
 		// Save button handler
 		saveButton.setOnMouseClicked((e) -> saveNewObject());
-	}
-
-	@Override
-	public void update() {
-		if (objectsOL != null) {
-			try {
-				objectsOL.setAll(getAllObjects());
-			} catch (DBClosedException e) {
-				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
-				return;
-			}
-		}
 	}
 
 	/**

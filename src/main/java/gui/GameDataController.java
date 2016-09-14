@@ -85,16 +85,6 @@ public abstract class GameDataController {
 	}
 
 	/**
-	 * Updates the view by synchronizing with the database. Should be called
-	 * each time the view is loaded again into the scene. This implementation
-	 * does nothing and should be appropriately overridden by subclasses.
-	 * 
-	 * TODO do we need this or can initialize take care of that!?
-	 */
-	public void update() {
-	}
-
-	/**
 	 * Default controller factory. This can be used by subclasses. They should
 	 * override the method, do some type checks and create their own instances.
 	 * In an else branch, they should return

@@ -114,9 +114,6 @@ public class MainWindowController {
 	 */
 	public void setCenterContent(String fxml, GameDataController controller,
 			Callback<Class<?>, Object> controllerFactory) {
-		// Update the controller to load
-		controller.update();
-
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
