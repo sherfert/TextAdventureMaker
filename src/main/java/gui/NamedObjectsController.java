@@ -20,8 +20,8 @@ import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
- * Controller for the a view with NamedObjects in a table, and the
- * possibility to add them.
+ * Controller for the a view with NamedObjects in a table, and the possibility
+ * to add them.
  * 
  * @author Satia
  */
@@ -49,7 +49,7 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 
 	@FXML
 	protected Button saveButton;
-	
+
 	@FXML
 	protected TextField filterTF;
 
@@ -95,34 +95,34 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 				return;
 			}
 		}
-		
+
 		// Filter
 		FilteredList<E> filteredData = new FilteredList<>(objectsOL, p -> true);
-		
-		filterTF.textProperty().addListener((f, o , n) -> {
-            filteredData.setPredicate(obj -> {
-                // If filter text is empty, display all objects.
-                if (n == null || n.isEmpty()) {
-                    return true;
-                }
 
-                // Compare name of every E with filter text.
-                return obj.getName().toLowerCase().contains(n.toLowerCase());
-            });
-        });
-		
+		filterTF.textProperty().addListener((f, o, n) -> {
+			filteredData.setPredicate(obj -> {
+				// If filter text is empty, display all objects.
+				if (n == null || n.isEmpty()) {
+					return true;
+				}
+
+				// Compare name of every E with filter text.
+				return obj.getName().toLowerCase().contains(n.toLowerCase());
+			});
+		});
+
 		// Sort filtered data
 		SortedList<E> sortedData = new SortedList<>(filteredData);
-		
+
 		// Bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty().bind(table.comparatorProperty());
+		sortedData.comparatorProperty().bind(table.comparatorProperty());
 
 		// Fill table
 		table.setItems(sortedData);
 
 		// Disable buttons at beginning
 		saveButton.setDisable(true);
-		
+
 		// Save button handler
 		saveButton.setOnMouseClicked((e) -> saveNewObject());
 	}
@@ -138,8 +138,19 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 			}
 		}
 	}
-	
-	
+
+	/**
+	 * Saves any named object
+	 * 
+	 * @param o
+	 *            the object
+	 * @throws DBClosedException
+	 *             if the DB was closed.
+	 */
+	protected void saveObject(NamedObject o) throws DBClosedException {
+		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
+		currentGameManager.getPersistenceManager().updateChanges();
+	}
 
 	/**
 	 * Saves a new object to both DB and table.
@@ -148,20 +159,20 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Game
 		E e = createNewObject(newNameTF.getText());
 		// Add item to DB
 		try {
-			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(e);
+			saveObject(e);
 		} catch (DBClosedException e1) {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 			return;
 		}
-		currentGameManager.getPersistenceManager().updateChanges();
 		// Add item to our table
 		objectsOL.add(e);
 
 		resetFormValues();
 	}
-	
+
 	/**
-	 * Reset all form values. Should be overridden to account for additional ones.
+	 * Reset all form values. Should be overridden to account for additional
+	 * ones.
 	 */
 	protected void resetFormValues() {
 		newNameTF.setText("");

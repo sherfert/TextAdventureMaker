@@ -46,6 +46,21 @@ public class WaysController extends NamedObjectsController<Way> {
 	 */
 	private Map<List<Location>, WayLine> lines = new HashMap<>();
 
+	/**
+	 * During way creation in the map, the origin.
+	 */
+	private Location creationOrigin;
+
+	/**
+	 * During way creation in the map, the destination.
+	 */
+	private Location creationDestination;
+
+	/**
+	 * During way creation in the map, the line.
+	 */
+	private Line creationLine;
+
 	@FXML
 	private TableColumn<Way, String> originCol;
 
@@ -65,7 +80,7 @@ public class WaysController extends NamedObjectsController<Way> {
 	private Pane mapPane;
 
 	@FXML
-	BorderPane mapBorderPane;
+	private BorderPane mapBorderPane;
 
 	@FXML
 	private Button mapNewWayButton;
@@ -124,15 +139,7 @@ public class WaysController extends NamedObjectsController<Way> {
 	protected Way createNewObject(String name) {
 		Way w = new Way(name, newDescriptionTA.getText(), newOriginChooser.getObjectValue(),
 				newDestinationChooser.getObjectValue());
-
-		// A line describing this way needs to be added to the Map
-		Line line = createWayNode(w);
-		if (line != null) {
-			mapPane.getChildren().add(line);
-			// Place lines behind rectangles
-			line.toBack();
-		}
-
+		addWayToMap(w);
 		return w;
 	}
 
@@ -164,7 +171,8 @@ public class WaysController extends NamedObjectsController<Way> {
 	 * @return the LocationRectangle
 	 */
 	private LocationRectangle createLocationNode(Location location) {
-		LocationRectangle sp = new LocationRectangle(location, this::locationSelected);
+		LocationRectangle sp = new LocationRectangle(location, this::locationSelected, this::originChosen,
+				this::destinationChosen);
 		// Save in map
 		rectangles.put(location, sp);
 
@@ -185,7 +193,8 @@ public class WaysController extends NamedObjectsController<Way> {
 
 		WayLine line;
 		if ((line = lines.get(endpoints)) == null) {
-			line = new WayLine(w, rectangles.get(w.getOrigin()), rectangles.get(w.getDestination()), this::objectSelected);
+			line = new WayLine(w, rectangles.get(w.getOrigin()), rectangles.get(w.getDestination()),
+					this::objectSelected);
 			lines.put(endpoints, line);
 			return line;
 		} else {
@@ -197,8 +206,6 @@ public class WaysController extends NamedObjectsController<Way> {
 
 	/**
 	 * Initializes the MapView.
-	 * 
-	 * TODO possibility to add new Ways here.
 	 */
 	private void initializeMap() {
 
@@ -233,8 +240,125 @@ public class WaysController extends NamedObjectsController<Way> {
 
 		// The add button
 		mapNewWayButton.setOnMouseClicked((e) -> {
-			//mapBorderPane.setCursor(Cursor.CROSSHAIR);
+			enableWayCreation();
 		});
+	}
+
+	/**
+	 * Adds a new way to the Map
+	 * 
+	 * @param way
+	 *            the way
+	 */
+	private void addWayToMap(Way way) {
+		Line line = createWayNode(way);
+		if (line != null) {
+			mapPane.getChildren().add(line);
+			// Place lines behind rectangles
+			line.toBack();
+		}
+	}
+
+	/**
+	 * Enables the creation of a way in the MapView. This changes the behavior
+	 * of the rectangles.
+	 */
+	private void enableWayCreation() {
+		// Disable the button.
+		mapNewWayButton.setDisable(true);
+		// Change the cursors
+		mapBorderPane.setCursor(Cursor.HAND);
+		for (LocationRectangle lr : rectangles.values()) {
+			lr.setCursor(Cursor.CROSSHAIR);
+			// the rectangles enter origin choose mode
+			lr.enterOriginChooseMode();
+		}
+		// Disable the hover styles
+		for (WayLine wl : lines.values()) {
+			wl.removeHoverStyle();
+		}
+		// If clicked outside a rectangle, disable the creation
+		mapBorderPane.setOnMouseClicked((e) -> {
+			disableWayCreation();
+		});
+	}
+
+	/**
+	 * Called when the first rectangle was clicked as part of the way creation
+	 * process in the MapView.
+	 * 
+	 * @param origin
+	 *            the origin of the way being created
+	 * @param line
+	 *            the line that serves as visual feedback
+	 */
+	private void originChosen(Location origin, Line line) {
+		this.creationOrigin = origin;
+		this.creationLine = line;
+
+		// Display the line
+		mapPane.getChildren().add(line);
+		line.toBack();
+
+		// Make the line follow the mouse
+		mapBorderPane.setOnMouseMoved((e) -> {
+			line.setEndX(e.getX());
+			line.setEndY(e.getY());
+		});
+
+		// The rectangles enter destination choose mode
+		for (LocationRectangle lr : rectangles.values()) {
+			lr.enterDestinationChooseMode();
+		}
+	}
+
+	/**
+	 * Called when the second rectangle was clicked as part of the way creation
+	 * process in the MapView.
+	 * 
+	 * @param destination
+	 *            the destination of the way being created
+	 */
+	private void destinationChosen(Location destination) {
+		this.creationDestination = destination;
+		// Create the way with a default name
+		Way way = new Way(this.creationOrigin.getName() + "->" + this.creationDestination.getName(), "",
+				this.creationOrigin, this.creationDestination);
+		// Save way
+		try {
+			saveObject(way);
+			// Add item to map
+			addWayToMap(way);
+			// Add item to table
+			objectsOL.add(way);
+			// Open new way for editing
+			objectSelected(way);
+		} catch (DBClosedException e1) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+		} finally {
+			disableWayCreation();
+		}
+	}
+
+	/**
+	 * Disables the creation of a way in the MapView again and returns to normal
+	 * behavior.
+	 */
+	private void disableWayCreation() {
+		// Undo everything
+		mapNewWayButton.setDisable(false);
+		mapBorderPane.setCursor(Cursor.DEFAULT);
+		for (LocationRectangle lr : rectangles.values()) {
+			lr.setCursor(Cursor.DEFAULT);
+			lr.enterRearrangeMode();
+		}
+		for (WayLine wl : lines.values()) {
+			wl.addHoverStyle();
+		}
+		mapBorderPane.setOnMouseClicked(null);
+		if (creationLine != null) {
+			mapPane.getChildren().remove(creationLine);
+		}
 	}
 
 }

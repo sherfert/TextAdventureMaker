@@ -62,7 +62,7 @@
 			<content>
 				<BorderPane fx:id="mapBorderPane">
 					<center>
-						<ScrollPane>
+						<ScrollPane id="outerMapPane">
 							<Pane fx:id="mapPane" />
 						</ScrollPane>
 					</center>

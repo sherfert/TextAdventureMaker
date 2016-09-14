@@ -22,11 +22,18 @@
     -fx-padding: 0 0 0 0;
 }
 
-.tab-pane
-{
+.tab-pane {
     -fx-tab-min-width:70px;
 }
 
-.mapelement:hover{
+#outerMapPane {
+	-fx-background-color:transparent;
+}
+
+.mapelement:hover {
+    -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0)
+}
+
+.selectedmapelement {
     -fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0)
 }

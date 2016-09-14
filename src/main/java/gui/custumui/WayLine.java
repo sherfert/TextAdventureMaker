@@ -100,7 +100,21 @@ public class WayLine extends Line {
 		setOnMouseClicked(clickHandler);
 
 		// Styling
+		addHoverStyle();
+	}
+	
+	/**
+	 * Adds the hover shadow effect.
+	 */
+	public void addHoverStyle() {
 		getStyleClass().add("mapelement");
+	}
+	
+	/**
+	 * Removes the hover shadow effect.
+	 */
+	public void removeHoverStyle() {
+		getStyleClass().remove("mapelement");
 	}
 
 	/**
