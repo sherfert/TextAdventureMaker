@@ -123,7 +123,7 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	/**
 	 * @return the option
 	 * 
-	 * XXX This should be (nullable = false). This is impossible due to circular
+	 * XXX This should be nullable = false. This is impossible due to circular
 	 * dependencies.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)

@@ -5,6 +5,7 @@ import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -20,6 +21,9 @@ public class WayController extends GameDataController {
 
 	/** The way */
 	private Way way;
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private LocationChooser originChooser;
@@ -74,6 +78,8 @@ public class WayController extends GameDataController {
 		editMoveCommandsTA.setText(getCommandString(way.getAdditionalTravelCommands()));
 		editMoveCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, editMoveCommandsTA, way::setAdditionalTravelCommands));
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

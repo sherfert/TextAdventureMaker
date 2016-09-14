@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
   <tabs>
     <Tab text="Basic properties">
          <content>

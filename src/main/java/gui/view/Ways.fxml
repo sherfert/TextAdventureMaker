@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1">
+	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
 	<tabs>
 		<Tab text="Table">
 			<content>

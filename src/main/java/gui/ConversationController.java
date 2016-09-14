@@ -9,6 +9,7 @@ import gui.custumui.ConversationLayerChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import logic.CurrentGameManager;
 
@@ -23,6 +24,9 @@ public class ConversationController extends NamedObjectsController<ConversationL
 
 	/** The conversation */
 	private Conversation conversation;
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private Button removeButton;
@@ -74,6 +78,8 @@ public class ConversationController extends NamedObjectsController<ConversationL
 
 		// Assure save is only enabled if there is a name
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

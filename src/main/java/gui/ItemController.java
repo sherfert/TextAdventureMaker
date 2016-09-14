@@ -7,6 +7,7 @@ import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -22,6 +23,9 @@ public class ItemController extends GameDataController {
 
 	/** The item */
 	private Item item;
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private LocationChooser locationChooser;
@@ -84,6 +88,8 @@ public class ItemController extends GameDataController {
 		pickUpItemsListView.initialize(item.getPickUpItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::pickUpItemSelected, (ii) -> item.addPickUpItem(ii), (ii) -> item.removePickUpItem(ii));
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

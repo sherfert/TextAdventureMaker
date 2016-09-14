@@ -20,7 +20,7 @@ import javafx.beans.property.StringProperty;
 /**
  * Anything having a name.
  * 
- * XXX overthink inheritance strategy!
+ * XXX This is probably not the best overall inheritance strategy.
  *
  * @author Satia
  */

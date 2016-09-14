@@ -84,8 +84,9 @@ public class Item extends UsableObject implements Takeable, HasLocation {
 	 * .
 	 * 
 	 * No ON CASCADE definitions, since this field is not accessible.
+	 * 
+	 * XXX This should be nullable = false, which is not possible.
 	 */
-	// XXX why not unnullable?
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn
 	@Access(AccessType.FIELD)

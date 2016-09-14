@@ -5,6 +5,7 @@ import gui.custumui.ConversationLayerChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -20,6 +21,9 @@ public class ConversationOptionController extends GameDataController {
 
 	/** The conversation option */
 	private ConversationOption option;
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private ConversationLayerChooser targetChooser;
@@ -72,6 +76,8 @@ public class ConversationOptionController extends GameDataController {
 		editTextTF.textProperty().bindBidirectional(option.textProperty());
 		editAnswerTA.textProperty().bindBidirectional(option.answerProperty());
 		editEventTA.textProperty().bindBidirectional(option.eventProperty());
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

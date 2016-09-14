@@ -15,6 +15,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import logic.CurrentGameManager;
@@ -77,6 +78,11 @@ public abstract class GameDataController {
 	protected MainWindowController mwController;
 
 	/**
+	 * For subtypes that have a TabPane, this saves the current index.
+	 */
+	private int currentTabIndex;
+
+	/**
 	 * @param currentGameManager
 	 */
 	public GameDataController(CurrentGameManager currentGameManager, MainWindowController mwController) {
@@ -90,7 +96,8 @@ public abstract class GameDataController {
 	 * In an else branch, they should return
 	 * {@code super.controllerFactory(type)}.
 	 * 
-	 * Or they don't override it if they don't have any nested controllers in the FXML.
+	 * Or they don't override it if they don't have any nested controllers in
+	 * the FXML.
 	 * 
 	 * @param type
 	 *            the type of the object
@@ -138,19 +145,20 @@ public abstract class GameDataController {
 			// Show tooltip immediately below the input field
 			Point2D p = node.localToScreen(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMaxY());
 			tooltip.show(node, p.getX(), p.getY());
-			
+
 			ChangeListener<? super Boolean> focusListener = (f, o, n) -> {
-				if(n) {
+				if (n) {
 					Point2D p2 = node.localToScreen(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMaxY());
 					tooltip.show(node, p2.getX(), p2.getY());
 				} else {
 					tooltip.hide();
 				}
 			};
-			
+
 			node.focusedProperty().addListener(focusListener);
 
-			// Save tooltip and focusListener in node properties to access it later
+			// Save tooltip and focusListener in node properties to access it
+			// later
 			node.getProperties().put(NODE_PROPERTIES_KEY_ERROR_TOOLTIP, tooltip);
 			node.getProperties().put(NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER, focusListener);
 		}
@@ -173,7 +181,7 @@ public abstract class GameDataController {
 			tooltip.hide();
 			// Unset tooltip property
 			node.getProperties().remove(NODE_PROPERTIES_KEY_ERROR_TOOLTIP);
-			
+
 			// Remove focus listener
 			@SuppressWarnings("unchecked")
 			ChangeListener<? super Boolean> focusListener = (ChangeListener<? super Boolean>) node.getProperties()
@@ -332,7 +340,7 @@ public abstract class GameDataController {
 		}
 		return count1 == count2 && count1 == count3;
 	}
-	
+
 	/**
 	 * Removes an object from the DB, asking for confirmation first.
 	 */
@@ -344,15 +352,15 @@ public abstract class GameDataController {
 		alert.setContentText(content);
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
-				// Update any previous changes first, otherwise the deletion may not work
+				// Update any previous changes first, otherwise the deletion may
+				// not work
 				currentGameManager.getPersistenceManager().updateChanges();
-				
+
 				// Remove item from DB
 				try {
 					currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(object);
 				} catch (Exception e) {
-					Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
-							"Abort: DB closed");
+					Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
 					return;
 				}
 				// Update the deletion
@@ -361,6 +369,19 @@ public abstract class GameDataController {
 				// Switch back to previous view
 				mwController.popCenterContent();
 			}
+		});
+	}
+
+	/**
+	 * Saves the index of the TabPane
+	 * 
+	 * @param tabPane
+	 *            the TabPane
+	 */
+	protected void saveTabIndex(TabPane tabPane) {
+		tabPane.getSelectionModel().select(currentTabIndex);
+		tabPane.getSelectionModel().selectedIndexProperty().addListener((f, o, n) -> {
+			currentTabIndex = n.intValue();
 		});
 	}
 

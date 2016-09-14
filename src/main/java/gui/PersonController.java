@@ -5,6 +5,7 @@ import gui.custumui.ConversationChooser;
 import gui.custumui.LocationChooser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -18,6 +19,9 @@ public class PersonController extends GameDataController {
 
 	/** The person */
 	private Person person;
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private LocationChooser locationChooser;
@@ -64,6 +68,8 @@ public class PersonController extends GameDataController {
 		editTalkCommandsTA.setText(getCommandString(person.getAdditionalTalkToCommands()));
 		editTalkCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, editTalkCommandsTA, person::setAdditionalTalkToCommands));
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

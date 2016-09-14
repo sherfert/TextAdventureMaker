@@ -3,6 +3,7 @@ package gui;
 import data.InventoryItem;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
 import logic.CurrentGameManager;
 
 /**
@@ -16,6 +17,9 @@ public class InventoryItemController extends GameDataController {
 
 	/** The inventory item */
 	private InventoryItem invitem;
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private Button removeButton;
@@ -38,6 +42,8 @@ public class InventoryItemController extends GameDataController {
 				(e) -> removeObject(invitem, "Deleting an invenory item", "Do you really want to delete this inventory item?",
 						"This will delete the inventory item, usage information with other inventory items, items and persons, "
 								+ "and actions associated with any of the deleted entities."));
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

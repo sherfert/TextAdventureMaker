@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
 import logic.CurrentGameManager;
 
 /**
@@ -27,6 +28,9 @@ public class LocationController extends GameDataController {
 
 	/** The location */
 	private Location location;
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private Button removeButton;
@@ -76,6 +80,8 @@ public class LocationController extends GameDataController {
 		waysOutListView.initialize(location.getWaysOut(),
 				this.currentGameManager.getPersistenceManager().getWayManager()::getAllWays, location::updateWaysOut,
 				this::waySelected, (way) -> way.setOrigin(location), null);
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

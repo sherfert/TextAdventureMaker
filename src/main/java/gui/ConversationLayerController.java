@@ -11,6 +11,7 @@ import gui.custumui.ConversationLayerChooser;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -25,6 +26,9 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 
 	/** The conversation layer */
 	private ConversationLayer layer;
+	
+	@FXML
+	private TabPane tabPane;
 	
 	@FXML
 	private TableColumn<ConversationOption, String> targetCol;
@@ -116,6 +120,8 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 			table.getSelectionModel().selectNext();
 			layer.updateOptions(objectsOL);
 		});
+		
+		saveTabIndex(tabPane);
 	}
 	
 	@Override

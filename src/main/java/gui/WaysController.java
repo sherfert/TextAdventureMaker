@@ -19,6 +19,7 @@ import gui.custumui.WayLine;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
@@ -35,6 +36,7 @@ import logic.CurrentGameManager;
  * @author Satia
  */
 public class WaysController extends NamedObjectsController<Way> {
+	
 	/**
 	 * A map with all LocationRectangles.
 	 */
@@ -60,7 +62,10 @@ public class WaysController extends NamedObjectsController<Way> {
 	 * During way creation in the map, the line.
 	 */
 	private Line creationLine;
-
+	
+	@FXML
+	private TabPane tabPane;
+	
 	@FXML
 	private TableColumn<Way, String> originCol;
 
@@ -125,6 +130,8 @@ public class WaysController extends NamedObjectsController<Way> {
 		newOriginChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newDestinationChooser.textProperty()
 				.addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
+		
+		saveTabIndex(tabPane);
 
 		// Initializes everything contained in the Map Tab
 		initializeMap();
