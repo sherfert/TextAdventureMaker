@@ -7,13 +7,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.LocationChooser?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1">
 	<tabs>
 		<Tab text="Table">
 			<content>
-				<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+				<BorderPane>
 					<center>
 						<TableView fx:id="table">
 							<columns>
@@ -59,9 +60,17 @@
 		</Tab>
 		<Tab text="Map">
 			<content>
-				<ScrollPane >
-					<Pane fx:id="mapPane" />
-				</ScrollPane>
+				<BorderPane fx:id="mapBorderPane">
+					<center>
+						<ScrollPane>
+							<Pane fx:id="mapPane" />
+						</ScrollPane>
+					</center>
+					<bottom>
+						<Button fx:id="mapNewWayButton" mnemonicParsing="false"
+							text="Create a way" />
+					</bottom>
+				</BorderPane>
 			</content>
 		</Tab>
 	</tabs>
