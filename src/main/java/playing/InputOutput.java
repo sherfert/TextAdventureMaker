@@ -1,8 +1,10 @@
 package playing;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 
 import javax.swing.JFrame;
 
@@ -219,7 +221,10 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 		// Not resizable
 		frame.setResizable(false);
 
-		// TODO Icon
+		ClassLoader classLoader = getClass().getClassLoader();
+		URL iconURL = classLoader.getResource("icon.png");
+
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(iconURL));
 		frame.setTitle("Text-Adventure");
 	}
 
