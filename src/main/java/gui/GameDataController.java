@@ -246,6 +246,9 @@ public abstract class GameDataController {
 	 * passed input node. Otherwise the given method is executed to set the
 	 * commands.
 	 * 
+	 * TODO param if empty field is OK.
+	 * XXX check if a command masks another and warn in that case.
+	 * 
 	 * @param commandsText
 	 *            the input text for the commands as a single 'n'-separated
 	 *            String.

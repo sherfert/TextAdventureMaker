@@ -15,6 +15,7 @@ import logic.CurrentGameManager;
  * Controller for the usage of an inventory item with a person or object.
  * 
  * TODO Support to change additionalUseWithActions
+ * TODO better label for commands
  * 
  * @author Satia
  */

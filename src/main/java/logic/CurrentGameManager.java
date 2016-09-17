@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import configuration.PropertiesReader;
 import exception.DBClosedException;
 import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
@@ -139,7 +140,7 @@ public class CurrentGameManager {
 	public void playGame() throws IOException {
 		disconnectDoReconnect(() -> {
 			Path from = openFile.getAbsoluteFile().toPath();
-			Path to = new File(openFile.getParent() + File.separator + gameName + "_temp" + LoadSaveManager.H2_ENDING)
+			Path to = new File(PropertiesReader.DIRECTORY + gameName + "_temp" + LoadSaveManager.H2_ENDING)
 					.toPath();
 			Files.copy(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 			LoadSaveManager.main(new String[] { gameName + "_temp" });

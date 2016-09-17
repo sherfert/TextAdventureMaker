@@ -166,15 +166,24 @@ public class Location extends NamedDescribedObject {
 		StringBuilder sb = new StringBuilder(getDescription());
 		// Persons
 		for (Person person : persons) {
-			sb.append(' ').append(person.getDescription());
+			String d = person.getDescription();
+			if(d != null && !d.isEmpty()) {
+				sb.append(' ').append(d);
+			}
 		}
 		// Items
 		for (Item item : items) {
-			sb.append(' ').append(item.getDescription());
+			String d = item.getDescription();
+		if(d != null && !d.isEmpty()) {
+			sb.append(' ').append(d);
+		}
 		}
 		// Ways out
 		for (Way way : waysOut) {
-			sb.append(' ').append(way.getDescription());
+			String d = way.getDescription();
+			if(d != null && !d.isEmpty()) {
+				sb.append(' ').append(d);
+			}
 		}
 		return sb.toString();
 	}
