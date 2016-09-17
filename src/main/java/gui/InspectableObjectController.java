@@ -26,6 +26,8 @@ public class InspectableObjectController extends GameDataController {
 	/**
 	 * @param currentGameManager
 	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 * @param object
 	 *            the object to edit
 	 */

@@ -21,6 +21,12 @@ public class ConversationsController extends NamedObjectsController<Conversation
 	@FXML
 	private TextArea newEventTA;
 
+	/**
+	 * @param currentGameManager
+	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
+	 */
 	public ConversationsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/Conversation.fxml");
 	}

@@ -26,13 +26,13 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 
 	/** The conversation layer */
 	private ConversationLayer layer;
-	
+
 	@FXML
 	private TabPane tabPane;
-	
+
 	@FXML
 	private TableColumn<ConversationOption, String> targetCol;
-	
+
 	@FXML
 	private TableColumn<ConversationOption, String> textCol;
 
@@ -60,6 +60,8 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 	/**
 	 * @param currentGameManager
 	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 * @param layer
 	 *            the layer to edit
 	 */
@@ -76,15 +78,15 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 		// Create new bindings
 		targetCol.setCellValueFactory((p) -> {
 			ConversationLayer target = p.getValue().getTarget();
-			if(target != null) {
+			if (target != null) {
 				return target.nameProperty();
 			} else {
 				return new ReadOnlyObjectWrapper<String>("(ends conversation)");
 			}
-			
+
 		});
 		textCol.setCellValueFactory((p) -> p.getValue().textProperty());
-		
+
 		removeButton.setOnMouseClicked((e) -> removeObject(layer, "Deleting a conversation layer",
 				"Do you really want to delete this conversation layer?",
 				"This will delete the conversation layer and options of the layer, "
@@ -99,15 +101,16 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newTextTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
 		newAnswerTA.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		
+
 		// Disable buttons by default and if no value is chosen
 		upButton.setDisable(true);
 		downButton.setDisable(true);
 		table.getSelectionModel().selectedItemProperty().addListener((f, o, n) -> {
 			upButton.setDisable(n == null || table.getSelectionModel().getSelectedIndex() == 0);
-			downButton.setDisable(n == null || table.getSelectionModel().getSelectedIndex() == table.getItems().size() - 1);
+			downButton.setDisable(
+					n == null || table.getSelectionModel().getSelectedIndex() == table.getItems().size() - 1);
 		});
-		
+
 		upButton.setOnMouseClicked((e) -> {
 			int index = table.getSelectionModel().getSelectedIndex();
 			Collections.swap(objectsOL, index, index - 1);
@@ -120,10 +123,10 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 			table.getSelectionModel().selectNext();
 			layer.updateOptions(objectsOL);
 		});
-		
+
 		saveTabIndex(tabPane);
 	}
-	
+
 	@Override
 	protected void resetFormValues() {
 		super.resetFormValues();
@@ -161,7 +164,6 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 
 	@Override
 	protected GameDataController getObjectController(ConversationOption selectedObject) {
-		return new ConversationOptionController(currentGameManager,
-					mwController, selectedObject);
+		return new ConversationOptionController(currentGameManager, mwController, selectedObject);
 	}
 }

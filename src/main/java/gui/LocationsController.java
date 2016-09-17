@@ -13,6 +13,12 @@ import logic.CurrentGameManager;
  */
 public class LocationsController extends NamedDescribedObjectsController<Location> {
 
+	/**
+	 * @param currentGameManager
+	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
+	 */
 	public LocationsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/Location.fxml");
 	}

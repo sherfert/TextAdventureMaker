@@ -55,6 +55,7 @@ public class NavbarController {
 
 	/**
 	 * @param mwController
+	 *            the main window controller
 	 */
 	public NavbarController(MainWindowController mwController) {
 		this.mwController = mwController;

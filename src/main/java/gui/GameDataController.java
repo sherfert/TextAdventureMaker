@@ -84,6 +84,9 @@ public abstract class GameDataController {
 
 	/**
 	 * @param currentGameManager
+	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 */
 	public GameDataController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		this.currentGameManager = currentGameManager;

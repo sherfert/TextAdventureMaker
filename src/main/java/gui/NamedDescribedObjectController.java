@@ -21,10 +21,13 @@ public class NamedDescribedObjectController extends GameDataController {
 	/**
 	 * @param currentGameManager
 	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 * @param object
 	 *            the object to edit
 	 */
-	public NamedDescribedObjectController(CurrentGameManager currentGameManager, MainWindowController mwController, NamedDescribedObject object) {
+	public NamedDescribedObjectController(CurrentGameManager currentGameManager, MainWindowController mwController,
+			NamedDescribedObject object) {
 		super(currentGameManager, mwController);
 		this.object = object;
 	}

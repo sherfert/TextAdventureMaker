@@ -91,10 +91,10 @@ public class WaysController extends NamedObjectsController<Way> {
 	private Button mapNewWayButton;
 
 	/**
-	 * Constructor
-	 * 
 	 * @param currentGameManager
+	 *            the game manager
 	 * @param mwController
+	 *            the main window controller
 	 */
 	public WaysController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/Way.fxml");

@@ -42,6 +42,7 @@ public class SidebarController {
 
 	/**
 	 * @param mwController
+	 *            the main window controller
 	 */
 	public SidebarController(MainWindowController mwController) {
 		this.mwController = mwController;

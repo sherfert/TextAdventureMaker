@@ -13,6 +13,12 @@ import logic.CurrentGameManager;
  */
 public class InventoryItemsController extends NamedDescribedObjectsController<InventoryItem> {
 
+	/**
+	 * @param currentGameManager
+	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
+	 */
 	public InventoryItemsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/InventoryItem.fxml");
 	}

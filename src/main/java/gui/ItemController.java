@@ -53,6 +53,8 @@ public class ItemController extends GameDataController {
 	/**
 	 * @param currentGameManager
 	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 * @param item
 	 *            the item to edit
 	 */

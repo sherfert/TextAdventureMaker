@@ -498,6 +498,12 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	public void removeAdditionalActionFromUseWith(HasLocation object, AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.remove(action);
 	}
+	
+	@Override
+	@Transient
+	public void setAdditionalUseWithCommands(HasLocation object, List<String> commands) {
+		getUsableHasLocation(object).additionalUseWithCommands = commands;
+	}
 
 	@Override
 	public void removeAdditionalCombineCommand(Combinable<InventoryItem> partner, String command) {
@@ -641,7 +647,38 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 		}
 		return result;
 	}
-	
+
+	/**
+	 * Ensure that usage information exists for a Person or Item.
+	 * 
+	 * @param object
+	 *            the object.
+	 */
+	public void ensureHasUsageInformation(HasLocation object) {
+		getUsableHasLocation(object);
+	}
+
+	/**
+	 * Obtains all items for which additional information for using them exists.
+	 * 
+	 * @return a list of items.
+	 */
+	@Transient
+	public List<Item> getItemsUsableWith() {
+		return new ArrayList<>(usableItems.keySet());
+	}
+
+	/**
+	 * Obtains all persons for which additional information for using them
+	 * exists.
+	 * 
+	 * @return a list of persons.
+	 */
+	@Transient
+	public List<Person> getPersonsUsableWith() {
+		return new ArrayList<>(usablePersons.keySet());
+	}
+
 	/**
 	 * Only used by {@link AddInventoryItemsAction}
 	 */
@@ -650,11 +687,11 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	public List<AddInventoryItemsAction> getAddIIActions() {
 		return addIIActions;
 	}
-	
+
 	@PreRemove
 	private void preRemove() {
 		// Remove from all AddInventoryItemsActions
-		for(AddInventoryItemsAction a : new ArrayList<>(addIIActions)) {
+		for (AddInventoryItemsAction a : new ArrayList<>(addIIActions)) {
 			a.removePickUpItem(this);
 		}
 	}

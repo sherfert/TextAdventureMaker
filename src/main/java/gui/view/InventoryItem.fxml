@@ -5,6 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
+<?import gui.custumui.ItemListView?>
+<?import gui.custumui.PersonListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
   <tabs>
@@ -33,6 +35,16 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </padding>
             </VBox>
+         </content>
+      </Tab>
+    <Tab text="Using with an item">
+         <content>
+            <ItemListView fx:id="usableItemsListView" />
+         </content>
+      </Tab>
+      <Tab text="Using with a person">
+         <content>
+            <PersonListView fx:id="usablePersonsListView" />
          </content>
       </Tab>
   </tabs>

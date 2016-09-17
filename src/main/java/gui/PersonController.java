@@ -41,6 +41,8 @@ public class PersonController extends GameDataController {
 	/**
 	 * @param currentGameManager
 	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 * @param person
 	 *            the person to edit
 	 */

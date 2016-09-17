@@ -13,6 +13,12 @@ import logic.CurrentGameManager;
  */
 public class ItemsController extends NamedDescribedObjectsController<Item> {
 
+	/**
+	 * @param currentGameManager
+	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
+	 */
 	public ItemsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/Item.fxml");
 	}

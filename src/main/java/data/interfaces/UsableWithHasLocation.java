@@ -131,4 +131,15 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 *            the game
 	 */
 	public void useWith(HasLocation object, Game game);
+
+	/**
+	 * Sets the additional commands that can be used to use this with something
+	 * else.
+	 * 
+	 * @param object
+	 *            the object
+	 * @param commands
+	 *            the commands
+	 */
+	public void setAdditionalUseWithCommands(HasLocation object, List<String> commands);
 }

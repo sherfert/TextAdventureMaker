@@ -50,6 +50,8 @@ public class LocationController extends GameDataController {
 	/**
 	 * @param currentGameManager
 	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 * @param location
 	 *            the location to edit
 	 */

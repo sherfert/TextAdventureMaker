@@ -53,7 +53,7 @@ public class GameDetailsController extends GameDataController {
 	@FXML
 	private LocationChooser startLocationChooser;
 	@FXML
-	private InventoryItemListView startItemsListView;	
+	private InventoryItemListView startItemsListView;
 	@FXML
 	private TextField useWithHelpTextField;
 	@FXML
@@ -145,6 +145,12 @@ public class GameDetailsController extends GameDataController {
 
 	private Property<Integer> numOptionLinesProp;
 
+	/**
+	 * @param currentGameManager
+	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
+	 */
 	public GameDetailsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController);
 	}
@@ -173,8 +179,8 @@ public class GameDetailsController extends GameDataController {
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
 
 		startLocationChooser.initialize(
-				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(), false,
-				false, this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (loc) -> {
+				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(), false, false,
+				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (loc) -> {
 					try {
 						currentGameManager.getPersistenceManager().getGameManager().getGame().setStartLocation(loc);
 					} catch (Exception e) {
@@ -182,11 +188,10 @@ public class GameDetailsController extends GameDataController {
 								e);
 					}
 				});
-		
+
 		startItemsListView.initialize(game.getStartItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::startItemSelected, (item) -> game.addStartItem(item), (item) -> game.removeStartItem(item));
-
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
@@ -298,7 +303,7 @@ public class GameDetailsController extends GameDataController {
 			game.setGameTitle(newTitle);
 		}
 	}
-	
+
 	/**
 	 * Opens an item for editing. Invoked when an item from the list is double
 	 * clicked.

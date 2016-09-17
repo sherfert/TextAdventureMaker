@@ -21,7 +21,7 @@ public class ConversationOptionController extends GameDataController {
 
 	/** The conversation option */
 	private ConversationOption option;
-	
+
 	@FXML
 	private TabPane tabPane;
 
@@ -49,10 +49,13 @@ public class ConversationOptionController extends GameDataController {
 	/**
 	 * @param currentGameManager
 	 *            the game manager
-	 * @param item
-	 *            the item to edit
+	 * @param mwController
+	 *            the main window controller
+	 * @param option
+	 *            the option to edit
 	 */
-	public ConversationOptionController(CurrentGameManager currentGameManager, MainWindowController mwController, ConversationOption option) {
+	public ConversationOptionController(CurrentGameManager currentGameManager, MainWindowController mwController,
+			ConversationOption option) {
 		super(currentGameManager, mwController);
 		this.option = option;
 	}
@@ -60,23 +63,22 @@ public class ConversationOptionController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		targetChooser.initialize(option.getTarget(), true, false,
-				option.getLayer().getConversation()::getLayers, option::setTarget);
+		targetChooser.initialize(option.getTarget(), true, false, option.getLayer().getConversation()::getLayers,
+				option::setTarget);
 
-		removeButton.setOnMouseClicked(
-				(e) -> removeObject(option, "Deleting a conversation option", "Do you really want to delete this conversation option?",
-						"This will delete the conversation option "
-								+ "and actions associated with any of the deleted entities."));
+		removeButton.setOnMouseClicked((e) -> removeObject(option, "Deleting a conversation option",
+				"Do you really want to delete this conversation option?", "This will delete the conversation option "
+						+ "and actions associated with any of the deleted entities."));
 
 		editEnabledCB.selectedProperty().bindBidirectional(option.enabledProperty());
 
 		editRemoveOptionEnabledCB.setSelected(option.isDisablingOptionAfterChosen());
 		editRemoveOptionEnabledCB.selectedProperty().addListener((f, o, n) -> option.setDisablingOptionAfterChosen(n));
-		
+
 		editTextTF.textProperty().bindBidirectional(option.textProperty());
 		editAnswerTA.textProperty().bindBidirectional(option.answerProperty());
 		editEventTA.textProperty().bindBidirectional(option.eventProperty());
-		
+
 		saveTabIndex(tabPane);
 	}
 

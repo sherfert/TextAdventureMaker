@@ -13,6 +13,12 @@ import logic.CurrentGameManager;
  */
 public class PersonsController extends NamedDescribedObjectsController<Person> {
 
+	/**
+	 * @param currentGameManager
+	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
+	 */
 	public PersonsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController, "view/Person.fxml");
 	}

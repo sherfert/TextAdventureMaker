@@ -24,7 +24,7 @@ public class ConversationController extends NamedObjectsController<ConversationL
 
 	/** The conversation */
 	private Conversation conversation;
-	
+
 	@FXML
 	private TabPane tabPane;
 
@@ -46,6 +46,8 @@ public class ConversationController extends NamedObjectsController<ConversationL
 	/**
 	 * @param currentGameManager
 	 *            the game manager
+	 * @param mwController
+	 *            the main window controller
 	 * @param conversation
 	 *            the conversation to edit
 	 */
@@ -78,7 +80,7 @@ public class ConversationController extends NamedObjectsController<ConversationL
 
 		// Assure save is only enabled if there is a name
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
-		
+
 		saveTabIndex(tabPane);
 	}
 
@@ -93,7 +95,7 @@ public class ConversationController extends NamedObjectsController<ConversationL
 			return super.controllerFactory(type);
 		}
 	}
-	
+
 	@Override
 	protected List<ConversationLayer> getAllObjects() throws DBClosedException {
 		return conversation.getLayers();
