@@ -5,6 +5,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gui.toplevel.ConversationsController;
+import gui.toplevel.GameDetailsController;
+import gui.toplevel.InventoryItemsController;
+import gui.toplevel.ItemsController;
+import gui.toplevel.LocationsController;
+import gui.toplevel.PersonsController;
+import gui.toplevel.WaysController;
+import gui.window.NavbarController;
+import gui.window.SidebarController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

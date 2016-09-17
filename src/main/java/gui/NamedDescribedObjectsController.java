@@ -7,7 +7,7 @@ import javafx.scene.control.TextArea;
 import logic.CurrentGameManager;
 
 /**
- * Controller for the a view with NamedDescribedObjects in a table, and the
+ * Controller for a view with NamedDescribedObjects in a table, and the
  * possibility to add them.
  * 
  * @author Satia

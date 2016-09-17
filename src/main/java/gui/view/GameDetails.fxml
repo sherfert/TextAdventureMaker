@@ -5,9 +5,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
-<?import gui.custumui.LocationChooser?>
+<?import gui.customui.LocationChooser?>
 <?import javafx.scene.control.ScrollPane?>
-<?import gui.custumui.InventoryItemListView?>
+<?import gui.customui.InventoryItemListView?>
 
 <Accordion xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<panes>

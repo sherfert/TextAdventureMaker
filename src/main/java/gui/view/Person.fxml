@@ -5,8 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
-<?import gui.custumui.LocationChooser?>
-<?import gui.custumui.ConversationChooser?>
+<?import gui.customui.LocationChooser?>
+<?import gui.customui.ConversationChooser?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">

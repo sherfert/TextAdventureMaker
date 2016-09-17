@@ -5,9 +5,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
-<?import gui.custumui.ItemListView?>
-<?import gui.custumui.PersonListView?>
-<?import gui.custumui.InventoryItemListView?>
+<?import gui.customui.ItemListView?>
+<?import gui.customui.PersonListView?>
+<?import gui.customui.InventoryItemListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
   <tabs>

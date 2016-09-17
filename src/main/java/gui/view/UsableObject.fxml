@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 
-<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.UsableObjectController">
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.include.UsableObjectController">
    <children>
       <CheckBox fx:id="editUsingEnabledCB" mnemonicParsing="false" text="Using enabled?" />
       <Label text="Use Successful Text" />
