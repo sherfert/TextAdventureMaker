@@ -454,6 +454,11 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	@Override
+	public void setAdditionalCombineCommands(Combinable<InventoryItem> partner, List<String> commands) {
+		getCombineCommands(partner).commands = commands;
+	}
+
+	@Override
 	@Transient
 	public List<String> getAdditionalUseWithCommands(HasLocation object) {
 		return getUsableHasLocation(object).additionalUseWithCommands;

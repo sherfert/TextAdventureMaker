@@ -3,9 +3,10 @@ package data.interfaces;
 import java.util.List;
 
 import data.Game;
+import data.InventoryItem;
 import data.action.AbstractAction;
 
-/** 
+/**
  * Anything combinable with another class. Usually the same class. Namely
  * {@link InventoryItem}.
  * 
@@ -192,4 +193,15 @@ public interface Combinable<E> extends UsableOrPassivelyUsable {
 	 *            whether it should be removed
 	 */
 	public void setRemoveCombinablesWhenCombinedWith(Combinable<E> partner, boolean remove);
+
+	/**
+	 * Sets the additional commands that can be used to combine with the
+	 * partner.
+	 * 
+	 * @param partner
+	 *            the partner
+	 * @param commands
+	 *            the commands
+	 */
+	public void setAdditionalCombineCommands(Combinable<InventoryItem> partner, List<String> commands);
 }
