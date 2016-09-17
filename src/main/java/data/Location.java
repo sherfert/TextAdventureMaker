@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import data.interfaces.HasLocation;
@@ -48,14 +49,16 @@ public class Location extends NamedDescribedObject {
 	 * location is deleted.
 	 */
 	private List<Way> waysOut;
-	
+
 	/**
-	 * The x coordinate when displaying this location in the map view. Not relevant for the game.
+	 * The x coordinate when displaying this location in the map view. Not
+	 * relevant for the game.
 	 */
 	private double xCoordinate;
 
 	/**
-	 * The x coordinate when displaying this location in the map view. Not relevant for the game.
+	 * The x coordinate when displaying this location in the map view. Not
+	 * relevant for the game.
 	 */
 	private double yCoordinate;
 
@@ -207,8 +210,6 @@ public class Location extends NamedDescribedObject {
 
 	/**
 	 * @return the items
-	 * 
-	 *         FIXME why get items deleted
 	 */
 	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
 	@OrderBy("locationOrder ASC, getId ASC")
@@ -225,7 +226,8 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * @param xCoordinate the xCoordinate to set
+	 * @param xCoordinate
+	 *            the xCoordinate to set
 	 */
 	public void setxCoordinate(double xCoordinate) {
 		this.xCoordinate = xCoordinate;
@@ -240,7 +242,8 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * @param yCoordinate the yCoordinate to set
+	 * @param yCoordinate
+	 *            the yCoordinate to set
 	 */
 	public void setyCoordinate(double yCoordinate) {
 		this.yCoordinate = yCoordinate;
@@ -433,6 +436,19 @@ public class Location extends NamedDescribedObject {
 	 */
 	void removeWayOut(Way wayOut) {
 		this.waysOut.remove(wayOut);
+	}
+
+	/**
+	 * Called to set the location of all items/persons to null.
+	 */
+	@PreRemove
+	private void preRemove() {
+		for (int i = persons.size() - 1; i >= 0; i--) {
+			persons.get(i).setLocation(null);
+		}
+		for (int i = items.size() - 1; i >= 0; i--) {
+			items.get(i).setLocation(null);
+		}
 	}
 
 }
