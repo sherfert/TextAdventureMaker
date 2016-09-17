@@ -1,7 +1,10 @@
 package gui;
 
+import java.util.stream.Collectors;
+
 import data.InventoryItem;
 import data.interfaces.HasLocation;
+import gui.custumui.InventoryItemListView;
 import gui.custumui.ItemListView;
 import gui.custumui.PersonListView;
 import javafx.fxml.FXML;
@@ -12,26 +15,27 @@ import logic.CurrentGameManager;
 /**
  * Controller for one inventory item.
  * 
- * TODO Support to change additionalCombineCommands, combinableInvItems
- * 
  * @author Satia
  */
 public class InventoryItemController extends GameDataController {
 
 	/** The inventory item */
 	private InventoryItem invitem;
-	
+
 	@FXML
 	private TabPane tabPane;
 
 	@FXML
 	private Button removeButton;
-	
+
 	@FXML
 	private ItemListView usableItemsListView;
-	
+
 	@FXML
 	private PersonListView usablePersonsListView;
+
+	@FXML
+	private InventoryItemListView usableInvItemsListView;
 
 	/**
 	 * @param currentGameManager
@@ -41,7 +45,8 @@ public class InventoryItemController extends GameDataController {
 	 * @param item
 	 *            the inventory item to edit
 	 */
-	public InventoryItemController(CurrentGameManager currentGameManager, MainWindowController mwController, InventoryItem item) {
+	public InventoryItemController(CurrentGameManager currentGameManager, MainWindowController mwController,
+			InventoryItem item) {
 		super(currentGameManager, mwController);
 		this.invitem = item;
 	}
@@ -49,19 +54,24 @@ public class InventoryItemController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		removeButton.setOnMouseClicked(
-				(e) -> removeObject(invitem, "Deleting an invenory item", "Do you really want to delete this inventory item?",
-						"This will delete the inventory item, usage information with other inventory items, items and persons, "
-								+ "and actions associated with any of the deleted entities."));
-		
+		removeButton.setOnMouseClicked((e) -> removeObject(invitem, "Deleting an invenory item",
+				"Do you really want to delete this inventory item?",
+				"This will delete the inventory item, usage information with other inventory items, items and persons, "
+						+ "and actions associated with any of the deleted entities."));
+
 		usableItemsListView.initialize(invitem.getItemsUsableWith(),
 				this.currentGameManager.getPersistenceManager().getItemManager()::getAllItems, null,
 				this::usableSelected, (i) -> invitem.ensureHasUsageInformation(i), null);
-		
+
 		usablePersonsListView.initialize(invitem.getPersonsUsableWith(),
 				this.currentGameManager.getPersistenceManager().getPersonManager()::getAllPersons, null,
 				this::usableSelected, (i) -> invitem.ensureHasUsageInformation(i), null);
-		
+
+		usableInvItemsListView.initialize(invitem.getInventoryItemsCombinableWith(),
+				() -> this.currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems()
+						.stream().filter((i) -> invitem != i).collect(Collectors.toList()),
+				null, this::combinableSelected, (i) -> invitem.ensureHasCombineInformation(i), null);
+
 		saveTabIndex(tabPane);
 	}
 
@@ -82,12 +92,10 @@ public class InventoryItemController extends GameDataController {
 			return super.controllerFactory(type);
 		}
 	}
-	
-
 
 	/**
-	 * Opens the usage information for editing. Invoked when an item from the list is double
-	 * clicked.
+	 * Opens the usage information for editing. Invoked when an item from the
+	 * list is double clicked.
 	 * 
 	 * @param o
 	 *            the object
@@ -97,8 +105,27 @@ public class InventoryItemController extends GameDataController {
 			return;
 		}
 
-		UsableHasLocationController controller = new UsableHasLocationController(currentGameManager, mwController, invitem, o);
+		UsableHasLocationController controller = new UsableHasLocationController(currentGameManager, mwController,
+				invitem, o);
 		mwController.pushCenterContent("when used with " + o.getName(), "view/UsableHasLocation.fxml", controller,
+				controller::controllerFactory);
+	}
+
+	/**
+	 * Opens the combining information for editing. Invoked when an item from
+	 * the list is double clicked.
+	 * 
+	 * @param i
+	 *            the other item
+	 */
+	private void combinableSelected(InventoryItem i) {
+		if (i == null) {
+			return;
+		}
+
+		CombinableInvItemController controller = new CombinableInvItemController(currentGameManager, mwController,
+				invitem, i);
+		mwController.pushCenterContent("when combined with " + i.getName(), "view/CombinableInvItem.fxml", controller,
 				controller::controllerFactory);
 	}
 }

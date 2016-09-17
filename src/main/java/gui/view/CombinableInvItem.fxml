@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+<?import gui.custumui.InventoryItemListView?>
+
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
+  <tabs>
+    <Tab text="Combining">
+         <content>
+            <VBox spacing="2.0">
+               <children>
+                  <CheckBox fx:id="editCombiningEnabledCB" mnemonicParsing="false" text="Combining enabled?" />
+                  <CheckBox fx:id="editRemoveItemsCB" mnemonicParsing="false" text="Remove combined items from inventory?" />
+                  <Label text="Combine Successful Text" />
+                  <TextField fx:id="editCombineSuccessfulTextTF" />
+                  <Label text="Combine Forbidden Text" />
+                  <TextField fx:id="editCombineForbiddenTextTF" />
+                  <Label text="Inventory items added to the inventory when combined" />
+                  <InventoryItemListView fx:id="newItemsListView" />
+               </children>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </VBox>
+         </content>
+      </Tab>
+  </tabs>
+</TabPane>

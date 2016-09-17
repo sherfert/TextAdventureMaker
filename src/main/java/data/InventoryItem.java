@@ -498,7 +498,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	public void removeAdditionalActionFromUseWith(HasLocation object, AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.remove(action);
 	}
-	
+
 	@Override
 	@Transient
 	public void setAdditionalUseWithCommands(HasLocation object, List<String> commands) {
@@ -659,6 +659,16 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	/**
+	 * Ensure that usage combine exists for an InventoryItem.
+	 * 
+	 * @param item
+	 *            the item.
+	 */
+	public void ensureHasCombineInformation(InventoryItem item) {
+		getCombinableInventoryItem(item);
+	}
+
+	/**
 	 * Obtains all items for which additional information for using them exists.
 	 * 
 	 * @return a list of items.
@@ -677,6 +687,17 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	@Transient
 	public List<Person> getPersonsUsableWith() {
 		return new ArrayList<>(usablePersons.keySet());
+	}
+
+	/**
+	 * Obtains all inventory items for which additional information for
+	 * combining them exists.
+	 * 
+	 * @return a list of inventory items.
+	 */
+	@Transient
+	public List<InventoryItem> getInventoryItemsCombinableWith() {
+		return new ArrayList<>(combinableInventoryItems.keySet());
 	}
 
 	/**

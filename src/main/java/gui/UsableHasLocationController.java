@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
- * Controller for one item.
+ * Controller for the usage of an inventory item with a person or object.
  * 
  * TODO Support to change additionalUseWithActions
  * 

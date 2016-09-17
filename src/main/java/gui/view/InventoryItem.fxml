@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import gui.custumui.ItemListView?>
 <?import gui.custumui.PersonListView?>
+<?import gui.custumui.InventoryItemListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
   <tabs>
@@ -45,6 +46,11 @@
       <Tab text="Using with a person">
          <content>
             <PersonListView fx:id="usablePersonsListView" />
+         </content>
+      </Tab>
+      <Tab text="Combining with an inventory item">
+         <content>
+            <InventoryItemListView fx:id="usableInvItemsListView" />
          </content>
       </Tab>
   </tabs>
