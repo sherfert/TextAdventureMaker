@@ -152,7 +152,7 @@ public class MainWindowController {
 	}
 
 	/**
-	 * Resets the content of the center
+	 * Resets the content of the center.
 	 */
 	private void resetCenterGUI() {
 		// Create all controllers
@@ -204,7 +204,7 @@ public class MainWindowController {
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
-		pushCenterContent("Game Configuration", fxml, gameDetailsController,  gameDetailsController::controllerFactory);
+		pushCenterContent("Game Configuration", fxml, gameDetailsController, gameDetailsController::controllerFactory);
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class MainWindowController {
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
-		pushCenterContent("Locations", fxml, locationsController,  locationsController::controllerFactory);
+		pushCenterContent("Locations", fxml, locationsController, locationsController::controllerFactory);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class MainWindowController {
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
-		pushCenterContent("Ways", fxml, waysController,  waysController::controllerFactory);
+		pushCenterContent("Ways", fxml, waysController, waysController::controllerFactory);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class MainWindowController {
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
-		pushCenterContent("Items", fxml, itemsController,  itemsController::controllerFactory);
+		pushCenterContent("Items", fxml, itemsController, itemsController::controllerFactory);
 	}
 
 	/**
@@ -248,9 +248,10 @@ public class MainWindowController {
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
-		pushCenterContent("Inventory items", fxml, inventoryItemsController,  inventoryItemsController::controllerFactory);
+		pushCenterContent("Inventory items", fxml, inventoryItemsController,
+				inventoryItemsController::controllerFactory);
 	}
-	
+
 	/**
 	 * Loads the persons into the center.
 	 */
@@ -259,9 +260,9 @@ public class MainWindowController {
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
-		pushCenterContent("Persons", fxml, personsController,  personsController::controllerFactory);
+		pushCenterContent("Persons", fxml, personsController, personsController::controllerFactory);
 	}
-	
+
 	/**
 	 * Loads the conversations into the center.
 	 */
@@ -270,7 +271,7 @@ public class MainWindowController {
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
-		pushCenterContent("Conversations", fxml, conversationsController,  conversationsController::controllerFactory);
+		pushCenterContent("Conversations", fxml, conversationsController, conversationsController::controllerFactory);
 	}
 
 	/**
@@ -389,11 +390,19 @@ public class MainWindowController {
 		// present.
 		if (file != null) {
 			try {
-				JARCreator.copyGameDBIntoGameJAR(currentGameManager.getOpenFile(), file);
+				currentGameManager.disconnectDoReconnect(() -> {
+					JARCreator.copyGameDBIntoGameJAR(currentGameManager.getOpenFile(), file);
+				});
+				// Show a success message.
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Export Successful");
+				alert.setHeaderText("The game file was exported!");
+				alert.setContentText(
+						"To execute the game, double click it or run 'java -jar <name-of-the-file>' in a command line.");
+				alert.showAndWait();
 			} catch (IOException e) {
 				// This very probably means that the "Game_missing_db.jar" was
 				// removed
-
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Export Error");
 				alert.setHeaderText("The game file could not be exported!");
@@ -401,13 +410,10 @@ public class MainWindowController {
 						"Make sure that the file \"Game_missing_db.jar\" is present in the same folder as the executable of TextAdventureMaker.");
 				alert.showAndWait();
 			}
-			// Show a success message.
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Export Successful");
-			alert.setHeaderText("The game file was exported!");
-			alert.setContentText(
-					"To execute the game, double click it or run 'java -jar <name-of-the-file>' in a command line.");
-			alert.showAndWait();
+			// After that, the DB has been reconnected and the GUI is
+			// in a detached state.
+			// Therefore, we reset the GUI state.
+			resetCenterGUI();
 		}
 	}
 
@@ -426,7 +432,7 @@ public class MainWindowController {
 			alert.setContentText(e.getMessage());
 			alert.showAndWait();
 		}
-		// After starting the game, the DB has been reconnected and the GUI is
+		// After that, the DB has been reconnected and the GUI is
 		// in a detached state.
 		// Therefore, we reset the GUI state.
 		resetCenterGUI();

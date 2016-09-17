@@ -15,7 +15,7 @@ import playing.menu.LoadSaveManager;
  * This class maintains the state of the currently opened game file and forwards
  * corresponding calls to the persistence.
  * 
- * TODO autosave every X minutes, where X is a configurable property
+ * XXX Autosave every X minutes, where X is a configurable property
  * 
  * @author Satia
  */
@@ -104,20 +104,22 @@ public class CurrentGameManager {
 	}
 
 	/**
-	 * Starts the game from within the TextAdventureMaker.
+	 * Disconnects from the DB, carries out the given action, and reconnects.
+	 * 
+	 * @param doSth
+	 *            what to do in-between
+	 * @throws IOException
+	 *             if the given action produces an {@link IOException}
 	 */
-	public void playGame() throws IOException {
+	public void disconnectDoReconnect(Do doSth) throws IOException {
 		// Be sure to commit the latest changes
 		persistenceManager.updateChanges();
 
 		// Disconnect before copying
 		persistenceManager.disconnect();
 
-		Path from = openFile.getAbsoluteFile().toPath();
-		Path to = new File(openFile.getParent() + File.separator + gameName + "_temp" + LoadSaveManager.H2_ENDING)
-				.toPath();
 		try {
-			Files.copy(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			doSth.doSth();
 		} finally {
 			// Reconnect
 			String fileName = openFile.getAbsolutePath();
@@ -129,9 +131,19 @@ public class CurrentGameManager {
 				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not open db file.", e);
 			}
 		}
+	}
 
-		LoadSaveManager.main(new String[] { gameName + "_temp" });
-
+	/**
+	 * Starts the game from within the TextAdventureMaker.
+	 */
+	public void playGame() throws IOException {
+		disconnectDoReconnect(() -> {
+			Path from = openFile.getAbsoluteFile().toPath();
+			Path to = new File(openFile.getParent() + File.separator + gameName + "_temp" + LoadSaveManager.H2_ENDING)
+					.toPath();
+			Files.copy(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+			LoadSaveManager.main(new String[] { gameName + "_temp" });
+		});
 	}
 
 }

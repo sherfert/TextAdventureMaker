@@ -37,13 +37,12 @@ public class JARCreator {
 		// Copy game db into temp folder with name game.mv.db
 		// create a temp file
 		File temp = new File("game" + LoadSaveManager.H2_ENDING);
-
 		try {
 			Files.copy(gameDB.toPath(), temp.toPath());
 		} catch (IOException e) {
 			Logger.getLogger(JARCreator.class.getName()).log(Level.SEVERE,
 					"Could not copy game db into temporary file. Aborting.", e);
-			return;
+			throw e;
 		}
 
 		String jarSourceS = System.getProperty("user.dir") + File.separator + "Game_missing_db.jar";

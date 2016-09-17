@@ -16,7 +16,6 @@ import java.net.URL;
  * TODO Font sizes in Linux
  * 
  * FIXME gui/view not copied when compiling with maven (just on Linux?)
- * TODO Test Icon with maven
  * 
  * @author Satia
  */
