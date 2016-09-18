@@ -178,16 +178,6 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * Sets the pattern for the current replacer.
-	 * 
-	 * @param pattern
-	 *            the matched pattern
-	 */
-	public void setPattern(String pattern) {
-		currentReplacer.setPattern(pattern);
-	}
-
-	/**
 	 * Starts playing the game. Returns immediately.
 	 */
 	public void start() {

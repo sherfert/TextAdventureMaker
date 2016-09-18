@@ -193,14 +193,14 @@ public class GeneralParser {
 				originalCommand = true;
 
 				// Save the pattern in the replacer
-				gamePlayer.setPattern(matcher.pattern().toString());
+				gamePlayer.getCurrentReplacer().setPattern(matcher.pattern().toString());
 			} else if (additionalCommandsMatcher.matches()) {
 				params = getParameters(additionalCommandsMatcher, commandType.numberOfParameters);
 				matchFound = true;
 				originalCommand = false;
 
 				// Save the pattern in the replacer
-				gamePlayer.setPattern(additionalCommandsMatcher.pattern().toString());
+				gamePlayer.getCurrentReplacer().setPattern(additionalCommandsMatcher.pattern().toString());
 			}
 
 			// Either a normal or an additional commandType matched
