@@ -23,7 +23,17 @@ public class Inventory extends Command {
 	 *            the game player
 	 */
 	public Inventory(GamePlayer gamePlayer) {
-		super(gamePlayer);
+		super(gamePlayer, 0);
+	}
+	
+	@Override
+	public String getHelpText() {
+		return this.gamePlayer.getGame().getInventoryHelpText();
+	}
+
+	@Override
+	public List<String> getCommands() {
+		return this.gamePlayer.getGame().getInventoryCommands();
 	}
 
 	@Override
@@ -34,7 +44,7 @@ public class Inventory extends Command {
 
 	@Override
 	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != 0) {
+		if (parameters.length != numberOfParameters) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Execute: wrong number of parameters");
 			return;

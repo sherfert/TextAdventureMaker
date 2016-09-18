@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import data.Game;
 import playing.GamePlayer;
-import playing.parser.GeneralParser.CommandRecExec;
 import playing.parser.Parameter;
 import utility.CommandRegExConverter;
 
@@ -24,7 +23,17 @@ public class Help extends Command {
 	 *            the game player
 	 */
 	public Help(GamePlayer gamePlayer) {
-		super(gamePlayer);
+		super(gamePlayer, 0);
+	}
+	
+	@Override
+	public String getHelpText() {
+		return this.gamePlayer.getGame().getHelpHelpText();
+	}
+
+	@Override
+	public List<String> getCommands() {
+		return this.gamePlayer.getGame().getHelpCommands();
 	}
 
 	@Override
@@ -35,7 +44,7 @@ public class Help extends Command {
 
 	@Override
 	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != 0) {
+		if (parameters.length != numberOfParameters) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Execute: wrong number of parameters");
 		}
@@ -53,8 +62,7 @@ public class Help extends Command {
 
 		// Iterate through all commands and all their textual commands
 		// Also include exit
-		for (CommandRecExec command : gamePlayer.getParser()
-				.getCommandRecExecs()) {
+		for (Command command : gamePlayer.getCommands()) {
 			printCommandHelp(command.getCommandHelpText(),
 					command.getTextualCommands(), game);
 		}

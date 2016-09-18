@@ -1,5 +1,6 @@
 package playing.command;
 
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,17 @@ public class Use extends Command {
 	 *            the game player
 	 */
 	public Use(GamePlayer gamePlayer) {
-		super(gamePlayer);
+		super(gamePlayer, 1);
+	}
+	
+	@Override
+	public String getHelpText() {
+		return this.gamePlayer.getGame().getUseHelpText();
+	}
+
+	@Override
+	public List<String> getCommands() {
+		return this.gamePlayer.getGame().getUseCommands();
 	}
 
 	@Override
@@ -35,7 +46,7 @@ public class Use extends Command {
 
 	@Override
 	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != 1) {
+		if (parameters.length != numberOfParameters) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Execute: wrong number of parameters");
 			return;

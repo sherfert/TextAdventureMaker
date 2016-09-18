@@ -1,6 +1,7 @@
 package playing.command;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +22,17 @@ public class LookAround extends Command {
 	 *            the game player
 	 */
 	public LookAround(GamePlayer gamePlayer) {
-		super(gamePlayer);
+		super(gamePlayer, 0);
+	}
+	
+	@Override
+	public String getHelpText() {
+		return this.gamePlayer.getGame().getLookAroundHelpText();
+	}
+
+	@Override
+	public List<String> getCommands() {
+		return this.gamePlayer.getGame().getLookAroundCommands();
 	}
 
 	@Override
@@ -32,7 +43,7 @@ public class LookAround extends Command {
 
 	@Override
 	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != 0) {
+		if (parameters.length != numberOfParameters) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Execute: wrong number of parameters");
 			return;

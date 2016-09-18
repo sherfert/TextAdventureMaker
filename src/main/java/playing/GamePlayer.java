@@ -1,10 +1,11 @@
 package playing;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import data.Game;
 import persistence.PersistenceManager;
 import playing.InputOutput.GeneralIOManager;
 import playing.command.Command;
@@ -19,7 +20,6 @@ import playing.command.Use;
 import playing.command.UseWithCombine;
 import playing.menu.MenuShower;
 import playing.parser.GeneralParser;
-import data.Game;
 
 /**
  * Manages the actual commands needed to play a game and access to any classes
@@ -54,9 +54,9 @@ public class GamePlayer implements GeneralIOManager {
 	private GeneralParser parser;
 
 	/**
-	 * All commands mapped to their class type for easy retrieval.
+	 * All commands.
 	 */
-	private Map<Class<? extends Command>, Command> commands;
+	private List<Command> commands;
 
 	/**
 	 * A reference to the currently active persistenceManager
@@ -77,18 +77,6 @@ public class GamePlayer implements GeneralIOManager {
 		this.persistenceManager = pm;
 		this.ms = ms;
 		this.currentReplacer = new PlaceholderReplacer();
-
-		// Create all commands
-		commands = new HashMap<>();
-		commands.put(Help.class, new Help(this));
-		commands.put(Inspect.class, new Inspect(this));
-		commands.put(Inventory.class, new Inventory(this));
-		commands.put(LookAround.class, new LookAround(this));
-		commands.put(Move.class, new Move(this));
-		commands.put(Take.class, new Take(this));
-		commands.put(TalkTo.class, new TalkTo(this));
-		commands.put(Use.class, new Use(this));
-		commands.put(UseWithCombine.class, new UseWithCombine(this));
 	}
 
 	/**
@@ -107,6 +95,36 @@ public class GamePlayer implements GeneralIOManager {
 	public void setGame(Game game) {
 		this.game = game;
 		this.parser = new GeneralParser(this);
+
+		/*
+		 * The ordering must be chosen carefully.
+		 *
+		 * E.g. should USEWITHCOMBINE come before USE, as USEWITHCOMBINE could
+		 * have "use X with Y" as a commandType and USE could have "use X".
+		 * Changing that order parsing "use A with b" would result in an answer
+		 * like "there is no A with B here".
+		 *
+		 * On the other hand, if "look around" is a LOOKAROUND commandType, it
+		 * should come before INSPECT if "look X" is an INSPECT commandType,
+		 * otherwise you would hear "there is no around here". The tradeoff is
+		 * that no item can be named "around".
+		 *
+		 * Generally speaking, commands with more parameters should often come
+		 * first.
+		 */
+
+		// Create all commands
+		commands = new ArrayList<>();
+
+		commands.add(new UseWithCombine(this));
+		commands.add(new Move(this));
+		commands.add(new Take(this));
+		commands.add(new Use(this));
+		commands.add(new TalkTo(this));
+		commands.add(new LookAround(this));
+		commands.add(new Inspect(this));
+		commands.add(new Inventory(this));
+		commands.add(new Help(this));
 	}
 
 	/**
@@ -145,14 +163,12 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * Retrieves the command of that class.
+	 * Retrieves the commands.
 	 * 
-	 * @param clazz
-	 *            the class of the command to get.
 	 * @return the command.
 	 */
-	public Command getCommand(Class<? extends Command> clazz) {
-		return commands.get(clazz);
+	public List<Command> getCommands() {
+		return commands;
 	}
 
 	/**

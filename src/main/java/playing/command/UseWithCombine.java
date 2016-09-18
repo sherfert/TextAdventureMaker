@@ -3,6 +3,7 @@
  */
 package playing.command;
 
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,17 @@ public class UseWithCombine extends Command {
 	 *            the game player
 	 */
 	public UseWithCombine(GamePlayer gamePlayer) {
-		super(gamePlayer);
+		super(gamePlayer, 2);
+	}
+	
+	@Override
+	public String getHelpText() {
+		return this.gamePlayer.getGame().getUseWithCombineHelpText();
+	}
+
+	@Override
+	public List<String> getCommands() {
+		return this.gamePlayer.getGame().getUseWithCombineCommands();
 	}
 
 	@Override
@@ -48,7 +59,7 @@ public class UseWithCombine extends Command {
 
 	@Override
 	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != 2) {
+		if (parameters.length != numberOfParameters) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Execute: wrong number of parameters");
 			return;
 		}
