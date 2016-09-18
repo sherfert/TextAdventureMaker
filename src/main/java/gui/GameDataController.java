@@ -50,6 +50,7 @@ public abstract class GameDataController {
 	private static final String NODE_PROPERTIES_KEY_ERROR_TOOLTIP = "Error-Tooltip";
 	private static final String NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER = "Error-Tooltip-FocusListener";
 
+	private static final String COMMAND_EMPTY = "At least one command must be defined";
 	private static final String COMMAND_MULTI_WHITESPACE = "A command must not have mutiple white spaces";
 	private static final String COMMAND_WHITESPACE_BEGINNING_END = "A command must not have white space in the beginning or end";
 	private static final String COMMAND_INVALID_CHAR = "Only lowercase letters a-z and the space character are allowed.\n"
@@ -246,54 +247,68 @@ public abstract class GameDataController {
 	 * passed input node. Otherwise the given method is executed to set the
 	 * commands.
 	 * 
-	 * TODO param if empty field is OK.
-	 * XXX check if a command masks another and warn in that case.
-	 * 
 	 * @param commandsText
 	 *            the input text for the commands as a single 'n'-separated
 	 *            String.
 	 * @param paramNum
 	 *            the number of parameters this command expects.
+	 * @param allowEmpty
+	 *            if it is allowed to enter no command
 	 * @param inputNode
 	 *            the input node used to type the commands
 	 * @param setter
 	 *            the method to call if the commands are valid
 	 */
-	protected void updateGameCommands(String commandsText, int paramNum, Node inputNode, StringListSetter setter) {
+	protected void updateGameCommands(String commandsText, int paramNum, boolean allowEmpty, Node inputNode,
+			StringListSetter setter) {
+		boolean errorFound = false;
 		String[] lines = commandsText.split("\\n");
-		if (Arrays.stream(lines).anyMatch((s) -> MULTIPLE_BLANKS.matcher(s).find())) {
-			showError(inputNode, COMMAND_MULTI_WHITESPACE);
-		} else if (Arrays.stream(lines).anyMatch((s) -> BLANKS_BEGINNING_END.matcher(s).find())) {
-			showError(inputNode, COMMAND_WHITESPACE_BEGINNING_END);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !VALID_SEQS.matcher(s).matches())) {
-			showError(inputNode, COMMAND_INVALID_CHAR);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !CHAR.matcher(s).find())) {
-			showError(inputNode, COMMAND_NO_WORD);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
-			showError(inputNode, COMMAND_UNMATCHING_BRACKETS);
-		} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
-			showError(inputNode, COMMAND_UNMATCHING_BRACKETS);
+
+		if (commandsText.isEmpty()) {
+			if (!allowEmpty) {
+				errorFound = true;
+				showError(inputNode, COMMAND_EMPTY);
+			}
 		} else {
-			boolean errorFound = false;
-			// For each param, check if it has the right number of occurrences
-			for (int i = 0; i < 2; i++) {
-				int num = i;
-				int expectedCount = i < paramNum ? 1 : 0;
-				if (Arrays.stream(lines).anyMatch((s) -> !checkParamOccurrences(s, num, expectedCount))) {
-					errorFound = true;
-					String param = i == 0 ? "<A>" : "<B>";
-					String err = expectedCount == 0 ? COMMAND_PARAM_WRONG_NOT_ZERO : COMMAND_PARAM_WRONG_NOT_ONE;
-					showError(inputNode, String.format(err, param));
-					break;
+			// At least one command was entered
+			if (Arrays.stream(lines).anyMatch((s) -> MULTIPLE_BLANKS.matcher(s).find())) {
+				errorFound = true;
+				showError(inputNode, COMMAND_MULTI_WHITESPACE);
+			} else if (Arrays.stream(lines).anyMatch((s) -> BLANKS_BEGINNING_END.matcher(s).find())) {
+				errorFound = true;
+				showError(inputNode, COMMAND_WHITESPACE_BEGINNING_END);
+			} else if (Arrays.stream(lines).anyMatch((s) -> !VALID_SEQS.matcher(s).matches())) {
+				errorFound = true;
+				showError(inputNode, COMMAND_INVALID_CHAR);
+			} else if (Arrays.stream(lines).anyMatch((s) -> !CHAR.matcher(s).find())) {
+				errorFound = true;
+				showError(inputNode, COMMAND_NO_WORD);
+			} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
+				errorFound = true;
+				showError(inputNode, COMMAND_UNMATCHING_BRACKETS);
+			} else {
+				// For each param, check if it has the right number of
+				// occurrences
+				for (int i = 0; i < 2; i++) {
+					int num = i;
+					int expectedCount = i < paramNum ? 1 : 0;
+					if (Arrays.stream(lines).anyMatch((s) -> !checkParamOccurrences(s, num, expectedCount))) {
+						errorFound = true;
+						String param = i == 0 ? "<A>" : "<B>";
+						String err = expectedCount == 0 ? COMMAND_PARAM_WRONG_NOT_ZERO : COMMAND_PARAM_WRONG_NOT_ONE;
+						showError(inputNode, String.format(err, param));
+						break;
+					}
 				}
 			}
+		}
 
-			if (!errorFound) {
-				hideError(inputNode);
-				List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
-						.collect(Collectors.toList());
-				setter.setList(newCommands);
-			}
+		// Hide error message and set value in DB if everything OK
+		if (!errorFound) {
+			hideError(inputNode);
+			List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
+					.collect(Collectors.toList());
+			setter.setList(newCommands);
 		}
 	}
 

@@ -36,6 +36,8 @@ import data.interfaces.UsableWithHasLocation;
 /**
  * Any item that can appear in your inventory. These items are not in locations.
  * 
+ * TODO inv items should be used with ways, too
+ * 
  * @author Satia
  */
 @Entity

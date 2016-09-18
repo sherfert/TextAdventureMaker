@@ -73,8 +73,8 @@ public class UsableHasLocationController extends GameDataController {
 		editUsingEnabledCB.selectedProperty().addListener((f, o, n) -> item.setUsingEnabledWith(object, n));
 
 		editUseWithCommandsTA.setText(getCommandString(item.getAdditionalUseWithCommands(object)));
-		editUseWithCommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, editUseWithCommandsTA,
-				(cs) -> item.setAdditionalUseWithCommands(object, cs)));
+		editUseWithCommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
+				editUseWithCommandsTA, (cs) -> item.setAdditionalUseWithCommands(object, cs)));
 
 		saveTabIndex(tabPane);
 	}

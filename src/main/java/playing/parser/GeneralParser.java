@@ -328,6 +328,7 @@ public class GeneralParser {
 		// Set the input for the game players' replacer
 		gamePlayer.setInput(input);
 
+		// TODO better handling for matching of multiple commands
 		for (CommandRecExec cmdRE : commandRecExecs) {
 			if (cmdRE.recognizeAndExecute(input)) {
 				return true;

@@ -91,7 +91,7 @@ public class ItemController extends GameDataController {
 
 		editTakeCommandsTA.setText(getCommandString(item.getAdditionalTakeCommands()));
 		editTakeCommandsTA.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 1, editTakeCommandsTA, item::setAdditionalTakeCommands));
+				(f, o, n) -> updateGameCommands(n, 1, true, editTakeCommandsTA, item::setAdditionalTakeCommands));
 
 		pickUpItemsListView.initialize(item.getPickUpItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,

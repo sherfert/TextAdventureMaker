@@ -84,7 +84,7 @@ public class WayController extends GameDataController {
 
 		editMoveCommandsTA.setText(getCommandString(way.getAdditionalTravelCommands()));
 		editMoveCommandsTA.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 1, editMoveCommandsTA, way::setAdditionalTravelCommands));
+				(f, o, n) -> updateGameCommands(n, 1, true, editMoveCommandsTA, way::setAdditionalTravelCommands));
 		
 		saveTabIndex(tabPane);
 	}

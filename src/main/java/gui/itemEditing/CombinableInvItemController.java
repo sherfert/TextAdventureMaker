@@ -101,12 +101,12 @@ public class CombinableInvItemController extends GameDataController {
 		combine2Label.setText("Commands for combining " + item2.getName() + " with " + item1.getName());
 
 		editCombine1CommandsTA.setText(getCommandString(item1.getAdditionalCombineCommands(item2)));
-		editCombine1CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, editCombine1CommandsTA,
-				(cs) -> item1.setAdditionalCombineCommands(item2, cs)));
+		editCombine1CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
+				editCombine1CommandsTA, (cs) -> item1.setAdditionalCombineCommands(item2, cs)));
 
 		editCombine2CommandsTA.setText(getCommandString(item2.getAdditionalCombineCommands(item1)));
-		editCombine2CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, editCombine2CommandsTA,
-				(cs) -> item2.setAdditionalCombineCommands(item1, cs)));
+		editCombine2CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
+				editCombine2CommandsTA, (cs) -> item2.setAdditionalCombineCommands(item1, cs)));
 
 		saveTabIndex(tabPane);
 	}

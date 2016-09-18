@@ -57,6 +57,6 @@ public class UsableObjectController extends GameDataController {
 		editUseCommandsTA.setText(getCommandString(object.getAdditionalUseCommands()));
 
 		editUseCommandsTA.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 1, editUseCommandsTA, object::setAdditionalUseCommands));
+				(f, o, n) -> updateGameCommands(n, 1, true, editUseCommandsTA, object::setAdditionalUseCommands));
 	}
 }

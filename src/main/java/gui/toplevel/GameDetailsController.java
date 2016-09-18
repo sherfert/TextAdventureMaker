@@ -267,25 +267,25 @@ public class GameDetailsController extends GameDataController {
 		gameTitleField.textProperty().addListener((f, o, n) -> updateGameTitle(n));
 
 		useWithCommandsTextField.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 2, useWithCommandsTextField, game::setUseWithCombineCommands));
+				(f, o, n) -> updateGameCommands(n, 2, false, useWithCommandsTextField, game::setUseWithCombineCommands));
 		moveCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, moveCommandsTextField, game::setMoveCommands));
+				.addListener((f, o, n) -> updateGameCommands(n, 1, false, moveCommandsTextField, game::setMoveCommands));
 		takeCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, takeCommandsTextField, game::setTakeCommands));
+				.addListener((f, o, n) -> updateGameCommands(n, 1, false, takeCommandsTextField, game::setTakeCommands));
 		useCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, useCommandsTextField, game::setUseCommands));
+				.addListener((f, o, n) -> updateGameCommands(n, 1, false, useCommandsTextField, game::setUseCommands));
 		talkCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, talkCommandsTextField, game::setTalkToCommands));
+				.addListener((f, o, n) -> updateGameCommands(n, 1, false, talkCommandsTextField, game::setTalkToCommands));
 		lookAroundCommandsTextField.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 0, lookAroundCommandsTextField, game::setLookAroundCommands));
+				(f, o, n) -> updateGameCommands(n, 0, false, lookAroundCommandsTextField, game::setLookAroundCommands));
 		inspectCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, inspectCommandsTextField, game::setInspectCommands));
+				.addListener((f, o, n) -> updateGameCommands(n, 1, false, inspectCommandsTextField, game::setInspectCommands));
 		inventoryCommandsTextField.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 0, inventoryCommandsTextField, game::setInventoryCommands));
+				(f, o, n) -> updateGameCommands(n, 0, false, inventoryCommandsTextField, game::setInventoryCommands));
 		helpCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 0, helpCommandsTextField, game::setHelpCommands));
+				.addListener((f, o, n) -> updateGameCommands(n, 0, false, helpCommandsTextField, game::setHelpCommands));
 		exitCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 0, exitCommandsTextField, game::setExitCommands));
+				.addListener((f, o, n) -> updateGameCommands(n, 0, false, exitCommandsTextField, game::setExitCommands));
 	}
 
 	/**

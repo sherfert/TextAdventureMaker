@@ -74,7 +74,7 @@ public class PersonController extends GameDataController {
 
 		editTalkCommandsTA.setText(getCommandString(person.getAdditionalTalkToCommands()));
 		editTalkCommandsTA.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 1, editTalkCommandsTA, person::setAdditionalTalkToCommands));
+				(f, o, n) -> updateGameCommands(n, 1, true, editTalkCommandsTA, person::setAdditionalTalkToCommands));
 		
 		saveTabIndex(tabPane);
 	}
