@@ -1,10 +1,13 @@
 package playing.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import playing.GamePlayer;
 import playing.command.Command;
+import playing.command.CommandExecution;
 import playing.parser.PatternGenerator.MultiPattern;
 
 /**
@@ -56,16 +59,28 @@ public class GeneralParser {
 		if (exitPattern.matcher(input).matches()) {
 			return false;
 		}
-
-		// Set the input for the game players' replacer
-		gamePlayer.setInput(input);
+		
 
 		// TODO better handling for matching of multiple commands
+		// Set the input for the game players' replacer
+		gamePlayer.getCurrentReplacer().reset();
+		gamePlayer.getCurrentReplacer().setInput(input);
+		
+		// Obtain all execution objects
+		List<CommandExecution> executions = new ArrayList<>();
 		for (Command command : gamePlayer.getCommands()) {
-			if (command.recognizeAndExecute(input)) {
+			executions.add(command.newExecution(input));
+		}
+		
+		// See if they match and execute
+		for(CommandExecution e : executions) {
+			if(e.matches()) {
+				e.execute();
 				return true;
 			}
 		}
+
+		
 		// No commandType matched
 		gamePlayer.noCommand();
 		return true;

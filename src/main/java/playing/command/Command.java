@@ -1,19 +1,16 @@
 package playing.command;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 
 import exception.DBClosedException;
 import persistence.PersistenceManager;
 import playing.GamePlayer;
 import playing.InputOutput;
 import playing.PlaceholderReplacer;
-import playing.parser.GeneralParser;
 import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 import playing.parser.PatternGenerator.MultiPattern;
@@ -40,7 +37,7 @@ public abstract class Command {
 	 * The pattern for recognizing with additional commands.
 	 */
 	protected final MultiPattern additionalCommandsPattern;
-	
+
 	/**
 	 * The textual commands.
 	 */
@@ -85,7 +82,7 @@ public abstract class Command {
 		this.currentReplacer = gamePlayer.getCurrentReplacer();
 		this.io = gamePlayer.getIo();
 		this.persistenceManager = gamePlayer.getPersistenceManager();
-		
+
 		this.numberOfParameters = numberOfParameters;
 
 		this.commandHelpText = getHelpText();
@@ -100,14 +97,14 @@ public abstract class Command {
 		}
 		this.additionalCommandsPattern = PatternGenerator.getPattern(commands);
 	}
-	
+
 	/**
 	 * Retrieves the particular help text from the game.
 	 * 
 	 * @return the help text for this command
 	 */
 	protected abstract String getHelpText();
-	
+
 	/**
 	 * Retrieves the particular textual commands from the game.
 	 * 
@@ -152,79 +149,14 @@ public abstract class Command {
 	}
 
 	/**
-	 * Tests if the input matches the pattern and executes the method in this
-	 * case. This method is private, but used by the outer class.
-	 *
+	 * Creates a new command execution which can be used for further testing and
+	 * executing of the actual command with the given input.
+	 * 
 	 * @param input
-	 *            the input
-	 * @return if the input matches the commandType's pattern.
+	 *            the user input
+	 * @return a new CommandExecution.
 	 */
-	public boolean recognizeAndExecute(String input) {
-		Matcher matcher = pattern.matcher(input);
-		Matcher additionalCommandsMatcher = additionalCommandsPattern.matcher(input);
-
-		boolean matchFound = false;
-		boolean originalCommand = false;
-		Parameter[] params = null;
-		if (matcher.matches()) {
-			params = getParameters(matcher, numberOfParameters);
-			matchFound = true;
-			originalCommand = true;
-
-			// Save the pattern in the replacer
-			gamePlayer.getCurrentReplacer().setPattern(matcher.pattern().toString());
-		} else if (additionalCommandsMatcher.matches()) {
-			params = getParameters(additionalCommandsMatcher, numberOfParameters);
-			matchFound = true;
-			originalCommand = false;
-
-			// Save the pattern in the replacer
-			gamePlayer.getCurrentReplacer().setPattern(additionalCommandsMatcher.pattern().toString());
-		}
-
-		// Either a normal or an additional commandType matched
-		if (matchFound) {
-			execute(originalCommand, params);
-			// This commandType matches
-			return true;
-		}
-		// This commandType did not match
-		return false;
-	}
-	
-	/**
-	 * Extracts the used parameters from a given matcher.
-	 *
-	 * @param matcher
-	 *            the matcher that must have matched an input
-	 * @param numberOfParameters
-	 *            the expected number of parameters
-	 * @return an array with the typed parameters
-	 */
-	public static Parameter[] getParameters(Matcher matcher, int numberOfParameters) {
-		/*
-		 * By convention, all capturing groups that denote parameters must be
-		 * named with o0, o1, o2, and so on, without leaving gaps. This can be
-		 * used to pass the parameter to the command function together with its
-		 * capturing group title for further processing.
-		 */
-
-		List<Parameter> parameters = new ArrayList<>(2);
-		try {
-			for (int i = 0; i < numberOfParameters; i++) {
-				String groupName = "o" + i;
-				String identifier;
-				if ((identifier = matcher.group(groupName)) != null) {
-					parameters.add(new Parameter(identifier, groupName));
-				} else {
-					break;
-				}
-			}
-		} catch (IllegalArgumentException e) {
-			Logger.getLogger(GeneralParser.class.getName()).log(Level.SEVERE,
-					"Capturing group in the range of expected parameters not found.", e);
-		}
-
-		return parameters.toArray(new Parameter[0]);
+	public CommandExecution newExecution(String input) {
+		return new CommandExecution(this, input);
 	}
 }

@@ -183,17 +183,6 @@ public class GamePlayer implements GeneralIOManager {
 	}
 
 	/**
-	 * Sets the input for the current replacer. The other fields will be reset.
-	 * 
-	 * @param input
-	 *            the typed input
-	 */
-	public void setInput(String input) {
-		currentReplacer.reset();
-		currentReplacer.setInput(input);
-	}
-
-	/**
 	 * Starts playing the game. Returns immediately.
 	 */
 	public void start() {
