@@ -6,11 +6,11 @@ import data.Game;
 import data.action.AbstractAction;
 
 /**
- * Anything usable with an {@link HasLocation} (Items or Persons) in the game.
+ * Anything usable with an {@link PassivelyUsable} in the game.
  * 
  * @author Satia
  */
-public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
+public interface UsableWithSomething extends Identifiable {
 	/**
 	 * Adds an additional action for that item
 	 * 
@@ -19,7 +19,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToUseWith(HasLocation object, AbstractAction action);
+	public void addAdditionalActionToUseWith(PassivelyUsable object, AbstractAction action);
 
 	/**
 	 * Adds an additional command that can be used to use this with something
@@ -30,7 +30,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param command
 	 *            the command
 	 */
-	public void addAdditionalUseWithCommand(HasLocation object, String command);
+	public void addAdditionalUseWithCommand(PassivelyUsable object, String command);
 
 	/**
 	 * @param object
@@ -38,7 +38,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the additional actions for that object.
 	 */
-	public List<AbstractAction> getAdditionalActionsFromUseWith(HasLocation object);
+	public List<AbstractAction> getAdditionalActionsFromUseWith(PassivelyUsable object);
 
 	/**
 	 * @param object
@@ -46,7 +46,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the additional use with commands.
 	 */
-	public List<String> getAdditionalUseWithCommands(HasLocation object);
+	public List<String> getAdditionalUseWithCommands(PassivelyUsable object);
 
 	/**
 	 * @param object
@@ -54,7 +54,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the forbiddenText for that object or {@code null}.
 	 */
-	public String getUseWithForbiddenText(HasLocation object);
+	public String getUseWithForbiddenText(PassivelyUsable object);
 
 	/**
 	 * @param object
@@ -62,7 +62,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * 
 	 * @return the successfulText for that object or {@code null}.
 	 */
-	public String getUseWithSuccessfulText(HasLocation object);
+	public String getUseWithSuccessfulText(PassivelyUsable object);
 
 	/**
 	 * @param object
@@ -70,7 +70,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * 
 	 * @return if using is enabled with the given object.
 	 */
-	public boolean isUsingEnabledWith(HasLocation object);
+	public boolean isUsingEnabledWith(PassivelyUsable object);
 
 	/**
 	 * Removes an additional action for that object.
@@ -80,7 +80,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromUseWith(HasLocation object, AbstractAction action);
+	public void removeAdditionalActionFromUseWith(PassivelyUsable object, AbstractAction action);
 
 	/**
 	 * Removes an additional use with command.
@@ -90,7 +90,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param command
 	 *            the command
 	 */
-	public void removeAdditionalUseWithCommand(HasLocation object, String command);
+	public void removeAdditionalUseWithCommand(PassivelyUsable object, String command);
 
 	/**
 	 * Sets the forbidden text for that object. If {@code null} passed, the
@@ -101,7 +101,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param forbiddenText
 	 *            the forbiddenText to set
 	 */
-	public void setUseWithForbiddenText(HasLocation object, String forbiddenText);
+	public void setUseWithForbiddenText(PassivelyUsable object, String forbiddenText);
 
 	/**
 	 * Sets the successful text for that object. If {@code null} passed, the
@@ -112,7 +112,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param successfulText
 	 *            the successfulText to set
 	 */
-	public void setUseWithSuccessfulText(HasLocation object, String successfulText);
+	public void setUseWithSuccessfulText(PassivelyUsable object, String successfulText);
 
 	/**
 	 * @param object
@@ -120,7 +120,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param enabled
 	 *            if using should be enabled with that item
 	 */
-	public void setUsingEnabledWith(HasLocation object, boolean enabled);
+	public void setUsingEnabledWith(PassivelyUsable object, boolean enabled);
 
 	/**
 	 * Triggers all additional actions for that item, if any.
@@ -130,7 +130,7 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param game
 	 *            the game
 	 */
-	public void useWith(HasLocation object, Game game);
+	public void useWith(PassivelyUsable object, Game game);
 
 	/**
 	 * Sets the additional commands that can be used to use this with something
@@ -141,5 +141,5 @@ public interface UsableWithHasLocation extends UsableOrPassivelyUsable {
 	 * @param commands
 	 *            the commands
 	 */
-	public void setAdditionalUseWithCommands(HasLocation object, List<String> commands);
+	public void setAdditionalUseWithCommands(PassivelyUsable object, List<String> commands);
 }

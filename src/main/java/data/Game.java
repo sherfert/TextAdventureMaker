@@ -6,7 +6,8 @@ import data.action.AddInventoryItemsAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasId;
 import data.interfaces.HasLocation;
-import data.interfaces.UsableWithHasLocation;
+import data.interfaces.PassivelyUsable;
+import data.interfaces.UsableWithSomething;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -457,8 +458,8 @@ public class Game implements HasId {
 	 * UseWith commands are asymmetric, combine commands are symmetric.
 	 * 
 	 * {@literal o0} has to denote a {@link Combinable} or a
-	 * {@link UsableWithHasLocation}. {@literal o1} can be that or a
-	 * {@link HasLocation}.
+	 * {@link UsableWithSomething}. {@literal o1} can be that or a
+	 * {@link PassivelyUsable}.
 	 */
 	@ElementCollection
 	private List<String> useWithCombineCommands;

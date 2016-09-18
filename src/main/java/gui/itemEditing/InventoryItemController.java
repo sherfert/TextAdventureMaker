@@ -3,7 +3,7 @@ package gui.itemEditing;
 import java.util.stream.Collectors;
 
 import data.InventoryItem;
-import data.interfaces.HasLocation;
+import data.interfaces.PassivelyUsable;
 import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.InventoryItemListView;
@@ -106,7 +106,7 @@ public class InventoryItemController extends GameDataController {
 	 * @param o
 	 *            the object
 	 */
-	private void usableSelected(HasLocation o) {
+	private void usableSelected(PassivelyUsable o) {
 		if (o == null) {
 			return;
 		}

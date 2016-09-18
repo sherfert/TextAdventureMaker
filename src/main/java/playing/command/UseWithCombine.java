@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 import data.Game;
 import data.InventoryItem;
 import data.interfaces.Combinable;
-import data.interfaces.HasLocation;
 import data.interfaces.Inspectable;
-import data.interfaces.UsableWithHasLocation;
+import data.interfaces.PassivelyUsable;
+import data.interfaces.UsableWithSomething;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import persistence.InspectableObjectManager;
@@ -60,7 +60,7 @@ public class UseWithCombine extends Command {
 	 * actions will be performed. A message informing about success/failure will
 	 * be displayed.
 	 * 
-	 * o0 has to denote a Combinable or UsableWithHasLocation, o1 can be that or
+	 * o0 has to denote a Combinable or UsableWithSomething, o1 can be that or
 	 * a HasLocation.
 	 * 
 	 * @param originalCommand
@@ -106,7 +106,7 @@ public class UseWithCombine extends Command {
 		}
 
 		// Check types of both objects (which can be null)
-		if (object1 instanceof UsableWithHasLocation || object1 instanceof Combinable) {
+		if (object1 instanceof UsableWithSomething || object1 instanceof Combinable) {
 			/*
 			 * The classes must be the same, since the generic type information
 			 * cannot be inferred at runtime.
@@ -117,13 +117,13 @@ public class UseWithCombine extends Command {
 
 				// Combine
 				combine(originalCommand, (Combinable) object1, (Combinable) object2, game);
-			} else if (object1 instanceof UsableWithHasLocation && object2 instanceof HasLocation) {
+			} else if (object1 instanceof UsableWithSomething && object2 instanceof PassivelyUsable) {
 				// UseWith
-				useWith(originalCommand, (UsableWithHasLocation) object1, (HasLocation) object2, game);
+				useWith(originalCommand, (UsableWithSomething) object1, (PassivelyUsable) object2, game);
 			} else if (object2 != null) {
 				// Error: Object2 not of correct type
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}", identifier2);
+						"Usewith/combine object not of type UsableWithSomething/Combinable {0}", identifier2);
 
 				String message = game.getInvalidCommandText();
 				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
@@ -140,11 +140,11 @@ public class UseWithCombine extends Command {
 						game.getFailedFgColor());
 			}
 		} else {
-			if (object2 instanceof UsableWithHasLocation) {
+			if (object2 instanceof UsableWithSomething) {
 				if (object1 != null) {
 					// Error: Object1 not of correct type
 					Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-							"Usewith/combine object not of type UsableWithHasLocation/Combinable {0}", identifier1);
+							"Usewith/combine object not of type UsableWithSomething/Combinable {0}", identifier1);
 
 					String message = game.getInvalidCommandText();
 					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
@@ -224,18 +224,18 @@ public class UseWithCombine extends Command {
 	}
 
 	/**
-	 * Uses an {@link UsableWithHasLocation} with an {@link HasLocation}.
+	 * Uses an {@link UsableWithSomething} with an {@link PassivelyUsable}.
 	 * 
 	 * @param originalCommand
 	 *            if the command was original (or else additional).
 	 * @param usable
-	 *            the {@link UsableWithHasLocation}
+	 *            the {@link UsableWithSomething}
 	 * @param object
 	 *            the object
 	 * @param game
 	 *            the game
 	 */
-	private void useWith(boolean originalCommand, UsableWithHasLocation usable, HasLocation object, Game game) {
+	private void useWith(boolean originalCommand, UsableWithSomething usable, PassivelyUsable object, Game game) {
 		if (!originalCommand) {
 			// Check if the additional command belongs the the chosen
 			// usable with object.
@@ -250,7 +250,7 @@ public class UseWithCombine extends Command {
 		}
 
 		if (usable.isUsingEnabledWith(object)) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Uswith enabled id {0} with {1}",
+			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Usewith enabled id {0} with {1}",
 					new Object[] { usable.getId(), object.getId() });
 
 			// Using was successful
@@ -261,7 +261,7 @@ public class UseWithCombine extends Command {
 			io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
 					game.getSuccessfullFgColor());
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Uswith disabled id {0} with {1}",
+			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Usewith disabled id {0} with {1}",
 					new Object[] { usable.getId(), object.getId() });
 
 			// Using was not successful

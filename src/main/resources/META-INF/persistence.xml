@@ -30,9 +30,9 @@
 		<class>data.Game</class>
 		<class>data.InspectableObject</class>
 		<class>data.InventoryItem</class>
-		<class>data.InventoryItem$CombinableInventoryItem</class>
+		<class>data.InventoryItem$CombineInformation</class>
 		<class>data.InventoryItem$CombineCommands</class>
-		<class>data.InventoryItem$UsableHasLocation</class>
+		<class>data.InventoryItem$UseWithInformation</class>
 		<class>data.Item</class>
 		<class>data.Location</class>
 		<class>data.NamedDescribedObject</class>

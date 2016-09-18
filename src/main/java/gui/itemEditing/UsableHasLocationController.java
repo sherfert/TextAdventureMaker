@@ -1,7 +1,7 @@
 package gui.itemEditing;
 
 import data.InventoryItem;
-import data.interfaces.HasLocation;
+import data.interfaces.PassivelyUsable;
 import gui.GameDataController;
 import gui.MainWindowController;
 import javafx.fxml.FXML;
@@ -25,7 +25,7 @@ public class UsableHasLocationController extends GameDataController {
 	private InventoryItem item;
 
 	/** The object it is being used with */
-	private HasLocation object;
+	private PassivelyUsable object;
 
 	@FXML
 	private TabPane tabPane;
@@ -54,7 +54,7 @@ public class UsableHasLocationController extends GameDataController {
 	 * 
 	 */
 	public UsableHasLocationController(CurrentGameManager currentGameManager, MainWindowController mwController,
-			InventoryItem item, HasLocation object) {
+			InventoryItem item, PassivelyUsable object) {
 		super(currentGameManager, mwController);
 		this.item = item;
 		this.object = object;

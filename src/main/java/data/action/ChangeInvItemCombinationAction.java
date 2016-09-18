@@ -78,7 +78,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInvItemCombinationAction(String, InventoryItem, HasLocation)}
+	 *             {@link #ChangeInvItemCombinationAction(String, InventoryItem, InventoryItem)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -90,9 +90,9 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 * @param name
 	 *            the name
 	 * @param inventoryItem
-	 *            the inventory item
+	 *            the first inventory item
 	 * @param object
-	 *            the person or item
+	 *            the second inventory item
 	 */
 	public ChangeInvItemCombinationAction(String name, InventoryItem inventoryItem1, InventoryItem inventoryItem2) {
 		super(name);

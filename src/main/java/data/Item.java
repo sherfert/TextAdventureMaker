@@ -22,6 +22,7 @@ import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeItemAction;
 import data.interfaces.HasLocation;
+import data.interfaces.PassivelyUsable;
 import data.interfaces.Takeable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Item extends UsableObject implements Takeable, HasLocation {
+public class Item extends UsableObject implements Takeable, HasLocation, PassivelyUsable {
 
 	/**
 	 * The {@link AddInventoryItemsAction} that adds item to your inventory when

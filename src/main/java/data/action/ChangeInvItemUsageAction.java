@@ -4,6 +4,7 @@ import data.Game;
 import data.InventoryItem;
 import data.NamedDescribedObject;
 import data.interfaces.HasLocation;
+import data.interfaces.PassivelyUsable;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -18,7 +19,7 @@ import javax.persistence.ManyToOne;
 
 /**
  * This action modifies the usage behavior of an {@link InventoryItem} with a
- * {@link HasLocation}.
+ * {@link PassivelyUsable}.
  * 
  * @author Satia
  * 
@@ -33,9 +34,9 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	private InventoryItem inventoryItem;
 
 	/**
-	 * The person or item.
+	 * The thing to use with.
 	 */
-	private HasLocation object;
+	private PassivelyUsable object;
 
 	/**
 	 * The new useWithForbiddenText. If {@code null}, the old will not be
@@ -58,7 +59,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInvItemUsageAction(String, InventoryItem, HasLocation)}
+	 *             {@link #ChangeInvItemUsageAction(String, InventoryItem, PassivelyUsable)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -72,9 +73,9 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * @param inventoryItem
 	 *            the inventory item
 	 * @param object
-	 *            the person or item
+	 *            the thing to use with
 	 */
-	public ChangeInvItemUsageAction(String name, InventoryItem inventoryItem, HasLocation object) {
+	public ChangeInvItemUsageAction(String name, InventoryItem inventoryItem, PassivelyUsable object) {
 		super(name);
 		init();
 		this.inventoryItem = inventoryItem;
@@ -162,7 +163,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedDescribedObject.class)
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", //
 	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
-	public HasLocation getObject() {
+	public PassivelyUsable getObject() {
 		return object;
 	}
 
@@ -170,7 +171,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * @param object
 	 *            the object to set
 	 */
-	public void setObject(HasLocation object) {
+	public void setObject(PassivelyUsable object) {
 		this.object = object;
 	}
 

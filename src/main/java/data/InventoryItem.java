@@ -30,8 +30,8 @@ import data.action.AddInventoryItemsAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasId;
-import data.interfaces.HasLocation;
-import data.interfaces.UsableWithHasLocation;
+import data.interfaces.PassivelyUsable;
+import data.interfaces.UsableWithSomething;
 
 /**
  * Any item that can appear in your inventory. These items are not in locations.
@@ -42,7 +42,7 @@ import data.interfaces.UsableWithHasLocation;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class InventoryItem extends UsableObject implements UsableWithHasLocation, Combinable<InventoryItem> {
+public class InventoryItem extends UsableObject implements UsableWithSomething, Combinable<InventoryItem> {
 
 	/**
 	 * Attributes of an {@link InventoryItem} that can be used with an
@@ -51,7 +51,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	 * @author Satia
 	 */
 	@Entity
-	private static class CombinableInventoryItem implements HasId {
+	private static class CombineInformation implements HasId {
 
 		/**
 		 * The action adding the new inventory items.
@@ -114,7 +114,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 		 * Disabled by default and no forbidden/successful texts. Removing items
 		 * also disabled by default.
 		 */
-		public CombinableInventoryItem() {
+		public CombineInformation() {
 			additionalCombineWithActions = new ArrayList<>();
 			addInventoryItemsAction = new AddInventoryItemsAction("");
 			enabled = false;
@@ -123,7 +123,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 
 		@Override
 		public String toString() {
-			return "CombinableInventoryItem{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId()
+			return "CombineInformation{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId()
 					+ ", additionalCombineWithActionsIDs=" + NamedObject.getIDList(additionalCombineWithActions)
 					+ ", combineWithForbiddenText=" + combineWithForbiddenText + ", combineWithSuccessfulText="
 					+ combineWithSuccessfulText + ", enabled=" + enabled + ", id=" + id + ", removeCombinables="
@@ -161,7 +161,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	/**
-	 * Attributes of an {@link HasLocation} that can be used with an
+	 * Attributes of an {@link PassivelyUsable} that can be used with an
 	 * {@link InventoryItem}.
 	 * 
 	 * JPA requires this inner class to be static. A back-reference to the
@@ -170,11 +170,11 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	 * @author Satia
 	 */
 	@Entity
-	private static class UsableHasLocation implements HasId {
+	private static class UseWithInformation implements HasId {
 
 		/**
 		 * All actions triggered when the {@link InventoryItem} is used with the
-		 * mapped {@link HasLocation}. They are triggered regardless of the
+		 * mapped {@link PassivelyUsable}. They are triggered regardless of the
 		 * enabled status.
 		 */
 		@ManyToMany(cascade = { CascadeType.PERSIST })
@@ -223,7 +223,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 		/**
 		 * Disabled by default and no forbidden/successful texts.
 		 */
-		public UsableHasLocation() {
+		public UseWithInformation() {
 			additionalUseWithActions = new ArrayList<>();
 			additionalUseWithCommands = new ArrayList<>();
 			enabled = false;
@@ -231,7 +231,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 
 		@Override
 		public String toString() {
-			return "UsableHasLocation{" + "additionalUseWithActionsIDs="
+			return "UseWithInformation{" + "additionalUseWithActionsIDs="
 					+ NamedObject.getIDList(additionalUseWithActions) + ", enabled=" + enabled + ", id=" + id
 					+ ", useWithForbiddenText=" + useWithForbiddenText + ", useWithSuccessfulText="
 					+ useWithSuccessfulText + '}';
@@ -251,7 +251,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	 * synchronized, too.
 	 * 
 	 * ManyToMany since exactly TWO InventoryItems store this
-	 * CombinableInventoryItem in their map.
+	 * CombineInformation in their map.
 	 */
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_S", //
@@ -261,12 +261,12 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_KEY", //
 	foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
-	private Map<InventoryItem, CombinableInventoryItem> combinableInventoryItems;
+	private Map<InventoryItem, CombineInformation> combineInformations;
 
 	/**
 	 * The additional combine commands for the mapped inventory item. Since the
 	 * additional combine commands are asymmetric, this is placed here as a map
-	 * and not in {@link CombinableInventoryItem} as a List.
+	 * and not in {@link CombineInformation} as a List.
 	 * 
 	 * OneToMany since each InventoryItem has its own CombineCommands (they are
 	 * not shared).
@@ -282,7 +282,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	/**
 	 * An inventory item can be used with {@link Item}s. For each object there
 	 * is additional information about the usability, etc. The method
-	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
+	 * {@link InventoryItem#getUsableHasLocation(PassivelyUsable)} adds key and
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
 	 */
@@ -292,12 +292,12 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usableItems_KEY", //
 	foreignKeyDefinition = "FOREIGN KEY (usableItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
-	private Map<Item, UsableHasLocation> usableItems;
+	private Map<Item, UseWithInformation> usableItems;
 
 	/**
 	 * An inventory item can be used with {@link Person}s. For each object there
 	 * is additional information about the usability, etc. The method
-	 * {@link InventoryItem#getUsableHasLocation(HasLocation)} adds key and
+	 * {@link InventoryItem#getUsableHasLocation(PassivelyUsable)} adds key and
 	 * value, if it was not stored before. It will choose the right map from the
 	 * two.
 	 */
@@ -307,7 +307,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usablePersons_KEY", //
 	foreignKeyDefinition = "FOREIGN KEY (usablePersons_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
-	private Map<Person, UsableHasLocation> usablePersons;
+	private Map<Person, UseWithInformation> usablePersons;
 
 	/**
 	 * This field is declared here just to ensure deletion from the list. It is
@@ -369,7 +369,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	@Override
-	public void addAdditionalActionToUseWith(HasLocation object, AbstractAction action) {
+	public void addAdditionalActionToUseWith(PassivelyUsable object, AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.add(action);
 	}
 
@@ -384,13 +384,13 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	@Override
-	public void addAdditionalUseWithCommand(HasLocation object, String command) {
+	public void addAdditionalUseWithCommand(PassivelyUsable object, String command) {
 		getUsableHasLocation(object).additionalUseWithCommands.add(command);
 	}
 
 	@Override
 	public void combineWith(Combinable<InventoryItem> partner, Game game) {
-		CombinableInventoryItem combination = getCombinableInventoryItem(partner);
+		CombineInformation combination = getCombinableInventoryItem(partner);
 		if (combination.enabled) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Combining {0} with {1}",
 					new Object[] { this, partner });
@@ -427,7 +427,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 
 	@Override
 	@Transient
-	public List<AbstractAction> getAdditionalActionsFromUseWith(HasLocation object) {
+	public List<AbstractAction> getAdditionalActionsFromUseWith(PassivelyUsable object) {
 		return getUsableHasLocation(object).additionalUseWithActions;
 	}
 
@@ -462,7 +462,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 
 	@Override
 	@Transient
-	public List<String> getAdditionalUseWithCommands(HasLocation object) {
+	public List<String> getAdditionalUseWithCommands(PassivelyUsable object) {
 		return getUsableHasLocation(object).additionalUseWithCommands;
 	}
 
@@ -474,13 +474,13 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 
 	@Override
 	@Transient
-	public String getUseWithForbiddenText(HasLocation object) {
+	public String getUseWithForbiddenText(PassivelyUsable object) {
 		return getUsableHasLocation(object).useWithForbiddenText;
 	}
 
 	@Override
 	@Transient
-	public String getUseWithSuccessfulText(HasLocation object) {
+	public String getUseWithSuccessfulText(PassivelyUsable object) {
 		return getUsableHasLocation(object).useWithSuccessfulText;
 	}
 
@@ -492,7 +492,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 
 	@Override
 	@Transient
-	public boolean isUsingEnabledWith(HasLocation object) {
+	public boolean isUsingEnabledWith(PassivelyUsable object) {
 		return getUsableHasLocation(object).enabled;
 	}
 
@@ -502,13 +502,13 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	@Override
-	public void removeAdditionalActionFromUseWith(HasLocation object, AbstractAction action) {
+	public void removeAdditionalActionFromUseWith(PassivelyUsable object, AbstractAction action) {
 		getUsableHasLocation(object).additionalUseWithActions.remove(action);
 	}
 
 	@Override
 	@Transient
-	public void setAdditionalUseWithCommands(HasLocation object, List<String> commands) {
+	public void setAdditionalUseWithCommands(PassivelyUsable object, List<String> commands) {
 		getUsableHasLocation(object).additionalUseWithCommands = commands;
 	}
 
@@ -518,7 +518,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	@Override
-	public void removeAdditionalUseWithCommand(HasLocation object, String command) {
+	public void removeAdditionalUseWithCommand(PassivelyUsable object, String command) {
 		getUsableHasLocation(object).additionalUseWithCommands.remove(command);
 	}
 
@@ -548,22 +548,22 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	@Override
-	public void setUseWithForbiddenText(HasLocation object, String forbiddenText) {
+	public void setUseWithForbiddenText(PassivelyUsable object, String forbiddenText) {
 		getUsableHasLocation(object).useWithForbiddenText = forbiddenText;
 	}
 
 	@Override
-	public void setUseWithSuccessfulText(HasLocation object, String successfulText) {
+	public void setUseWithSuccessfulText(PassivelyUsable object, String successfulText) {
 		getUsableHasLocation(object).useWithSuccessfulText = successfulText;
 	}
 
 	@Override
-	public void setUsingEnabledWith(HasLocation object, boolean enabled) {
+	public void setUsingEnabledWith(PassivelyUsable object, boolean enabled) {
 		getUsableHasLocation(object).enabled = enabled;
 	}
 
 	@Override
-	public void useWith(HasLocation object, Game game) {
+	public void useWith(PassivelyUsable object, Game game) {
 		// There is no "primary" action, so no "isEnabled" check
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Using {0} with {1}",
 				new Object[] { this, object });
@@ -575,23 +575,23 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	/**
-	 * Gets the {@link CombinableInventoryItem} associated with the given
+	 * Gets the {@link CombineInformation} associated with the given
 	 * {@link Combinable}. If no mapping exists, one will be created on both
 	 * sides.
 	 * 
 	 * @param item
 	 *            the item
-	 * @return the associated {@link CombinableInventoryItem}.
+	 * @return the associated {@link CombineInformation}.
 	 */
 	@Transient
-	private CombinableInventoryItem getCombinableInventoryItem(Combinable<InventoryItem> item) {
+	private CombineInformation getCombinableInventoryItem(Combinable<InventoryItem> item) {
 		if (item instanceof InventoryItem) {
-			CombinableInventoryItem result = combinableInventoryItems.get((InventoryItem) item);
+			CombineInformation result = combineInformations.get((InventoryItem) item);
 			if (result == null) {
 				// Create a new mapping
-				combinableInventoryItems.put((InventoryItem) item, result = new CombinableInventoryItem());
+				combineInformations.put((InventoryItem) item, result = new CombineInformation());
 				// And synchronize other map
-				((InventoryItem) item).combinableInventoryItems.put(this, result);
+				((InventoryItem) item).combineInformations.put(this, result);
 			}
 			return result;
 		} else {
@@ -626,29 +626,29 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	}
 
 	/**
-	 * Gets the {@link UsableHasLocation} associated with the given
-	 * {@link HasLocation} . If no mapping exists, one will be created.
+	 * Gets the {@link UseWithInformation} associated with the given
+	 * {@link PassivelyUsable} . If no mapping exists, one will be created.
 	 * 
 	 * @param object
 	 *            the object
-	 * @return the associated {@link UsableHasLocation}.
+	 * @return the associated {@link UseWithInformation}.
 	 */
 	@Transient
-	private UsableHasLocation getUsableHasLocation(HasLocation object) {
-		UsableHasLocation result;
+	private UseWithInformation getUsableHasLocation(PassivelyUsable object) {
+		UseWithInformation result;
 
 		if (object instanceof Item) {
 			result = usableItems.get(object);
 			if (result == null) {
-				usableItems.put((Item) object, result = new UsableHasLocation());
+				usableItems.put((Item) object, result = new UseWithInformation());
 			}
 		} else if (object instanceof Person) {
 			result = usablePersons.get(object);
 			if (result == null) {
-				usablePersons.put((Person) object, result = new UsableHasLocation());
+				usablePersons.put((Person) object, result = new UseWithInformation());
 			}
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Not supported HasLocation subclass: {0}",
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Not supported PassivelyUsable subclass: {0}",
 					object.getClass().getName());
 			return null;
 		}
@@ -661,7 +661,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	 * @param object
 	 *            the object.
 	 */
-	public void ensureHasUsageInformation(HasLocation object) {
+	public void ensureHasUsageInformation(PassivelyUsable object) {
 		getUsableHasLocation(object);
 	}
 
@@ -704,7 +704,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	 */
 	@Transient
 	public List<InventoryItem> getInventoryItemsCombinableWith() {
-		return new ArrayList<>(combinableInventoryItems.keySet());
+		return new ArrayList<>(combineInformations.keySet());
 	}
 
 	/**
@@ -730,7 +730,7 @@ public class InventoryItem extends UsableObject implements UsableWithHasLocation
 	private final void init() {
 		usableItems = new HashMap<>();
 		usablePersons = new HashMap<>();
-		combinableInventoryItems = new HashMap<>();
+		combineInformations = new HashMap<>();
 		additionalCombineCommands = new HashMap<>();
 		addIIActions = new ArrayList<>();
 	}

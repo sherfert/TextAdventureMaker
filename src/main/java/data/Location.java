@@ -189,7 +189,7 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * @return a list containing the {@link HasLocation}s: Persons and Items.
+	 * @return a list containing the {@link HasLocation}s: Persons and Items. This does not include the Player.
 	 */
 	@Transient
 	public List<HasLocation> getHasLocations() {

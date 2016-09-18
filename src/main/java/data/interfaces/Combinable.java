@@ -18,7 +18,7 @@ import data.action.AbstractAction;
  *            the class to be combinable with. Usually the implementing class
  *            itself.
  */
-public interface Combinable<E> extends UsableOrPassivelyUsable {
+public interface Combinable<E> extends Identifiable {
 
 	/**
 	 * Adds an additional action for that combineable.

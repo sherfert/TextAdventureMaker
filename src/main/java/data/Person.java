@@ -15,6 +15,7 @@ import javax.persistence.Transient;
 import data.action.AbstractAction;
 import data.interfaces.HasConversation;
 import data.interfaces.HasLocation;
+import data.interfaces.PassivelyUsable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -30,7 +31,7 @@ import java.util.logging.Logger;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Person extends InspectableObject implements HasLocation, HasConversation {
+public class Person extends InspectableObject implements HasLocation, HasConversation, PassivelyUsable {
 
 	/**
 	 * All additional talk to commands.
