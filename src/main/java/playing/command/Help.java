@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import data.Game;
 import playing.GamePlayer;
-import playing.parser.Parameter;
 import utility.CommandRegExConverter;
 
 /**
@@ -25,7 +24,7 @@ public class Help extends Command {
 	public Help(GamePlayer gamePlayer) {
 		super(gamePlayer, 0);
 	}
-	
+
 	@Override
 	public String getHelpText() {
 		return this.gamePlayer.getGame().getHelpHelpText();
@@ -43,54 +42,65 @@ public class Help extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != numberOfParameters) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of parameters");
-		}
-		help();
+	public CommandExecution newExecution(String input) {
+		return new HelpExecution(input);
 	}
 
 	/**
-	 * Displays the help text to the player.
-	 */
-	private void help() {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Displaying help");
-
-		Game game = gamePlayer.getGame();
-
-		// Iterate through all commands and all their textual commands
-		// Also include exit
-		for (Command command : gamePlayer.getCommands()) {
-			printCommandHelp(command.getCommandHelpText(),
-					command.getTextualCommands(), game);
-		}
-
-		printCommandHelp(game.getExitCommandHelpText(), game.getExitCommands(),
-				game);
-	}
-
-	/**
-	 * Prints the help for a command
+	 * Execution of the help command.
 	 * 
-	 * @param commandHelpText
-	 *            the help text specified for that command
-	 * @param textualCommands
-	 *            all the textual commands triggering that command
-	 * @param game
-	 *            the game
+	 * @author Satia
 	 */
-	private void printCommandHelp(String commandHelpText,
-			List<String> textualCommands, Game game) {
-		io.println(commandHelpText, game.getNeutralBgColor(),
-				game.getNeutralFgColor());
-		for (String textualCommand : textualCommands) {
-			// Convert to a better understandable form
-			String cmd = CommandRegExConverter.convertRegExToString(textualCommand);
-			io.println(" " + cmd, game.getNeutralBgColor(),
-					game.getNeutralFgColor());
+	private class HelpExecution extends CommandExecution {
+
+		/**
+		 * @param input
+		 *            the user input
+		 */
+		public HelpExecution(String input) {
+			super(Help.this, input);
 		}
+
+		@Override
+		public boolean hasObjects() {
+			return true;
+		}
+
+		@Override
+		public void execute() {
+			configureReplacer();
+			Game game = gamePlayer.getGame();
+
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Displaying help");
+
+			// Iterate through all commands and all their textual commands
+			// Also include exit
+			for (Command command : gamePlayer.getCommands()) {
+				printCommandHelp(command.getCommandHelpText(), command.getTextualCommands(), game);
+			}
+
+			printCommandHelp(game.getExitCommandHelpText(), game.getExitCommands(), game);
+		}
+
+		/**
+		 * Prints the help for a command
+		 * 
+		 * @param commandHelpText
+		 *            the help text specified for that command
+		 * @param textualCommands
+		 *            all the textual commands triggering that command
+		 * @param game
+		 *            the game
+		 */
+		private void printCommandHelp(String commandHelpText, List<String> textualCommands, Game game) {
+			io.println(commandHelpText, game.getNeutralBgColor(), game.getNeutralFgColor());
+			for (String textualCommand : textualCommands) {
+				// Convert to a better understandable form
+				String cmd = CommandRegExConverter.convertRegExToString(textualCommand);
+				io.println(" " + cmd, game.getNeutralBgColor(), game.getNeutralFgColor());
+			}
+		}
+
 	}
 
 }

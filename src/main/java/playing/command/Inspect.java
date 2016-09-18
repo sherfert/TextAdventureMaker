@@ -7,11 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import data.Game;
-import data.interfaces.Inspectable;
-import exception.DBClosedException;
-import exception.DBIncompatibleException;
 import playing.GamePlayer;
-import playing.parser.Parameter;
 
 /**
  * Command to inspect something.
@@ -31,8 +27,8 @@ public class Inspect extends Command {
 	 */
 	public Inspect(GamePlayer gamePlayer) {
 		super(gamePlayer, 1);
-	}	
-	
+	}
+
 	@Override
 	public String getHelpText() {
 		return this.gamePlayer.getGame().getInspectHelpText();
@@ -50,62 +46,60 @@ public class Inspect extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != numberOfParameters) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of parameters");
-			return;
-		}
-		inspect(parameters[0].getIdentifier());
+	public CommandExecution newExecution(String input) {
+		return new InspectExecution(input);
 	}
 
 	/**
-	 * Tries to inspect an object with the given name. The player will look at
-	 * it if possible and if not, a meaningful message will be displayed.
-	 * @param identifier
-	 *            an identifier of the object
+	 * Execution of the inspect command.
+	 * 
+	 * @author Satia
 	 */
-	private void inspect(String identifier) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Inspecting identifier {0}", identifier);
+	private class InspectExecution extends CommandExecution {
 
-		Game game = gamePlayer.getGame();
-
-		Inspectable object;
-		try {
-			object = persistenceManager.getInspectableObjectManager()
-					.getInspectable(identifier);
-		} catch (DBClosedException | DBIncompatibleException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Operating on a closed/incompatible DB", e);
-			return;
+		/**
+		 * @param input
+		 *            the user input
+		 */
+		public InspectExecution(String input) {
+			super(Inspect.this, input);
 		}
-		// Save identifier
-		currentReplacer.setIdentifier(identifier);
 
-		if (object != null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Inspecting id {0}", object.getId());
+		@Override
+		public boolean hasObjects() {
+			findInspectableObjects();
+			return object1 != null;
+		}
 
-			// Save name
-			currentReplacer.setName(object.getName());
+		@Override
+		public void execute() {
+			configureReplacer();
+			Game game = gamePlayer.getGame();
+			String identifier = parameters[0].getIdentifier();
 
-			String message = object.getInspectionText();
-			if (message == null) {
-				message = game.getInspectionDefaultText();
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Inspecting identifier {0}", identifier);
+
+			if (object1 != null) {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Inspecting id {0}", object1.getId());
+
+				String message = object1.getInspectionText();
+				if (message == null) {
+					message = game.getInspectionDefaultText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message), game.getNeutralBgColor(),
+						game.getNeutralFgColor());
+				// Effect depends on additional actions
+				object1.inspect(game);
+			} else {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Inspect object not found {0}",
+						identifier);
+
+				// There is no such thing
+				String message = game.getNoSuchItemText();
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+						game.getFailedFgColor());
 			}
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getNeutralBgColor(), game.getNeutralFgColor());
-			// Effect depends on additional actions
-			object.inspect(game);
-		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Inspect object not found {0}", identifier);
-
-			// There is no such thing
-			String message = game.getNoSuchItemText();
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getFailedBgColor(), game.getFailedFgColor());
 		}
+
 	}
 }

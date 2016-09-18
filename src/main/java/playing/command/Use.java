@@ -6,12 +6,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import data.Game;
-import data.interfaces.Inspectable;
 import data.interfaces.Usable;
 import exception.DBClosedException;
-import exception.DBIncompatibleException;
 import playing.GamePlayer;
-import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 
 /**
@@ -28,7 +25,7 @@ public class Use extends Command {
 	public Use(GamePlayer gamePlayer) {
 		super(gamePlayer, 1);
 	}
-	
+
 	@Override
 	public String getHelpText() {
 		return this.gamePlayer.getGame().getUseHelpText();
@@ -43,123 +40,103 @@ public class Use extends Command {
 	public Set<String> getAdditionalCommands() throws DBClosedException {
 		return persistenceManager.getUsableObjectManager().getAllAdditionalUseCommands();
 	}
-
+	
 	@Override
-	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != numberOfParameters) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of parameters");
-			return;
-		}
-		use(originalCommand, parameters[0].getIdentifier());
+	public CommandExecution newExecution(String input) {
+		return new UseExecution(input);
 	}
 
 	/**
-	 * Tries to use the object with the given name. The additional actions will
-	 * be performed. A message informing about success/failure will be
-	 * displayed.
+	 * Execution of the use command.
 	 * 
-	 * @param originalCommand
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier.
-	 * @param identifier
-	 *            an identifier of the object
+	 * @author Satia
 	 */
-	private void use(boolean originalCommand, String identifier) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Use identifier {0}", identifier);
-		
-		Game game = gamePlayer.getGame();
+	private class UseExecution extends CommandExecution {
 
-		// Collect all objects, whether they are usable or not.
-		Inspectable objectI;
-		try {
-			objectI = persistenceManager.getInspectableObjectManager()
-					.getInspectable(identifier);
-		} catch (DBClosedException | DBIncompatibleException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Operating on a closed/incompatible DB", e);
-			return;
+		/**
+		 * @param input
+		 *            the user input
+		 */
+		public UseExecution(String input) {
+			super(Use.this, input);
 		}
-		// Save identifier
-		currentReplacer.setIdentifier(identifier);
 
-		if (objectI == null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Use item not found {0}", identifier);
-			// There is no such object and you have no such object
-			String message = game.getNoSuchItemText() + " "
-					+ game.getNoSuchInventoryItemText();
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getFailedBgColor(), game.getFailedFgColor());
+		@Override
+		public boolean hasObjects() {
+			findInspectableObjects();
+			return object1 != null && object1 instanceof Usable;
+		}
 
-		} else {
-			// Save name
-			currentReplacer.setName(objectI.getName());
+		@Override
+		public void execute() {
+			configureReplacer();
+			Game game = gamePlayer.getGame();
+			String identifier = parameters[0].getIdentifier();
 
-			if (objectI instanceof Usable) {
-				Usable object = (Usable) objectI;
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Use identifier {0}", identifier);
 
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Use id {0}", object.getId());
-
-				if (!originalCommand) {
-					// Check if the additional command belongs the the chosen
-					// usable
-					if (!PatternGenerator
-							.getPattern(object.getAdditionalUseCommands())
-							.matcher(currentReplacer.getInput()).matches()) {
-						// no match
-						String message = game.getNotUsableText();
-						io.println(
-								currentReplacer.replacePlaceholders(message),
-								game.getFailedBgColor(),
-								game.getFailedFgColor());
-						return;
-					}
-				}
-
-				// Save name
-				currentReplacer.setName(object.getName());
-				if (object.getUsingEnabled()) {
-					Logger.getLogger(this.getClass().getName()).log(
-							Level.FINEST, "Use id {0} enabled", object.getId());
-
-					// The object was used
-					String message = object.getUseSuccessfulText();
-					if (message == null) {
-						message = game.getUsedText();
-					}
-					io.println(currentReplacer.replacePlaceholders(message),
-							game.getSuccessfullBgColor(),
-							game.getSuccessfullFgColor());
-				} else {
-					Logger.getLogger(this.getClass().getName())
-							.log(Level.FINEST, "Use id {0} disabled",
-									object.getId());
-
-					// The object was not used
-					String message = object.getUseForbiddenText();
-					if (message == null) {
-						message = game.getNotUsableText();
-					}
-					io.println(currentReplacer.replacePlaceholders(message),
-							game.getFailedBgColor(), game.getFailedFgColor());
-				}
-				// Effect depends on additional actions
-				object.use(game);
+			if (object1 == null) {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Use item not found {0}", identifier);
+				// There is no such object and you have no such object
+				String message = game.getNoSuchItemText() + " " + game.getNoSuchInventoryItemText();
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+						game.getFailedFgColor());
 			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Use item not of type Useable {0}", identifier);
-				// There is something (e.g. a person), but nothing you could
-				// use.
-				String message = game.getInvalidCommandText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
+				if (object1 instanceof Usable) {
+					Usable object = (Usable) object1;
 
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Use id {0}", object.getId());
+
+					if (!originalCommand) {
+						// Check if the additional command belongs to the
+						// chosen usable
+						if (!PatternGenerator.getPattern(object.getAdditionalUseCommands())
+								.matcher(currentReplacer.getInput()).matches()) {
+							// no match
+							String message = game.getNotUsableText();
+							io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+									game.getFailedFgColor());
+							return;
+						}
+					}
+
+					if (object.getUsingEnabled()) {
+						Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Use id {0} enabled",
+								object.getId());
+
+						// The object was used
+						String message = object.getUseSuccessfulText();
+						if (message == null) {
+							message = game.getUsedText();
+						}
+						io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
+								game.getSuccessfullFgColor());
+					} else {
+						Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Use id {0} disabled",
+								object.getId());
+
+						// The object was not used
+						String message = object.getUseForbiddenText();
+						if (message == null) {
+							message = game.getNotUsableText();
+						}
+						io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+								game.getFailedFgColor());
+					}
+					// Effect depends on additional actions
+					object.use(game);
+				} else {
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Use item not of type Useable {0}",
+							identifier);
+					// There is something (e.g. a person), but nothing you could
+					// use.
+					String message = game.getInvalidCommandText();
+					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+							game.getFailedFgColor());
+				}
 			}
 		}
+
 	}
 
 }

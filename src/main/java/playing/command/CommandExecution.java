@@ -6,37 +6,63 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
+import data.interfaces.Inspectable;
+import exception.DBClosedException;
+import exception.DBIncompatibleException;
+import persistence.InspectableObjectManager;
 import playing.parser.GeneralParser;
 import playing.parser.Parameter;
 
-// TODO
-public class CommandExecution {
+/**
+ * A particular execution of a command. This class has internal states and its
+ * methods must be called in a particular sequence.
+ * 
+ * {@link #matches()} has to be called first. If that returns {@code true},
+ * {@link #hasObjects()} may be called next. Following {@link #execute()} may be
+ * called last.
+ * 
+ * @author Satia
+ */
+public abstract class CommandExecution {
 
 	// Set in Constructor:
-	private final Command command;
-	private final String input;
-	
+	protected final Command command;
+	protected final String input;
+
 	// Set during matches():
-	private boolean isMatch;
-	private Matcher usedMatcher;
-	private boolean originalCommand = false;
-	private Parameter[] params = null;
+	protected boolean isMatch;
+	protected boolean originalCommand;
+	protected Matcher usedMatcher;
+	protected Parameter[] parameters;
+
+	// Set during hasObjects():
+	protected Inspectable object1;
+	protected Inspectable object2;
 
 	/**
+	 * Create a new command execution with the given command and input.
+	 * 
 	 * @param command
 	 *            the command
 	 * @param input
 	 *            the input
 	 */
-	public CommandExecution(Command command, String input) {
+	protected CommandExecution(Command command, String input) {
 		this.command = command;
 		this.input = input;
 	}
-	
+
+	/**
+	 * Tests whether this command matches the provided input. Must only be
+	 * called once and as the first method after construction. If this returns
+	 * {@code false}, no further methods must be called on this object.
+	 * 
+	 * @return if the command matches the input.
+	 */
 	public boolean matches() {
 		Matcher matcher = command.pattern.matcher(input);
 		Matcher additionalCommandsMatcher = command.additionalCommandsPattern.matcher(input);
-		
+
 		if (matcher.matches()) {
 			isMatch = true;
 			originalCommand = true;
@@ -49,22 +75,84 @@ public class CommandExecution {
 
 		// Either a normal or an additional commandType matched
 		if (isMatch) {
-			params = getParameters(usedMatcher, command.numberOfParameters);
+			parameters = getParameters(usedMatcher, command.numberOfParameters);
 			return true;
 		}
 		// This commandType did not match
 		return false;
 	}
-	
-	public void execute() {
-		// Save the pattern in the replacer TODO later
-		command.gamePlayer.getCurrentReplacer().setPattern(usedMatcher.pattern().toString());
-		command.execute(originalCommand, params);
+
+	/**
+	 * Must only be called after {@link #matches()} was called and returned
+	 * {@code true}. Must only be called once.
+	 * 
+	 * Tests if the command finds all objects that it needs to execute. If
+	 * {@code false}, the command may still execute, but an error message will
+	 * be shown to the user.
+	 * 
+	 * @return if the command finds all objects to execute.
+	 */
+	public abstract boolean hasObjects();
+
+	/**
+	 * Must only be called after {@link #hasObjects()} was called. Must only be
+	 * called once.
+	 * 
+	 * Executes the command.
+	 * 
+	 * Subclasses may call setters on the currentReplacer in this method, but
+	 * not in other methods.
+	 */
+	public abstract void execute();
+
+	/**
+	 * As part of {@link #hasObjects()} this method may be called by subclasses
+	 * to find up to two inspectable objects with the identifiers that were
+	 * extracted from the user input.
+	 */
+	protected void findInspectableObjects() {
+		// Collect all inspectable objects.
+		InspectableObjectManager iom = command.persistenceManager.getInspectableObjectManager();
+		try {
+			if (command.numberOfParameters >= 1) {
+				String identifier = parameters[0].getIdentifier();
+				object1 = iom.getInspectable(identifier);
+			}
+			if (command.numberOfParameters >= 2) {
+				String identifier = parameters[1].getIdentifier();
+				object2 = iom.getInspectable(identifier);
+			}
+		} catch (DBClosedException | DBIncompatibleException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Operating on a closed/incompatible DB", e);
+			return;
+		}
 	}
-	
+
+	/**
+	 * As part of {@link #execute()} this must be called to configure the
+	 * replacer correctly for subsequent output.
+	 */
+	protected void configureReplacer() {
+		command.gamePlayer.getCurrentReplacer().setPattern(usedMatcher.pattern().toString());
+		if (command.numberOfParameters >= 1) {
+			String identifier = parameters[0].getIdentifier();
+			command.currentReplacer.setIdentifier(identifier);
+			if (object1 != null) {
+				command.currentReplacer.setName(object1.getName());
+			}
+			if (command.numberOfParameters >= 2) {
+				String identifier2 = parameters[1].getIdentifier();
+				command.currentReplacer.setIdentifier2(identifier2);
+				if (object2 != null) {
+					command.currentReplacer.setName2(object2.getName());
+				}
+			}
+		}
+
+	}
+
 	/**
 	 * Extracts the used parameters from a given matcher.
-	 * TODO move
 	 *
 	 * @param matcher
 	 *            the matcher that must have matched an input

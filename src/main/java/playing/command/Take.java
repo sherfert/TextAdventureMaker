@@ -5,14 +5,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import playing.GamePlayer;
-import playing.parser.Parameter;
-import playing.parser.PatternGenerator;
 import data.Game;
-import data.interfaces.Inspectable;
 import data.interfaces.Takeable;
 import exception.DBClosedException;
-import exception.DBIncompatibleException;
+import playing.GamePlayer;
+import playing.parser.PatternGenerator;
 
 /**
  * Command to take an item.
@@ -45,118 +42,110 @@ public class Take extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != numberOfParameters) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of parameters");
-			return;
-		}
-		take(originalCommand, parameters[0].getIdentifier());
+	public CommandExecution newExecution(String input) {
+		return new TakeExecution(input);
 	}
-
+	
 	/**
-	 * Tries to take the object with the given name. The connected actions will
-	 * be performed if the item is takeable (additional actions will be
-	 * performed even if it is not). If not, a meaningful message will be displayed.
+	 * Execution of the take command.
 	 * 
-	 * @param originalCommand
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier.
-	 * @param identifier
-	 *            an identifier of the object
+	 * @author Satia
 	 */
-	private void take(boolean originalCommand, String identifier) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Take identifier {0}", identifier);
+	private class TakeExecution extends CommandExecution {
 
-		Game game = gamePlayer.getGame();
-
-		// Collect all objects, whether they are takeable or not.
-		Inspectable object;
-		try {
-			object = persistenceManager.getInspectableObjectManager()
-					.getInspectable(identifier);
-		} catch (DBClosedException | DBIncompatibleException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Operating on a closed/incompatible DB", e);
-			return;
+		/**
+		 * @param input
+		 *            the user input
+		 */
+		public TakeExecution(String input) {
+			super(Take.this, input);
 		}
 
-		// Save identifier
-		currentReplacer.setIdentifier(identifier);
+		@Override
+		public boolean hasObjects() {
+			findInspectableObjects();
+			return object1 != null && object1 instanceof Takeable;
+		}
 
-		if (object == null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-					"Take item not found {0}", identifier);
+		@Override
+		public void execute() {
+			configureReplacer();
+			Game game = gamePlayer.getGame();
+			String identifier = parameters[0].getIdentifier();
+			
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+					"Take identifier {0}", identifier);
 
-			// There is no such item
-			String message = game.getNoSuchItemText();
-			io.println(currentReplacer.replacePlaceholders(message),
-					game.getFailedBgColor(), game.getFailedFgColor());
-		} else {
-			// Save name
-			currentReplacer.setName(object.getName());
-
-			if (object instanceof Takeable) {
-				Takeable item = (Takeable) object;
-
+			if (object1 == null) {
 				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Take id {0}", item.getId());
+						"Take item not found {0}", identifier);
 
-				if (!originalCommand) {
-					// Check if the additional command belongs the the chosen
-					// usable
-					if (!PatternGenerator
-							.getPattern(item.getAdditionalTakeCommands())
-							.matcher(currentReplacer.getInput()).matches()) {
-						// no match
-						String message = game.getNotTakeableText();
-						io.println(
-								currentReplacer.replacePlaceholders(message),
-								game.getFailedBgColor(),
-								game.getFailedFgColor());
-						return;
+				// There is no such item
+				String message = game.getNoSuchItemText();
+				io.println(currentReplacer.replacePlaceholders(message),
+						game.getFailedBgColor(), game.getFailedFgColor());
+			} else {
+				if (object1 instanceof Takeable) {
+					Takeable item = (Takeable) object1;
+
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+							"Take id {0}", item.getId());
+
+					if (!originalCommand) {
+						// Check if the additional command belongs the the chosen
+						// usable
+						if (!PatternGenerator
+								.getPattern(item.getAdditionalTakeCommands())
+								.matcher(currentReplacer.getInput()).matches()) {
+							// no match
+							String message = game.getNotTakeableText();
+							io.println(
+									currentReplacer.replacePlaceholders(message),
+									game.getFailedBgColor(),
+									game.getFailedFgColor());
+							return;
+						}
 					}
-				}
 
-				if (item.isTakingEnabled()) {
-					Logger.getLogger(this.getClass().getName()).log(
-							Level.FINEST, "Take id {0} enabled", item.getId());
+					if (item.isTakingEnabled()) {
+						Logger.getLogger(this.getClass().getName()).log(
+								Level.FINEST, "Take id {0} enabled", item.getId());
 
-					// The item was taken
-					String message = item.getTakeSuccessfulText();
-					if (message == null) {
-						message = game.getTakenText();
+						// The item was taken
+						String message = item.getTakeSuccessfulText();
+						if (message == null) {
+							message = game.getTakenText();
+						}
+						io.println(currentReplacer.replacePlaceholders(message),
+								game.getSuccessfullBgColor(),
+								game.getSuccessfullFgColor());
+					} else {
+						Logger.getLogger(this.getClass().getName()).log(
+								Level.FINEST, "Take id {0} disabled", item.getId());
+
+						// The item was not taken
+						String message = item.getTakeForbiddenText();
+						if (message == null) {
+							message = game.getNotTakeableText();
+						}
+						io.println(currentReplacer.replacePlaceholders(message),
+								game.getFailedBgColor(), game.getFailedFgColor());
 					}
-					io.println(currentReplacer.replacePlaceholders(message),
-							game.getSuccessfullBgColor(),
-							game.getSuccessfullFgColor());
+					// Effect depends on enabled status and additional actions
+					item.take(game);
 				} else {
-					Logger.getLogger(this.getClass().getName()).log(
-							Level.FINEST, "Take id {0} disabled", item.getId());
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+							"Take item not of type Takeable {0}", identifier);
 
-					// The item was not taken
-					String message = item.getTakeForbiddenText();
-					if (message == null) {
-						message = game.getNotTakeableText();
-					}
+					// There is something (e.g. a person), but nothing you could
+					// take.
+					String message = game.getInvalidCommandText();
 					io.println(currentReplacer.replacePlaceholders(message),
 							game.getFailedBgColor(), game.getFailedFgColor());
 				}
-				// Effect depends on enabled status and additional actions
-				item.take(game);
-			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Take item not of type Takeable {0}", identifier);
-
-				// There is something (e.g. a person), but nothing you could
-				// take.
-				String message = game.getInvalidCommandText();
-				io.println(currentReplacer.replacePlaceholders(message),
-						game.getFailedBgColor(), game.getFailedFgColor());
 			}
 		}
+
 	}
 
 }

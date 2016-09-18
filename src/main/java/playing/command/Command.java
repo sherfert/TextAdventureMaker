@@ -11,7 +11,6 @@ import persistence.PersistenceManager;
 import playing.GamePlayer;
 import playing.InputOutput;
 import playing.PlaceholderReplacer;
-import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 import playing.parser.PatternGenerator.MultiPattern;
 
@@ -122,19 +121,6 @@ public abstract class Command {
 	protected abstract Set<String> getAdditionalCommands() throws DBClosedException;
 
 	/**
-	 * Executes the command.
-	 * 
-	 * @param originalCommand
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier.
-	 * @param parameters
-	 *            the parameters. Depending on the command this must be none,
-	 *            one, or more.
-	 */
-	public abstract void execute(boolean originalCommand, Parameter... parameters);
-
-	/**
 	 * @return the commandHelpText
 	 */
 	public String getCommandHelpText() {
@@ -156,7 +142,5 @@ public abstract class Command {
 	 *            the user input
 	 * @return a new CommandExecution.
 	 */
-	public CommandExecution newExecution(String input) {
-		return new CommandExecution(this, input);
-	}
+	public abstract CommandExecution newExecution(String input);
 }

@@ -60,8 +60,6 @@ public class GeneralParser {
 			return false;
 		}
 		
-
-		// TODO better handling for matching of multiple commands
 		// Set the input for the game players' replacer
 		gamePlayer.getCurrentReplacer().reset();
 		gamePlayer.getCurrentReplacer().setInput(input);
@@ -72,16 +70,29 @@ public class GeneralParser {
 			executions.add(command.newExecution(input));
 		}
 		
-		// See if they match and execute
+		// See if they match and filter
+		for(int i = executions.size() - 1; i >= 0; i--) {
+			CommandExecution e = executions.get(i);
+			if(!e.matches()) {
+				executions.remove(i);
+			}
+		}
+		
 		for(CommandExecution e : executions) {
-			if(e.matches()) {
+			if(e.hasObjects()) {
 				e.execute();
 				return true;
 			}
 		}
-
 		
-		// No commandType matched
+		// No execution found matching objects
+		if(!executions.isEmpty()) {
+			// Let the first one execute anyhow, displaying an error message to the user
+			executions.get(0).execute();
+			return true;
+		}
+		
+		// No command matched
 		gamePlayer.noCommand();
 		return true;
 	}

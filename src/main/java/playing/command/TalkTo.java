@@ -7,12 +7,9 @@ import java.util.logging.Logger;
 
 import data.Game;
 import data.interfaces.HasConversation;
-import data.interfaces.Inspectable;
 import exception.DBClosedException;
-import exception.DBIncompatibleException;
 import playing.ConversationPlayer;
 import playing.GamePlayer;
-import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 
 /**
@@ -46,101 +43,98 @@ public class TalkTo extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != numberOfParameters) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Execute: wrong number of parameters");
-			return;
-		}
-		talkTo(originalCommand, parameters[0].getIdentifier());
+	public CommandExecution newExecution(String input) {
+		return new TalkToExecution(input);
 	}
-
+	
 	/**
-	 * Tries to talk to the person with the given name. The additional actions
-	 * will be performed. Either the conversation will be started or a message
-	 * informing about failure will be displayed.
+	 * Execution of the talk to command.
 	 * 
-	 * @param originalCommand
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier.
-	 * @param identifier
-	 *            an identifier of the person
+	 * @author Satia
 	 */
-	private void talkTo(boolean originalCommand, String identifier) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Talk to identifier {0}", identifier);
+	private class TalkToExecution extends CommandExecution {
 
-		Game game = gamePlayer.getGame();
-
-		Inspectable object;
-		try {
-			object = persistenceManager.getInspectableObjectManager().getInspectable(identifier);
-		} catch (DBClosedException | DBIncompatibleException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Operating on a closed/incompatible DB", e);
-			return;
+		/**
+		 * @param input
+		 *            the user input
+		 */
+		public TalkToExecution(String input) {
+			super(TalkTo.this, input);
 		}
-		// Save identifier
-		currentReplacer.setIdentifier(identifier);
 
-		if (object == null) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Talk to person not found {0}", identifier);
+		@Override
+		public boolean hasObjects() {
+			findInspectableObjects();
+			return object1 != null && object1 instanceof HasConversation;
+		}
 
-			// There is no such person
-			String message = game.getNoSuchPersonText();
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
-		} else {
-			// Save name
-			currentReplacer.setName(object.getName());
+		@Override
+		public void execute() {
+			configureReplacer();
+			Game game = gamePlayer.getGame();
+			String identifier = parameters[0].getIdentifier();
+			
 
-			if (object instanceof HasConversation) {
-				HasConversation person = (HasConversation) object;
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Talk to id {0}", person.getId());
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Talk to identifier {0}", identifier);
 
-				if (!originalCommand) {
-					// Check if the additional command belongs the the chosen
-					// usable
-					if (!PatternGenerator.getPattern(person.getAdditionalTalkToCommands())
-							.matcher(currentReplacer.getInput()).matches()) {
-						// no match
-						String message = game.getNotTalkingToEnabledText();
+			if (object1 == null) {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Talk to person not found {0}", identifier);
+
+				// There is no such person
+				String message = game.getNoSuchPersonText();
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
+			} else {
+				if (object1 instanceof HasConversation) {
+					HasConversation person = (HasConversation) object1;
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Talk to id {0}", person.getId());
+
+					if (!originalCommand) {
+						// Check if the additional command belongs the the chosen
+						// usable
+						if (!PatternGenerator.getPattern(person.getAdditionalTalkToCommands())
+								.matcher(currentReplacer.getInput()).matches()) {
+							// no match
+							String message = game.getNotTalkingToEnabledText();
+							io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+									game.getFailedFgColor());
+							return;
+						}
+					}
+
+					if (person.isTalkingEnabled()) {
+						Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Talk to id {0} enabled",
+								person.getId());
+
+						// Start the conversation
+						new ConversationPlayer(io, game, person.getConversation(), person.getName(),
+								gamePlayer.getMenuShower());
+					} else {
+						Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Talk to {0} disabled",
+								person.getId());
+
+						// Talking disabled
+						String message = person.getTalkingToForbiddenText();
+						if (message == null) {
+							message = game.getNotTalkingToEnabledText();
+						}
 						io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
 								game.getFailedFgColor());
-						return;
 					}
-				}
-
-				if (person.isTalkingEnabled()) {
-					Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Talk to id {0} enabled",
-							person.getId());
-
-					// Start the conversation
-					new ConversationPlayer(io, game, person.getConversation(), person.getName(),
-							gamePlayer.getMenuShower());
+					// Effect depends on additional actions
+					person.talkTo(game);
 				} else {
-					Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Talk to {0} disabled",
-							person.getId());
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+							"Talk to person not of type HasConversation {0}", identifier);
 
-					// Talking disabled
-					String message = person.getTalkingToForbiddenText();
-					if (message == null) {
-						message = game.getNotTalkingToEnabledText();
-					}
+					// There is something (e.g. an item), but nothing you could
+					// talk to.
+					String message = game.getInvalidCommandText();
 					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
 							game.getFailedFgColor());
 				}
-				// Effect depends on additional actions
-				person.talkTo(game);
-			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Talk to person not of type HasConversation {0}", identifier);
-
-				// There is something (e.g. an item), but nothing you could
-				// talk to.
-				String message = game.getInvalidCommandText();
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
-						game.getFailedFgColor());
 			}
 		}
+
 	}
 
 }

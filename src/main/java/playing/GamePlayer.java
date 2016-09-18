@@ -176,7 +176,7 @@ public class GamePlayer implements GeneralIOManager {
 	 * recognizable.
 	 */
 	public void noCommand() {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "CommandType not identifiable");
+		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Command type not identifiable");
 
 		io.println(currentReplacer.replacePlaceholders(game.getNoCommandText()), game.getFailedBgColor(),
 				game.getFailedFgColor());

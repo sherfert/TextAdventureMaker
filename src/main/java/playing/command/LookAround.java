@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 import data.Game;
 import playing.GamePlayer;
-import playing.parser.Parameter;
 
 /**
  * Command to look around.
@@ -42,28 +41,44 @@ public class LookAround extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != numberOfParameters) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Execute: wrong number of parameters");
-			return;
-		}
-		lookAround();
+	public CommandExecution newExecution(String input) {
+		return new LookAroundExecution(input);
 	}
-
+	
 	/**
-	 * Displays the location entered text to the player.
+	 * Execution of the look around command.
+	 * 
+	 * @author Satia
 	 */
-	private void lookAround() {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE,
-				"Looking around");
-		
-		Game game = gamePlayer.getGame();
+	private class LookAroundExecution extends CommandExecution {
 
-		io.println(
-				currentReplacer.replacePlaceholders(game.getPlayer()
-						.getLocation().getEnteredText()),
-				game.getNeutralBgColor(), game.getNeutralFgColor());
+		/**
+		 * @param input
+		 *            the user input
+		 */
+		public LookAroundExecution(String input) {
+			super(LookAround.this, input);
+		}
+
+		@Override
+		public boolean hasObjects() {
+			return true;
+		}
+
+		@Override
+		public void execute() {
+			configureReplacer();
+			Game game = gamePlayer.getGame();
+
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE,
+					"Looking around");
+
+			io.println(
+					currentReplacer.replacePlaceholders(game.getPlayer()
+							.getLocation().getEnteredText()),
+					game.getNeutralBgColor(), game.getNeutralFgColor());
+		}
+
 	}
 
 }

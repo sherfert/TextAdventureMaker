@@ -1,6 +1,3 @@
-/**
- * 
- */
 package playing.command;
 
 import java.util.List;
@@ -11,16 +8,12 @@ import java.util.logging.Logger;
 import data.Game;
 import data.InventoryItem;
 import data.interfaces.Combinable;
-import data.interfaces.Inspectable;
 import data.interfaces.PassivelyUsable;
 import data.interfaces.UsableWithSomething;
 import exception.DBClosedException;
-import exception.DBIncompatibleException;
-import persistence.InspectableObjectManager;
 import persistence.InventoryItemManager;
 import playing.GamePlayer;
 import playing.PlaceholderReplacer;
-import playing.parser.Parameter;
 import playing.parser.PatternGenerator;
 
 /**
@@ -37,7 +30,7 @@ public class UseWithCombine extends Command {
 	public UseWithCombine(GamePlayer gamePlayer) {
 		super(gamePlayer, 2);
 	}
-	
+
 	@Override
 	public String getHelpText() {
 		return this.gamePlayer.getGame().getUseWithCombineHelpText();
@@ -58,231 +51,214 @@ public class UseWithCombine extends Command {
 	}
 
 	@Override
-	public void execute(boolean originalCommand, Parameter... parameters) {
-		if (parameters.length != numberOfParameters) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Execute: wrong number of parameters");
-			return;
-		}
-		useWithOrCombine(originalCommand, parameters[0], parameters[1]);
+	public CommandExecution newExecution(String input) {
+		return new UseWithCombineExecution(input);
 	}
 
 	/**
-	 * Tries to use/combine the objects with the given names. The (additional)
-	 * actions will be performed. A message informing about success/failure will
-	 * be displayed.
+	 * Execution of the use with/combine command.
 	 * 
-	 * o0 has to denote a Combinable or UsableWithSomething, o1 can be that or
-	 * a HasLocation.
-	 * 
-	 * @param originalCommand
-	 *            if the command was original (or else additional). Used to test
-	 *            if an additional command really belonged to the chosen
-	 *            identifier.
-	 * @param parameter1
-	 *            the first parameter.
-	 * @param parameter2
-	 *            the second parameter.
+	 * @author Satia
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void useWithOrCombine(boolean originalCommand, Parameter parameter1, Parameter parameter2) {
-		String identifier1 = parameter1.getIdentifier();
-		String identifier2 = parameter2.getIdentifier();
+	private class UseWithCombineExecution extends CommandExecution {
 
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Usewith/combine identifiers {0} / {1}",
-				new Object[] { identifier1, identifier2 });
-
-		Game game = gamePlayer.getGame();
-
-		InspectableObjectManager iom = persistenceManager.getInspectableObjectManager();
-
-		Inspectable object1;
-		Inspectable object2;
-		try {
-			object1 = iom.getInspectable(identifier1);
-			object2 = iom.getInspectable(identifier2);
-		} catch (DBClosedException | DBIncompatibleException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
-					"Operating on a closed/incompatible DB", e);
-			return;
-		}
-		// Save identifiers
-		currentReplacer.setIdentifier(identifier1);
-		currentReplacer.setIdentifier2(identifier2);
-
-		if (object1 != null) {
-			currentReplacer.setName(object1.getName());
-		}
-		if (object2 != null) {
-			currentReplacer.setName2(object2.getName());
+		/**
+		 * @param input
+		 *            the user input
+		 */
+		public UseWithCombineExecution(String input) {
+			super(UseWithCombine.this, input);
 		}
 
-		// Check types of both objects (which can be null)
-		if (object1 instanceof UsableWithSomething || object1 instanceof Combinable) {
-			/*
-			 * The classes must be the same, since the generic type information
-			 * cannot be inferred at runtime.
-			 */
-			if (object1 instanceof Combinable && object2 instanceof Combinable
-					&& object1.getClass() == object2.getClass()) {
-				// The rawtype can be used since we know they're the same type
+		@Override
+		public boolean hasObjects() {
+			findInspectableObjects();
+			return object1 != null && object2 != null
+					&& ((object1 instanceof Combinable && object2 instanceof Combinable
+							&& object1.getClass() == object2.getClass())
+							|| (object1 instanceof UsableWithSomething && object2 instanceof PassivelyUsable));
+		}
 
-				// Combine
-				combine(originalCommand, (Combinable) object1, (Combinable) object2, game);
-			} else if (object1 instanceof UsableWithSomething && object2 instanceof PassivelyUsable) {
-				// UseWith
-				useWith(originalCommand, (UsableWithSomething) object1, (PassivelyUsable) object2, game);
-			} else if (object2 != null) {
-				// Error: Object2 not of correct type
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Usewith/combine object not of type UsableWithSomething/Combinable {0}", identifier2);
+		@Override
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		public void execute() {
+			configureReplacer();
+			Game game = gamePlayer.getGame();
+			String identifier1 = parameters[0].getIdentifier();
+			String identifier2 = parameters[1].getIdentifier();
+			
+			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Usewith/combine identifiers {0} / {1}",
+					new Object[] { identifier1, identifier2 });
+			
+			// Check types of both objects (which can be null)
+			if (object1 instanceof UsableWithSomething || object1 instanceof Combinable) {
+				/*
+				 * The classes must be the same, since the generic type information
+				 * cannot be inferred at runtime.
+				 */
+				if (object1 instanceof Combinable && object2 instanceof Combinable
+						&& object1.getClass() == object2.getClass()) {
+					// The rawtype can be used since we know they're the same type
 
-				String message = game.getInvalidCommandText();
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
-						game.getFailedFgColor());
-
-			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Usewith/combine object not found {0}",
-						identifier2);
-
-				// Error: Object2 neither in inventory nor in location
-				String message = PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchItemText()) + " "
-						+ PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
-						game.getFailedFgColor());
-			}
-		} else {
-			if (object2 instanceof UsableWithSomething) {
-				if (object1 != null) {
-					// Error: Object1 not of correct type
+					// Combine
+					combine(originalCommand, (Combinable) object1, (Combinable) object2, game);
+				} else if (object1 instanceof UsableWithSomething && object2 instanceof PassivelyUsable) {
+					// UseWith
+					useWith(originalCommand, (UsableWithSomething) object1, (PassivelyUsable) object2, game);
+				} else if (object2 != null) {
+					// Error: Object2 not of correct type
 					Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-							"Usewith/combine object not of type UsableWithSomething/Combinable {0}", identifier1);
+							"Usewith/combine object not of type UsableWithSomething/Combinable {0}", identifier2);
 
 					String message = game.getInvalidCommandText();
 					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
 							game.getFailedFgColor());
+
 				} else {
 					Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Usewith/combine object not found {0}",
-							identifier1);
+							identifier2);
 
-					// Error: Object1 not in inventory
-					String message = game.getNoSuchItemText() + " " + game.getNoSuchInventoryItemText();
+					// Error: Object2 neither in inventory nor in location
+					String message = PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchItemText()) + " "
+							+ PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchInventoryItemText());
 					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
 							game.getFailedFgColor());
 				}
 			} else {
-				Logger.getLogger(this.getClass().getName()).log(Level.FINER,
-						"Usewith/combine objects not found {0} / {1}", new Object[] { identifier1, identifier2 });
+				if (object2 instanceof UsableWithSomething) {
+					if (object1 != null) {
+						// Error: Object1 not of correct type
+						Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+								"Usewith/combine object not of type UsableWithSomething/Combinable {0}", identifier1);
 
-				// Error: Neither Object1 nor Object2 in inventory
-				String message = game.getNoSuchInventoryItemText() + " "
-						+ PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchInventoryItemText());
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
-						game.getFailedFgColor());
+						String message = game.getInvalidCommandText();
+						io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+								game.getFailedFgColor());
+					} else {
+						Logger.getLogger(this.getClass().getName()).log(Level.FINER, "Usewith/combine object not found {0}",
+								identifier1);
+
+						// Error: Object1 not in inventory
+						String message = game.getNoSuchItemText() + " " + game.getNoSuchInventoryItemText();
+						io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+								game.getFailedFgColor());
+					}
+				} else {
+					Logger.getLogger(this.getClass().getName()).log(Level.FINER,
+							"Usewith/combine objects not found {0} / {1}", new Object[] { identifier1, identifier2 });
+
+					// Error: Neither Object1 nor Object2 in inventory
+					String message = game.getNoSuchInventoryItemText() + " "
+							+ PlaceholderReplacer.convertFirstToSecondPlaceholders(game.getNoSuchInventoryItemText());
+					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+							game.getFailedFgColor());
+				}
 			}
 		}
-	}
-
-	/**
-	 * Combines two {@link InventoryItem}s.
-	 * 
-	 * @param originalCommand
-	 *            if the command was original (or else additional).
-	 * @param item1
-	 *            the first item
-	 * @param item2
-	 *            the second item
-	 * @param game
-	 *            the game
-	 */
-	private <E> void combine(boolean originalCommand, Combinable<E> item1, Combinable<E> item2, Game game) {
-		if (!originalCommand) {
-			// Check if the additional command belongs the the chosen
-			// item1 with item2 (not vice versa!)
-			if (!PatternGenerator.getPattern(item1.getAdditionalCombineCommands(item2))
-					.matcher(currentReplacer.getInput()).matches()) {
-				// no match
-				String message = game.getNotUsableWithText();
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
-						game.getFailedFgColor());
-				return;
+		
+		/**
+		 * Combines two {@link InventoryItem}s.
+		 * 
+		 * @param originalCommand
+		 *            if the command was original (or else additional).
+		 * @param item1
+		 *            the first item
+		 * @param item2
+		 *            the second item
+		 * @param game
+		 *            the game
+		 */
+		private <E> void combine(boolean originalCommand, Combinable<E> item1, Combinable<E> item2, Game game) {
+			if (!originalCommand) {
+				// Check if the additional command belongs the the chosen
+				// item1 with item2 (not vice versa!)
+				if (!PatternGenerator.getPattern(item1.getAdditionalCombineCommands(item2))
+						.matcher(currentReplacer.getInput()).matches()) {
+					// no match
+					String message = game.getNotUsableWithText();
+					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+							game.getFailedFgColor());
+					return;
+				}
 			}
+
+			if (item1.isCombiningEnabledWith(item2)) {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Combine enabled id {0} with {1}",
+						new Object[] { item1.getId(), item2.getId() });
+
+				// Combining was successful
+				String message = item1.getCombineWithSuccessfulText(item2);
+				if (message == null) {
+					message = game.getUsedWithText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
+						game.getSuccessfullFgColor());
+			} else {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Combine disabled id {0} with {1}",
+						new Object[] { item1.getId(), item2.getId() });
+
+				// Combining was not successful
+				String message = item1.getCombineWithForbiddenText(item2);
+				if (message == null) {
+					message = game.getNotUsableWithText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
+			}
+			// Effect depends on enabled status and additional actions
+			item1.combineWith(item2, game);
 		}
 
-		if (item1.isCombiningEnabledWith(item2)) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Combine enabled id {0} with {1}",
-					new Object[] { item1.getId(), item2.getId() });
-
-			// Combining was successful
-			String message = item1.getCombineWithSuccessfulText(item2);
-			if (message == null) {
-				message = game.getUsedWithText();
+		/**
+		 * Uses an {@link UsableWithSomething} with an {@link PassivelyUsable}.
+		 * 
+		 * @param originalCommand
+		 *            if the command was original (or else additional).
+		 * @param usable
+		 *            the {@link UsableWithSomething}
+		 * @param object
+		 *            the object
+		 * @param game
+		 *            the game
+		 */
+		private void useWith(boolean originalCommand, UsableWithSomething usable, PassivelyUsable object, Game game) {
+			if (!originalCommand) {
+				// Check if the additional command belongs the the chosen
+				// usable with object.
+				if (!PatternGenerator.getPattern(usable.getAdditionalUseWithCommands(object))
+						.matcher(currentReplacer.getInput()).matches()) {
+					// no match
+					String message = game.getNotUsableWithText();
+					io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
+							game.getFailedFgColor());
+					return;
+				}
 			}
-			io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
-					game.getSuccessfullFgColor());
-		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Combine disabled id {0} with {1}",
-					new Object[] { item1.getId(), item2.getId() });
 
-			// Combining was not successful
-			String message = item1.getCombineWithForbiddenText(item2);
-			if (message == null) {
-				message = game.getNotUsableWithText();
+			if (usable.isUsingEnabledWith(object)) {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Usewith enabled id {0} with {1}",
+						new Object[] { usable.getId(), object.getId() });
+
+				// Using was successful
+				String message = usable.getUseWithSuccessfulText(object);
+				if (message == null) {
+					message = game.getUsedWithText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
+						game.getSuccessfullFgColor());
+			} else {
+				Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Usewith disabled id {0} with {1}",
+						new Object[] { usable.getId(), object.getId() });
+
+				// Using was not successful
+				String message = usable.getUseWithForbiddenText(object);
+				if (message == null) {
+					message = game.getNotUsableWithText();
+				}
+				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
 			}
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
+			// Effect depends on additional actions
+			usable.useWith(object, game);
 		}
-		// Effect depends on enabled status and additional actions
-		item1.combineWith(item2, game);
-	}
 
-	/**
-	 * Uses an {@link UsableWithSomething} with an {@link PassivelyUsable}.
-	 * 
-	 * @param originalCommand
-	 *            if the command was original (or else additional).
-	 * @param usable
-	 *            the {@link UsableWithSomething}
-	 * @param object
-	 *            the object
-	 * @param game
-	 *            the game
-	 */
-	private void useWith(boolean originalCommand, UsableWithSomething usable, PassivelyUsable object, Game game) {
-		if (!originalCommand) {
-			// Check if the additional command belongs the the chosen
-			// usable with object.
-			if (!PatternGenerator.getPattern(usable.getAdditionalUseWithCommands(object))
-					.matcher(currentReplacer.getInput()).matches()) {
-				// no match
-				String message = game.getNotUsableWithText();
-				io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(),
-						game.getFailedFgColor());
-				return;
-			}
-		}
-
-		if (usable.isUsingEnabledWith(object)) {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Usewith enabled id {0} with {1}",
-					new Object[] { usable.getId(), object.getId() });
-
-			// Using was successful
-			String message = usable.getUseWithSuccessfulText(object);
-			if (message == null) {
-				message = game.getUsedWithText();
-			}
-			io.println(currentReplacer.replacePlaceholders(message), game.getSuccessfullBgColor(),
-					game.getSuccessfullFgColor());
-		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.FINEST, "Usewith disabled id {0} with {1}",
-					new Object[] { usable.getId(), object.getId() });
-
-			// Using was not successful
-			String message = usable.getUseWithForbiddenText(object);
-			if (message == null) {
-				message = game.getNotUsableWithText();
-			}
-			io.println(currentReplacer.replacePlaceholders(message), game.getFailedBgColor(), game.getFailedFgColor());
-		}
-		// Effect depends on additional actions
-		usable.useWith(object, game);
 	}
 }
