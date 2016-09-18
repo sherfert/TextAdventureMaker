@@ -65,9 +65,9 @@ public class InventoryItemController extends GameDataController {
 
 		usableObjectsListView.initialize(invitem.getObjectsUsableWith(), () -> {
 			List<PassivelyUsable> allObjects = new ArrayList<>();
-			// TODO include ways
 			allObjects.addAll(this.currentGameManager.getPersistenceManager().getItemManager().getAllItems());
 			allObjects.addAll(this.currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+			allObjects.addAll(this.currentGameManager.getPersistenceManager().getWayManager().getAllWays());
 			return allObjects;
 		} , null, this::usableSelected, (i) -> invitem.ensureHasUsageInformation(i), null);
 

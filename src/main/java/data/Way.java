@@ -19,6 +19,7 @@ import javax.persistence.Transient;
 
 import data.action.AbstractAction;
 import data.action.MoveAction;
+import data.interfaces.PassivelyUsable;
 import data.interfaces.Travelable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class Way extends InspectableObject implements Travelable {
+public class Way extends InspectableObject implements Travelable, PassivelyUsable {
 
 	/**
 	 * All additional move actions.

@@ -30,8 +30,6 @@ import data.interfaces.UsableWithSomething;
 /**
  * Any item that can appear in your inventory. These items are not in locations.
  * 
- * TODO inv items should be used with ways, too
- * 
  * @author Satia
  */
 @Entity
@@ -416,7 +414,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	private UseWithInformation getUseWithInformation(PassivelyUsable object) {
 		UseWithInformation result;
 
-		if (object instanceof Item || object instanceof Person) {
+		if (object instanceof Item || object instanceof Person || object instanceof Way) {
 			result = useWithInformation.get(object);
 			if (result == null) {
 				// Cast to NamedDescribedObject.
