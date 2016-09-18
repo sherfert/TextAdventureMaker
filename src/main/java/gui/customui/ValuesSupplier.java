@@ -2,7 +2,7 @@ package gui.customui;
 
 import java.util.List;
 
-import data.NamedObject;
+import data.interfaces.HasName;
 import exception.DBClosedException;
 
 /**
@@ -13,7 +13,7 @@ import exception.DBClosedException;
  * @param <E>
  *            the type
  */
-public interface ValuesSupplier<E extends NamedObject> {
+public interface ValuesSupplier<E extends HasName> {
 	/**
 	 * Get the values.
 	 * 

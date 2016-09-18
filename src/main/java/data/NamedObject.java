@@ -14,6 +14,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 import data.interfaces.HasId;
+import data.interfaces.HasName;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -26,7 +27,7 @@ import javafx.beans.property.StringProperty;
  */
 @MappedSuperclass
 @Access(AccessType.PROPERTY)
-public abstract class NamedObject implements HasId {
+public abstract class NamedObject implements HasName {
 
 	/**
 	 * The id.
@@ -72,18 +73,13 @@ public abstract class NamedObject implements HasId {
 		this.id = id;
 	}
 
-	/**
-	 * @return the name
-	 */
+	@Override
 	@Column(nullable = false)
 	public String getName() {
 		return name.get();
 	}
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
+	@Override
 	public void setName(String name) {
 		this.name.set(name);
 	}

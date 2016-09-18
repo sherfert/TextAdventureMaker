@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import data.NamedObject;
+import data.interfaces.HasName;
 import gui.MainWindowController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,7 +33,7 @@ import javafx.scene.layout.Priority;
  * 
  * @author Satia
  */
-public abstract class NamedObjectListView<E extends NamedObject> extends BorderPane {
+public abstract class NamedObjectListView<E extends HasName> extends BorderPane {
 
 	@FXML
 	private ListView<E> listView;

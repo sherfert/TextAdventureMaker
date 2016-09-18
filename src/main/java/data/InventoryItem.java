@@ -45,16 +45,16 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * value, if it was not stored before. The other inventory items map will be
 	 * synchronized, too.
 	 * 
-	 * ManyToMany since exactly TWO InventoryItems store this
-	 * CombineInformation in their map.
+	 * ManyToMany since exactly TWO InventoryItems store this CombineInformation
+	 * in their map.
 	 */
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_S", //
+	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combineInformation_S", //
 	foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_D", //
-	foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") )
-	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_KEY", //
-	foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	inverseForeignKey = @ForeignKey(name = "FK_InvItem_combineInformation_D", //
+	foreignKeyDefinition = "FOREIGN KEY (combineInformation_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") )
+	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combineInformation_KEY", //
+	foreignKeyDefinition = "FOREIGN KEY (combineInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombineInformation> combineInformation;
 
@@ -75,34 +75,18 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	private Map<InventoryItem, CombineCommands> additionalCombineCommands;
 
 	/**
-	 * An inventory item can be used with {@link Item}s. For each object there
-	 * is additional information about the usability, etc. The method
-	 * {@link InventoryItem#getUsableHasLocation(PassivelyUsable)} adds key and
-	 * value, if it was not stored before. It will choose the right map from the
-	 * two.
+	 * An inventory item can be used with {@link PassivelyUsable}s. For each
+	 * object there is additional information about the usability, etc. The
+	 * method {@link InventoryItem#getUseWithInformation(PassivelyUsable)} adds
+	 * key and value, if it was not stored before.
 	 */
 	@OneToMany(cascade = { CascadeType.PERSIST })
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usableItems", //
-	foreignKeyDefinition = "FOREIGN KEY (usableItems_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
-	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usableItems_KEY", //
-	foreignKeyDefinition = "FOREIGN KEY (usableItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation", //
+	foreignKeyDefinition = "FOREIGN KEY (useWithInformation_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation_KEY", //
+	foreignKeyDefinition = "FOREIGN KEY (useWithInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
-	private Map<Item, UseWithInformation> usableItems;
-
-	/**
-	 * An inventory item can be used with {@link Person}s. For each object there
-	 * is additional information about the usability, etc. The method
-	 * {@link InventoryItem#getUsableHasLocation(PassivelyUsable)} adds key and
-	 * value, if it was not stored before. It will choose the right map from the
-	 * two.
-	 */
-	@OneToMany(cascade = { CascadeType.PERSIST })
-	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usablePersons", //
-	foreignKeyDefinition = "FOREIGN KEY (usablePersons_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
-	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_usablePersons_KEY", //
-	foreignKeyDefinition = "FOREIGN KEY (usablePersons_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
-	@Access(AccessType.FIELD)
-	private Map<Person, UseWithInformation> usablePersons;
+	private Map<NamedDescribedObject, UseWithInformation> useWithInformation;
 
 	/**
 	 * This field is declared here just to ensure deletion from the list. It is
@@ -165,7 +149,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void addAdditionalActionToUseWith(PassivelyUsable object, AbstractAction action) {
-		getUsableHasLocation(object).additionalUseWithActions.add(action);
+		getUseWithInformation(object).additionalUseWithActions.add(action);
 	}
 
 	@Override
@@ -180,7 +164,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void addAdditionalUseWithCommand(PassivelyUsable object, String command) {
-		getUsableHasLocation(object).additionalUseWithCommands.add(command);
+		getUseWithInformation(object).additionalUseWithCommands.add(command);
 	}
 
 	@Override
@@ -223,7 +207,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public List<AbstractAction> getAdditionalActionsFromUseWith(PassivelyUsable object) {
-		return getUsableHasLocation(object).additionalUseWithActions;
+		return getUseWithInformation(object).additionalUseWithActions;
 	}
 
 	@Override
@@ -258,7 +242,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public List<String> getAdditionalUseWithCommands(PassivelyUsable object) {
-		return getUsableHasLocation(object).additionalUseWithCommands;
+		return getUseWithInformation(object).additionalUseWithCommands;
 	}
 
 	@Override
@@ -270,13 +254,13 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public String getUseWithForbiddenText(PassivelyUsable object) {
-		return getUsableHasLocation(object).useWithForbiddenText;
+		return getUseWithInformation(object).useWithForbiddenText;
 	}
 
 	@Override
 	@Transient
 	public String getUseWithSuccessfulText(PassivelyUsable object) {
-		return getUsableHasLocation(object).useWithSuccessfulText;
+		return getUseWithInformation(object).useWithSuccessfulText;
 	}
 
 	@Override
@@ -288,7 +272,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public boolean isUsingEnabledWith(PassivelyUsable object) {
-		return getUsableHasLocation(object).enabled;
+		return getUseWithInformation(object).enabled;
 	}
 
 	@Override
@@ -298,13 +282,13 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void removeAdditionalActionFromUseWith(PassivelyUsable object, AbstractAction action) {
-		getUsableHasLocation(object).additionalUseWithActions.remove(action);
+		getUseWithInformation(object).additionalUseWithActions.remove(action);
 	}
 
 	@Override
 	@Transient
 	public void setAdditionalUseWithCommands(PassivelyUsable object, List<String> commands) {
-		getUsableHasLocation(object).additionalUseWithCommands = commands;
+		getUseWithInformation(object).additionalUseWithCommands = commands;
 	}
 
 	@Override
@@ -314,7 +298,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void removeAdditionalUseWithCommand(PassivelyUsable object, String command) {
-		getUsableHasLocation(object).additionalUseWithCommands.remove(command);
+		getUseWithInformation(object).additionalUseWithCommands.remove(command);
 	}
 
 	@Override
@@ -344,17 +328,17 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void setUseWithForbiddenText(PassivelyUsable object, String forbiddenText) {
-		getUsableHasLocation(object).useWithForbiddenText = forbiddenText;
+		getUseWithInformation(object).useWithForbiddenText = forbiddenText;
 	}
 
 	@Override
 	public void setUseWithSuccessfulText(PassivelyUsable object, String successfulText) {
-		getUsableHasLocation(object).useWithSuccessfulText = successfulText;
+		getUseWithInformation(object).useWithSuccessfulText = successfulText;
 	}
 
 	@Override
 	public void setUsingEnabledWith(PassivelyUsable object, boolean enabled) {
-		getUsableHasLocation(object).enabled = enabled;
+		getUseWithInformation(object).enabled = enabled;
 	}
 
 	@Override
@@ -364,7 +348,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 				new Object[] { this, object });
 
 		// Trigger all additional actions
-		for (AbstractAction abstractAction : getUsableHasLocation(object).additionalUseWithActions) {
+		for (AbstractAction abstractAction : getUseWithInformation(object).additionalUseWithActions) {
 			abstractAction.triggerAction(game);
 		}
 	}
@@ -429,22 +413,18 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * @return the associated {@link UseWithInformation}.
 	 */
 	@Transient
-	private UseWithInformation getUsableHasLocation(PassivelyUsable object) {
+	private UseWithInformation getUseWithInformation(PassivelyUsable object) {
 		UseWithInformation result;
 
-		if (object instanceof Item) {
-			result = usableItems.get(object);
+		if (object instanceof Item || object instanceof Person) {
+			result = useWithInformation.get(object);
 			if (result == null) {
-				usableItems.put((Item) object, result = new UseWithInformation());
-			}
-		} else if (object instanceof Person) {
-			result = usablePersons.get(object);
-			if (result == null) {
-				usablePersons.put((Person) object, result = new UseWithInformation());
+				// Cast to NamedDescribedObject.
+				useWithInformation.put((NamedDescribedObject) object, result = new UseWithInformation());
 			}
 		} else {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Not supported PassivelyUsable subclass: {0}",
-					object.getClass().getName());
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"Not supported PassivelyUsable subclass: {0}", object.getClass().getName());
 			return null;
 		}
 		return result;
@@ -457,7 +437,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 *            the object.
 	 */
 	public void ensureHasUsageInformation(PassivelyUsable object) {
-		getUsableHasLocation(object);
+		getUseWithInformation(object);
 	}
 
 	/**
@@ -471,24 +451,18 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	}
 
 	/**
-	 * Obtains all items for which additional information for using them exists.
-	 * 
-	 * @return a list of items.
-	 */
-	@Transient
-	public List<Item> getItemsUsableWith() {
-		return new ArrayList<>(usableItems.keySet());
-	}
-
-	/**
-	 * Obtains all persons for which additional information for using them
+	 * Obtains all objects for which additional information for using them
 	 * exists.
 	 * 
-	 * @return a list of persons.
+	 * @return a list of objects.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Transient
-	public List<Person> getPersonsUsableWith() {
-		return new ArrayList<>(usablePersons.keySet());
+	public List<PassivelyUsable> getObjectsUsableWith() {
+		// The set contains NamedDescribedObjects. By not parameterizing the
+		// ArrayList, we assume that all included items implement
+		// PassivelyUsable. The method getUseWithInformation should ensure this.
+		return new ArrayList(useWithInformation.keySet());
 	}
 
 	/**
@@ -523,8 +497,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * Initializes the fields.
 	 */
 	private final void init() {
-		usableItems = new HashMap<>();
-		usablePersons = new HashMap<>();
+		useWithInformation = new HashMap<>();
 		combineInformation = new HashMap<>();
 		additionalCombineCommands = new HashMap<>();
 		addIIActions = new ArrayList<>();

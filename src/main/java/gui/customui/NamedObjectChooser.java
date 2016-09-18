@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import org.controlsfx.control.textfield.TextFields;
 
-import data.NamedObject;
+import data.interfaces.HasName;
 import exception.DBClosedException;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
@@ -25,7 +25,7 @@ import javafx.util.StringConverter;
  * @param <E>
  *            the concrete subtype that should be managed by inheriting choosers
  */
-public abstract class NamedObjectChooser<E extends NamedObject> extends TextField {
+public abstract class NamedObjectChooser<E extends HasName> extends TextField {
 
 	/** All available values to choose from */
 	private List<E> availableValues;

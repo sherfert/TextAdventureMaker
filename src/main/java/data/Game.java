@@ -5,7 +5,6 @@ import com.googlecode.lanterna.terminal.Terminal.Color;
 import data.action.AddInventoryItemsAction;
 import data.interfaces.Combinable;
 import data.interfaces.HasId;
-import data.interfaces.HasLocation;
 import data.interfaces.PassivelyUsable;
 import data.interfaces.UsableWithSomething;
 import javafx.beans.property.IntegerProperty;

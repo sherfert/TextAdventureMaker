@@ -3,7 +3,6 @@ package data.action;
 import data.Game;
 import data.InventoryItem;
 import data.NamedDescribedObject;
-import data.interfaces.HasLocation;
 import data.interfaces.PassivelyUsable;
 
 import javax.persistence.Access;

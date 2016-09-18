@@ -5,8 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
-<?import gui.customui.ItemListView?>
-<?import gui.customui.PersonListView?>
+<?import gui.customui.PassivelyUsableListView?>
 <?import gui.customui.InventoryItemListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
@@ -38,17 +37,12 @@
             </VBox>
          </content>
       </Tab>
-    <Tab text="Using with an item">
+    <Tab text="Using it with something">
          <content>
-            <ItemListView fx:id="usableItemsListView" />
+            <PassivelyUsableListView fx:id="usableObjectsListView" />
          </content>
       </Tab>
-      <Tab text="Using with a person">
-         <content>
-            <PersonListView fx:id="usablePersonsListView" />
-         </content>
-      </Tab>
-      <Tab text="Combining with an inventory item">
+      <Tab text="Combining it with another inventory item">
          <content>
             <InventoryItemListView fx:id="usableInvItemsListView" />
          </content>

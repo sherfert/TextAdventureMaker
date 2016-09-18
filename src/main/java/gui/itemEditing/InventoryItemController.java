@@ -1,5 +1,7 @@
 package gui.itemEditing;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import data.InventoryItem;
@@ -7,8 +9,7 @@ import data.interfaces.PassivelyUsable;
 import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.InventoryItemListView;
-import gui.customui.ItemListView;
-import gui.customui.PersonListView;
+import gui.customui.PassivelyUsableListView;
 import gui.include.InspectableObjectController;
 import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
@@ -35,10 +36,7 @@ public class InventoryItemController extends GameDataController {
 	private Button removeButton;
 
 	@FXML
-	private ItemListView usableItemsListView;
-
-	@FXML
-	private PersonListView usablePersonsListView;
+	private PassivelyUsableListView usableObjectsListView;
 
 	@FXML
 	private InventoryItemListView usableInvItemsListView;
@@ -65,13 +63,13 @@ public class InventoryItemController extends GameDataController {
 				"This will delete the inventory item, usage information with other inventory items, items and persons, "
 						+ "and actions associated with any of the deleted entities."));
 
-		usableItemsListView.initialize(invitem.getItemsUsableWith(),
-				this.currentGameManager.getPersistenceManager().getItemManager()::getAllItems, null,
-				this::usableSelected, (i) -> invitem.ensureHasUsageInformation(i), null);
-
-		usablePersonsListView.initialize(invitem.getPersonsUsableWith(),
-				this.currentGameManager.getPersistenceManager().getPersonManager()::getAllPersons, null,
-				this::usableSelected, (i) -> invitem.ensureHasUsageInformation(i), null);
+		usableObjectsListView.initialize(invitem.getObjectsUsableWith(), () -> {
+			List<PassivelyUsable> allObjects = new ArrayList<>();
+			// TODO include ways
+			allObjects.addAll(this.currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+			allObjects.addAll(this.currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+			return allObjects;
+		} , null, this::usableSelected, (i) -> invitem.ensureHasUsageInformation(i), null);
 
 		usableInvItemsListView.initialize(invitem.getInventoryItemsCombinableWith(),
 				() -> this.currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems()

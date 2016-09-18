@@ -5,7 +5,6 @@ import java.util.List;
 
 import data.Game;
 import data.InventoryItem;
-import data.interfaces.HasLocation;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
