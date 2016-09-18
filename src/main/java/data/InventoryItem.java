@@ -10,16 +10,11 @@ import java.util.logging.Logger;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
@@ -29,7 +24,6 @@ import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.Combinable;
-import data.interfaces.HasId;
 import data.interfaces.PassivelyUsable;
 import data.interfaces.UsableWithSomething;
 
@@ -45,208 +39,9 @@ import data.interfaces.UsableWithSomething;
 public class InventoryItem extends UsableObject implements UsableWithSomething, Combinable<InventoryItem> {
 
 	/**
-	 * Attributes of an {@link InventoryItem} that can be used with an
-	 * {@link InventoryItem}.
-	 * 
-	 * @author Satia
-	 */
-	@Entity
-	private static class CombineInformation implements HasId {
-
-		/**
-		 * The action adding the new inventory items.
-		 * 
-		 * No ON CASCADE definitions, since this field is not accessible.
-		 */
-		@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-		@JoinColumn(nullable = false)
-		private final AddInventoryItemsAction addInventoryItemsAction;
-
-		/**
-		 * All actions triggered when the two {@link InventoryItem}s are
-		 * combined. They are triggered regardless of the enabled status.
-		 */
-		@ManyToMany(cascade = { CascadeType.PERSIST })
-		@JoinTable(name = "CII_ACWA", foreignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_S", //
-		foreignKeyDefinition = "FOREIGN KEY (InventoryItem$CombinableInventoryItem_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") , //
-		inverseForeignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_D", //
-		foreignKeyDefinition = "FOREIGN KEY (additionalCombineWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
-		private final List<AbstractAction> additionalCombineWithActions;
-
-		/**
-		 * The text displayed when combining is disabled but the user tries to
-		 * trigger the connection or suggests the default text to be displayed
-		 * if {@code null}.
-		 */
-		@Column(nullable = true)
-		private String combineWithForbiddenText;
-
-		/**
-		 * The text displayed when combining is enabled and the user tries to
-		 * trigger the connection or suggests the default text to be displayed
-		 * if {@code null}.
-		 */
-		@Column(nullable = true)
-		private String combineWithSuccessfulText;
-
-		/**
-		 * Whether combining of the two {@link InventoryItem}s should be
-		 * enabled.
-		 */
-		@Column(nullable = false)
-		private boolean enabled;
-
-		/**
-		 * The id.
-		 */
-		@Id
-		@GeneratedValue
-		private int id;
-
-		/**
-		 * Whether the two partners should be removed when combined
-		 * successfully.
-		 */
-		@Column(nullable = false)
-		private boolean removeCombinables;
-
-		/**
-		 * Disabled by default and no forbidden/successful texts. Removing items
-		 * also disabled by default.
-		 */
-		public CombineInformation() {
-			additionalCombineWithActions = new ArrayList<>();
-			addInventoryItemsAction = new AddInventoryItemsAction("");
-			enabled = false;
-			removeCombinables = false;
-		}
-
-		@Override
-		public String toString() {
-			return "CombineInformation{" + "addInventoryItemsActionID=" + addInventoryItemsAction.getId()
-					+ ", additionalCombineWithActionsIDs=" + NamedObject.getIDList(additionalCombineWithActions)
-					+ ", combineWithForbiddenText=" + combineWithForbiddenText + ", combineWithSuccessfulText="
-					+ combineWithSuccessfulText + ", enabled=" + enabled + ", id=" + id + ", removeCombinables="
-					+ removeCombinables + '}';
-		}
-
-		@Override
-		public int getId() {
-			return id;
-		}
-	}
-
-	/**
-	 * Entity for grouping additional combine commands, as they are asymmetric
-	 * and not symmetric like the basic combine commands.
-	 * 
-	 * @author Satia
-	 */
-	@Entity
-	private static class CombineCommands {
-
-		/**
-		 * The id.
-		 */
-		@Id
-		@GeneratedValue
-		private int id;
-
-		/**
-		 * The commands.
-		 */
-		@ElementCollection
-		private List<String> commands = new ArrayList<>();
-
-	}
-
-	/**
-	 * Attributes of an {@link PassivelyUsable} that can be used with an
-	 * {@link InventoryItem}.
-	 * 
-	 * JPA requires this inner class to be static. A back-reference to the
-	 * owning {@link InventoryItem} could optionally be added.
-	 * 
-	 * @author Satia
-	 */
-	@Entity
-	private static class UseWithInformation implements HasId {
-
-		/**
-		 * All actions triggered when the {@link InventoryItem} is used with the
-		 * mapped {@link PassivelyUsable}. They are triggered regardless of the
-		 * enabled status.
-		 */
-		@ManyToMany(cascade = { CascadeType.PERSIST })
-		@JoinTable(name = "UHL_AUWA", foreignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_S", //
-		foreignKeyDefinition = "FOREIGN KEY (InventoryItem$UsableHasLocation_ID) REFERENCES INVENTORYITEM$USABLEHASLOCATION (ID) ON DELETE CASCADE") , //
-		inverseForeignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_D", //
-		foreignKeyDefinition = "FOREIGN KEY (additionalUseWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
-		private final List<AbstractAction> additionalUseWithActions;
-
-		/**
-		 * All additional useWith commands.
-		 */
-		@ElementCollection
-		private List<String> additionalUseWithCommands;
-
-		/**
-		 * Whether using of this {@link InventoryItem} with the mapped
-		 * {@link Item} should be enabled.
-		 */
-		@Column(nullable = false)
-		private boolean enabled;
-
-		/**
-		 * The id.
-		 */
-		@Id
-		@GeneratedValue
-		private int id;
-
-		/**
-		 * The text displayed when using is disabled but the user tries to
-		 * trigger the connection or suggests the default text to be displayed
-		 * if {@code null}.
-		 */
-		@Column(nullable = true)
-		private String useWithForbiddenText;
-
-		/**
-		 * The text displayed when using is enabled and the user tries to
-		 * trigger the connection or suggests the default text to be displayed
-		 * if {@code null}.
-		 */
-		@Column(nullable = true)
-		private String useWithSuccessfulText;
-
-		/**
-		 * Disabled by default and no forbidden/successful texts.
-		 */
-		public UseWithInformation() {
-			additionalUseWithActions = new ArrayList<>();
-			additionalUseWithCommands = new ArrayList<>();
-			enabled = false;
-		}
-
-		@Override
-		public String toString() {
-			return "UseWithInformation{" + "additionalUseWithActionsIDs="
-					+ NamedObject.getIDList(additionalUseWithActions) + ", enabled=" + enabled + ", id=" + id
-					+ ", useWithForbiddenText=" + useWithForbiddenText + ", useWithSuccessfulText="
-					+ useWithSuccessfulText + '}';
-		}
-
-		@Override
-		public int getId() {
-			return id;
-		}
-	}
-
-	/**
 	 * An inventory item can be combined with others. For each inventory item
 	 * there is additional information about the usability, etc. The method
-	 * {@link InventoryItem#getCombinableInventoryItem(Combinable)} adds key and
+	 * {@link InventoryItem#getCombineInformation(Combinable)} adds key and
 	 * value, if it was not stored before. The other inventory items map will be
 	 * synchronized, too.
 	 * 
@@ -261,7 +56,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combinableInventoryItems_KEY", //
 	foreignKeyDefinition = "FOREIGN KEY (combinableInventoryItems_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
-	private Map<InventoryItem, CombineInformation> combineInformations;
+	private Map<InventoryItem, CombineInformation> combineInformation;
 
 	/**
 	 * The additional combine commands for the mapped inventory item. Since the
@@ -365,7 +160,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void addAdditionalActionToCombineWith(Combinable<InventoryItem> partner, AbstractAction action) {
-		getCombinableInventoryItem(partner).additionalCombineWithActions.add(action);
+		getCombineInformation(partner).additionalCombineWithActions.add(action);
 	}
 
 	@Override
@@ -375,7 +170,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void addNewCombinableWhenCombinedWith(Combinable<InventoryItem> partner, InventoryItem newItem) {
-		getCombinableInventoryItem(partner).addInventoryItemsAction.addPickUpItem(newItem);
+		getCombineInformation(partner).addInventoryItemsAction.addPickUpItem(newItem);
 	}
 
 	@Override
@@ -390,7 +185,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void combineWith(Combinable<InventoryItem> partner, Game game) {
-		CombineInformation combination = getCombinableInventoryItem(partner);
+		CombineInformation combination = getCombineInformation(partner);
 		if (combination.enabled) {
 			Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Combining {0} with {1}",
 					new Object[] { this, partner });
@@ -422,7 +217,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public List<AbstractAction> getAdditionalActionsFromCombineWith(Combinable<InventoryItem> partner) {
-		return getCombinableInventoryItem(partner).additionalCombineWithActions;
+		return getCombineInformation(partner).additionalCombineWithActions;
 	}
 
 	@Override
@@ -434,19 +229,19 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public String getCombineWithForbiddenText(Combinable<InventoryItem> partner) {
-		return getCombinableInventoryItem(partner).combineWithForbiddenText;
+		return getCombineInformation(partner).combineWithForbiddenText;
 	}
 
 	@Override
 	@Transient
 	public String getCombineWithSuccessfulText(Combinable<InventoryItem> partner) {
-		return getCombinableInventoryItem(partner).combineWithSuccessfulText;
+		return getCombineInformation(partner).combineWithSuccessfulText;
 	}
 
 	@Override
 	@Transient
 	public List<InventoryItem> getNewCombinablesWhenCombinedWith(Combinable<InventoryItem> partner) {
-		return getCombinableInventoryItem(partner).addInventoryItemsAction.getPickUpItems();
+		return getCombineInformation(partner).addInventoryItemsAction.getPickUpItems();
 	}
 
 	@Override
@@ -469,7 +264,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public boolean getRemoveCombinablesWhenCombinedWith(Combinable<InventoryItem> partner) {
-		return getCombinableInventoryItem(partner).removeCombinables;
+		return getCombineInformation(partner).removeCombinables;
 	}
 
 	@Override
@@ -487,7 +282,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@Override
 	@Transient
 	public boolean isCombiningEnabledWith(Combinable<InventoryItem> partner) {
-		return getCombinableInventoryItem(partner).enabled;
+		return getCombineInformation(partner).enabled;
 	}
 
 	@Override
@@ -498,7 +293,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void removeAdditionalActionFromCombineWith(Combinable<InventoryItem> partner, AbstractAction action) {
-		getCombinableInventoryItem(partner).additionalCombineWithActions.remove(action);
+		getCombineInformation(partner).additionalCombineWithActions.remove(action);
 	}
 
 	@Override
@@ -524,27 +319,27 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	public void removeNewCombinableWhenCombinedWith(Combinable<InventoryItem> partner, InventoryItem newItem) {
-		getCombinableInventoryItem(partner).addInventoryItemsAction.removePickUpItem(newItem);
+		getCombineInformation(partner).addInventoryItemsAction.removePickUpItem(newItem);
 	}
 
 	@Override
 	public void setCombineWithForbiddenText(Combinable<InventoryItem> partner, String forbiddenText) {
-		getCombinableInventoryItem(partner).combineWithForbiddenText = forbiddenText;
+		getCombineInformation(partner).combineWithForbiddenText = forbiddenText;
 	}
 
 	@Override
 	public void setCombineWithSuccessfulText(Combinable<InventoryItem> partner, String successfulText) {
-		getCombinableInventoryItem(partner).combineWithSuccessfulText = successfulText;
+		getCombineInformation(partner).combineWithSuccessfulText = successfulText;
 	}
 
 	@Override
 	public void setCombiningEnabledWith(Combinable<InventoryItem> partner, boolean enabled) {
-		getCombinableInventoryItem(partner).enabled = enabled;
+		getCombineInformation(partner).enabled = enabled;
 	}
 
 	@Override
 	public void setRemoveCombinablesWhenCombinedWith(Combinable<InventoryItem> partner, boolean remove) {
-		getCombinableInventoryItem(partner).removeCombinables = remove;
+		getCombineInformation(partner).removeCombinables = remove;
 	}
 
 	@Override
@@ -584,14 +379,14 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * @return the associated {@link CombineInformation}.
 	 */
 	@Transient
-	private CombineInformation getCombinableInventoryItem(Combinable<InventoryItem> item) {
+	private CombineInformation getCombineInformation(Combinable<InventoryItem> item) {
 		if (item instanceof InventoryItem) {
-			CombineInformation result = combineInformations.get((InventoryItem) item);
+			CombineInformation result = combineInformation.get((InventoryItem) item);
 			if (result == null) {
 				// Create a new mapping
-				combineInformations.put((InventoryItem) item, result = new CombineInformation());
+				combineInformation.put((InventoryItem) item, result = new CombineInformation());
 				// And synchronize other map
-				((InventoryItem) item).combineInformations.put(this, result);
+				((InventoryItem) item).combineInformation.put(this, result);
 			}
 			return result;
 		} else {
@@ -672,7 +467,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 *            the item.
 	 */
 	public void ensureHasCombineInformation(InventoryItem item) {
-		getCombinableInventoryItem(item);
+		getCombineInformation(item);
 	}
 
 	/**
@@ -704,7 +499,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 */
 	@Transient
 	public List<InventoryItem> getInventoryItemsCombinableWith() {
-		return new ArrayList<>(combineInformations.keySet());
+		return new ArrayList<>(combineInformation.keySet());
 	}
 
 	/**
@@ -730,7 +525,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	private final void init() {
 		usableItems = new HashMap<>();
 		usablePersons = new HashMap<>();
-		combineInformations = new HashMap<>();
+		combineInformation = new HashMap<>();
 		additionalCombineCommands = new HashMap<>();
 		addIIActions = new ArrayList<>();
 	}
