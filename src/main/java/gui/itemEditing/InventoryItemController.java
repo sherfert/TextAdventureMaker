@@ -109,9 +109,9 @@ public class InventoryItemController extends GameDataController {
 			return;
 		}
 
-		UsableHasLocationController controller = new UsableHasLocationController(currentGameManager, mwController,
+		UseWithInformationController controller = new UseWithInformationController(currentGameManager, mwController,
 				invitem, o);
-		mwController.pushCenterContent("when used with " + o.getName(), "view/UsableHasLocation.fxml", controller,
+		mwController.pushCenterContent("when used with " + o.getName(), "view/UseWithInformation.fxml", controller,
 				controller::controllerFactory);
 	}
 
@@ -127,9 +127,9 @@ public class InventoryItemController extends GameDataController {
 			return;
 		}
 
-		CombinableInvItemController controller = new CombinableInvItemController(currentGameManager, mwController,
+		CombinationInformationController controller = new CombinationInformationController(currentGameManager, mwController,
 				invitem, i);
-		mwController.pushCenterContent("when combined with " + i.getName(), "view/CombinableInvItem.fxml", controller,
+		mwController.pushCenterContent("when combined with " + i.getName(), "view/CombinationInformation.fxml", controller,
 				controller::controllerFactory);
 	}
 }

@@ -37,7 +37,7 @@
 						<ConversationChooser fx:id="conversationChooser"  />
 						<Label text="Talk Forbidden Text" />
 						<TextField fx:id="editTalkForbiddenTextTF" />
-						<Label text="Talk commands" />
+						<Label fx:id="talkCommandsLabel" />
 						<TextArea fx:id="editTalkCommandsTA" prefHeight="100.0" wrapText="true" />
 					</children>
 					<padding>

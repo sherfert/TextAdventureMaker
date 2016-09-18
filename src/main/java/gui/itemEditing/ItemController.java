@@ -13,6 +13,7 @@ import gui.include.UsableObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -52,7 +53,11 @@ public class ItemController extends GameDataController {
 	private TextField editTakeForbiddenTextTF;
 
 	@FXML
+	private Label takeCommandsLabel;
+
+	@FXML
 	private TextArea editTakeCommandsTA;
+	
 	@FXML
 	private InventoryItemListView pickUpItemsListView;
 
@@ -96,6 +101,8 @@ public class ItemController extends GameDataController {
 		pickUpItemsListView.initialize(item.getPickUpItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::pickUpItemSelected, (ii) -> item.addPickUpItem(ii), (ii) -> item.removePickUpItem(ii));
+		
+		takeCommandsLabel.setText("Additional commands for taking " + item.getName());
 		
 		saveTabIndex(tabPane);
 	}

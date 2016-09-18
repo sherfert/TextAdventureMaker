@@ -49,7 +49,7 @@
                   <TextField fx:id="editTakeSuccessfulTextTF" />
                   <Label text="Take Forbidden Text" />
                   <TextField fx:id="editTakeForbiddenTextTF" />
-                  <Label text="Take commands" />
+                  <Label fx:id="takeCommandsLabel" />
                   <TextArea fx:id="editTakeCommandsTA" prefHeight="100.0" wrapText="true" />
                   <Label text="Inventory items added to the inventory when picked up" />
                   <InventoryItemListView fx:id="pickUpItemsListView" />

@@ -5,6 +5,7 @@ import gui.GameDataController;
 import gui.MainWindowController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -33,6 +34,9 @@ public class UsableObjectController extends GameDataController {
 	@FXML
 	private TextArea editUseCommandsTA;
 
+	@FXML
+	private Label useCommandsLabel;
+
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -58,5 +62,9 @@ public class UsableObjectController extends GameDataController {
 
 		editUseCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, true, editUseCommandsTA, object::setAdditionalUseCommands));
+		
+
+		
+		useCommandsLabel.setText("Additional commands for using " + object.getName());
 	}
 }

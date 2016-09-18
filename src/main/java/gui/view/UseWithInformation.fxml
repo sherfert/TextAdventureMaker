@@ -17,7 +17,7 @@
                   <TextField fx:id="editUseWithSuccessfulTextTF" />
                   <Label text="Use-with Forbidden Text" />
                   <TextField fx:id="editUseWithForbiddenTextTF" />
-                  <Label text="Use-with commands" />
+                  <Label fx:id="useWithCommandsLabel" />
                   <TextArea fx:id="editUseWithCommandsTA" prefHeight="100.0" wrapText="true" />
                </children>
                <padding>

@@ -37,7 +37,7 @@
 			      <TextField fx:id="editMoveSuccessfulTextTF" />
 			      <Label text="Move Forbidden Text" />
 			      <TextField fx:id="editMoveForbiddenTextTF" />
-			      <Label text="Move commands" />
+			      <Label fx:id="moveCommandsLabel" />
 			      <TextArea fx:id="editMoveCommandsTA" prefHeight="100.0" wrapText="true" />
                </children>
                <padding>

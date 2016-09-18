@@ -13,7 +13,7 @@
       <TextField fx:id="editUseSuccessfulTextTF" />
       <Label text="Use Forbidden Text" />
       <TextField fx:id="editUseForbiddenTextTF" />
-      <Label text="Use commands" />
+      <Label fx:id="useCommandsLabel" />
       <TextArea fx:id="editUseCommandsTA" prefHeight="100.0" wrapText="true" />
    </children>
 </VBox>

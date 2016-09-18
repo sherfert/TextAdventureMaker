@@ -26,12 +26,12 @@
 						<TextField fx:id="editCombineForbiddenTextTF" />
 						<HBox spacing="2.0">
 							<VBox spacing="2.0">
-								<Label text="Combine A with B commands" fx:id="combine1Label" />
+								<Label fx:id="combine1CommandsLabel" />
 								<TextArea fx:id="editCombine1CommandsTA" prefHeight="100.0"
 									wrapText="true" />
 							</VBox>
 							<VBox spacing="2.0">
-								<Label text="Combine B with A commands" fx:id="combine2Label" />
+								<Label fx:id="combine2CommandsLabel" />
 								<TextArea fx:id="editCombine2CommandsTA" prefHeight="100.0"
 									wrapText="true" />
 							</VBox>

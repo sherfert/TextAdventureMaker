@@ -6,6 +6,7 @@ import gui.GameDataController;
 import gui.MainWindowController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -15,11 +16,10 @@ import logic.CurrentGameManager;
  * Controller for the usage of an inventory item with a person or object.
  * 
  * TODO Support to change additionalUseWithActions
- * TODO better label for commands
  * 
  * @author Satia
  */
-public class UsableHasLocationController extends GameDataController {
+public class UseWithInformationController extends GameDataController {
 
 	/** The inventory item that is being used */
 	private InventoryItem item;
@@ -42,6 +42,9 @@ public class UsableHasLocationController extends GameDataController {
 	@FXML
 	private TextArea editUseWithCommandsTA;
 
+	@FXML
+	private Label useWithCommandsLabel;
+
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -53,7 +56,7 @@ public class UsableHasLocationController extends GameDataController {
 	 *            the object it is being used with
 	 * 
 	 */
-	public UsableHasLocationController(CurrentGameManager currentGameManager, MainWindowController mwController,
+	public UseWithInformationController(CurrentGameManager currentGameManager, MainWindowController mwController,
 			InventoryItem item, PassivelyUsable object) {
 		super(currentGameManager, mwController);
 		this.item = item;
@@ -75,6 +78,8 @@ public class UsableHasLocationController extends GameDataController {
 		editUseWithCommandsTA.setText(getCommandString(item.getAdditionalUseWithCommands(object)));
 		editUseWithCommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
 				editUseWithCommandsTA, (cs) -> item.setAdditionalUseWithCommands(object, cs)));
+		
+		useWithCommandsLabel.setText("Additional commands for using " + item.getName() + " with " + object.getName());
 
 		saveTabIndex(tabPane);
 	}

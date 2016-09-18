@@ -19,7 +19,7 @@ import logic.CurrentGameManager;
  * 
  * @author Satia
  */
-public class CombinableInvItemController extends GameDataController {
+public class CombinationInformationController extends GameDataController {
 
 	/** The first inventory item */
 	private InventoryItem item1;
@@ -46,13 +46,13 @@ public class CombinableInvItemController extends GameDataController {
 	private InventoryItemListView newItemsListView;
 
 	@FXML
-	private Label combine1Label;
+	private Label combine1CommandsLabel;
 
 	@FXML
 	private TextArea editCombine1CommandsTA;
 
 	@FXML
-	private Label combine2Label;
+	private Label combine2CommandsLabel;
 
 	@FXML
 	private TextArea editCombine2CommandsTA;
@@ -67,7 +67,7 @@ public class CombinableInvItemController extends GameDataController {
 	 * @param second
 	 *            the first inventory item
 	 */
-	public CombinableInvItemController(CurrentGameManager currentGameManager, MainWindowController mwController,
+	public CombinationInformationController(CurrentGameManager currentGameManager, MainWindowController mwController,
 			InventoryItem item1, InventoryItem item2) {
 		super(currentGameManager, mwController);
 		this.item1 = item1;
@@ -97,8 +97,8 @@ public class CombinableInvItemController extends GameDataController {
 				} , (ii) -> item1.addNewCombinableWhenCombinedWith(item2, ii),
 				(ii) -> item1.removeNewCombinableWhenCombinedWith(item2, ii));
 
-		combine1Label.setText("Commands for combining " + item1.getName() + " with " + item2.getName());
-		combine2Label.setText("Commands for combining " + item2.getName() + " with " + item1.getName());
+		combine1CommandsLabel.setText("Additional commands for combining " + item1.getName() + " with " + item2.getName());
+		combine2CommandsLabel.setText("Additional commands for combining " + item2.getName() + " with " + item1.getName());
 
 		editCombine1CommandsTA.setText(getCommandString(item1.getAdditionalCombineCommands(item2)));
 		editCombine1CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,

@@ -10,6 +10,7 @@ import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -43,6 +44,9 @@ public class PersonController extends GameDataController {
 	@FXML
 	private TextArea editTalkCommandsTA;
 
+	@FXML
+	private Label talkCommandsLabel;
+
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -75,6 +79,10 @@ public class PersonController extends GameDataController {
 		editTalkCommandsTA.setText(getCommandString(person.getAdditionalTalkToCommands()));
 		editTalkCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, true, editTalkCommandsTA, person::setAdditionalTalkToCommands));
+		
+
+		
+		talkCommandsLabel.setText("Additional commands for talking to " + person.getName());
 		
 		saveTabIndex(tabPane);
 	}

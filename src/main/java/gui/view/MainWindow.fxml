@@ -5,29 +5,36 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane fx:id="borderPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.MainWindowController">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-                  <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="New game" />
-                  <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open game" />
-                  <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" text="Export runnable game" />
-              <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" text="Close" />
-            </items>
-          </Menu>
-            <Menu fx:id="gameMenu" mnemonicParsing="false" text="Game">
-              <items>
-                <MenuItem fx:id="playMenuItem" mnemonicParsing="false" text="Play game" />
-              </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
+<BorderPane fx:id="borderPane" prefHeight="768.0" prefWidth="1024.0"
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.MainWindowController">
+	<top>
+		<MenuBar BorderPane.alignment="CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="File">
+					<items>
+						<MenuItem fx:id="newMenuItem" mnemonicParsing="false"
+							text="New game" />
+						<MenuItem fx:id="openMenuItem" mnemonicParsing="false"
+							text="Open game" />
+						<MenuItem fx:id="exportMenuItem" mnemonicParsing="false"
+							text="Export runnable game" />
+						<MenuItem fx:id="closeMenuItem" mnemonicParsing="false"
+							text="Close" />
+					</items>
+				</Menu>
+				<Menu fx:id="gameMenu" mnemonicParsing="false" text="Game">
+					<items>
+						<MenuItem fx:id="playMenuItem" mnemonicParsing="false"
+							text="Play game" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Help">
+					<items>
+						<MenuItem mnemonicParsing="false" text="About" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
 </BorderPane>
