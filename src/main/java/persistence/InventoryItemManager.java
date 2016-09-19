@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import data.InventoryItem;
 import exception.DBClosedException;
@@ -68,8 +67,7 @@ public class InventoryItemManager {
 	public List<InventoryItem> getAllInventoryItems() throws DBClosedException {
 		CriteriaQuery<InventoryItem> query = persistenceManager
 				.getCriteriaBuilder().createQuery(InventoryItem.class);
-		Root<InventoryItem> root = query.from(InventoryItem.class);
-		query.select(root);
+		query.from(InventoryItem.class);
 		List<InventoryItem> resultList = persistenceManager.getEntityManager()
 				.createQuery(query).getResultList();
 		return resultList;

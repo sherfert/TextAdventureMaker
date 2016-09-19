@@ -3,7 +3,6 @@ package persistence;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import data.Conversation;
 import exception.DBClosedException;
@@ -34,8 +33,7 @@ public class ConversationManager {
 	public List<Conversation> getAllConversations() throws DBClosedException {
 		CriteriaQuery<Conversation> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Conversation.class);
-		Root<Conversation> root = query.from(Conversation.class);
-		query.select(root);
+		query.from(Conversation.class);
 		List<Conversation> resultList = persistenceManager.getEntityManager()
 				.createQuery(query).getResultList();
 		return resultList;

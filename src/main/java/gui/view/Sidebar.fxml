@@ -17,5 +17,6 @@
       <Hyperlink fx:id="inventoryItemsHL" maxWidth="Infinity" text="Inventory items" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="personsHL" maxWidth="Infinity" text="Persons" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="conversationsHL" maxWidth="Infinity" text="Conversations" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="actionsHL" maxWidth="Infinity" text="Actions" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>

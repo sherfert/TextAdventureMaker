@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import gui.toplevel.ActionsController;
 import gui.toplevel.ConversationsController;
 import gui.toplevel.GameDetailsController;
 import gui.toplevel.InventoryItemsController;
@@ -52,6 +53,7 @@ public class MainWindowController {
 	private InventoryItemsController inventoryItemsController;
 	private PersonsController personsController;
 	private ConversationsController conversationsController;
+	private ActionsController actionsController;
 
 	// The navigation bar controller
 	private NavbarController navbarController;
@@ -172,6 +174,7 @@ public class MainWindowController {
 		inventoryItemsController = new InventoryItemsController(currentGameManager, this);
 		personsController = new PersonsController(currentGameManager, this);
 		conversationsController = new ConversationsController(currentGameManager, this);
+		actionsController = new ActionsController(currentGameManager, this);
 
 		// Load game details as first view
 		loadGameDetails();
@@ -281,6 +284,17 @@ public class MainWindowController {
 		navbarController.reset();
 		// Load the content
 		pushCenterContent("Conversations", fxml, conversationsController, conversationsController::controllerFactory);
+	}
+
+	/**
+	 * Loads the actions into the center.
+	 */
+	public void loadActions() {
+		String fxml = "view/Actions.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		// Load the content
+		pushCenterContent("Actions", fxml, actionsController, actionsController::controllerFactory);
 	}
 
 	/**

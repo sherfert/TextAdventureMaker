@@ -52,10 +52,15 @@ public abstract class AbstractAction extends NamedObject {
 	}
 
 	/**
+	 * If the action is hidden, users must not gain access to it.
+	 */
+	private boolean hidden;
+
+	/**
 	 * If the action is enabled and therefore triggerable.
 	 */
 	protected boolean enabled;
-	
+
 	/**
 	 * No-arg constructor for the database.
 	 * 
@@ -86,6 +91,16 @@ public abstract class AbstractAction extends NamedObject {
 	}
 
 	/**
+	 * If the action is hidden, users must not gain access to it.
+	 * 
+	 * @return if the action is hidden.
+	 */
+	@Column(nullable = false)
+	public boolean getHidden() {
+		return hidden;
+	}
+
+	/**
 	 * Enables or disables an action.
 	 * 
 	 * @param enabled
@@ -93,6 +108,17 @@ public abstract class AbstractAction extends NamedObject {
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	/**
+	 * Only inaccessible actions should have this set to true by the owner of
+	 * the mapping.
+	 * 
+	 * @param hidden
+	 *            if the action should be hidden
+	 */
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 
 	/**

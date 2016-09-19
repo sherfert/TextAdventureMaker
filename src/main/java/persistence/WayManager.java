@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import data.Location;
 import data.Way;
@@ -63,11 +62,9 @@ public class WayManager {
 	 * @throws DBClosedException 
 	 */
 	public List<Way> getAllWays() throws DBClosedException {
-		// Find all items
 		CriteriaQuery<Way> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Way.class);
-		Root<Way> root = query.from(Way.class);
-		query.select(root);
+		query.from(Way.class);
 		List<Way> resultList = persistenceManager.getEntityManager()
 				.createQuery(query).getResultList();
 		return resultList;

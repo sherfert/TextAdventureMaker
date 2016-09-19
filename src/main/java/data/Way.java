@@ -127,6 +127,7 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 		moveForbiddenText = new SimpleStringProperty();
 		moveSuccessfulText = new SimpleStringProperty();
 		moveAction = new MoveAction("", destination);
+		moveAction.setHidden(true);
 		setOrigin(origin);
 		setDestination(destination);
 	}

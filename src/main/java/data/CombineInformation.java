@@ -89,6 +89,7 @@ class CombineInformation implements HasId {
 	public CombineInformation() {
 		additionalCombineWithActions = new ArrayList<>();
 		addInventoryItemsAction = new AddInventoryItemsAction("");
+		addInventoryItemsAction.setHidden(true);
 		enabled = false;
 		removeCombinables = false;
 	}

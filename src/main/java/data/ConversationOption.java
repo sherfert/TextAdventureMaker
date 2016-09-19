@@ -292,6 +292,7 @@ public class ConversationOption extends NamedObject {
 	private final void init() {
 		this.additionalActions = new ArrayList<>();
 		this.disableAction = new ChangeConversationOptionAction("", this);
+		this.disableAction.setHidden(true);
 		this.disableAction.setEnabled(false);
 		this.disableAction.setEnabling(Enabling.DISABLE);
 	}

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import data.Item;
 import exception.DBClosedException;
@@ -50,11 +49,9 @@ public class ItemManager {
 	 * @throws DBClosedException 
 	 */
 	public List<Item> getAllItems() throws DBClosedException {
-		// Find all items
 		CriteriaQuery<Item> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Item.class);
-		Root<Item> root = query.from(Item.class);
-		query.select(root);
+		query.from(Item.class);
 		List<Item> resultList = persistenceManager.getEntityManager()
 				.createQuery(query).getResultList();
 		return resultList;

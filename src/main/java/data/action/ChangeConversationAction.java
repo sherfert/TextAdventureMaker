@@ -15,7 +15,7 @@ import data.Conversation;
 import data.Game;
 
 /**
- * Changes a conversation. It can be dis- or enabled and the greeting can be
+ * Changes a conversation. It can be dis- or enabled and the greeting and event can be
  * changed.
  * 
  * @author Satia

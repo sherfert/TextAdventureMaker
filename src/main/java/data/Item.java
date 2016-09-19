@@ -224,10 +224,14 @@ public class Item extends UsableObject implements Takeable, HasLocation, Passive
 	 */
 	private final void init() {
 		this.addInventoryItemsAction = new AddInventoryItemsAction("");
+		this.addInventoryItemsAction.setHidden(true);
 		this.addInventoryItemsAction.setEnabled(false);
+		
 		this.removeAction = new ChangeItemAction("", this);
+		this.removeAction.setHidden(true);
 		this.removeAction.setNewLocation(null);
 		this.removeAction.setChangeLocation(true);
+		
 		this.additionalTakeActions = new ArrayList<>();
 		this.additionalTakeCommands = new ArrayList<>();
 		setRemoveItem(true);

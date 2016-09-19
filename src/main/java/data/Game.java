@@ -1,19 +1,5 @@
 package data;
 
-import com.googlecode.lanterna.terminal.Terminal.Color;
-
-import data.action.AddInventoryItemsAction;
-import data.interfaces.Combinable;
-import data.interfaces.HasId;
-import data.interfaces.PassivelyUsable;
-import data.interfaces.UsableWithSomething;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +16,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+
+import com.googlecode.lanterna.terminal.Terminal.Color;
+
+import data.action.AddInventoryItemsAction;
+import data.interfaces.Combinable;
+import data.interfaces.HasId;
+import data.interfaces.PassivelyUsable;
+import data.interfaces.UsableWithSomething;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * A game that can be played. Contains all configuration and (default) texts.
@@ -78,44 +78,8 @@ public class Game implements HasId {
 	 */
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@JoinColumn(nullable = false)
-	@Access(AccessType.FIELD)
 	private AddInventoryItemsAction addInventoryItemsAction;
 	
-	/**
-	 * @return the start items
-	 */
-	@Transient
-	public List<InventoryItem> getStartItems() {
-		return addInventoryItemsAction.getPickUpItems();
-	}
-
-	/**
-	 * Adds a start item.
-	 * 
-	 * @param item
-	 */
-	public void addStartItem(InventoryItem item) {
-		addInventoryItemsAction.addPickUpItem(item);
-
-	}
-
-	/**
-	 * Removes a start item.
-	 * 
-	 * @param item
-	 */
-	public void removeStartItem(InventoryItem item) {
-		addInventoryItemsAction.removePickUpItem(item);
-	}
-
-	/**
-	 * Puts the configured start items in the players inventory. Should be
-	 * called once upon starting a new game.
-	 */
-	public void putStartItemsIntoInventory() {
-		addInventoryItemsAction.triggerAction(this);
-	}
-
 	/**
 	 * The help text being displayed for the exit command
 	 */
@@ -474,6 +438,7 @@ public class Game implements HasId {
 	 */
 	public Game() {
 		addInventoryItemsAction = new AddInventoryItemsAction("");
+		addInventoryItemsAction.setHidden(true);
 
 		exitCommands = new ArrayList<>();
 		lookAroundCommands = new ArrayList<>();
@@ -584,6 +549,16 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * Adds a start item.
+	 * 
+	 * @param item
+	 */
+	public void addStartItem(InventoryItem item) {
+		addInventoryItemsAction.addPickUpItem(item);
+
+	}
+
+	/**
 	 * Adds a take command.
 	 * 
 	 * @param cmd
@@ -621,6 +596,27 @@ public class Game implements HasId {
 	 */
 	public void addUseWithCombineCommand(String cmd) {
 		this.useWithCombineCommands.add(cmd.toLowerCase());
+	}
+
+	/**
+	 * @return the exitCommandHelpText property
+	 */
+	public StringProperty exitCommandHelpTextProperty() {
+		return exitCommandHelpText;
+	}
+
+	/**
+	 * @return the failedBgColor property
+	 */
+	public Property<Color> failedBgColorProperty() {
+		return failedBgColor;
+	}
+
+	/**
+	 * @return the failedFgColor property
+	 */
+	public Property<Color> failedFgColorProperty() {
+		return failedFgColor;
 	}
 
 	/**
@@ -921,6 +917,14 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the start items
+	 */
+	@Transient
+	public List<InventoryItem> getStartItems() {
+		return addInventoryItemsAction.getPickUpItems();
+	}
+
+	/**
 	 * @return the startLocation
 	 */
 	public Location getStartLocation() {
@@ -1048,6 +1052,168 @@ public class Game implements HasId {
 	}
 
 	/**
+	 * @return the helphelptext property
+	 */
+	public StringProperty helphelpTextProperty() {
+		return helpHelpText;
+	}
+
+	/**
+	 * @return inspectHelpText property
+	 */
+	public StringProperty inspectHelpTextProperty() {
+		return inspectHelpText;
+	}
+
+	/**
+	 * @return inspectionDefaultText property
+	 */
+	public StringProperty inspectionDefaultTextProperty() {
+		return inspectionDefaultText;
+	}
+
+	/**
+	 * @return invalidCommandText property
+	 */
+	public StringProperty invalidCommandTextProperty() {
+		return invalidCommandText;
+	}
+
+	/**
+	 * @return inventoryEmptyText property
+	 */
+	public StringProperty inventoryEmptyTextProperty() {
+		return inventoryEmptyText;
+	}
+
+	/**
+	 * @return inventoryHelpText property
+	 */
+	public StringProperty inventoryHelpTextProperty() {
+		return inventoryHelpText;
+	}
+
+	/**
+	 * @return inventoryText property
+	 */
+	public StringProperty inventoryTextProperty() {
+		return inventoryText;
+	}
+
+	/**
+	 * @return lookAroundHelpText property
+	 */
+	public StringProperty lookAroundHelpTextProperty() {
+		return lookAroundHelpText;
+	}
+
+	/**
+	 * @return moveHelpText property
+	 */
+	public StringProperty moveHelpTextProperty() {
+		return moveHelpText;
+	}
+
+	/**
+	 * @return the neutralBgColor property
+	 */
+	public Property<Color> neutralBgColorProperty() {
+		return neutralBgColor;
+	}
+
+	/**
+	 * @return the neutralFgColor property
+	 */
+	public Property<Color> neutralFgColorProperty() {
+		return neutralFgColor;
+	}
+
+	/**
+	 * @return noCommandText property
+	 */
+	public StringProperty noCommandTextProperty() {
+		return noCommandText;
+	}
+
+	/**
+	 * @return noSuchInventoryItemText property
+	 */
+	public StringProperty noSuchInventoryItemTextProperty() {
+		return noSuchInventoryItemText;
+	}
+
+	/**
+	 * @return noSuchItemText property
+	 */
+	public StringProperty noSuchItemTextProperty() {
+		return noSuchItemText;
+	}
+
+	/**
+	 * @return noSuchPersonText property
+	 */
+	public StringProperty noSuchPersonTextProperty() {
+		return noSuchPersonText;
+	}
+
+	/**
+	 * @return noSuchWayText property
+	 */
+	public StringProperty noSuchWayTextProperty() {
+		return noSuchWayText;
+	}
+
+	/**
+	 * @return notTakeableText property
+	 */
+	public StringProperty notTakeableTextProperty() {
+		return notTakeableText;
+	}
+
+	/**
+	 * @return notTalkingToEnabledText property
+	 */
+	public StringProperty notTalkingToEnabledTextProperty() {
+		return notTalkingToEnabledText;
+	}
+
+	/**
+	 * @return notTravelableText property
+	 */
+	public StringProperty notTravelableTextProperty() {
+		return notTravelableText;
+	}
+
+	/**
+	 * @return notUsableText property
+	 */
+	public StringProperty notUsableTextProperty() {
+		return notUsableText;
+	}
+
+	/**
+	 * @return notUsableWithText property
+	 */
+	public StringProperty notUsableWithTextProperty() {
+		return notUsableWithText;
+	}
+
+	/**
+	 * @return numberOfOptionLines property
+	 */
+	public IntegerProperty numberOfOptionLinesProperty() {
+		return numberOfOptionLines;
+	}
+
+	/**
+	 * Puts the configured start items in the players inventory. Should be
+	 * called once upon starting a new game.
+	 */
+	public void putStartItemsIntoInventory() {
+		addInventoryItemsAction.triggerAction(this);
+	}
+
+	/**
 	 * Removes an exit command.
 	 * 
 	 * @param cmd
@@ -1095,6 +1261,15 @@ public class Game implements HasId {
 	 */
 	public void removeMoveCommand(String cmd) {
 		this.moveCommands.remove(cmd.toLowerCase());
+	}
+
+	/**
+	 * Removes a start item.
+	 * 
+	 * @param item
+	 */
+	public void removeStartItem(InventoryItem item) {
+		addInventoryItemsAction.removePickUpItem(item);
 	}
 
 	/**
@@ -1146,13 +1321,6 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the exitCommandHelpText property
-	 */
-	public StringProperty exitCommandHelpTextProperty() {
-		return exitCommandHelpText;
-	}
-
-	/**
 	 * @param exitCommands
 	 *            the exitCommands to set
 	 */
@@ -1169,25 +1337,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the failedBgColor property
-	 */
-	public Property<Color> failedBgColorProperty() {
-		return failedBgColor;
-	}
-
-	/**
 	 * @param failedFgColor
 	 *            the failedFgColor to set
 	 */
 	public void setFailedFgColor(Color failedFgColor) {
 		this.failedFgColor.setValue(failedFgColor);
-	}
-
-	/**
-	 * @return the failedFgColor property
-	 */
-	public Property<Color> failedFgColorProperty() {
-		return failedFgColor;
 	}
 
 	/**
@@ -1223,13 +1377,6 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the helphelptext property
-	 */
-	public StringProperty helphelpTextProperty() {
-		return helpHelpText;
-	}
-
-	/**
 	 * @param id
 	 *            the id to set
 	 */
@@ -1254,25 +1401,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return inspectHelpText property
-	 */
-	public StringProperty inspectHelpTextProperty() {
-		return inspectHelpText;
-	}
-
-	/**
 	 * @param inspectionDefaultText
 	 *            the inspectionDefaultText to set
 	 */
 	public void setInspectionDefaultText(String inspectionDefaultText) {
 		this.inspectionDefaultText.set(inspectionDefaultText);
-	}
-
-	/**
-	 * @return inspectionDefaultText property
-	 */
-	public StringProperty inspectionDefaultTextProperty() {
-		return inspectionDefaultText;
 	}
 
 	/**
@@ -1282,13 +1415,6 @@ public class Game implements HasId {
 	 */
 	public void setInvalidCommandText(String invalidCommandText) {
 		this.invalidCommandText.set(invalidCommandText);
-	}
-
-	/**
-	 * @return invalidCommandText property
-	 */
-	public StringProperty invalidCommandTextProperty() {
-		return invalidCommandText;
 	}
 
 	/**
@@ -1308,13 +1434,6 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return inventoryEmptyText property
-	 */
-	public StringProperty inventoryEmptyTextProperty() {
-		return inventoryEmptyText;
-	}
-
-	/**
 	 * @param inventoryHelpText
 	 *            the inventoryHelpText to set
 	 */
@@ -1323,25 +1442,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return inventoryHelpText property
-	 */
-	public StringProperty inventoryHelpTextProperty() {
-		return inventoryHelpText;
-	}
-
-	/**
 	 * @param inventoryText
 	 *            the inventoryText to set
 	 */
 	public void setInventoryText(String inventoryText) {
 		this.inventoryText.set(inventoryText);
-	}
-
-	/**
-	 * @return inventoryText property
-	 */
-	public StringProperty inventoryTextProperty() {
-		return inventoryText;
 	}
 
 	/**
@@ -1361,13 +1466,6 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return lookAroundHelpText property
-	 */
-	public StringProperty lookAroundHelpTextProperty() {
-		return lookAroundHelpText;
-	}
-
-	/**
 	 * @param moveCommands
 	 *            the moveCommands to set
 	 */
@@ -1384,25 +1482,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return moveHelpText property
-	 */
-	public StringProperty moveHelpTextProperty() {
-		return moveHelpText;
-	}
-
-	/**
 	 * @param neutralBgColor
 	 *            the neutralBgColor to set
 	 */
 	public void setNeutralBgColor(Color neutralBgColor) {
 		this.neutralBgColor.setValue(neutralBgColor);
-	}
-
-	/**
-	 * @return the neutralBgColor property
-	 */
-	public Property<Color> neutralBgColorProperty() {
-		return neutralBgColor;
 	}
 
 	/**
@@ -1414,25 +1498,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the neutralFgColor property
-	 */
-	public Property<Color> neutralFgColorProperty() {
-		return neutralFgColor;
-	}
-
-	/**
 	 * @param noCommandText
 	 *            the noCommandText to set
 	 */
 	public void setNoCommandText(String noCommandText) {
 		this.noCommandText.set(noCommandText);
-	}
-
-	/**
-	 * @return noCommandText property
-	 */
-	public StringProperty noCommandTextProperty() {
-		return noCommandText;
 	}
 
 	/**
@@ -1444,25 +1514,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return noSuchInventoryItemText property
-	 */
-	public StringProperty noSuchInventoryItemTextProperty() {
-		return noSuchInventoryItemText;
-	}
-
-	/**
 	 * @param noSuchItemText
 	 *            the noSuchItemText to set
 	 */
 	public void setNoSuchItemText(String noSuchItemText) {
 		this.noSuchItemText.set(noSuchItemText);
-	}
-
-	/**
-	 * @return noSuchItemText property
-	 */
-	public StringProperty noSuchItemTextProperty() {
-		return noSuchItemText;
 	}
 
 	/**
@@ -1474,25 +1530,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return noSuchPersonText property
-	 */
-	public StringProperty noSuchPersonTextProperty() {
-		return noSuchPersonText;
-	}
-
-	/**
 	 * @param noSuchWayText
 	 *            the noSuchWayText to set
 	 */
 	public void setNoSuchWayText(String noSuchWayText) {
 		this.noSuchWayText.set(noSuchWayText);
-	}
-
-	/**
-	 * @return noSuchWayText property
-	 */
-	public StringProperty noSuchWayTextProperty() {
-		return noSuchWayText;
 	}
 
 	/**
@@ -1504,25 +1546,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return notTakeableText property
-	 */
-	public StringProperty notTakeableTextProperty() {
-		return notTakeableText;
-	}
-
-	/**
 	 * @param notTalkingToEnabledText
 	 *            the notTalkingToEnabledText to set
 	 */
 	public void setNotTalkingToEnabledText(String notTalkingToEnabledText) {
 		this.notTalkingToEnabledText.set(notTalkingToEnabledText);
-	}
-
-	/**
-	 * @return notTalkingToEnabledText property
-	 */
-	public StringProperty notTalkingToEnabledTextProperty() {
-		return notTalkingToEnabledText;
 	}
 
 	/**
@@ -1534,25 +1562,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return notTravelableText property
-	 */
-	public StringProperty notTravelableTextProperty() {
-		return notTravelableText;
-	}
-
-	/**
 	 * @param notUsableText
 	 *            the notUsableText to set
 	 */
 	public void setNotUsableText(String notUsableText) {
 		this.notUsableText.set(notUsableText);
-	}
-
-	/**
-	 * @return notUsableText property
-	 */
-	public StringProperty notUsableTextProperty() {
-		return notUsableText;
 	}
 
 	/**
@@ -1564,25 +1578,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return notUsableWithText property
-	 */
-	public StringProperty notUsableWithTextProperty() {
-		return notUsableWithText;
-	}
-
-	/**
 	 * @param numberOfOptionLines
 	 *            the numberOfOptionLines to set
 	 */
 	public void setNumberOfOptionLines(int numberOfOptionLines) {
 		this.numberOfOptionLines.set(numberOfOptionLines);
-	}
-
-	/**
-	 * @return numberOfOptionLines property
-	 */
-	public IntegerProperty numberOfOptionLinesProperty() {
-		return numberOfOptionLines;
 	}
 
 	/**
@@ -1610,13 +1610,6 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return startText property
-	 */
-	public StringProperty startTextProperty() {
-		return startText;
-	}
-
-	/**
 	 * @param successfullBgColor
 	 *            the successfullBgColor to set
 	 */
@@ -1625,25 +1618,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the successfullBgColor property
-	 */
-	public Property<Color> successfullBgColorProperty() {
-		return successfullBgColor;
-	}
-
-	/**
 	 * @param successfullFgColor
 	 *            the successfullFgColor to set
 	 */
 	public void setSuccessfullFgColor(Color successfullFgColor) {
 		this.successfullFgColor.setValue(successfullFgColor);
-	}
-
-	/**
-	 * @return the successfullFgColor property
-	 */
-	public Property<Color> successfullFgColorProperty() {
-		return successfullFgColor;
 	}
 
 	/**
@@ -1663,25 +1642,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return takeHelpText property
-	 */
-	public StringProperty takeHelpTextProperty() {
-		return takeHelpText;
-	}
-
-	/**
 	 * @param takenText
 	 *            the takenText to set
 	 */
 	public void setTakenText(String takenText) {
 		this.takenText.set(takenText);
-	}
-
-	/**
-	 * @return takenText property
-	 */
-	public StringProperty takenTextProperty() {
-		return takenText;
 	}
 
 	/**
@@ -1717,25 +1682,11 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return usedText property
-	 */
-	public StringProperty usedTextProperty() {
-		return usedText;
-	}
-
-	/**
 	 * @param usedWithText
 	 *            the usedWithText to set
 	 */
 	public void setUsedWithText(String usedWithText) {
 		this.usedWithText.set(usedWithText);
-	}
-
-	/**
-	 * @return usedWithText property
-	 */
-	public StringProperty usedWithTextProperty() {
-		return usedWithText;
 	}
 
 	/**
@@ -1763,10 +1714,59 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the useWithCombineHelpText property
+	 * @return startText property
 	 */
-	public StringProperty useWithCombineHelpTextProperty() {
-		return useWithCombineHelpText;
+	public StringProperty startTextProperty() {
+		return startText;
+	}
+
+	/**
+	 * @return the successfullBgColor property
+	 */
+	public Property<Color> successfullBgColorProperty() {
+		return successfullBgColor;
+	}
+
+	/**
+	 * @return the successfullFgColor property
+	 */
+	public Property<Color> successfullFgColorProperty() {
+		return successfullFgColor;
+	}
+
+	/**
+	 * @return takeHelpText property
+	 */
+	public StringProperty takeHelpTextProperty() {
+		return takeHelpText;
+	}
+
+	/**
+	 * @return takenText property
+	 */
+	public StringProperty takenTextProperty() {
+		return takenText;
+	}
+
+	/**
+	 * @return the talkToHelpText property
+	 */
+	public StringProperty talkToHelpTextProperty() {
+		return talkToHelpText;
+	}
+
+	/**
+	 * @return usedText property
+	 */
+	public StringProperty usedTextProperty() {
+		return usedText;
+	}
+
+	/**
+	 * @return usedWithText property
+	 */
+	public StringProperty usedWithTextProperty() {
+		return usedWithText;
 	}
 
 	/**
@@ -1777,9 +1777,9 @@ public class Game implements HasId {
 	}
 
 	/**
-	 * @return the talkToHelpText property
+	 * @return the useWithCombineHelpText property
 	 */
-	public StringProperty talkToHelpTextProperty() {
-		return talkToHelpText;
+	public StringProperty useWithCombineHelpTextProperty() {
+		return useWithCombineHelpText;
 	}
 }

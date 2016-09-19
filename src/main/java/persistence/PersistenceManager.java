@@ -55,6 +55,7 @@ public class PersistenceManager {
 	private UsableObjectManager usableObjectManager;
 	private WayManager wayManager;
 	private ConversationManager conversationManager;
+	private ActionManager actionManager;
 
 	/**
 	 * Creates a persistence manager with all its subordinate managers.
@@ -72,6 +73,7 @@ public class PersistenceManager {
 		this.usableObjectManager = new UsableObjectManager(this);
 		this.wayManager = new WayManager(this);
 		this.conversationManager = new ConversationManager(this);
+		this.actionManager = new ActionManager(this);
 	}
 
 	/**
@@ -245,6 +247,13 @@ public class PersistenceManager {
 	 */
 	public ConversationManager getConversationManager() {
 		return conversationManager;
+	}
+
+	/**
+	 * @return the actionManager
+	 */
+	public ActionManager getActionManager() {
+		return actionManager;
 	}
 
 }
