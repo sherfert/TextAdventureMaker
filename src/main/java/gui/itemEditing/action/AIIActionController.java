@@ -1,13 +1,11 @@
 package gui.itemEditing.action;
 
 import data.action.AddInventoryItemsAction;
-import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.InventoryItemListView;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import logic.CurrentGameManager;
 
 /**
@@ -15,16 +13,10 @@ import logic.CurrentGameManager;
  * 
  * @author Satia
  */
-public class AIIActionController extends GameDataController {
-
-	/** The action */
-	private AddInventoryItemsAction action;
+public class AIIActionController extends ActionController<AddInventoryItemsAction> {
 	
 	@FXML
 	private InventoryItemListView pickUpItemsListView;
-
-	@FXML
-	private Button removeButton;
 
 	/**
 	 * @param currentGameManager
@@ -35,21 +27,17 @@ public class AIIActionController extends GameDataController {
 	 *            the action to edit
 	 */
 	public AIIActionController(CurrentGameManager currentGameManager, MainWindowController mwController, AddInventoryItemsAction action) {
-		super(currentGameManager, mwController);
-		this.action = action;
+		super(currentGameManager, mwController, action);
 	}
 
 	@FXML
-	private void initialize() {
-		// Create new bindings
+	@Override
+	protected void initialize() {
+		super.initialize();
 
 		pickUpItemsListView.initialize(action.getPickUpItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::objectSelected, (ii) -> action.addPickUpItem(ii), (ii) -> action.removePickUpItem(ii));
-
-		removeButton.setOnMouseClicked(
-				(e) -> removeObject(action, "Deleting an action", "Do you really want to delete this action?",
-						"No other entities will be deleted."));
 	}
 
 	/**

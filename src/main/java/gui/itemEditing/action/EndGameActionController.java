@@ -1,6 +1,6 @@
 package gui.itemEditing.action;
 
-import data.action.RemoveInventoryItemAction;
+import data.action.EndGameAction;
 import gui.MainWindowController;
 import gui.customui.InventoryItemChooser;
 import gui.include.AbstractActionController;
@@ -9,16 +9,14 @@ import javafx.fxml.FXML;
 import logic.CurrentGameManager;
 
 /**
- * Controller for one {@link RemoveInventoryItemAction}.
+ * Controller for one {@link EndGameAction}.
  * 
  * @author Satia
  */
-public class RIIActionController extends ActionController<RemoveInventoryItemAction> {
-
+public class EndGameActionController extends ActionController<EndGameAction> {
 
 	@FXML
 	private InventoryItemChooser inventoryItemChooser;
-
 
 	/**
 	 * @param currentGameManager
@@ -28,17 +26,8 @@ public class RIIActionController extends ActionController<RemoveInventoryItemAct
 	 * @param action
 	 *            the action to edit
 	 */
-	public RIIActionController(CurrentGameManager currentGameManager, MainWindowController mwController, RemoveInventoryItemAction action) {
+	public EndGameActionController(CurrentGameManager currentGameManager, MainWindowController mwController, EndGameAction action) {
 		super(currentGameManager, mwController, action);
-	}
-
-	@FXML
-	@Override
-	protected void initialize() {
-		super.initialize();
-		inventoryItemChooser.initialize(action.getItem(), false, false,
-				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems,
-				action::setItem);
 	}
 
 	/**

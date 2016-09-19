@@ -13,6 +13,8 @@ import java.net.URL;
 /**
  * Opens the GUI of TextAdventureMaker.
  * 
+ * TODO more headlines, so you know better what you're doing
+ * 
  * TODO Font sizes in Linux
  * 
  * @author Satia
