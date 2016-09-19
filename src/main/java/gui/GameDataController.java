@@ -20,6 +20,7 @@ import data.Person;
 import data.Way;
 import data.action.AddInventoryItemsAction;
 import data.action.EndGameAction;
+import data.action.MoveAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.HasId;
 import gui.itemEditing.ConversationController;
@@ -32,6 +33,7 @@ import gui.itemEditing.PersonController;
 import gui.itemEditing.WayController;
 import gui.itemEditing.action.AIIActionController;
 import gui.itemEditing.action.EndGameActionController;
+import gui.itemEditing.action.MoveActionController;
 import gui.itemEditing.action.RIIActionController;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
@@ -475,6 +477,9 @@ public abstract class GameDataController {
 		} else if (o instanceof EndGameAction) {
 			c = new EndGameActionController(currentGameManager, mwController, (EndGameAction) o);
 			fxml = "view/EndGameAction.fxml";
+		} else if (o instanceof MoveAction) {
+			c = new MoveActionController(currentGameManager, mwController, (MoveAction) o);
+			fxml = "view/MoveAction.fxml";
 		} else if (o instanceof RemoveInventoryItemAction) {
 			c = new RIIActionController(currentGameManager, mwController, (RemoveInventoryItemAction) o);
 			fxml = "view/RIIAction.fxml";

@@ -26,6 +26,7 @@ import data.action.ChangeNDObjectAction;
 import data.action.ChangePersonAction;
 import data.action.ChangeWayAction;
 import data.action.EndGameAction;
+import data.action.MoveAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 
@@ -248,11 +249,15 @@ public class Main {
 		changeTVAction.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
 		tv.addAdditionalInspectAction(changeTVAction);
 
-		// A useless button
+		// A button
 		Item button = new Item(flat, "Button", "There is a button the wall.");
 		button.setInspectionText("\"DANGER. SELF-DESTRUCTION\"");
 		button.setUsingEnabled(true);
 		button.addAdditionalUseCommand("push (?<o0>.+?)");
+		button.setUseSuccessfulText("BOOOM. Everything is dark. What have you done?");
+		
+		MoveAction moveToVoid = new MoveAction("moveToVoid", voidLoc);
+		button.addAdditionalActionToUse(moveToVoid);
 
 		/*
 		 * A banana. If the banana is being used the item disappears and the
