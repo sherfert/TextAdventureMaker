@@ -1,14 +1,9 @@
 package gui.customui;
 
-import java.util.function.Consumer;
-
 import data.InventoryItem;
-import logic.CurrentGameManager;
 
 /**
- * Custom TextField for choosing inventory items. Must be initialized with
- * {@link InventoryItemChooser#initialize(InventoryItem, boolean, boolean, CurrentGameManager, Consumer)}
- * , otherwise it behaves just as a normal TextField.
+ * Custom TextField for choosing inventory items.
  * 
  * @author satia
  */

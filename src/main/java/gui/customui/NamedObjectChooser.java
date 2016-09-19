@@ -18,7 +18,9 @@ import javafx.util.StringConverter;
 
 /**
  * Abstract superclass for all Choosers of a single NamedObject from the
- * Database.
+ * Database. Each instance must be initialized with
+ * {@link #initialize(HasName, boolean, boolean, ValuesSupplier, Consumer)}
+ * before it behaves properly.
  * 
  * @author Satia
  *

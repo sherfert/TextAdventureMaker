@@ -3,6 +3,7 @@ package gui.itemEditing;
 import data.Item;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.ActionListView;
 import gui.customui.InventoryItemListView;
 import gui.customui.LocationChooser;
 import gui.include.InspectableObjectController;
@@ -21,15 +22,13 @@ import logic.CurrentGameManager;
 /**
  * Controller for one item.
  * 
- * TODO Support to change additionalTakeActions
- * 
  * @author Satia
  */
 public class ItemController extends GameDataController {
 
 	/** The item */
 	private Item item;
-	
+
 	@FXML
 	private TabPane tabPane;
 
@@ -56,9 +55,12 @@ public class ItemController extends GameDataController {
 
 	@FXML
 	private TextArea editTakeCommandsTA;
-	
+
 	@FXML
 	private InventoryItemListView pickUpItemsListView;
+
+	@FXML
+	private ActionListView takeActionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -100,9 +102,14 @@ public class ItemController extends GameDataController {
 		pickUpItemsListView.initialize(item.getPickUpItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::objectSelected, (ii) -> item.addPickUpItem(ii), (ii) -> item.removePickUpItem(ii));
-		
+
+		takeActionsListView.initialize(item.getAdditionalTakeActions(),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> item.addAdditionalTakeAction(a),
+				(a) -> item.removeAdditionalTakeAction(a));
+
 		takeCommandsLabel.setText("Additional commands for taking " + item.getName());
-		
+
 		saveTabIndex(tabPane);
 	}
 

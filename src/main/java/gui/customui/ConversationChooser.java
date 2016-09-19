@@ -1,14 +1,9 @@
 package gui.customui;
 
-import java.util.function.Consumer;
-
 import data.Conversation;
-import logic.CurrentGameManager;
 
 /**
- * Custom TextField for choosing conversations. Must be initialized with
- * {@link ConversationChooser#initialize(Conversation, boolean, boolean, CurrentGameManager, Consumer)}
- * , otherwise it behaves just as a normal TextField.
+ * Custom TextField for choosing conversations.
  * 
  * @author satia
  */

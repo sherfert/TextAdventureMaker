@@ -16,7 +16,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one item.
  * 
- * TODO Support to change additionalTakeActions
+ * TODO Support to change additionalTalkToActions
  * 
  * @author Satia
  */

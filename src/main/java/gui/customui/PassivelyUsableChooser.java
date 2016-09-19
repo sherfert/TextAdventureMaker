@@ -1,14 +1,9 @@
 package gui.customui;
 
-import java.util.function.Consumer;
-
 import data.interfaces.PassivelyUsable;
-import logic.CurrentGameManager;
 
 /**
- * Custom TextField for choosing PassivelyUsables. Must be initialized with
- * {@link NamedDescribedObjectChooser#initialize(PassivelyUsables, boolean, boolean, CurrentGameManager, Consumer)}
- * , otherwise it behaves just as a normal TextField.
+ * Custom TextField for choosing PassivelyUsables.
  * 
  * @author satia
  */
