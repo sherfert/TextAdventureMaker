@@ -12,6 +12,8 @@ import javax.persistence.InheritanceType;
 
 import data.Game;
 import data.NamedObject;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * Any action that changes something in the game (if enabled).
@@ -55,11 +57,11 @@ public abstract class AbstractAction extends NamedObject {
 	 * If the action is hidden, users must not gain access to it.
 	 */
 	private boolean hidden;
-
+	
 	/**
 	 * If the action is enabled and therefore triggerable.
 	 */
-	protected boolean enabled;
+	protected final BooleanProperty enabled;
 
 	/**
 	 * No-arg constructor for the database.
@@ -68,7 +70,7 @@ public abstract class AbstractAction extends NamedObject {
 	 */
 	@Deprecated
 	protected AbstractAction() {
-		enabled = true;
+		enabled = new SimpleBooleanProperty(true);
 	}
 
 	/**
@@ -79,7 +81,7 @@ public abstract class AbstractAction extends NamedObject {
 	 */
 	protected AbstractAction(String name) {
 		super(name);
-		enabled = true;
+		enabled = new SimpleBooleanProperty(true);
 	}
 
 	/**
@@ -87,6 +89,13 @@ public abstract class AbstractAction extends NamedObject {
 	 */
 	@Column(nullable = false)
 	public boolean getEnabled() {
+		return enabled.get();
+	}
+	
+	/**
+	 * @return enabled property.
+	 */
+	public BooleanProperty enabledProperty() {
 		return enabled;
 	}
 
@@ -107,7 +116,7 @@ public abstract class AbstractAction extends NamedObject {
 	 *            whether to enable or disable the action
 	 */
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		this.enabled.set(enabled);
 	}
 
 	/**
@@ -131,7 +140,7 @@ public abstract class AbstractAction extends NamedObject {
 	public final void triggerAction(Game game) {
 		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Triggering action {0}", this);
 
-		if (enabled) {
+		if (enabled.get()) {
 			doAction(game);
 		}
 	}

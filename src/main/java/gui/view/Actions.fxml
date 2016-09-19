@@ -11,11 +11,12 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<center>
-		<TableView fx:id="table">
+		<TableView fx:id="table" fixedCellSize="55">
 			<columns>
 				<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
 				<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
-				<TableColumn fx:id="summaryCol" prefWidth="400.0" text="Summary" />
+				<TableColumn fx:id="typeCol" prefWidth="150.0" text="Type" />
+				<TableColumn fx:id="summaryCol" prefWidth="250.0" text="Summary" />
 			</columns>
 		</TableView>
 	</center>

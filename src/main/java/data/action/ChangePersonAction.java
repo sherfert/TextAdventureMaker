@@ -189,8 +189,8 @@ public class ChangePersonAction extends ChangeInspectableObjectAction {
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (changeConversation) {
-			builder.append(" Setting conversation to '")
-					.append(newConversation != null ? newConversation.getId() : "null").append("'.");
+			builder.append(" Setting conversation to ")
+					.append(newConversation != null ? newConversation.getId() : "null").append(".");
 		}
 		if (changeLocation) {
 			builder.append(" Setting location to '").append(newLocation != null ? newLocation.getName() : "null")

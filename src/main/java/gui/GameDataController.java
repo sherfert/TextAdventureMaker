@@ -364,6 +364,8 @@ public abstract class GameDataController {
 
 	/**
 	 * Removes an object from the DB, asking for confirmation first.
+	 * 
+	 * TODO not all text visible
 	 */
 	protected void removeObject(HasId object, String title, String header, String content) {
 		// Show a confirmation dialog

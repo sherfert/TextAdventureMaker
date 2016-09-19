@@ -127,9 +127,11 @@ public class MultiAction extends AbstractAction {
 	@Override
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Combining actions: ");
+		builder.append("Combining actions:");
+		int i = 1;
 		for (AbstractAction action : actions) {
-			builder.append(action.actionDescription());
+			builder.append(' ').append(i).append(") ").append(action.actionDescription());
+			i++;
 		}
 		return builder.toString();
 	}

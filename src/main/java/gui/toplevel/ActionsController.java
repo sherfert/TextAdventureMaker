@@ -3,12 +3,17 @@ package gui.toplevel;
 import java.util.List;
 
 import data.action.AbstractAction;
+import data.action.RemoveInventoryItemAction;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsTableController;
+import gui.itemEditing.action.RIIActionController;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
+import javafx.scene.control.Control;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.text.Text;
 import logic.CurrentGameManager;
 
 /**
@@ -17,7 +22,10 @@ import logic.CurrentGameManager;
  * @author Satia
  */
 public class ActionsController extends NamedObjectsTableController<AbstractAction> {
-	
+
+	@FXML
+	private TableColumn<AbstractAction, String> typeCol;
+
 	@FXML
 	private TableColumn<AbstractAction, String> summaryCol;
 
@@ -35,7 +43,19 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 	@Override
 	protected void initialize() {
 		super.initialize();
+		typeCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<String>(p.getValue().getClass().getSimpleName()));
 		summaryCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<String>(p.getValue().actionDescription()));
+
+		// Allow wrapped text for the summary column
+		summaryCol.setCellFactory((p) -> {
+			TableCell<AbstractAction, String> cell = new TableCell<>();
+			Text text = new Text();
+			cell.setGraphic(text);
+			cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+			text.wrappingWidthProperty().bind(cell.widthProperty());
+			text.textProperty().bind(cell.itemProperty());
+			return cell;
+		});
 	}
 
 	@Override
@@ -45,7 +65,15 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 
 	@Override
 	protected void objectSelected(AbstractAction e) {
-		// TODO Auto-generated method stub
+		if (e == null) {
+			return;
+		}
+		// TODO a more general method could be added higher up in the hierarchy
+		if (e instanceof RemoveInventoryItemAction) {
+			RIIActionController c = new RIIActionController(currentGameManager, mwController,
+					(RemoveInventoryItemAction) e);
+			mwController.pushCenterContent(e.getName(), "view/RIIAction.fxml", c, c::controllerFactory);
+		}
 	}
 
 }
