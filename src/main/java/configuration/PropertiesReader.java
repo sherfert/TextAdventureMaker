@@ -20,10 +20,14 @@ import java.util.logging.Logger;
 public class PropertiesReader {
 
 	//********* PROPERTIES **************
-	/** The name of the LogLevel property */
 	public static final String LOG_LEVEL_PROPERTY = "LogLevel";
-	/** The default value of the LogLevel property */
 	public static final String LOG_LEVEL_DEFAULT = "CONFIG";
+	
+	public static final String SWING_TERMINAL_ROWS_PROPERTY = "SwingTerminalRows";
+	public static final String SWING_TERMINAL_ROWS_DEFAULT = "40";
+	
+	public static final String SWING_TERMINAL_COLS_PROPERTY = "SwingTerminalCols";
+	public static final String SWING_TERMINAL_COLS_DEFAULT = "150";
 	//***********************************
 
 	/**
@@ -154,6 +158,8 @@ public class PropertiesReader {
 		Properties props = new Properties();
 		// Set Properties for Logger
 		props.setProperty(LOG_LEVEL_PROPERTY, LOG_LEVEL_DEFAULT);
+		props.setProperty(SWING_TERMINAL_ROWS_PROPERTY, SWING_TERMINAL_ROWS_DEFAULT);
+		props.setProperty(SWING_TERMINAL_COLS_PROPERTY, SWING_TERMINAL_COLS_DEFAULT);
 		return props;
 	}
 

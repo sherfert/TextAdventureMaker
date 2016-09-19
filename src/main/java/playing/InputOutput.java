@@ -1,18 +1,15 @@
 package playing;
 
-import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
-
-import playing.menu.MenuShower;
-import lanterna.LanternaScreenOptionChooser;
-import lanterna.LanternaScreenOptionChooser.OptionHandler;
-import lanterna.LanternaScreenTextArea;
-import lanterna.LanternaScreenTextArea.TextHandler;
 
 import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.input.Key;
@@ -20,20 +17,21 @@ import com.googlecode.lanterna.input.Key.Kind;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.Terminal.Color;
-import com.googlecode.lanterna.terminal.Terminal.ResizeListener;
-import com.googlecode.lanterna.terminal.TerminalSize;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
 
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import configuration.PropertiesReader;
+import lanterna.LanternaScreenOptionChooser;
+import lanterna.LanternaScreenOptionChooser.OptionHandler;
+import lanterna.LanternaScreenTextArea;
+import lanterna.LanternaScreenTextArea.TextHandler;
+import playing.menu.MenuShower;
 
 /**
  * Providing means to print and read input while playing.
  * 
  * @author Satia
  */
-public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
+public class InputOutput implements TextHandler, OptionHandler {
 
 	/**
 	 * The class using this must provide these methods.
@@ -116,13 +114,9 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	private LanternaScreenOptionChooser optionChoser;
 
 	/**
-	 * Signaling whether the initialization is finished.
-	 */
-	private volatile boolean isFinished;
-	
-	/**
-	 * The interrupted status of the input reader Thread is reset somehow on Linux after calling
-	 * interrupt on it. To overcome this problem, this variable was introduced.
+	 * The interrupted status of the input reader Thread is reset somehow on
+	 * Linux after calling interrupt on it. To overcome this problem, this
+	 * variable was introduced.
 	 */
 	private volatile boolean inputReaderRunning;
 
@@ -135,60 +129,36 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	public InputOutput(GeneralIOManager ioManager, MenuShower ms) {
 		this.ioManager = ioManager;
 		this.ms = ms;
-		this.screen = TerminalFacade.createScreen();
+
+		Terminal t;
+		if (GraphicsEnvironment.isHeadless()) {
+			t = TerminalFacade.createTextTerminal();
+		} else {
+			// XXX If this size is bigger than the actual screen, lanterna
+			// behaves undeterministic and probably it won't work. In that case,
+			// change the size value in the properties file for your system.
+			int cols = Integer.parseInt(PropertiesReader.getProperty(PropertiesReader.SWING_TERMINAL_COLS_PROPERTY));
+			int rows = Integer.parseInt(PropertiesReader.getProperty(PropertiesReader.SWING_TERMINAL_ROWS_PROPERTY));
+			t = TerminalFacade.createSwingTerminal(cols, rows);
+		}
+
+		this.screen = TerminalFacade.createScreen(t);
 		this.screen.startScreen();
 
-		Terminal t = this.screen.getTerminal();
-		
-		// Add us as resize listener
-		t.addResizeListener(this);
+		// Then create the default text area
+		defaultTextArea = new LanternaScreenTextArea(screen, true, true, Terminal.Color.DEFAULT, Terminal.Color.DEFAULT,
+				Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0, screen.getTerminalSize().getColumns(), 0,
+				screen.getTerminalSize().getRows(), InputOutput.this);
 
-		// Modify (which includes resize) the JFrame
+
+		// Modify  the JFrame
 		if (t instanceof SwingTerminal) {
 			modifyJFrame(((SwingTerminal) t).getJFrame());
-		} else {
-			// If we're not waiting for a resize, call onResized
-			// manually to finish initialization.
-			onResized(screen.getTerminalSize());
-		}
-
-		// Wait for the resize to be finished
-		while (!isFinished) {
-		}
+		} 
 
 		// Start the thread reading input
 		startInputReadingThread();
-	}
 
-	/**
-	 * Called when the Terminal is resized. {@code synchronized} modifier added.
-	 * This will finish the initialization.
-	 */
-	@Override
-	public synchronized void onResized(TerminalSize newSize) {
-		Logger.getLogger(this.getClass().getName()).log(Level.FINE, "Resized, new size: {0} vs old size {1}",
-				new Object[] { newSize, screen.getTerminalSize() });
-		// Refresh to adapt to new size
-		screen.refresh();
-
-		if (isFinished) {
-			// Resize rather than create the defaultTextArea
-			defaultTextArea.setNewDimensions(0, screen.getTerminalSize().getColumns(), 0,
-					screen.getTerminalSize().getRows());
-		} else {
-			if (newSize.getColumns() == 101 && newSize.getRows() == 30) {
-				// XXX This is the default size, and we ignore this resize.
-				return;
-			}
-
-			// Then create the default text area
-			defaultTextArea = new LanternaScreenTextArea(screen, true, true, Terminal.Color.DEFAULT,
-					Terminal.Color.DEFAULT, Terminal.Color.DEFAULT, Terminal.Color.CYAN, 0,
-					screen.getTerminalSize().getColumns(), 0, screen.getTerminalSize().getRows(), InputOutput.this);
-
-			// Tell the constructor we are finished.
-			isFinished = true;
-		}
 	}
 
 	/**
@@ -202,22 +172,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 				ioManager.stop();
 			}
 		});
-		Dimension fullScreen = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension prefSize = new Dimension((int) (fullScreen.width * 0.8), (int) (fullScreen.height * 0.8));
-		// Let the screen cover 80 % of the real screen in each dimension
-		frame.setPreferredSize(prefSize);
 
-		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Setting preferred dimension to {0}", prefSize);
-		
-		// FIXME the Terminal still crashes often - either on Windows (now) or on Linux (previosly)
-		// Sometimes the resize does not take effect when calling pack immediately.
-		// Therefore we wait a little and then pack
-//		try {
-//			Thread.sleep(500);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//		frame.pack();
 		// Not resizable
 		frame.setResizable(false);
 
@@ -235,7 +190,7 @@ public class InputOutput implements TextHandler, OptionHandler, ResizeListener {
 	 */
 	private void startInputReadingThread() {
 		this.inputReaderRunning = true;
-		
+
 		Thread t = new Thread(() -> {
 			while (true) {
 				// Check for interruptions
