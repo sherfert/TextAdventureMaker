@@ -52,7 +52,24 @@
 			<version>8.40.10</version>
 		</dependency>
 	</dependencies>
+
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java/</directory>
+				<includes>
+					<include>**/*.fxml</include>
+					<include>**/*.css</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources/</directory>
+				<includes>
+					<include>**/*.*</include>
+				</includes>
+			</resource>
+		</resources>
+		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -121,7 +138,7 @@
 							</transformers>
 							<minimizeJar>false</minimizeJar>
 							<dependencyReducedPomLocation>
-								${java.io.tmpdir}/dependency-reduced-pom.xml
+								${java.io.tmpdir}/dependency-reduced-pom-2.xml
 							</dependencyReducedPomLocation>
 						</configuration>
 					</execution>

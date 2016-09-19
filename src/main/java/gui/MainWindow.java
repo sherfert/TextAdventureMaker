@@ -15,8 +15,6 @@ import java.net.URL;
  * 
  * TODO Font sizes in Linux
  * 
- * FIXME gui/view not copied when compiling with maven (just on Linux?)
- * 
  * @author Satia
  */
 public class MainWindow extends Application {
