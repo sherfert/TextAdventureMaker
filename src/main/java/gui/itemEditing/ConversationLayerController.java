@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import data.ConversationLayer;
 import data.ConversationOption;
 import exception.DBClosedException;
-import gui.GameDataController;
 import gui.MainWindowController;
 import gui.NamedObjectsController;
 import gui.customui.ConversationLayerChooser;
@@ -71,7 +70,7 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 	 */
 	public ConversationLayerController(CurrentGameManager currentGameManager, MainWindowController mwController,
 			ConversationLayer layer) {
-		super(currentGameManager, mwController, "view/ConversationOption.fxml");
+		super(currentGameManager, mwController);
 		this.layer = layer;
 	}
 
@@ -164,10 +163,5 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 		// Also add the option to this layer
 		layer.addOption(result);
 		return result;
-	}
-
-	@Override
-	protected GameDataController getObjectController(ConversationOption selectedObject) {
-		return new ConversationOptionController(currentGameManager, mwController, selectedObject);
 	}
 }

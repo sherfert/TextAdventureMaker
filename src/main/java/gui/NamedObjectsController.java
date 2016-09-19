@@ -18,11 +18,6 @@ import logic.CurrentGameManager;
  */
 public abstract class NamedObjectsController<E extends NamedObject> extends NamedObjectsTableController<E> {
 
-	/**
-	 * The FMXL for controllers to edit single objects of type E.
-	 */
-	private String objectControllerFXML;
-
 	@FXML
 	protected TextField newNameTF;
 
@@ -35,13 +30,9 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Name
 	 *            the current game manager
 	 * @param mwController
 	 *            the main window controller
-	 * @param objectControllerFXML
-	 *            the FMXL for controllers to edit single objects of type E
 	 */
-	public NamedObjectsController(CurrentGameManager currentGameManager, MainWindowController mwController,
-			String objectControllerFXML) {
+	public NamedObjectsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController);
-		this.objectControllerFXML = objectControllerFXML;
 	}
 
 	@FXML
@@ -93,22 +84,6 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Name
 	}
 
 	/**
-	 * Opens this object for editing.
-	 * 
-	 * @param e
-	 *            the object
-	 */
-	@Override
-	protected void objectSelected(E e) {
-		if (e == null) {
-			return;
-		}
-
-		GameDataController c = getObjectController(e);
-		mwController.pushCenterContent(e.getName(), objectControllerFXML, c, c::controllerFactory);
-	}
-
-	/**
 	 * Create a new Object of type E.
 	 * 
 	 * @param name
@@ -116,14 +91,5 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Name
 	 * @return the new object.
 	 */
 	protected abstract E createNewObject(String name);
-
-	/**
-	 * Create a controller to edit the single given object of type E.
-	 * 
-	 * @param selectedObject
-	 *            the object to edit.
-	 * @return the controller.
-	 */
-	protected abstract GameDataController getObjectController(E selectedObject);
 
 }

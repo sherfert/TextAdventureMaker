@@ -4,10 +4,8 @@ import java.util.List;
 
 import data.Person;
 import exception.DBClosedException;
-import gui.GameDataController;
 import gui.MainWindowController;
 import gui.NamedDescribedObjectsController;
-import gui.itemEditing.PersonController;
 import logic.CurrentGameManager;
 
 /**
@@ -35,11 +33,6 @@ public class PersonsController extends NamedDescribedObjectsController<Person> {
 	@Override
 	protected Person createNewObject(String name, String description) {
 		return new Person(name, description);
-	}
-
-	@Override
-	protected GameDataController getObjectController(Person selectedObject) {
-		return new PersonController(currentGameManager, mwController, selectedObject);
 	}
 
 }

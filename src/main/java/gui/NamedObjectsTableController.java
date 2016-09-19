@@ -108,13 +108,5 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 	 *             if the DB was closed.
 	 */
 	protected abstract List<E> getAllObjects() throws DBClosedException;
-	
-	/**
-	 * Opens this object for editing.
-	 * 
-	 * @param e
-	 *            the object
-	 */
-	protected abstract void objectSelected(E e);
 
 }

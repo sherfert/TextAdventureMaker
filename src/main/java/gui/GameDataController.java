@@ -9,7 +9,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import data.Conversation;
+import data.ConversationLayer;
+import data.ConversationOption;
+import data.InventoryItem;
+import data.Item;
+import data.Location;
+import data.NamedObject;
+import data.Person;
+import data.Way;
+import data.action.RemoveInventoryItemAction;
 import data.interfaces.HasId;
+import gui.itemEditing.ConversationController;
+import gui.itemEditing.ConversationLayerController;
+import gui.itemEditing.ConversationOptionController;
+import gui.itemEditing.InventoryItemController;
+import gui.itemEditing.ItemController;
+import gui.itemEditing.LocationController;
+import gui.itemEditing.PersonController;
+import gui.itemEditing.WayController;
+import gui.itemEditing.action.RIIActionController;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -406,6 +425,57 @@ public abstract class GameDataController {
 		tabPane.getSelectionModel().selectedIndexProperty().addListener((f, o, n) -> {
 			currentTabIndex = n.intValue();
 		});
+	}
+
+	/**
+	 * Opens this object for editing in a new center view atop the stack.
+	 * 
+	 * @param o
+	 *            the object
+	 */
+	protected void objectSelected(NamedObject o) {
+		if (o == null) {
+			return;
+		}
+
+		GameDataController c = null;
+		String fxml = null;
+
+		if (o instanceof Conversation) {
+			c = new ConversationController(currentGameManager, mwController, (Conversation) o);
+			fxml = "view/Conversation.fxml";
+		} else if (o instanceof ConversationLayer) {
+			c = new ConversationLayerController(currentGameManager, mwController, (ConversationLayer) o);
+			fxml = "view/ConversationLayer.fxml";
+		} else if (o instanceof ConversationOption) {
+			c = new ConversationOptionController(currentGameManager, mwController, (ConversationOption) o);
+			fxml = "view/ConversationOption.fxml";
+		} else if (o instanceof InventoryItem) {
+			c = new InventoryItemController(currentGameManager, mwController, (InventoryItem) o);
+			fxml = "view/InventoryItem.fxml";
+		} else if (o instanceof Item) {
+			c = new ItemController(currentGameManager, mwController, (Item) o);
+			fxml = "view/Item.fxml";
+		} else if (o instanceof Location) {
+			c = new LocationController(currentGameManager, mwController, (Location) o);
+			fxml = "view/Location.fxml";
+		} else if (o instanceof Person) {
+			c = new PersonController(currentGameManager, mwController, (Person) o);
+			fxml = "view/Person.fxml";
+		} else if (o instanceof Way) {
+			c = new WayController(currentGameManager, mwController, (Way) o);
+			fxml = "view/Way.fxml";
+		} else if (o instanceof RemoveInventoryItemAction) {
+			c = new RIIActionController(currentGameManager, mwController, (RemoveInventoryItemAction) o);
+			fxml = "view/RIIAction.fxml";
+		} else {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
+					"An item was intended to be edited, that has no fitting controller: {0} of type {1}",
+					new Object[] { o, o.getClass().getSimpleName() });
+			return;
+		}
+
+		mwController.pushCenterContent(o.getName(), fxml, c, c::controllerFactory);
 	}
 
 }

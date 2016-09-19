@@ -1,6 +1,5 @@
 package gui.itemEditing;
 
-import data.InventoryItem;
 import data.Item;
 import gui.GameDataController;
 import gui.MainWindowController;
@@ -100,7 +99,7 @@ public class ItemController extends GameDataController {
 
 		pickUpItemsListView.initialize(item.getPickUpItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
-				this::pickUpItemSelected, (ii) -> item.addPickUpItem(ii), (ii) -> item.removePickUpItem(ii));
+				this::objectSelected, (ii) -> item.addPickUpItem(ii), (ii) -> item.removePickUpItem(ii));
 		
 		takeCommandsLabel.setText("Additional commands for taking " + item.getName());
 		
@@ -123,22 +122,5 @@ public class ItemController extends GameDataController {
 		} else {
 			return super.controllerFactory(type);
 		}
-	}
-
-	/**
-	 * Opens an item for editing. Invoked when an item from the list is double
-	 * clicked.
-	 * 
-	 * @param i
-	 *            the item
-	 */
-	private void pickUpItemSelected(InventoryItem i) {
-		if (i == null) {
-			return;
-		}
-
-		InventoryItemController itemController = new InventoryItemController(currentGameManager, mwController, i);
-		mwController.pushCenterContent(i.getName(), "view/InventoryItem.fxml", itemController,
-				itemController::controllerFactory);
 	}
 }

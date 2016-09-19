@@ -4,10 +4,8 @@ import java.util.List;
 
 import data.Conversation;
 import exception.DBClosedException;
-import gui.GameDataController;
 import gui.MainWindowController;
 import gui.NamedObjectsController;
-import gui.itemEditing.ConversationController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import logic.CurrentGameManager;
@@ -32,7 +30,7 @@ public class ConversationsController extends NamedObjectsController<Conversation
 	 *            the main window controller
 	 */
 	public ConversationsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
-		super(currentGameManager, mwController, "view/Conversation.fxml");
+		super(currentGameManager, mwController);
 	}
 	
 	@Override
@@ -61,11 +59,6 @@ public class ConversationsController extends NamedObjectsController<Conversation
 	@Override
 	protected Conversation createNewObject(String name) {
 		return new Conversation(name, newGreetingTA.getText(), newEventTA.getText());
-	}
-
-	@Override
-	protected GameDataController getObjectController(Conversation selectedObject) {
-		return new ConversationController(currentGameManager, mwController, selectedObject);
 	}
 
 }

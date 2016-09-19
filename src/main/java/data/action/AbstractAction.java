@@ -18,6 +18,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 /**
  * Any action that changes something in the game (if enabled).
  * 
+ * TODO other action controllers
+ * TODO creating actions
+ * 
  * @author Satia
  */
 @Entity

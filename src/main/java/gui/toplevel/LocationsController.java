@@ -4,10 +4,8 @@ import java.util.List;
 
 import data.Location;
 import exception.DBClosedException;
-import gui.GameDataController;
 import gui.MainWindowController;
 import gui.NamedDescribedObjectsController;
-import gui.itemEditing.LocationController;
 import logic.CurrentGameManager;
 
 /**
@@ -35,11 +33,6 @@ public class LocationsController extends NamedDescribedObjectsController<Locatio
 	@Override
 	protected Location createNewObject(String name, String description) {
 		return new Location(name, description);
-	}
-
-	@Override
-	protected GameDataController getObjectController(Location selectedObject) {
-		return new LocationController(currentGameManager, mwController, selectedObject);
 	}
 
 }

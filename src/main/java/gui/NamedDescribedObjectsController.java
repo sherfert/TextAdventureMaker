@@ -31,7 +31,7 @@ public abstract class NamedDescribedObjectsController<E extends NamedDescribedOb
 	 */
 	public NamedDescribedObjectsController(CurrentGameManager currentGameManager, MainWindowController mwController,
 			String objectControllerFXML) {
-		super(currentGameManager, mwController, objectControllerFXML);
+		super(currentGameManager, mwController);
 	}
 
 	@FXML

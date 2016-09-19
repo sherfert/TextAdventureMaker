@@ -40,7 +40,7 @@ import data.action.RemoveInventoryItemAction;
  * 
  * TODO no logging to console
  * 
- * TODO sound support (optional)
+ * XXX sound support (optional)
  * 
  * @author Satia
  */

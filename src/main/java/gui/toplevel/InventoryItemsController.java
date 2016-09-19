@@ -4,10 +4,8 @@ import java.util.List;
 
 import data.InventoryItem;
 import exception.DBClosedException;
-import gui.GameDataController;
 import gui.MainWindowController;
 import gui.NamedDescribedObjectsController;
-import gui.itemEditing.InventoryItemController;
 import logic.CurrentGameManager;
 
 /**
@@ -35,11 +33,6 @@ public class InventoryItemsController extends NamedDescribedObjectsController<In
 	@Override
 	protected InventoryItem createNewObject(String name, String description) {
 		return new InventoryItem(name, description);
-	}
-
-	@Override
-	protected GameDataController getObjectController(InventoryItem selectedObject) {
-		return new InventoryItemController(currentGameManager, mwController, selectedObject);
 	}
 
 }

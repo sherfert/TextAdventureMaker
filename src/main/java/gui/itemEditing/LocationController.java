@@ -3,10 +3,7 @@ package gui.itemEditing;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import data.Item;
 import data.Location;
-import data.Person;
-import data.Way;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import gui.GameDataController;
@@ -72,20 +69,20 @@ public class LocationController extends GameDataController {
 
 		itemListView.initialize(location.getItems(),
 				this.currentGameManager.getPersistenceManager().getItemManager()::getAllItems, location::updateItems,
-				this::itemSelected, (item) -> item.setLocation(location), (item) -> item.setLocation(null));
+				this::objectSelected, (item) -> item.setLocation(location), (item) -> item.setLocation(null));
 
 		personListView.initialize(location.getPersons(),
 				this.currentGameManager.getPersistenceManager().getPersonManager()::getAllPersons,
-				location::updatePersons, this::personSelected, (person) -> person.setLocation(location),
+				location::updatePersons, this::objectSelected, (person) -> person.setLocation(location),
 				(person) -> person.setLocation(null));
 
 		waysInListView.initialize(location.getWaysIn(),
 				this.currentGameManager.getPersistenceManager().getWayManager()::getAllWays, location::updateWaysIn,
-				this::waySelected, (way) -> way.setDestination(location), null);
+				this::objectSelected, (way) -> way.setDestination(location), null);
 		
 		waysOutListView.initialize(location.getWaysOut(),
 				this.currentGameManager.getPersistenceManager().getWayManager()::getAllWays, location::updateWaysOut,
-				this::waySelected, (way) -> way.setOrigin(location), null);
+				this::objectSelected, (way) -> way.setOrigin(location), null);
 		
 		saveTabIndex(tabPane);
 	}
@@ -137,60 +134,6 @@ public class LocationController extends GameDataController {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not get Game.", e);
 		}
 		return false;
-	}
-
-	/**
-	 * Opens an item for editing. Invoked when an item from the list is double
-	 * clicked.
-	 * 
-	 * @param i
-	 *            the item
-	 */
-	private void itemSelected(Item i) {
-		if (i == null) {
-			return;
-		}
-
-		// Open the item view
-		ItemController itemController = new ItemController(currentGameManager, mwController, i);
-		mwController.pushCenterContent(i.getName(), "view/Item.fxml", itemController,
-				itemController::controllerFactory);
-	}
-
-	/**
-	 * Opens a person for editing. Invoked when a person from the list is double
-	 * clicked.
-	 * 
-	 * @param p
-	 *            the person
-	 */
-	private void personSelected(Person p) {
-		if (p == null) {
-			return;
-		}
-
-		// Open the person view
-		PersonController personController = new PersonController(currentGameManager, mwController, p);
-		mwController.pushCenterContent(p.getName(), "view/Person.fxml", personController,
-				personController::controllerFactory);
-	}
-
-	/**
-	 * Opens a way for editing. Invoked when a way from the list is double
-	 * clicked.
-	 * 
-	 * @param w
-	 *            the way
-	 */
-	private void waySelected(Way w) {
-		if (w == null) {
-			return;
-		}
-
-		// Open the way view
-		WayController wayController = new WayController(currentGameManager, mwController, w);
-		mwController.pushCenterContent(w.getName(), "view/Way.fxml", wayController,
-				wayController::controllerFactory);
 	}
 
 }

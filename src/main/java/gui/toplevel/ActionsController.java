@@ -3,11 +3,9 @@ package gui.toplevel;
 import java.util.List;
 
 import data.action.AbstractAction;
-import data.action.RemoveInventoryItemAction;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsTableController;
-import gui.itemEditing.action.RIIActionController;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Control;
@@ -61,19 +59,6 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 	@Override
 	protected List<AbstractAction> getAllObjects() throws DBClosedException {
 		return currentGameManager.getPersistenceManager().getActionManager().getAllActions();
-	}
-
-	@Override
-	protected void objectSelected(AbstractAction e) {
-		if (e == null) {
-			return;
-		}
-		// TODO a more general method could be added higher up in the hierarchy
-		if (e instanceof RemoveInventoryItemAction) {
-			RIIActionController c = new RIIActionController(currentGameManager, mwController,
-					(RemoveInventoryItemAction) e);
-			mwController.pushCenterContent(e.getName(), "view/RIIAction.fxml", c, c::controllerFactory);
-		}
 	}
 
 }

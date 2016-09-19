@@ -13,14 +13,11 @@ import java.util.stream.Collectors;
 import data.Location;
 import data.Way;
 import exception.DBClosedException;
-import gui.GameDataController;
 import gui.MainWindowController;
 import gui.NamedObjectsController;
 import gui.customui.LocationChooser;
 import gui.customui.LocationRectangle;
 import gui.customui.WayLine;
-import gui.itemEditing.LocationController;
-import gui.itemEditing.WayController;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -102,7 +99,7 @@ public class WaysController extends NamedObjectsController<Way> {
 	 *            the main window controller
 	 */
 	public WaysController(CurrentGameManager currentGameManager, MainWindowController mwController) {
-		super(currentGameManager, mwController, "view/Way.fxml");
+		super(currentGameManager, mwController);
 	}
 
 	@Override
@@ -155,26 +152,6 @@ public class WaysController extends NamedObjectsController<Way> {
 		return w;
 	}
 
-	@Override
-	protected GameDataController getObjectController(Way selectedObject) {
-		return new WayController(currentGameManager, mwController, selectedObject);
-	}
-
-	/**
-	 * Opens this location for editing.
-	 * 
-	 * @param l
-	 *            the location
-	 */
-	private void locationSelected(Location l) {
-		if (l == null) {
-			return;
-		}
-
-		GameDataController c = new LocationController(currentGameManager, mwController, l);
-		mwController.pushCenterContent(l.getName(), "view/Location.fxml", c, c::controllerFactory);
-	}
-
 	/**
 	 * Creates a new LocationRectangle, and saves it in the rectangles Map.
 	 * 
@@ -183,7 +160,7 @@ public class WaysController extends NamedObjectsController<Way> {
 	 * @return the LocationRectangle
 	 */
 	private LocationRectangle createLocationNode(Location location) {
-		LocationRectangle sp = new LocationRectangle(location, this::locationSelected, this::originChosen,
+		LocationRectangle sp = new LocationRectangle(location, this::objectSelected, this::originChosen,
 				this::destinationChosen);
 		// Save in map
 		rectangles.put(location, sp);
