@@ -16,7 +16,7 @@
 			text="Change the name?" />
 		<TextField fx:id="newNameTF" />
 		<CheckBox fx:id="newDescriptionCB" mnemonicParsing="false"
-			text="Change the description" />
+			text="Change the description?" />
 		<TextArea fx:id="newDescriptionTA" prefHeight="100.0"
 			wrapText="true" />
 	</children>

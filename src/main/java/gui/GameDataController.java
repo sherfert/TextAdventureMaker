@@ -20,6 +20,7 @@ import data.Person;
 import data.Way;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeNDObjectAction;
+import data.action.ChangePersonAction;
 import data.action.EndGameAction;
 import data.action.MoveAction;
 import data.action.MultiAction;
@@ -35,6 +36,7 @@ import gui.itemEditing.PersonController;
 import gui.itemEditing.WayController;
 import gui.itemEditing.action.AIIActionController;
 import gui.itemEditing.action.ChangeLocationActionController;
+import gui.itemEditing.action.ChangePersonActionController;
 import gui.itemEditing.action.EndGameActionController;
 import gui.itemEditing.action.MoveActionController;
 import gui.itemEditing.action.MultiActionController;
@@ -238,7 +240,7 @@ public abstract class GameDataController {
 	}
 
 	/**
-	 * Splits the string by the '\n'char and then invokes the setter with the
+	 * Splits the string by the '\n' char and then invokes the setter with the
 	 * obtained list.
 	 * 
 	 * @param joinedString
@@ -451,46 +453,49 @@ public abstract class GameDataController {
 		GameDataController c = null;
 		String fxml = null;
 
-		if (o instanceof Conversation) {
+		if (o.getClass() == Conversation.class) {
 			c = new ConversationController(currentGameManager, mwController, (Conversation) o);
 			fxml = "view/Conversation.fxml";
-		} else if (o instanceof ConversationLayer) {
+		} else if (o.getClass() == ConversationLayer.class) {
 			c = new ConversationLayerController(currentGameManager, mwController, (ConversationLayer) o);
 			fxml = "view/ConversationLayer.fxml";
-		} else if (o instanceof ConversationOption) {
+		} else if (o.getClass() == ConversationOption.class) {
 			c = new ConversationOptionController(currentGameManager, mwController, (ConversationOption) o);
 			fxml = "view/ConversationOption.fxml";
-		} else if (o instanceof InventoryItem) {
+		} else if (o.getClass() == InventoryItem.class) {
 			c = new InventoryItemController(currentGameManager, mwController, (InventoryItem) o);
 			fxml = "view/InventoryItem.fxml";
-		} else if (o instanceof Item) {
+		} else if (o.getClass() == Item.class) {
 			c = new ItemController(currentGameManager, mwController, (Item) o);
 			fxml = "view/Item.fxml";
-		} else if (o instanceof Location) {
+		} else if (o.getClass() == Location.class) {
 			c = new LocationController(currentGameManager, mwController, (Location) o);
 			fxml = "view/Location.fxml";
-		} else if (o instanceof Person) {
+		} else if (o.getClass() == Person.class) {
 			c = new PersonController(currentGameManager, mwController, (Person) o);
 			fxml = "view/Person.fxml";
-		} else if (o instanceof Way) {
+		} else if (o.getClass() == Way.class) {
 			c = new WayController(currentGameManager, mwController, (Way) o);
 			fxml = "view/Way.fxml";
-		} else if (o instanceof AddInventoryItemsAction) {
+		} else if (o.getClass() == AddInventoryItemsAction.class) {
 			c = new AIIActionController(currentGameManager, mwController, (AddInventoryItemsAction) o);
 			fxml = "view/AIIAction.fxml";
-		} else if (o instanceof ChangeNDObjectAction) {
+		} else if (o.getClass() == ChangeNDObjectAction.class) {
 			c = new ChangeLocationActionController(currentGameManager, mwController, (ChangeNDObjectAction) o);
 			fxml = "view/ChangeLocationAction.fxml";
-		} else if (o instanceof EndGameAction) {
+		} else if (o.getClass() == ChangePersonAction.class) {
+			c = new ChangePersonActionController(currentGameManager, mwController, (ChangePersonAction) o);
+			fxml = "view/ChangePersonAction.fxml";
+		} else if (o.getClass() == EndGameAction.class) {
 			c = new EndGameActionController(currentGameManager, mwController, (EndGameAction) o);
 			fxml = "view/EndGameAction.fxml";
-		} else if (o instanceof MoveAction) {
+		} else if (o.getClass() == MoveAction.class) {
 			c = new MoveActionController(currentGameManager, mwController, (MoveAction) o);
 			fxml = "view/MoveAction.fxml";
-		} else if (o instanceof MultiAction) {
+		} else if (o.getClass() == MultiAction.class) {
 			c = new MultiActionController(currentGameManager, mwController, (MultiAction) o);
 			fxml = "view/MultiAction.fxml";
-		} else if (o instanceof RemoveInventoryItemAction) {
+		} else if (o.getClass() == RemoveInventoryItemAction.class) {
 			c = new RIIActionController(currentGameManager, mwController, (RemoveInventoryItemAction) o);
 			fxml = "view/RIIAction.fxml";
 		} else {

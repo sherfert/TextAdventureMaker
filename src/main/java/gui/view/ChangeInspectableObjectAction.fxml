@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Hyperlink?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.include.ChangeInspectableObjectActionController">
+	<children>
+		<CheckBox fx:id="newInspectionTextCB" mnemonicParsing="false"
+			text="Change the Inspection Text?" />
+		<TextArea fx:id="newInspectionTextTA" prefHeight="100.0"
+			wrapText="true" />
+		<HBox spacing="2.0">
+			<VBox spacing="2.0">
+				<Label text="Identifiers to add" />
+				<TextArea fx:id="identifiersAddTA" prefHeight="100.0"
+					wrapText="true" />
+			</VBox>
+			<VBox spacing="2.0">
+				<Label text="Identifiers to remove" />
+				<TextArea fx:id="identifiersRemoveTA" prefHeight="100.0"
+					wrapText="true" />
+			</VBox>
+		</HBox>
+	</children>
+</VBox>

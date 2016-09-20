@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
- * Controller for one named described object.
+ * Controller to change properties of one named described object.
  * 
  * @author Satia
  */
@@ -21,7 +21,7 @@ public class ChangeNDObjectActionController extends GameDataController {
 	private ChangeNDObjectAction action;
 
 	@FXML
-	Hyperlink link;
+	private Hyperlink link;
 
 	@FXML
 	private CheckBox newNameCB;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+<?import gui.customui.LocationChooser?>
+<?import gui.customui.ConversationChooser?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<fx:include source="NamedObject.fxml" />
+		<fx:include source="AbstractAction.fxml" />
+		<fx:include source="ChangeNDObjectAction.fxml" />
+		<fx:include source="ChangeInspectableObjectAction.fxml" />
+		<CheckBox fx:id="newTalkForbiddenTextCB" mnemonicParsing="false"
+			text="Change the Talk Forbidden Text?" />
+		<TextField fx:id="newTalkForbiddenTextTF" />
+		<CheckBox fx:id="newConversationCB" mnemonicParsing="false"
+			text="Change the conversation?" />
+		<ConversationChooser fx:id="newConversationChooser" />
+		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
+			text="Change the location?" />
+		<LocationChooser fx:id="newLocationChooser" />
+		<Button fx:id="removeButton" mnemonicParsing="false"
+			text="Delete this action" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>
