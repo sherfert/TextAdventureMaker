@@ -5,15 +5,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
+<?import gui.customui.ActionListView?>
 
-<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.include.UsableObjectController">
-   <children>
-      <CheckBox fx:id="editUsingEnabledCB" mnemonicParsing="false" text="Using enabled?" />
-      <Label text="Use Successful Text" />
-      <TextField fx:id="editUseSuccessfulTextTF" />
-      <Label text="Use Forbidden Text" />
-      <TextField fx:id="editUseForbiddenTextTF" />
-      <Label fx:id="useCommandsLabel" />
-      <TextArea fx:id="editUseCommandsTA" prefHeight="100.0" wrapText="true" />
-   </children>
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.include.UsableObjectController">
+	<children>
+		<CheckBox fx:id="editUsingEnabledCB" mnemonicParsing="false"
+			text="Using enabled?" />
+		<Label text="Use Successful Text" />
+		<TextField fx:id="editUseSuccessfulTextTF" />
+		<Label text="Use Forbidden Text" />
+		<TextField fx:id="editUseForbiddenTextTF" />
+		<Label fx:id="useCommandsLabel" />
+		<TextArea fx:id="editUseCommandsTA" prefHeight="100.0"
+			wrapText="true" />
+		<Label text="Actions triggered when used" />
+		<ActionListView fx:id="useActionsListView" />
+	</children>
 </VBox>

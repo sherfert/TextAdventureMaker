@@ -4,13 +4,18 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.StackPane?>
+<?import gui.customui.ActionListView?>
 
-<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.include.InspectableObjectController">
-   <children>
-      <Label text="Inspection Text" />
-      <TextArea fx:id="editInspectionTextTA" prefHeight="100.0" wrapText="true" />
-      <Label text="Identifiers" />
-      <TextArea fx:id="editIdentifiersTA" prefHeight="100.0" wrapText="true" />
-   </children>
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.include.InspectableObjectController">
+	<children>
+		<Label text="Inspection Text" />
+		<TextArea fx:id="editInspectionTextTA" prefHeight="100.0"
+			wrapText="true" />
+		<Label text="Identifiers" />
+		<TextArea fx:id="editIdentifiersTA" prefHeight="100.0"
+			wrapText="true" />
+		<Label text="Actions triggered when inspected" />
+		<ActionListView prefHeight="200.0" fx:id="inspectActionsListView" />
+	</children>
 </VBox>

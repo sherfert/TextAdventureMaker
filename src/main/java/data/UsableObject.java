@@ -92,7 +92,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	}
 
 	@Override
-	public void addAdditionalActionToUse(AbstractAction action) {
+	public void addAdditionalUseAction(AbstractAction action) {
 		additionalUseActions.add(action);
 	}
 
@@ -167,7 +167,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	}
 
 	@Override
-	public void removeAdditionalActionFromUse(AbstractAction action) {
+	public void removeAdditionalUseAction(AbstractAction action) {
 		additionalUseActions.remove(action);
 	}
 

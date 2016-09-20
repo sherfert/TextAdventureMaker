@@ -7,6 +7,7 @@ import data.ConversationLayer;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsController;
+import gui.customui.ActionListView;
 import gui.customui.ConversationLayerChooser;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -18,8 +19,6 @@ import logic.CurrentGameManager;
 
 /**
  * Controller for one conversation.
- * 
- * TODO Support to change additionalActions
  * 
  * @author Satia
  */
@@ -45,6 +44,9 @@ public class ConversationController extends NamedObjectsController<ConversationL
 
 	@FXML
 	private ConversationLayerChooser startLayerChooser;
+
+	@FXML
+	private ActionListView actionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -83,6 +85,11 @@ public class ConversationController extends NamedObjectsController<ConversationL
 
 		// Assure save is only enabled if there is a name
 		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
+		
+		actionsListView.initialize(conversation.getAdditionalActions(),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> conversation.addAdditionalAction(a),
+				(a) -> conversation.removeAdditionalAction(a));
 
 		saveTabIndex(tabPane);
 	}

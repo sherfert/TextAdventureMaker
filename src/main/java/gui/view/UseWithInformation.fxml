@@ -5,26 +5,24 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
+<?import gui.customui.ActionListView?>
 
-<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
-  <tabs>
-    <Tab text="Usage">
-         <content>
-            <VBox spacing="2.0">
-               <children>
-                  <CheckBox fx:id="editUsingEnabledCB" mnemonicParsing="false" text="Using enabled?" />
-                  <Label text="Use-with Successful Text" />
-                  <TextField fx:id="editUseWithSuccessfulTextTF" />
-                  <Label text="Use-with Forbidden Text" />
-                  <TextField fx:id="editUseWithForbiddenTextTF" />
-                  <Label fx:id="useWithCommandsLabel" />
-                  <TextArea fx:id="editUseWithCommandsTA" prefHeight="100.0" wrapText="true" />
-               </children>
-               <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
-            </VBox>
-         </content>
-      </Tab>
-  </tabs>
-</TabPane>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<CheckBox fx:id="editUsingEnabledCB" mnemonicParsing="false"
+			text="Using enabled?" />
+		<Label text="Use-with Successful Text" />
+		<TextField fx:id="editUseWithSuccessfulTextTF" />
+		<Label text="Use-with Forbidden Text" />
+		<TextField fx:id="editUseWithForbiddenTextTF" />
+		<Label fx:id="useWithCommandsLabel" />
+		<TextArea fx:id="editUseWithCommandsTA" prefHeight="100.0"
+			wrapText="true" />
+		<Label text="Actions triggered when used together" />
+		<ActionListView fx:id="useWithActionsListView" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>

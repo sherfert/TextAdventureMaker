@@ -3,14 +3,13 @@ package gui.include;
 import data.InspectableObject;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.ActionListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import logic.CurrentGameManager;
 
 /**
  * Controller for one inspectable object.
- * 
- * TODO Support to change additionalInspectActions
  * 
  * @author Satia
  */
@@ -24,6 +23,9 @@ public class InspectableObjectController extends GameDataController {
 
 	@FXML
 	private TextArea editIdentifiersTA;
+
+	@FXML
+	private ActionListView inspectActionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -45,5 +47,10 @@ public class InspectableObjectController extends GameDataController {
 		editInspectionTextTA.textProperty().bindBidirectional(object.inspectionTextProperty());
 		editIdentifiersTA.setText(getListString(object.getIdentifiers()));
 		editIdentifiersTA.textProperty().addListener((f, o, n) -> updateList(n, object::setIdentifiers));
+
+		inspectActionsListView.initialize(object.getAdditionalInspectActions(),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> object.addAdditionalInspectAction(a),
+				(a) -> object.removeAdditionalInspectAction(a));
 	}
 }

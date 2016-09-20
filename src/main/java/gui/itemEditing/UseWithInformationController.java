@@ -4,18 +4,16 @@ import data.InventoryItem;
 import data.interfaces.PassivelyUsable;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.ActionListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
  * Controller for the usage of an inventory item with a person or object.
- * 
- * TODO Support to change additionalUseWithActions
  * 
  * @author Satia
  */
@@ -26,9 +24,6 @@ public class UseWithInformationController extends GameDataController {
 
 	/** The object it is being used with */
 	private PassivelyUsable object;
-
-	@FXML
-	private TabPane tabPane;
 
 	@FXML
 	private CheckBox editUsingEnabledCB;
@@ -44,6 +39,9 @@ public class UseWithInformationController extends GameDataController {
 
 	@FXML
 	private Label useWithCommandsLabel;
+
+	@FXML
+	private ActionListView useWithActionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -68,7 +66,7 @@ public class UseWithInformationController extends GameDataController {
 		// Create new bindings
 		editUseWithSuccessfulTextTF.setText(item.getUseWithSuccessfulText(object));
 		editUseWithSuccessfulTextTF.textProperty().addListener((f, o, n) -> item.setUseWithSuccessfulText(object, n));
-		
+
 		editUseWithForbiddenTextTF.setText(item.getUseWithForbiddenText(object));
 		editUseWithForbiddenTextTF.textProperty().addListener((f, o, n) -> item.setUseWithForbiddenText(object, n));
 
@@ -78,9 +76,12 @@ public class UseWithInformationController extends GameDataController {
 		editUseWithCommandsTA.setText(getCommandString(item.getAdditionalUseWithCommands(object)));
 		editUseWithCommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
 				editUseWithCommandsTA, (cs) -> item.setAdditionalUseWithCommands(object, cs)));
-		
+
 		useWithCommandsLabel.setText("Additional commands for using " + item.getName() + " with " + object.getName());
 
-		saveTabIndex(tabPane);
+		useWithActionsListView.initialize(item.getAdditionalActionsFromUseWith(object),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> item.addAdditionalActionToUseWith(object, a),
+				(a) -> item.removeAdditionalActionFromUseWith(object, a));
 	}
 }

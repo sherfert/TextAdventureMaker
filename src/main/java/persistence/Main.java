@@ -90,9 +90,9 @@ public class Main {
 		// Going into the black hole ends the game
 		Way wayToVoid = new Way("Black hole", "There is a big black hole where the front door " + "used to be.", flat,
 				voidLoc);
-		wayToVoid.addAdditionalTravelCommand("climb into (?<o0>.+?)");
-		wayToVoid.addAdditionalTravelCommand("jump into (?<o0>.+?)");
-		wayToVoid.addAdditionalActionToMove(new EndGameAction("ende"));
+		wayToVoid.addAdditionalMoveCommand("climb into (?<o0>.+?)");
+		wayToVoid.addAdditionalMoveCommand("jump into (?<o0>.+?)");
+		wayToVoid.addAdditionalMoveAction(new EndGameAction("ende"));
 
 		/*
 		 * Inspecting satia will give you 5 bucks. You can "give them back" by
@@ -257,7 +257,7 @@ public class Main {
 		button.setUseSuccessfulText("BOOOM. Everything is dark. What have you done?");
 		
 		MoveAction moveToVoid = new MoveAction("moveToVoid", voidLoc);
-		button.addAdditionalActionToUse(moveToVoid);
+		button.addAdditionalUseAction(moveToVoid);
 
 		/*
 		 * A banana. If the banana is being used the item disappears and the
@@ -285,11 +285,11 @@ public class Main {
 		peel.setUseForbiddenText("Do you want to eat the peel, too?");
 		AddInventoryItemsAction addPeelAction = new AddInventoryItemsAction("addPeelAction");
 		addPeelAction.addPickUpItem(peel);
-		banana.addAdditionalActionToUse(addPeelAction);
+		banana.addAdditionalUseAction(addPeelAction);
 		ChangeItemAction removeBananaAction = new ChangeItemAction("removeBananaAction", banana);
 		removeBananaAction.setNewLocation(null);
 		removeBananaAction.setChangeLocation(true);
-		banana.addAdditionalActionToUse(removeBananaAction);
+		banana.addAdditionalUseAction(removeBananaAction);
 		InventoryItem invBanana = new InventoryItem(banana);
 		invBanana.setDescription("A banana");
 

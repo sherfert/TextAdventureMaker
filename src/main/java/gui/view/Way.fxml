@@ -6,45 +6,52 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
 <?import gui.customui.LocationChooser?>
+<?import gui.customui.ActionListView?>
 
-<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
-  <tabs>
-    <Tab text="Basic properties">
-         <content>
-            <VBox spacing="2.0">
-               <children>
-                  <fx:include source="NamedObject.fxml" />
-                  <fx:include source="NamedDescribedObject.fxml" />
-                  <fx:include source="InspectableObject.fxml" />
-                  <Label text="Origin" />
-                  <LocationChooser fx:id="originChooser"  />
-                  <Label text="Destination" />
-                  <LocationChooser fx:id="destinationChooser"  />
-                  <Button fx:id="removeButton" mnemonicParsing="false" text="Delete this way" />
-               </children>
-               <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
-            </VBox>
-         </content>
-      </Tab>
-    <Tab text="Using the way">
-         <content>
-            <VBox spacing="2.0">
-               <children>
-                  <CheckBox fx:id="editMovingEnabledCB" mnemonicParsing="false" text="Using enabled?" />
-			      <Label text="Move Successful Text" />
-			      <TextField fx:id="editMoveSuccessfulTextTF" />
-			      <Label text="Move Forbidden Text" />
-			      <TextField fx:id="editMoveForbiddenTextTF" />
-			      <Label fx:id="moveCommandsLabel" />
-			      <TextArea fx:id="editMoveCommandsTA" prefHeight="100.0" wrapText="true" />
-               </children>
-               <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
-            </VBox>
-         </content>
-      </Tab>
-  </tabs>
+<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
+	<tabs>
+		<Tab text="Basic properties">
+			<content>
+				<VBox spacing="2.0">
+					<children>
+						<fx:include source="NamedObject.fxml" />
+						<fx:include source="NamedDescribedObject.fxml" />
+						<fx:include source="InspectableObject.fxml" />
+						<Label text="Origin" />
+						<LocationChooser fx:id="originChooser" />
+						<Label text="Destination" />
+						<LocationChooser fx:id="destinationChooser" />
+						<Button fx:id="removeButton" mnemonicParsing="false"
+							text="Delete this way" />
+					</children>
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+				</VBox>
+			</content>
+		</Tab>
+		<Tab text="Using the way">
+			<content>
+				<VBox spacing="2.0">
+					<children>
+						<CheckBox fx:id="editMovingEnabledCB" mnemonicParsing="false"
+							text="Using enabled?" />
+						<Label text="Move Successful Text" />
+						<TextField fx:id="editMoveSuccessfulTextTF" />
+						<Label text="Move Forbidden Text" />
+						<TextField fx:id="editMoveForbiddenTextTF" />
+						<Label fx:id="moveCommandsLabel" />
+						<TextArea fx:id="editMoveCommandsTA" prefHeight="100.0"
+							wrapText="true" />
+						<Label text="Actions triggered when used" />
+						<ActionListView fx:id="moveActionsListView" />
+					</children>
+					<padding>
+						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+					</padding>
+				</VBox>
+			</content>
+		</Tab>
+	</tabs>
 </TabPane>

@@ -19,7 +19,7 @@ public interface Travelable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToMove(AbstractAction action);
+	public void addAdditionalMoveAction(AbstractAction action);
 
 	/**
 	 * Adds an additional command that can be used to travel here.
@@ -27,7 +27,7 @@ public interface Travelable extends Identifiable {
 	 * @param command
 	 *            the command
 	 */
-	public void addAdditionalTravelCommand(String command);
+	public void addAdditionalMoveCommand(String command);
 
 	/**
 	 * @return the additional actions.
@@ -37,7 +37,7 @@ public interface Travelable extends Identifiable {
 	/**
 	 * @return the additional travel commands.
 	 */
-	public List<String> getAdditionalTravelCommands();
+	public List<String> getAdditionalMoveCommands();
 
 	/**
 	 * @return the destination
@@ -65,7 +65,7 @@ public interface Travelable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromMove(AbstractAction action);
+	public void removeAdditionalMoveAction(AbstractAction action);
 
 	/**
 	 * Removes an additional travel command
@@ -73,7 +73,7 @@ public interface Travelable extends Identifiable {
 	 * @param command
 	 *            the command
 	 */
-	public void removeAdditionalTravelCommand(String command);
+	public void removeAdditionalMoveCommand(String command);
 
 	/**
 	 * Sets the forbidden text. If {@code null} passed, the default text will be
@@ -121,7 +121,7 @@ public interface Travelable extends Identifiable {
 	 * @param additionalTravelCommands
 	 *            the additionalTravelCommands to set
 	 */
-	public void setAdditionalTravelCommands(List<String> additionalTravelCommands);
+	public void setAdditionalMoveCommands(List<String> additionalTravelCommands);
 
 	/**
 	 * Sets additional move actions

@@ -3,20 +3,18 @@ package gui.itemEditing;
 import data.ConversationOption;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.ActionListView;
 import gui.customui.ConversationLayerChooser;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
- * Controller for one item.
- * 
- * TODO Support to change additionalTalkToActions
+ * Controller for one conversation option.
  * 
  * @author Satia
  */
@@ -24,9 +22,6 @@ public class ConversationOptionController extends GameDataController {
 
 	/** The conversation option */
 	private ConversationOption option;
-
-	@FXML
-	private TabPane tabPane;
 
 	@FXML
 	private ConversationLayerChooser targetChooser;
@@ -48,6 +43,9 @@ public class ConversationOptionController extends GameDataController {
 
 	@FXML
 	private TextArea editEventTA;
+
+	@FXML
+	private ActionListView actionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -81,8 +79,11 @@ public class ConversationOptionController extends GameDataController {
 		editTextTF.textProperty().bindBidirectional(option.textProperty());
 		editAnswerTA.textProperty().bindBidirectional(option.answerProperty());
 		editEventTA.textProperty().bindBidirectional(option.eventProperty());
-
-		saveTabIndex(tabPane);
+		
+		actionsListView.initialize(option.getAdditionalActions(),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> option.addAdditionalAction(a),
+				(a) -> option.removeAdditionalAction(a));
 	}
 
 	/**

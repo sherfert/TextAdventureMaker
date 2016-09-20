@@ -4,11 +4,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.StackPane?>
 <?import gui.customui.ConversationLayerChooser?>
+<?import gui.customui.ActionListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1"  fx:id="tabPane">
+	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
 	<tabs>
 		<Tab text="Basic properties">
 			<content>
@@ -25,6 +25,8 @@
 							wrapText="true" />
 						<Label text="Start layer" />
 						<ConversationLayerChooser fx:id="startLayerChooser" />
+						<Label text="Actions triggered when started" />
+						<ActionListView prefHeight="200.0" fx:id="actionsListView" />
 						<Button fx:id="removeButton" mnemonicParsing="false"
 							text="Delete this conversation" />
 					</children>

@@ -3,19 +3,17 @@ package gui.itemEditing;
 import data.InventoryItem;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.ActionListView;
 import gui.customui.InventoryItemListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
  * Controller for one the combination of two inventory items.
- * 
- * TODO Support to change additionalCombineWithActions
  * 
  * @author Satia
  */
@@ -26,9 +24,6 @@ public class CombinationInformationController extends GameDataController {
 
 	/** The second inventory item */
 	private InventoryItem item2;
-
-	@FXML
-	private TabPane tabPane;
 
 	@FXML
 	private CheckBox editCombiningEnabledCB;
@@ -56,6 +51,9 @@ public class CombinationInformationController extends GameDataController {
 
 	@FXML
 	private TextArea editCombine2CommandsTA;
+
+	@FXML
+	private ActionListView combineActionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -97,8 +95,10 @@ public class CombinationInformationController extends GameDataController {
 				} , (ii) -> item1.addNewCombinableWhenCombinedWith(item2, ii),
 				(ii) -> item1.removeNewCombinableWhenCombinedWith(item2, ii));
 
-		combine1CommandsLabel.setText("Additional commands for combining " + item1.getName() + " with " + item2.getName());
-		combine2CommandsLabel.setText("Additional commands for combining " + item2.getName() + " with " + item1.getName());
+		combine1CommandsLabel
+				.setText("Additional commands for combining " + item1.getName() + " with " + item2.getName());
+		combine2CommandsLabel
+				.setText("Additional commands for combining " + item2.getName() + " with " + item1.getName());
 
 		editCombine1CommandsTA.setText(getCommandString(item1.getAdditionalCombineCommands(item2)));
 		editCombine1CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
@@ -108,6 +108,9 @@ public class CombinationInformationController extends GameDataController {
 		editCombine2CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
 				editCombine2CommandsTA, (cs) -> item2.setAdditionalCombineCommands(item1, cs)));
 
-		saveTabIndex(tabPane);
+		combineActionsListView.initialize(item1.getAdditionalActionsFromCombineWith(item2),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> item1.addAdditionalActionToCombineWith(item2, a),
+				(a) -> item1.removeAdditionalActionFromCombineWith(item2, a));
 	}
 }

@@ -17,7 +17,7 @@ public interface Usable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void addAdditionalActionToUse(AbstractAction action);
+	public void addAdditionalUseAction(AbstractAction action);
 
 	/**
 	 * Adds an additional command that can be used to use the object.
@@ -58,7 +58,7 @@ public interface Usable extends Identifiable {
 	 * @param action
 	 *            the action
 	 */
-	public void removeAdditionalActionFromUse(AbstractAction action);
+	public void removeAdditionalUseAction(AbstractAction action);
 
 	/**
 	 * Removes an additional use command

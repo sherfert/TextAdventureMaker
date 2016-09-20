@@ -3,6 +3,7 @@ package gui.itemEditing;
 import data.Way;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.ActionListView;
 import gui.customui.LocationChooser;
 import gui.include.InspectableObjectController;
 import gui.include.NamedDescribedObjectController;
@@ -18,8 +19,6 @@ import logic.CurrentGameManager;
 
 /**
  * Controller for one way.
- * 
- * TODO Support to change additionalMoveActions
  * 
  * @author Satia
  */
@@ -55,6 +54,9 @@ public class WayController extends GameDataController {
 	@FXML
 	private Label moveCommandsLabel;
 
+	@FXML
+	private ActionListView moveActionsListView;
+
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -86,13 +88,16 @@ public class WayController extends GameDataController {
 		editMovingEnabledCB.setSelected(way.isMovingEnabled());
 		editMovingEnabledCB.selectedProperty().addListener((f, o, n) -> way.setMovingEnabled(n));
 
-		editMoveCommandsTA.setText(getCommandString(way.getAdditionalTravelCommands()));
+		editMoveCommandsTA.setText(getCommandString(way.getAdditionalMoveCommands()));
 		editMoveCommandsTA.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 1, true, editMoveCommandsTA, way::setAdditionalTravelCommands));
-		
-
+				(f, o, n) -> updateGameCommands(n, 1, true, editMoveCommandsTA, way::setAdditionalMoveCommands));
 		
 		moveCommandsLabel.setText("Additional commands for using " + way.getName());
+
+		moveActionsListView.initialize(way.getAdditionalMoveActions(),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> way.addAdditionalMoveAction(a),
+				(a) -> way.removeAdditionalMoveAction(a));
 		
 		saveTabIndex(tabPane);
 	}

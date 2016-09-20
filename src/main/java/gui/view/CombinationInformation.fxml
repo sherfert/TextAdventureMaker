@@ -4,46 +4,37 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.StackPane?>
 <?import gui.customui.InventoryItemListView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import gui.customui.ActionListView?>
 
-<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
-	<tabs>
-		<Tab text="Combining">
-			<content>
-				<VBox spacing="2.0">
-					<children>
-						<CheckBox fx:id="editCombiningEnabledCB" mnemonicParsing="false"
-							text="Combining enabled?" />
-						<CheckBox fx:id="editRemoveItemsCB" mnemonicParsing="false"
-							text="Remove combined items from inventory?" />
-						<Label text="Combine Successful Text" />
-						<TextField fx:id="editCombineSuccessfulTextTF" />
-						<Label text="Combine Forbidden Text" />
-						<TextField fx:id="editCombineForbiddenTextTF" />
-						<HBox spacing="2.0">
-							<VBox spacing="2.0">
-								<Label fx:id="combine1CommandsLabel" />
-								<TextArea fx:id="editCombine1CommandsTA" prefHeight="100.0"
-									wrapText="true" />
-							</VBox>
-							<VBox spacing="2.0">
-								<Label fx:id="combine2CommandsLabel" />
-								<TextArea fx:id="editCombine2CommandsTA" prefHeight="100.0"
-									wrapText="true" />
-							</VBox>
-						</HBox>
-						<Label text="Inventory items added to the inventory when combined" />
-						<InventoryItemListView fx:id="newItemsListView" />
-					</children>
-					<padding>
-						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-					</padding>
-				</VBox>
-			</content>
-		</Tab>
-	</tabs>
-</TabPane>
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<CheckBox fx:id="editCombiningEnabledCB" mnemonicParsing="false"
+			text="Combining enabled?" />
+		<CheckBox fx:id="editRemoveItemsCB" mnemonicParsing="false"
+			text="Remove combined items from inventory?" />
+		<Label text="Combine Successful Text" />
+		<TextField fx:id="editCombineSuccessfulTextTF" />
+		<Label text="Combine Forbidden Text" />
+		<TextField fx:id="editCombineForbiddenTextTF" />
+		<HBox spacing="2.0">
+			<VBox spacing="2.0">
+				<Label fx:id="combine1CommandsLabel" />
+				<TextArea fx:id="editCombine1CommandsTA" prefHeight="100.0"
+					wrapText="true" />
+			</VBox>
+			<VBox spacing="2.0">
+				<Label fx:id="combine2CommandsLabel" />
+				<TextArea fx:id="editCombine2CommandsTA" prefHeight="100.0"
+					wrapText="true" />
+			</VBox>
+		</HBox>
+		<Label text="Inventory items added to the inventory when combined" />
+		<InventoryItemListView fx:id="newItemsListView" />
+		<Label text="Actions triggered when combined" />
+		<ActionListView fx:id="combineActionsListView" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>

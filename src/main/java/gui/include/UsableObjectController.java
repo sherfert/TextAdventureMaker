@@ -3,6 +3,7 @@ package gui.include;
 import data.UsableObject;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.ActionListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -13,7 +14,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for one usable object.
  * 
- * TODO Support to change additionalUseActions
+ * TODO layout actionviews properly
  * 
  * @author Satia
  */
@@ -36,6 +37,9 @@ public class UsableObjectController extends GameDataController {
 
 	@FXML
 	private Label useCommandsLabel;
+
+	@FXML
+	private ActionListView useActionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -62,9 +66,12 @@ public class UsableObjectController extends GameDataController {
 
 		editUseCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, true, editUseCommandsTA, object::setAdditionalUseCommands));
-		
 
-		
 		useCommandsLabel.setText("Additional commands for using " + object.getName());
+
+		useActionsListView.initialize(object.getAdditionalUseActions(),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
+				this::objectSelected, (a) -> object.addAdditionalUseAction(a),
+				(a) -> object.removeAdditionalUseAction(a));
 	}
 }

@@ -31,6 +31,8 @@ import javafx.scene.layout.Priority;
  * 
  * Initialize must be called to enable the functionality.
  * 
+ * TODO button sizes Linux
+ * 
  * @author Satia
  */
 public abstract class NamedObjectListView<E extends HasName> extends BorderPane {

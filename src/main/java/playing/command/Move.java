@@ -94,7 +94,7 @@ public class Move extends Command {
 					// Check if the additional command belongs the the chosen
 					// usable
 					if (!PatternGenerator
-							.getPattern(way.getAdditionalTravelCommands())
+							.getPattern(way.getAdditionalMoveCommands())
 							.matcher(currentReplacer.getInput()).matches()) {
 						// no match
 						String message = game.getNotTravelableText();

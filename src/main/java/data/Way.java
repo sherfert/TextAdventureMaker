@@ -42,9 +42,9 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	private List<AbstractAction> additionalMoveActions;
 
 	/**
-	 * All additional travel commands.
+	 * All additional move commands.
 	 */
-	private List<String> additionalTravelCommands;
+	private List<String> additionalMoveCommands;
 
 	/**
 	 * The destination.
@@ -133,13 +133,13 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	}
 
 	@Override
-	public void addAdditionalActionToMove(AbstractAction action) {
+	public void addAdditionalMoveAction(AbstractAction action) {
 		additionalMoveActions.add(action);
 	}
 
 	@Override
-	public void addAdditionalTravelCommand(String command) {
-		additionalTravelCommands.add(command);
+	public void addAdditionalMoveCommand(String command) {
+		additionalMoveCommands.add(command);
 	}
 
 	@Override
@@ -154,8 +154,8 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 
 	@Override
 	@ElementCollection
-	public List<String> getAdditionalTravelCommands() {
-		return additionalTravelCommands;
+	public List<String> getAdditionalMoveCommands() {
+		return additionalMoveCommands;
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	 */
 	private final void init() {
 		this.additionalMoveActions = new ArrayList<>();
-		this.additionalTravelCommands = new ArrayList<>();
+		this.additionalMoveCommands = new ArrayList<>();
 	}
 
 	@Override
@@ -229,13 +229,13 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	}
 	
 	@Override
-	public void removeAdditionalActionFromMove(AbstractAction action) {
+	public void removeAdditionalMoveAction(AbstractAction action) {
 		additionalMoveActions.remove(action);
 	}
 
 	@Override
-	public void removeAdditionalTravelCommand(String command) {
-		additionalTravelCommands.remove(command);
+	public void removeAdditionalMoveCommand(String command) {
+		additionalMoveCommands.remove(command);
 	}
 
 	/**
@@ -257,8 +257,8 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	}
 
 	@Override
-	public void setAdditionalTravelCommands(List<String> additionalTravelCommands) {
-		this.additionalTravelCommands = additionalTravelCommands;
+	public void setAdditionalMoveCommands(List<String> additionalMoveCommands) {
+		this.additionalMoveCommands = additionalMoveCommands;
 	}
 
 	// final as called in constructor
