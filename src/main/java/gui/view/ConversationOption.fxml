@@ -23,7 +23,7 @@
 		<Label text="Target layer" />
 		<ConversationLayerChooser fx:id="targetChooser" />
 		<Label text="Actions triggered when chosen" />
-		<ActionListView prefHeight="200.0" fx:id="actionsListView" />
+		<ActionListView fx:id="actionsListView" />
 		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this item" />
 	</children>
 	<padding>

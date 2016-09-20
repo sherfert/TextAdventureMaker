@@ -7,7 +7,7 @@
 <?import gui.customui.ActionListView?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="gui.include.InspectableObjectController">
+	fx:controller="gui.include.InspectableObjectController" VBox.vgrow="ALWAYS">
 	<children>
 		<Label text="Inspection Text" />
 		<TextArea fx:id="editInspectionTextTA" prefHeight="100.0"
@@ -16,6 +16,6 @@
 		<TextArea fx:id="editIdentifiersTA" prefHeight="100.0"
 			wrapText="true" />
 		<Label text="Actions triggered when inspected" />
-		<ActionListView prefHeight="200.0" fx:id="inspectActionsListView" />
+		<ActionListView fx:id="inspectActionsListView" />
 	</children>
 </VBox>

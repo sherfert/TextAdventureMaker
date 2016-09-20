@@ -26,7 +26,7 @@
 						<Label text="Start layer" />
 						<ConversationLayerChooser fx:id="startLayerChooser" />
 						<Label text="Actions triggered when started" />
-						<ActionListView prefHeight="200.0" fx:id="actionsListView" />
+						<ActionListView fx:id="actionsListView" />
 						<Button fx:id="removeButton" mnemonicParsing="false"
 							text="Delete this conversation" />
 					</children>
