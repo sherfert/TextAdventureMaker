@@ -21,6 +21,7 @@ import logic.CurrentGameManager;
  */
 public class ActionsController extends NamedObjectsTableController<AbstractAction> {
 
+	// TODO map for other names.
 	@FXML
 	private TableColumn<AbstractAction, String> typeCol;
 

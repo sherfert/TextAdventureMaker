@@ -25,7 +25,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class ChangeInvItemUsageAction extends AbstractAction {
+public class ChangeUseWithInformationAction extends AbstractAction {
 
 	/**
 	 * The inventory item.
@@ -58,11 +58,11 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInvItemUsageAction(String, InventoryItem, PassivelyUsable)}
+	 *             {@link #ChangeUseWithInformationAction(String, InventoryItem, PassivelyUsable)}
 	 *             instead.
 	 */
 	@Deprecated
-	public ChangeInvItemUsageAction() {
+	public ChangeUseWithInformationAction() {
 		init();
 	}
 
@@ -74,7 +74,7 @@ public class ChangeInvItemUsageAction extends AbstractAction {
 	 * @param object
 	 *            the thing to use with
 	 */
-	public ChangeInvItemUsageAction(String name, InventoryItem inventoryItem, PassivelyUsable object) {
+	public ChangeUseWithInformationAction(String name, InventoryItem inventoryItem, PassivelyUsable object) {
 		super(name);
 		init();
 		this.inventoryItem = inventoryItem;

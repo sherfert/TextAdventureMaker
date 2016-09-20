@@ -5,9 +5,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.include.NamedObjectController">
-   <children>
-      <Label text="Name" />
-      <TextField fx:id="editNameTF" />
-   </children>
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.include.NamedObjectController">
+	<children>
+		<Label text="Name" />
+		<TextField fx:id="editNameTF" />
+	</children>
 </VBox>

@@ -19,8 +19,8 @@ import data.action.ChangeActionAction;
 import data.action.ChangeConversationAction;
 import data.action.ChangeConversationOptionAction;
 import data.action.ChangeInspectableObjectAction;
-import data.action.ChangeInvItemCombinationAction;
-import data.action.ChangeInvItemUsageAction;
+import data.action.ChangeCombineInformationAction;
+import data.action.ChangeUseWithInformationAction;
 import data.action.ChangeItemAction;
 import data.action.ChangeNDObjectAction;
 import data.action.ChangePersonAction;
@@ -374,14 +374,14 @@ public class Main {
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
 
-		ChangeInvItemUsageAction changeChairTVaction = new ChangeInvItemUsageAction("changeChairTVaction", invChair, tv);
+		ChangeUseWithInformationAction changeChairTVaction = new ChangeUseWithInformationAction("changeChairTVaction", invChair, tv);
 		changeChairTVaction.setNewUseWithSuccessfulText("32\" wasted!");
 
-		ChangeInvItemUsageAction changeSatiaMoneyAction = new ChangeInvItemUsageAction("changeSatiaMoneyAction", money, satia);
+		ChangeUseWithInformationAction changeSatiaMoneyAction = new ChangeUseWithInformationAction("changeSatiaMoneyAction", money, satia);
 		changeSatiaMoneyAction
 				.setNewUseWithSuccessfulText("You feel guilty and put the money back. Although he has a big tv.");
 
-		ChangeInvItemCombinationAction changePeelPenCombinationAction = new ChangeInvItemCombinationAction("changePeelPenCombinationAction", peel,
+		ChangeCombineInformationAction changePeelPenCombinationAction = new ChangeCombineInformationAction("changePeelPenCombinationAction", peel,
 				invPen);
 		changePeelPenCombinationAction.setNewCombineWithSuccessfulText(
 				"Absent-mindedly you paint the peel while staring at the huge tv screen - which is black.");

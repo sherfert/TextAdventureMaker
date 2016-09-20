@@ -28,7 +28,7 @@ import javax.persistence.ManyToOne;
  */
 @Entity
 @Access(AccessType.PROPERTY)
-public class ChangeInvItemCombinationAction extends AbstractAction {
+public class ChangeCombineInformationAction extends AbstractAction {
 
 	/**
 	 * The first inventory item.
@@ -77,11 +77,11 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 * No-arg constructor for the database.
 	 * 
 	 * @deprecated Use
-	 *             {@link #ChangeInvItemCombinationAction(String, InventoryItem, InventoryItem)}
+	 *             {@link #ChangeCombineInformationAction(String, InventoryItem, InventoryItem)}
 	 *             instead.
 	 */
 	@Deprecated
-	public ChangeInvItemCombinationAction() {
+	public ChangeCombineInformationAction() {
 		init();
 	}
 
@@ -93,7 +93,7 @@ public class ChangeInvItemCombinationAction extends AbstractAction {
 	 * @param object
 	 *            the second inventory item
 	 */
-	public ChangeInvItemCombinationAction(String name, InventoryItem inventoryItem1, InventoryItem inventoryItem2) {
+	public ChangeCombineInformationAction(String name, InventoryItem inventoryItem1, InventoryItem inventoryItem2) {
 		super(name);
 		init();
 		this.inventoryItem1 = inventoryItem1;

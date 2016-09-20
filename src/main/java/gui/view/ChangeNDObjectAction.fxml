@@ -6,10 +6,12 @@
 <?import javafx.scene.layout.*?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="gui.include.NamedDescribedObjectController">
+	fx:controller="gui.include.ChangeNDObjectActionController">
 	<children>
-		<Label text="Description" />
-		<TextArea fx:id="editDescriptionTA" prefHeight="100.0"
+		<Label text="New name" />
+		<TextField fx:id="newNameTF" />
+		<Label text="New description" />
+		<TextArea fx:id="newDescriptionTA" prefHeight="100.0"
 			wrapText="true" />
 	</children>
 </VBox>
