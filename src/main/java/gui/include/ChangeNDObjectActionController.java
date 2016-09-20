@@ -4,6 +4,8 @@ import data.action.ChangeNDObjectAction;
 import gui.GameDataController;
 import gui.MainWindowController;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
@@ -11,20 +13,27 @@ import logic.CurrentGameManager;
 /**
  * Controller for one named described object.
  * 
- * TODO link to the NDO under change
- * 
  * @author Satia
  */
 public class ChangeNDObjectActionController extends GameDataController {
 
 	/** The action */
 	private ChangeNDObjectAction action;
-	
+
+	@FXML
+	Hyperlink link;
+
+	@FXML
+	private CheckBox newNameCB;
+
 	@FXML
 	private TextField newNameTF;
 
 	@FXML
 	private TextArea newDescriptionTA;
+
+	@FXML
+	private CheckBox newDescriptionCB;
 
 	/**
 	 * @param currentGameManager
@@ -42,8 +51,33 @@ public class ChangeNDObjectActionController extends GameDataController {
 
 	@FXML
 	private void initialize() {
-		// TODO Create new bindings
-		// Since null is a valid value, a Property is not a good idea.
-		// Also, there should be checkboxes to decide if a value should be changed or not.
+		link.setText("Changing: " + action.getObject().toString());
+		link.setOnAction((e) -> {
+			objectSelected(action.getObject());
+		});
+
+		newNameTF.setText(action.getNewName());
+		newNameTF.disableProperty().bind(newNameCB.selectedProperty().not());
+		newNameTF.textProperty().addListener((f, o, n) -> {
+			action.setNewName(n);
+		});
+		newNameCB.setSelected(action.getNewName() != null);
+		newNameCB.selectedProperty().addListener((f, o, n) -> {
+			if (!n) {
+				action.setNewName(null);
+			}
+		});
+
+		newDescriptionTA.setText(action.getNewDescription());
+		newDescriptionTA.disableProperty().bind(newDescriptionCB.selectedProperty().not());
+		newDescriptionTA.textProperty().addListener((f, o, n) -> {
+			action.setNewDescription(n);
+		});
+		newDescriptionCB.setSelected(action.getNewDescription() != null);
+		newDescriptionCB.selectedProperty().addListener((f, o, n) -> {
+			if (!n) {
+				action.setNewDescription(null);
+			}
+		});
 	}
 }

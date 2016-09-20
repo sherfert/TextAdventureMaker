@@ -4,13 +4,19 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Hyperlink?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="gui.include.ChangeNDObjectActionController">
 	<children>
-		<Label text="New name" />
+		<Hyperlink fx:id="link"/>
+		<CheckBox fx:id="newNameCB" mnemonicParsing="false"
+			text="Change the name?" />
 		<TextField fx:id="newNameTF" />
-		<Label text="New description" />
+		<CheckBox fx:id="newDescriptionCB" mnemonicParsing="false"
+			text="Change the description" />
 		<TextArea fx:id="newDescriptionTA" prefHeight="100.0"
 			wrapText="true" />
 	</children>
