@@ -14,15 +14,15 @@
 		<fx:include source="AbstractAction.fxml" />
 		<fx:include source="ChangeNDObjectAction.fxml" />
 		<fx:include source="ChangeInspectableObjectAction.fxml" />
+		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
+			text="Change the location?" />
+		<LocationChooser fx:id="newLocationChooser" />
 		<CheckBox fx:id="newTalkForbiddenTextCB" mnemonicParsing="false"
 			text="Change the Talk Forbidden Text?" />
 		<TextField fx:id="newTalkForbiddenTextTF" />
 		<CheckBox fx:id="newConversationCB" mnemonicParsing="false"
 			text="Change the conversation?" />
 		<ConversationChooser fx:id="newConversationChooser" />
-		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
-			text="Change the location?" />
-		<LocationChooser fx:id="newLocationChooser" />
 		<Button fx:id="removeButton" mnemonicParsing="false"
 			text="Delete this action" />
 	</children>

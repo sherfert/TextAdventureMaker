@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.StackPane?>
+<?import gui.customui.LocationChooser?>
+<?import gui.customui.ConversationChooser?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<fx:include source="NamedObject.fxml" />
+		<fx:include source="AbstractAction.fxml" />
+		<fx:include source="ChangeNDObjectAction.fxml" />
+		<fx:include source="ChangeInspectableObjectAction.fxml" />
+
+		<Label text="Enable or disable the way?" />
+		<HBox spacing="2.0">
+
+			<RadioButton text="Do not change" fx:id="doNotChangeWayRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingWayTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableWayRB"
+				toggleGroup="$enablingWayTG" />
+			<RadioButton text="Disable" fx:id="disableWayRB"
+				toggleGroup="$enablingWayTG" />
+
+		</HBox>
+		<CheckBox fx:id="newOriginCB" mnemonicParsing="false"
+			text="Change the origin?" />
+		<LocationChooser fx:id="newOriginChooser" />
+		<CheckBox fx:id="newDestinationCB" mnemonicParsing="false"
+			text="Change the destination?" />
+		<LocationChooser fx:id="newDestinationChooser" />
+		<CheckBox fx:id="newMoveSuccessfulTextCB" mnemonicParsing="false"
+			text="Change the Move Successful Text?" />
+		<TextField fx:id="newMoveSuccessfulTextTF" />
+		<CheckBox fx:id="newMoveForbiddenTextCB" mnemonicParsing="false"
+			text="Change the Move Forbidden Text?" />
+		<TextField fx:id="newMoveForbiddenTextTF" />
+
+		<Button fx:id="removeButton" mnemonicParsing="false"
+			text="Delete this action" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>
