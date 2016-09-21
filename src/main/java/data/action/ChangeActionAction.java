@@ -75,10 +75,11 @@ public class ChangeActionAction extends AbstractAction {
 	}
 
 	/**
-	 * @param action
-	 *            the action to set
+	 * Just for the database.
 	 */
-	public void setAction(AbstractAction action) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setAction(AbstractAction action) {
 		this.action = action;
 	}
 

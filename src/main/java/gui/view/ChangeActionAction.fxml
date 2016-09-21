@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<fx:include source="NamedObject.fxml" />
+		<fx:include source="AbstractAction.fxml" />
+		
+		<Hyperlink fx:id="link"/>
+		<Label text="Enable or disable the action" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeActionRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingActionTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableActionRB"
+				toggleGroup="$enablingActionTG" />
+			<RadioButton text="Disable" fx:id="disableActionRB"
+				toggleGroup="$enablingActionTG" />
+		</HBox>
+		
+		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this action" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>

@@ -37,6 +37,8 @@ import logic.CurrentGameManager;
  * 
  * XXX placeholder checking for success fields
  * 
+ * TODO consider tabs instead of accordion
+ * 
  * @author Satia
  */
 public class GameDetailsController extends GameDataController {
