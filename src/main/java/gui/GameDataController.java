@@ -21,6 +21,7 @@ import data.Way;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeNDObjectAction;
 import data.action.ChangePersonAction;
+import data.action.ChangeUsableObjectAction;
 import data.action.ChangeWayAction;
 import data.action.EndGameAction;
 import data.action.MoveAction;
@@ -36,6 +37,7 @@ import gui.itemEditing.LocationController;
 import gui.itemEditing.PersonController;
 import gui.itemEditing.WayController;
 import gui.itemEditing.action.AIIActionController;
+import gui.itemEditing.action.ChangeInventoryItemActionController;
 import gui.itemEditing.action.ChangeLocationActionController;
 import gui.itemEditing.action.ChangePersonActionController;
 import gui.itemEditing.action.ChangeWayActionController;
@@ -488,6 +490,9 @@ public abstract class GameDataController {
 		} else if (o.getClass() == ChangePersonAction.class) {
 			c = new ChangePersonActionController(currentGameManager, mwController, (ChangePersonAction) o);
 			fxml = "view/ChangePersonAction.fxml";
+		} else if (o.getClass() == ChangeUsableObjectAction.class) {
+			c = new ChangeInventoryItemActionController(currentGameManager, mwController, (ChangeUsableObjectAction) o);
+			fxml = "view/ChangeInventoryItemAction.fxml";
 		} else if (o.getClass() == ChangeWayAction.class) {
 			c = new ChangeWayActionController(currentGameManager, mwController, (ChangeWayAction) o);
 			fxml = "view/ChangeWayAction.fxml";

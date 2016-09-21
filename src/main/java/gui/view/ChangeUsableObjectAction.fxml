@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Hyperlink?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.include.ChangeUsableObjectActionController">
+	<children>
+
+		<Label text="Enable or disable using the item?" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeUseRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingUseTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableUseRB"
+				toggleGroup="$enablingUseTG" />
+			<RadioButton text="Disable" fx:id="disableUseRB"
+				toggleGroup="$enablingUseTG" />
+		</HBox>
+		<CheckBox fx:id="newUseSuccessfulTextCB" mnemonicParsing="false"
+			text="Change the Use Successful Text?" />
+		<TextField fx:id="newUseSuccessfulTextTF" />
+		<CheckBox fx:id="newUseForbiddenTextCB" mnemonicParsing="false"
+			text="Change the Use Forbidden Text?" />
+		<TextField fx:id="newUseForbiddenTextTF" />
+		
+	</children>
+</VBox>

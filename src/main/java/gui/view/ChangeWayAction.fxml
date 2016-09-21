@@ -20,7 +20,6 @@
 
 		<Label text="Enable or disable the way?" />
 		<HBox spacing="2.0">
-
 			<RadioButton text="Do not change" fx:id="doNotChangeWayRB">
 				<toggleGroup>
 					<ToggleGroup fx:id="enablingWayTG" />
@@ -30,7 +29,6 @@
 				toggleGroup="$enablingWayTG" />
 			<RadioButton text="Disable" fx:id="disableWayRB"
 				toggleGroup="$enablingWayTG" />
-
 		</HBox>
 		<CheckBox fx:id="newOriginCB" mnemonicParsing="false"
 			text="Change the origin?" />
