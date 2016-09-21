@@ -92,7 +92,7 @@ public class ChangeUseWithInformationAction extends AbstractAction {
 	 * @return the inventoryItem
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_INVENTORYITEM", //
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_ChangeUseWithInformationAction_INVENTORYITEM", //
 	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public InventoryItem getInventoryItem() {
 		return inventoryItem;
@@ -160,7 +160,7 @@ public class ChangeUseWithInformationAction extends AbstractAction {
 	 */
 	// Specify the common supertype of Person and Item: NamedDescribedObject
 	@ManyToOne(cascade = CascadeType.PERSIST, targetEntity = NamedDescribedObject.class)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMUSAGEACTION_OBJECT", //
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_ChangeUseWithInformationAction_OBJECT", //
 	foreignKeyDefinition = "FOREIGN KEY (OBJECT_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public PassivelyUsable getObject() {
 		return object;

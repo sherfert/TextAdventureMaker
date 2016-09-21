@@ -38,7 +38,7 @@ public class InventoryItemManager {
 		List<String> resultList = persistenceManager
 				.getEntityManager()
 				.createNativeQuery(
-						"SELECT DISTINCT c.COMMANDS FROM InventoryItem$CombineCommands_COMMANDS c")
+						"SELECT DISTINCT c.COMMANDS FROM CombineCommands_COMMANDS c")
 				.getResultList();
 	
 		return new HashSet<>(resultList);
@@ -54,7 +54,7 @@ public class InventoryItemManager {
 		List<String> resultList = persistenceManager
 				.getEntityManager()
 				.createNativeQuery(
-						"SELECT DISTINCT c.ADDITIONALUSEWITHCOMMANDS FROM InventoryItem$UsableHasLocation_ADDITIONALUSEWITHCOMMANDS c")
+						"SELECT DISTINCT c.ADDITIONALUSEWITHCOMMANDS FROM UseWithInformation_ADDITIONALUSEWITHCOMMANDS c")
 				.getResultList();
 	
 		return new HashSet<>(resultList);

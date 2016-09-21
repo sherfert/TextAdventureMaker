@@ -24,6 +24,7 @@ import data.action.ChangeUseWithInformationAction;
 import data.action.ChangeItemAction;
 import data.action.ChangeNDObjectAction;
 import data.action.ChangePersonAction;
+import data.action.ChangeUsableObjectAction;
 import data.action.ChangeWayAction;
 import data.action.EndGameAction;
 import data.action.MoveAction;
@@ -143,8 +144,8 @@ public class Main {
 		ChangePersonAction changeSatiaAction1 = new ChangePersonAction("changeSatiaAction1", satia);
 		changeSatiaAction1.setNewInspectionText(
 				"He looks pretty busy programming nonsense stuff. You stole the poor guy his last 5 bucks.");
-		 changeSatiaAction1.setNewConversation(satiaShortConversation);
-		 changeSatiaAction1.setChangeConversation(true);
+		changeSatiaAction1.setNewConversation(satiaShortConversation);
+		changeSatiaAction1.setChangeConversation(true);
 
 		satia.addAdditionalInspectAction(changeSatiaAction1);
 
@@ -220,6 +221,11 @@ public class Main {
 		satiaShortConversation.addAdditionalAction(changeSatiaOption42);
 		satiaShortConversation.addAdditionalAction(disableChangeFlatDescriptionAction);
 
+		// Start item in the inventory
+		InventoryItem dildo = new InventoryItem("Dildo", "Made out of Kruppstahl.");
+		dildo.setInspectionText("Why are you carrying that around with you!?");
+		game.addStartItem(dildo);
+
 		// A hot chick
 		Person hotChick = new Person(flat, "Hot chick", "A hot chick is standing in the corner.");
 		hotChick.addIdentifier("chick");
@@ -227,6 +233,15 @@ public class Main {
 		Conversation hotChickConversation = new Conversation("chickConv", "Sorry, you're not my type.");
 		hotChick.setConversation(hotChickConversation);
 		hotChick.addAdditionalTalkToCommand("flirt with (?<o0>.+?)");
+		
+		// Using the dildo with the hotchick
+		ChangeUsableObjectAction changeDildoUseFBText = new ChangeUsableObjectAction("changeDildoUseFBText", dildo);
+		changeDildoUseFBText.setNewUseForbiddenText("You have some bad memories associated with this dildo...");
+		
+		dildo.setUsingEnabledWith(hotChick, true);
+		dildo.setUseWithSuccessfulText(hotChick, "You ask the girl to test the dildo on her. Sooner than you can react you get some "
+				+ "pepper spray in your face.");
+		dildo.addAdditionalActionToUseWith(hotChick, changeDildoUseFBText);
 
 		// A gremlin
 		Person gremlin = new Person(flat, "Gremlin", "A gremlin is sitting around and staring at the black tv screen.");
@@ -255,7 +270,7 @@ public class Main {
 		button.setUsingEnabled(true);
 		button.addAdditionalUseCommand("push (?<o0>.+?)");
 		button.setUseSuccessfulText("BOOOM. Everything is dark. What have you done?");
-		
+
 		MoveAction moveToVoid = new MoveAction("moveToVoid", voidLoc);
 		button.addAdditionalUseAction(moveToVoid);
 
@@ -273,7 +288,8 @@ public class Main {
 		/*
 		 * Inspecting the banana will "convert" it into a bananaphone.
 		 */
-		ChangeInspectableObjectAction changeBananaAction = new ChangeInspectableObjectAction("changeBananaAction", banana);
+		ChangeInspectableObjectAction changeBananaAction = new ChangeInspectableObjectAction("changeBananaAction",
+				banana);
 		changeBananaAction.setNewName("Banana phone");
 		changeBananaAction.setNewInspectionText("Ring ring ring ring ring ring ring - banana phone.");
 		changeBananaAction.addIdentifierToAdd("banana phone");
@@ -317,7 +333,7 @@ public class Main {
 		destroyedTv.addIdentifier("tv");
 		destroyedTv.setTakeForbiddenText("What the hell do you want with this mess?");
 		destroyedTv.setUseForbiddenText("It does not work anymore.");
-		
+
 		ChangeItemAction addDTVAction = new ChangeItemAction("addDTVAction", destroyedTv);
 		addDTVAction.setNewLocation(flat);
 		addDTVAction.setChangeLocation(true);
@@ -374,26 +390,23 @@ public class Main {
 		peel.addAdditionalActionToUseWith(pen, removePeelAction);
 		peel.addAdditionalActionToCombineWith(invPen, removePeelAction);
 
-		ChangeUseWithInformationAction changeChairTVaction = new ChangeUseWithInformationAction("changeChairTVaction", invChair, tv);
+		ChangeUseWithInformationAction changeChairTVaction = new ChangeUseWithInformationAction("changeChairTVaction",
+				invChair, tv);
 		changeChairTVaction.setNewUseWithSuccessfulText("32\" wasted!");
 
-		ChangeUseWithInformationAction changeSatiaMoneyAction = new ChangeUseWithInformationAction("changeSatiaMoneyAction", money, satia);
+		ChangeUseWithInformationAction changeSatiaMoneyAction = new ChangeUseWithInformationAction(
+				"changeSatiaMoneyAction", money, satia);
 		changeSatiaMoneyAction
 				.setNewUseWithSuccessfulText("You feel guilty and put the money back. Although he has a big tv.");
 
-		ChangeCombineInformationAction changePeelPenCombinationAction = new ChangeCombineInformationAction("changePeelPenCombinationAction", peel,
-				invPen);
+		ChangeCombineInformationAction changePeelPenCombinationAction = new ChangeCombineInformationAction(
+				"changePeelPenCombinationAction", peel, invPen);
 		changePeelPenCombinationAction.setNewCombineWithSuccessfulText(
 				"Absent-mindedly you paint the peel while staring at the huge tv screen - which is black.");
-		
+
 		tv.addAdditionalInspectAction(changePeelPenCombinationAction);
 		tv.addAdditionalInspectAction(changeChairTVaction);
 		tv.addAdditionalInspectAction(changeSatiaMoneyAction);
-
-		// Start item in the inventory
-		InventoryItem dildo = new InventoryItem("Dildo", "Made out of Kruppstahl.");
-		dildo.setInspectionText("Why are you carrying that around with you!?");
-		game.addStartItem(dildo);
 
 		// Game options
 		game.setPlayer(player);
@@ -478,7 +491,7 @@ public class Main {
 		Location locToDel = new Location("Del me", "pls");
 		ChangeNDObjectAction cltd = new ChangeNDObjectAction("cltd", locToDel);
 		cltd.setNewName("Did ja del me?");
-		//Item thing = new Item(locToDel, "Thing", "useless");
+		// Item thing = new Item(locToDel, "Thing", "useless");
 
 		pm.getEntityManager().persist(locToDel);
 		pm.getEntityManager().persist(cltd);

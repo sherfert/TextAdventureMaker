@@ -42,7 +42,7 @@ class CombineInformation implements HasId {
 	 */
 	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "CII_ACWA", foreignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_S", //
-	foreignKeyDefinition = "FOREIGN KEY (InventoryItem$CombinableInventoryItem_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (CombineInformation_ID) REFERENCES CombineInformation (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalCombineWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	final List<AbstractAction> additionalCombineWithActions;

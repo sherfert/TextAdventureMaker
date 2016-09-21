@@ -114,7 +114,7 @@ public class ChangeCombineInformationAction extends AbstractAction {
 	 * @return the inventoryItem1
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM1", //
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_ChangeCombineInformationAction_INVENTORYITEM1", //
 	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM1_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public InventoryItem getInventoryItem1() {
 		return inventoryItem1;
@@ -132,7 +132,7 @@ public class ChangeCombineInformationAction extends AbstractAction {
 	 * @return the inventoryItem2
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_CHANGEINVITEMCOMBINATIONACTION_INVENTORYITEM2", //
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_ChangeCombineInformationAction_INVENTORYITEM2", //
 	foreignKeyDefinition = "FOREIGN KEY (INVENTORYITEM2_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public InventoryItem getInventoryItem2() {
 		return inventoryItem2;
@@ -183,7 +183,7 @@ public class ChangeCombineInformationAction extends AbstractAction {
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "CIICA_CTA", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_S", //
-	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeCombineInformationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToAdd_D", //
 	foreignKeyDefinition = "FOREIGN KEY (combinablesToAdd_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public List<InventoryItem> getCombinablesToAdd() {
@@ -203,7 +203,7 @@ public class ChangeCombineInformationAction extends AbstractAction {
 	 */
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "CIICA_CTR", foreignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_S", //
-	foreignKeyDefinition = "FOREIGN KEY (ChangeInvItemCombinationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (ChangeCombineInformationAction_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CIICA_combinablesToRemove_D", //
 	foreignKeyDefinition = "FOREIGN KEY (combinablesToRemove_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	public List<InventoryItem> getCombinablesToRemove() {

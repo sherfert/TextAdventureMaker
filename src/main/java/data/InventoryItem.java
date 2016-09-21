@@ -50,7 +50,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combineInformation_S", //
 	foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_InvItem_combineInformation_D", //
-	foreignKeyDefinition = "FOREIGN KEY (combineInformation_ID) REFERENCES INVENTORYITEM$COMBINABLEINVENTORYITEM (ID) ON DELETE CASCADE") )
+	foreignKeyDefinition = "FOREIGN KEY (combineInformation_ID) REFERENCES CombineInformation (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combineInformation_KEY", //
 	foreignKeyDefinition = "FOREIGN KEY (combineInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)

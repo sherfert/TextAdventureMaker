@@ -33,7 +33,7 @@ class UseWithInformation implements HasId {
 	 */
 	@ManyToMany(cascade = { CascadeType.PERSIST })
 	@JoinTable(name = "UHL_AUWA", foreignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_S", //
-	foreignKeyDefinition = "FOREIGN KEY (InventoryItem$UsableHasLocation_ID) REFERENCES INVENTORYITEM$USABLEHASLOCATION (ID) ON DELETE CASCADE") , //
+	foreignKeyDefinition = "FOREIGN KEY (UseWithInformation_ID) REFERENCES UseWithInformation (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalUseWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
 	final List<AbstractAction> additionalUseWithActions;
