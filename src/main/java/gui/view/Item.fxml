@@ -37,7 +37,7 @@
             <VBox spacing="2.0">
                <children>
                   <CheckBox fx:id="editTakingEnabledCB" mnemonicParsing="false" text="Taking enabled?" />
-                  <CheckBox fx:id="editRemoveItemEnabledCB" mnemonicParsing="false" text="Remove the item after taking?" />
+                  <CheckBox fx:id="editRemoveItemEnabledCB" mnemonicParsing="false" text="Remove the item after taking it?" />
                   <Label text="Take Successful Text" />
                   <TextField fx:id="editTakeSuccessfulTextTF" />
                   <Label text="Take Forbidden Text" />

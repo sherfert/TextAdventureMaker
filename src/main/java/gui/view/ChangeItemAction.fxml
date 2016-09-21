@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import gui.customui.LocationChooser?>
+<?import gui.customui.InventoryItemListView?>
+
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<fx:include source="NamedObject.fxml" />
+		<fx:include source="AbstractAction.fxml" />
+		<fx:include source="ChangeNDObjectAction.fxml" />
+		<fx:include source="ChangeInspectableObjectAction.fxml" />
+		<fx:include source="ChangeUsableObjectAction.fxml" />
+
+		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
+			text="Change the location?" />
+		<LocationChooser fx:id="newLocationChooser" />
+
+		<Label text="Enable or disable taking the item?" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeTakeRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingTakeTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableTakeRB"
+				toggleGroup="$enablingTakeTG" />
+			<RadioButton text="Disable" fx:id="disableTakeRB"
+				toggleGroup="$enablingTakeTG" />
+		</HBox>
+
+		<Label
+			text="Enable or disable if the item should be removed after taking it?" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeRemoveItemRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingRemoveItemTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableRemoveItemRB"
+				toggleGroup="$enablingRemoveItemTG" />
+			<RadioButton text="Disable" fx:id="disableRemoveItemRB"
+				toggleGroup="$enablingRemoveItemTG" />
+		</HBox>
+
+		<CheckBox fx:id="newTakeSuccessfulTextCB" mnemonicParsing="false"
+			text="Change the Take Successful Text?" />
+		<TextField fx:id="newTakeSuccessfulTextTF" />
+		<CheckBox fx:id="newTakeForbiddenTextCB" mnemonicParsing="false"
+			text="Change the Take Forbidden Text?" />
+		<TextField fx:id="newTakeForbiddenTextTF" />
+
+		<HBox spacing="2.0">
+			<VBox spacing="2.0">
+				<Label text="New inventory items added to the inventory when picked up" />
+				<InventoryItemListView fx:id="pickUpItemsAddListView" />
+			</VBox>
+			<VBox spacing="2.0">
+				<Label text="Inventory items not added to the inventory any more when picked up" />
+				<InventoryItemListView fx:id="pickUpItemsRemoveListView" />
+			</VBox>
+		</HBox>
+
+		<Button fx:id="removeButton" mnemonicParsing="false"
+			text="Delete this action" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>
