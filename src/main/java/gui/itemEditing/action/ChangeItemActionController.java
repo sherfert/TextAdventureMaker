@@ -1,7 +1,6 @@
 package gui.itemEditing.action;
 
 import data.action.ChangeItemAction;
-import data.action.AbstractAction.Enabling;
 import gui.MainWindowController;
 import gui.customui.InventoryItemListView;
 import gui.customui.LocationChooser;
@@ -93,77 +92,17 @@ public class ChangeItemActionController extends ActionController<ChangeItemActio
 		newLocationChooser.initialize(action.getNewLocation(), true, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				action::setNewLocation);
-		newLocationChooser.disableProperty().bind(newLocationCB.selectedProperty().not());
-		newLocationCB.setSelected(action.getChangeLocation());
-		newLocationCB.selectedProperty().addListener((f, o, n) -> {
-			action.setChangeLocation(n);
-		});
+		initCheckBoxAndChooser(newLocationCB, newLocationChooser, action::getChangeLocation, action::setChangeLocation);
 		
-		switch(action.getEnablingTakeable()) {
-		case DISABLE:
-			enablingTakeTG.selectToggle(disableTakeRB);
-			break;
-		case DO_NOT_CHANGE:
-			enablingTakeTG.selectToggle(doNotChangeTakeRB);
-			break;
-		case ENABLE:
-			enablingTakeTG.selectToggle(enableTakeRB);
-			break;
-		}
-		enablingTakeTG.selectedToggleProperty().addListener((f, o, n) -> {
-			if(n == doNotChangeTakeRB) {
-				action.setEnablingTakeable(Enabling.DO_NOT_CHANGE);
-			} else if(n == enableTakeRB) {
-				action.setEnablingTakeable(Enabling.ENABLE);
-			} else if(n == disableTakeRB) {
-				action.setEnablingTakeable(Enabling.DISABLE);
-			}
-		});
+		initRadioButtonEnablingGroup(enablingTakeTG, doNotChangeTakeRB, enableTakeRB, disableTakeRB,
+				action::getEnablingTakeable, action::setEnablingTakeable);
+		initRadioButtonEnablingGroup(enablingRemoveItemTG, doNotChangeRemoveItemRB, enableRemoveItemRB, disableRemoveItemRB,
+				action::getEnablingRemoveItem, action::setEnablingRemoveItem);
 		
-		switch(action.getEnablingRemoveItem()) {
-		case DISABLE:
-			enablingRemoveItemTG.selectToggle(disableRemoveItemRB);
-			break;
-		case DO_NOT_CHANGE:
-			enablingRemoveItemTG.selectToggle(doNotChangeRemoveItemRB);
-			break;
-		case ENABLE:
-			enablingRemoveItemTG.selectToggle(enableRemoveItemRB);
-			break;
-		}
-		enablingRemoveItemTG.selectedToggleProperty().addListener((f, o, n) -> {
-			if(n == doNotChangeRemoveItemRB) {
-				action.setEnablingRemoveItem(Enabling.DO_NOT_CHANGE);
-			} else if(n == enableRemoveItemRB) {
-				action.setEnablingRemoveItem(Enabling.ENABLE);
-			} else if(n == disableRemoveItemRB) {
-				action.setEnablingRemoveItem(Enabling.DISABLE);
-			}
-		});
-
-		newTakeSuccessfulTextTF.setText(action.getNewTakeSuccessfulText());
-		newTakeSuccessfulTextTF.disableProperty().bind(newTakeSuccessfulTextCB.selectedProperty().not());
-		newTakeSuccessfulTextTF.textProperty().addListener((f, o, n) -> {
-			action.setNewTakeSuccessfulText(n);
-		});
-		newTakeSuccessfulTextCB.setSelected(action.getNewTakeSuccessfulText() != null);
-		newTakeSuccessfulTextCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewTakeSuccessfulText(null);
-			}
-		});
-
-		newTakeForbiddenTextTF.setText(action.getNewTakeForbiddenText());
-		newTakeForbiddenTextTF.disableProperty().bind(newTakeForbiddenTextCB.selectedProperty().not());
-		newTakeForbiddenTextTF.textProperty().addListener((f, o, n) -> {
-			action.setNewTakeForbiddenText(n);
-		});
-		newTakeForbiddenTextCB.setSelected(action.getNewTakeForbiddenText() != null);
-		newTakeForbiddenTextCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewTakeForbiddenText(null);
-			}
-		});
+		initCheckBoxAndTextFieldSetter(newTakeSuccessfulTextCB, newTakeSuccessfulTextTF,
+				action::getNewTakeSuccessfulText, action::setNewTakeSuccessfulText);
+		initCheckBoxAndTextFieldSetter(newTakeForbiddenTextCB, newTakeForbiddenTextTF,
+				action::getNewTakeForbiddenText, action::setNewTakeForbiddenText);
 
 		pickUpItemsAddListView.initialize(action.getPickUpItemsToAdd(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,

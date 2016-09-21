@@ -15,7 +15,7 @@
 					<children>
 						<fx:include source="NamedObject.fxml" />
 						<Button fx:id="removeButton" mnemonicParsing="false"
-							text="Delete this conversation" />
+							text="Delete this layer" />
 					</children>
 					<padding>
 						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

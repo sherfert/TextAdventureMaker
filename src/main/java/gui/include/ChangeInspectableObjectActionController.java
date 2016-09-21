@@ -3,6 +3,7 @@ package gui.include;
 import data.action.ChangeInspectableObjectAction;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.itemEditing.action.ActionController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
@@ -26,7 +27,7 @@ public class ChangeInspectableObjectActionController extends GameDataController 
 
 	@FXML
 	private TextArea identifiersAddTA;
-	
+
 	@FXML
 	private TextArea identifiersRemoveTA;
 
@@ -46,17 +47,8 @@ public class ChangeInspectableObjectActionController extends GameDataController 
 
 	@FXML
 	private void initialize() {
-		newInspectionTextTA.setText(action.getNewInspectionText());
-		newInspectionTextTA.disableProperty().bind(newInspectionTextCB.selectedProperty().not());
-		newInspectionTextTA.textProperty().addListener((f, o, n) -> {
-			action.setNewInspectionText(n);
-		});
-		newInspectionTextCB.setSelected(action.getNewInspectionText() != null);
-		newInspectionTextCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewInspectionText(null);
-			}
-		});
+		ActionController.initCheckBoxAndTextFieldSetter(newInspectionTextCB, newInspectionTextTA,
+				action::getNewInspectionText, action::setNewInspectionText);
 
 		identifiersAddTA.setText(getListString(action.getIdentifiersToAdd()));
 		identifiersAddTA.textProperty().addListener((f, o, n) -> updateList(n, action::setIdentifiersToAdd));

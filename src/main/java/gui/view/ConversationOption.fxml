@@ -24,7 +24,7 @@
 		<ConversationLayerChooser fx:id="targetChooser" />
 		<Label text="Actions triggered when chosen" />
 		<ActionListView fx:id="actionsListView" />
-		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this item" />
+		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this option" />
 	</children>
 	<padding>
 		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

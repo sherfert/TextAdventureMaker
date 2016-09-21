@@ -1,7 +1,6 @@
 package gui.itemEditing.action;
 
 import data.action.ChangeActionAction;
-import data.action.AbstractAction.Enabling;
 import gui.MainWindowController;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
@@ -55,26 +54,8 @@ public class ChangeActionActionController extends ActionController<ChangeActionA
 			objectSelected(action.getAction());
 		});
 		
-		switch(action.getEnabling()) {
-		case DISABLE:
-			enablingActionTG.selectToggle(disableActionRB);
-			break;
-		case DO_NOT_CHANGE:
-			enablingActionTG.selectToggle(doNotChangeActionRB);
-			break;
-		case ENABLE:
-			enablingActionTG.selectToggle(enableActionRB);
-			break;
-		}
-		enablingActionTG.selectedToggleProperty().addListener((f, o, n) -> {
-			if(n == doNotChangeActionRB) {
-				action.setEnabling(Enabling.DO_NOT_CHANGE);
-			} else if(n == enableActionRB) {
-				action.setEnabling(Enabling.ENABLE);
-			} else if(n == disableActionRB) {
-				action.setEnabling(Enabling.DISABLE);
-			}
-		});
+		initRadioButtonEnablingGroup(enablingActionTG, doNotChangeActionRB, enableActionRB, disableActionRB,
+				action::getEnabling, action::setEnabling);
 	}
 
 	/**

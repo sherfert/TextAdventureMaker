@@ -38,7 +38,6 @@ public class ChangePersonActionController extends ActionController<ChangePersonA
 	@FXML
 	private LocationChooser newLocationChooser;
 
-
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -51,41 +50,25 @@ public class ChangePersonActionController extends ActionController<ChangePersonA
 			ChangePersonAction action) {
 		super(currentGameManager, mwController, action);
 	}
-	
+
 	@FXML
 	@Override
 	protected void initialize() {
 		super.initialize();
-
-		newTalkForbiddenTextTF.setText(action.getNewTalkingToForbiddenText());
-		newTalkForbiddenTextTF.disableProperty().bind(newTalkForbiddenTextCB.selectedProperty().not());
-		newTalkForbiddenTextTF.textProperty().addListener((f, o, n) -> {
-			action.setNewTalkingToForbiddenText(n);
-		});
-		newTalkForbiddenTextCB.setSelected(action.getNewTalkingToForbiddenText() != null);
-		newTalkForbiddenTextCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewTalkingToForbiddenText(null);
-			}
-		});
+		
+		initCheckBoxAndTextFieldSetter(newTalkForbiddenTextCB, newTalkForbiddenTextTF,
+				action::getNewTalkingToForbiddenText, action::setNewTalkingToForbiddenText);
 
 		newConversationChooser.initialize(action.getNewConversation(), true, false,
 				this.currentGameManager.getPersistenceManager().getConversationManager()::getAllConversations,
 				action::setNewConversation);
-		newConversationChooser.disableProperty().bind(newConversationCB.selectedProperty().not());
-		newConversationCB.setSelected(action.getChangeConversation());
-		newConversationCB.selectedProperty().addListener((f, o, n) -> {
-			action.setChangeConversation(n);
-		});
+		initCheckBoxAndChooser(newConversationCB, newConversationChooser, action::getChangeConversation,
+				action::setChangeConversation);
 
 		newLocationChooser.initialize(action.getNewLocation(), true, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				action::setNewLocation);
-		newLocationChooser.disableProperty().bind(newLocationCB.selectedProperty().not());
-		newLocationCB.setSelected(action.getChangeLocation());
-		newLocationCB.selectedProperty().addListener((f, o, n) -> {
-			action.setChangeLocation(n);
-		});		
+		initCheckBoxAndChooser(newLocationCB, newLocationChooser, action::getChangeLocation, action::setChangeLocation);
 	}
 
 	/**

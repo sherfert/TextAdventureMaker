@@ -3,6 +3,7 @@ package gui.include;
 import data.action.ChangeNDObjectAction;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.itemEditing.action.ActionController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
@@ -56,28 +57,9 @@ public class ChangeNDObjectActionController extends GameDataController {
 			objectSelected(action.getObject());
 		});
 
-		newNameTF.setText(action.getNewName());
-		newNameTF.disableProperty().bind(newNameCB.selectedProperty().not());
-		newNameTF.textProperty().addListener((f, o, n) -> {
-			action.setNewName(n);
-		});
-		newNameCB.setSelected(action.getNewName() != null);
-		newNameCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewName(null);
-			}
-		});
-
-		newDescriptionTA.setText(action.getNewDescription());
-		newDescriptionTA.disableProperty().bind(newDescriptionCB.selectedProperty().not());
-		newDescriptionTA.textProperty().addListener((f, o, n) -> {
-			action.setNewDescription(n);
-		});
-		newDescriptionCB.setSelected(action.getNewDescription() != null);
-		newDescriptionCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewDescription(null);
-			}
-		});
+		ActionController.initCheckBoxAndTextFieldSetter(newNameCB, newNameTF,
+				action::getNewName, action::setNewName);
+		ActionController.initCheckBoxAndTextFieldSetter(newDescriptionCB, newDescriptionTA,
+				action::getNewDescription, action::setNewDescription);
 	}
 }

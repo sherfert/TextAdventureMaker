@@ -1,7 +1,6 @@
 package gui.itemEditing.action;
 
 import data.action.ChangeWayAction;
-import data.action.AbstractAction.Enabling;
 import gui.MainWindowController;
 import gui.customui.LocationChooser;
 import gui.include.AbstractActionController;
@@ -76,72 +75,23 @@ public class ChangeWayActionController extends ActionController<ChangeWayAction>
 	protected void initialize() {
 		super.initialize();
 
-		switch(action.getEnabling()) {
-		case DISABLE:
-			enablingWayTG.selectToggle(disableWayRB);
-			break;
-		case DO_NOT_CHANGE:
-			enablingWayTG.selectToggle(doNotChangeWayRB);
-			break;
-		case ENABLE:
-			enablingWayTG.selectToggle(enableWayRB);
-			break;
-		}
-		enablingWayTG.selectedToggleProperty().addListener((f, o, n) -> {
-			if(n == doNotChangeWayRB) {
-				action.setEnabling(Enabling.DO_NOT_CHANGE);
-			} else if(n == enableWayRB) {
-				action.setEnabling(Enabling.ENABLE);
-			} else if(n == disableWayRB) {
-				action.setEnabling(Enabling.DISABLE);
-			}
-		});
+		initRadioButtonEnablingGroup(enablingWayTG, doNotChangeWayRB, enableWayRB, disableWayRB,
+				action::getEnabling, action::setEnabling);
 
 		newOriginChooser.initialize(action.getNewOrigin(), false, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				action::setNewOrigin);
-		newOriginChooser.disableProperty().bind(newOriginCB.selectedProperty().not());
-		newOriginCB.setSelected(action.getNewOrigin() != null);
-		newOriginCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewOrigin(null);
-			}
-		});
+		initCheckBoxAndChooserNoNull(newOriginCB, newOriginChooser, action::getNewOrigin, action::setNewOrigin);
 
 		newDestinationChooser.initialize(action.getNewDestination(), false, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				action::setNewDestination);
-		newDestinationChooser.disableProperty().bind(newDestinationCB.selectedProperty().not());
-		newDestinationCB.setSelected(action.getNewDestination() != null);
-		newDestinationCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewDestination(null);
-			}
-		});
-
-		newMoveSuccessfulTextTF.setText(action.getNewMoveSuccessfulText());
-		newMoveSuccessfulTextTF.disableProperty().bind(newMoveSuccessfulTextCB.selectedProperty().not());
-		newMoveSuccessfulTextTF.textProperty().addListener((f, o, n) -> {
-			action.setNewMoveSuccessfulText(n);
-		});
-		newMoveSuccessfulTextCB.setSelected(action.getNewMoveSuccessfulText() != null);
-		newMoveSuccessfulTextCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewMoveSuccessfulText(null);
-			}
-		});
-
-		newMoveForbiddenTextTF.setText(action.getNewMoveForbiddenText());
-		newMoveForbiddenTextTF.disableProperty().bind(newMoveForbiddenTextCB.selectedProperty().not());
-		newMoveForbiddenTextTF.textProperty().addListener((f, o, n) -> {
-			action.setNewMoveForbiddenText(n);
-		});
-		newMoveForbiddenTextCB.setSelected(action.getNewMoveForbiddenText() != null);
-		newMoveForbiddenTextCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewMoveForbiddenText(null);
-			}
-		});
+		initCheckBoxAndChooserNoNull(newDestinationCB, newDestinationChooser, action::getNewDestination, action::setNewDestination);
+		
+		initCheckBoxAndTextFieldSetter(newMoveSuccessfulTextCB, newMoveSuccessfulTextTF,
+				action::getNewMoveSuccessfulText, action::setNewMoveSuccessfulText);
+		initCheckBoxAndTextFieldSetter(newMoveForbiddenTextCB, newMoveForbiddenTextTF,
+				action::getNewMoveForbiddenText, action::setNewMoveForbiddenText);
 	}
 
 	/**

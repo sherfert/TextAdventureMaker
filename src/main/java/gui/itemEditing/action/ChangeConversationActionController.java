@@ -1,7 +1,6 @@
 package gui.itemEditing.action;
 
 import data.action.ChangeConversationAction;
-import data.action.AbstractAction.Enabling;
 import gui.MainWindowController;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
@@ -22,7 +21,7 @@ public class ChangeConversationActionController extends ActionController<ChangeC
 
 	@FXML
 	private Hyperlink link;
-	
+
 	@FXML
 	private RadioButton doNotChangeConversationRB;
 
@@ -59,60 +58,20 @@ public class ChangeConversationActionController extends ActionController<ChangeC
 			ChangeConversationAction action) {
 		super(currentGameManager, mwController, action);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		super.initialize();
-		
+
 		link.setText("Changing: " + action.getConversation().toString());
 		link.setOnAction((e) -> {
 			objectSelected(action.getConversation());
 		});
-		
-		switch(action.getEnabling()) {
-		case DISABLE:
-			enablingConversationTG.selectToggle(disableConversationRB);
-			break;
-		case DO_NOT_CHANGE:
-			enablingConversationTG.selectToggle(doNotChangeConversationRB);
-			break;
-		case ENABLE:
-			enablingConversationTG.selectToggle(enableConversationRB);
-			break;
-		}
-		enablingConversationTG.selectedToggleProperty().addListener((f, o, n) -> {
-			if(n == doNotChangeConversationRB) {
-				action.setEnabling(Enabling.DO_NOT_CHANGE);
-			} else if(n == enableConversationRB) {
-				action.setEnabling(Enabling.ENABLE);
-			} else if(n == disableConversationRB) {
-				action.setEnabling(Enabling.DISABLE);
-			}
-		});
-		// TODO abstract all these similar GUI things
-		newGreetingTF.setText(action.getNewGreeting());
-		newGreetingTF.disableProperty().bind(newGreetingCB.selectedProperty().not());
-		newGreetingTF.textProperty().addListener((f, o, n) -> {
-			action.setNewGreeting(n);
-		});
-		newGreetingCB.setSelected(action.getNewGreeting() != null);
-		newGreetingCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewGreeting(null);
-			}
-		});
 
-		newEventTF.setText(action.getNewEvent());
-		newEventTF.disableProperty().bind(newEventCB.selectedProperty().not());
-		newEventTF.textProperty().addListener((f, o, n) -> {
-			action.setNewEvent(n);
-		});
-		newEventCB.setSelected(action.getNewEvent() != null);
-		newEventCB.selectedProperty().addListener((f, o, n) -> {
-			if (!n) {
-				action.setNewEvent(null);
-			}
-		});
+		initRadioButtonEnablingGroup(enablingConversationTG, doNotChangeConversationRB, enableConversationRB,
+				disableConversationRB, action::getEnabling, action::setEnabling);
+		initCheckBoxAndTextFieldSetter(newGreetingCB, newGreetingTF, action::getNewGreeting, action::setNewGreeting);
+		initCheckBoxAndTextFieldSetter(newEventCB, newEventTF, action::getNewEvent, action::setNewEvent);
 	}
 
 	/**
