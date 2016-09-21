@@ -134,10 +134,11 @@ public class ChangeConversationOptionAction extends AbstractAction {
 	}
 
 	/**
-	 * @param option
-	 *            the option to set
+	 * Just for the database.
 	 */
-	public void setOption(ConversationOption option) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setOption(ConversationOption option) {
 		this.option = option;
 	}
 

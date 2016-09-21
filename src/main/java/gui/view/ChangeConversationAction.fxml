@@ -11,18 +11,24 @@
 		<fx:include source="AbstractAction.fxml" />
 		
 		<Hyperlink fx:id="link"/>
-		<Label text="Enable or disable the action?" />
+		<Label text="Enable or disable the conversation?" />
 		<HBox spacing="2.0">
-			<RadioButton text="Do not change" fx:id="doNotChangeActionRB">
+			<RadioButton text="Do not change" fx:id="doNotChangeConversationRB">
 				<toggleGroup>
-					<ToggleGroup fx:id="enablingActionTG" />
+					<ToggleGroup fx:id="enablingConversationTG" />
 				</toggleGroup>
 			</RadioButton>
-			<RadioButton text="Enable" fx:id="enableActionRB"
-				toggleGroup="$enablingActionTG" />
-			<RadioButton text="Disable" fx:id="disableActionRB"
-				toggleGroup="$enablingActionTG" />
+			<RadioButton text="Enable" fx:id="enableConversationRB"
+				toggleGroup="$enablingConversationTG" />
+			<RadioButton text="Disable" fx:id="disableConversationRB"
+				toggleGroup="$enablingConversationTG" />
 		</HBox>
+		<CheckBox fx:id="newGreetingCB" mnemonicParsing="false"
+			text="Change the Greeting?" />
+		<TextField fx:id="newGreetingTF" />
+		<CheckBox fx:id="newEventCB" mnemonicParsing="false"
+			text="Change the Event?" />
+		<TextField fx:id="newEventTF" />
 		
 		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this action" />
 	</children>

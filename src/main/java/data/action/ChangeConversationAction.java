@@ -131,10 +131,11 @@ public class ChangeConversationAction extends AbstractAction {
 	}
 
 	/**
-	 * @param conversation
-	 *            the conversation to set
+	 * Just for the database.
 	 */
-	public void setConversation(Conversation conversation) {
+	@SuppressWarnings("unused")
+	@Deprecated
+	private void setConversation(Conversation conversation) {
 		this.conversation = conversation;
 	}
 
