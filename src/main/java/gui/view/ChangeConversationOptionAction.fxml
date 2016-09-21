@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<fx:include source="NamedObject.fxml" />
+		<fx:include source="AbstractAction.fxml" />
+
+		<Hyperlink fx:id="link" />
+		<Label text="Enable or disable the option?" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeOptionRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingOptionTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableOptionRB"
+				toggleGroup="$enablingOptionTG" />
+			<RadioButton text="Disable" fx:id="disableOptionRB"
+				toggleGroup="$enablingOptionTG" />
+		</HBox>
+		<Label
+			text="Enable or disable if the option should be removed from the layer after choosing it?" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeRemoveOptionRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingRemoveOptionTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableRemoveOptionRB"
+				toggleGroup="$enablingRemoveOptionTG" />
+			<RadioButton text="Disable" fx:id="disableRemoveOptionRB"
+				toggleGroup="$enablingRemoveOptionTG" />
+		</HBox>
+		<CheckBox fx:id="newTextCB" mnemonicParsing="false"
+			text="Change the text?" />
+		<TextField fx:id="newTextTF" />
+		<CheckBox fx:id="newAnswerCB" mnemonicParsing="false"
+			text="Change the answer?" />
+		<TextArea fx:id="newAnswerTA" prefHeight="100.0"
+			wrapText="true" />
+		<CheckBox fx:id="newEventCB" mnemonicParsing="false"
+			text="Change the event?" />
+		<TextArea fx:id="newEventTA" prefHeight="100.0"
+			wrapText="true" />
+
+		<Button fx:id="removeButton" mnemonicParsing="false"
+			text="Delete this action" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>
