@@ -14,8 +14,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for one usable object.
  * 
- * TODO layout actionviews properly
- * 
  * @author Satia
  */
 public class UsableObjectController extends GameDataController {

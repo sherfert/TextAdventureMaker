@@ -20,6 +20,7 @@ import data.Person;
 import data.Way;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
+import data.action.ChangeCombineInformationAction;
 import data.action.ChangeConversationAction;
 import data.action.ChangeConversationOptionAction;
 import data.action.ChangeItemAction;
@@ -42,6 +43,7 @@ import gui.itemEditing.PersonController;
 import gui.itemEditing.WayController;
 import gui.itemEditing.action.AIIActionController;
 import gui.itemEditing.action.ChangeActionActionController;
+import gui.itemEditing.action.ChangeCombineInformationActionController;
 import gui.itemEditing.action.ChangeConversationActionController;
 import gui.itemEditing.action.ChangeConversationOptionActionController;
 import gui.itemEditing.action.ChangeInventoryItemActionController;
@@ -495,6 +497,9 @@ public abstract class GameDataController {
 		} else if (o.getClass() == ChangeActionAction.class) {
 			c = new ChangeActionActionController(currentGameManager, mwController, (ChangeActionAction) o);
 			fxml = "view/ChangeActionAction.fxml";
+		} else if (o.getClass() == ChangeCombineInformationAction.class) {
+			c = new ChangeCombineInformationActionController(currentGameManager, mwController, (ChangeCombineInformationAction) o);
+			fxml = "view/ChangeCombineInformationAction.fxml";
 		} else if (o.getClass() == ChangeConversationAction.class) {
 			c = new ChangeConversationActionController(currentGameManager, mwController, (ChangeConversationAction) o);
 			fxml = "view/ChangeConversationAction.fxml";

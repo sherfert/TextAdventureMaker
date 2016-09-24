@@ -23,8 +23,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for one conversation layer.
  * 
- * TODO delete this layer
- * 
  * @author Satia
  */
 public class ConversationLayerController extends NamedObjectsController<ConversationOption> {

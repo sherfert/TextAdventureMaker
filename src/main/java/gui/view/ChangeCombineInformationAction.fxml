@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import gui.customui.InventoryItemListView?>
+
+<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<fx:include source="NamedObject.fxml" />
+		<fx:include source="AbstractAction.fxml" />
+		
+		<Hyperlink fx:id="linkItem1"/>
+		<Hyperlink fx:id="linkItem2"/>
+		
+		<Label text="Enable or disable if combining is possible?" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeCombinationRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingCombinationTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableCombinationRB"
+				toggleGroup="$enablingCombinationTG" />
+			<RadioButton text="Disable" fx:id="disableCombinationRB"
+				toggleGroup="$enablingCombinationTG" />
+		</HBox>
+		
+		<Label text="Enable or disable if combined items should be removed from inventory?" />
+		<HBox spacing="2.0">
+			<RadioButton text="Do not change" fx:id="doNotChangeRemoveItemsRB">
+				<toggleGroup>
+					<ToggleGroup fx:id="enablingRemoveItemsTG" />
+				</toggleGroup>
+			</RadioButton>
+			<RadioButton text="Enable" fx:id="enableRemoveItemsRB"
+				toggleGroup="$enablingRemoveItemsTG" />
+			<RadioButton text="Disable" fx:id="disableRemoveItemsRB"
+				toggleGroup="$enablingRemoveItemsTG" />
+		</HBox>
+		
+		<CheckBox fx:id="newCombineWithSuccessfulTextCB" mnemonicParsing="false"
+			text="Change the Combine With Successful Text?" />
+		<TextField fx:id="newCombineWithSuccessfulTextTF" />
+		<CheckBox fx:id="newCombineWithForbiddenTextCB" mnemonicParsing="false"
+			text="Change the Combine With Forbidden Text?" />
+		<TextField fx:id="newCombineWithForbiddenTextTF" />
+		
+		<HBox spacing="2.0">
+			<VBox spacing="2.0">
+				<Label text="New inventory items added to the inventory when combined" />
+				<InventoryItemListView fx:id="itemsAddListView" />
+			</VBox>
+			<VBox spacing="2.0">
+				<Label text="Inventory items not added to the inventory any more when combined" />
+				<InventoryItemListView fx:id="itemsRemoveListView" />
+			</VBox>
+		</HBox>
+		
+		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this action" />
+	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
+</VBox>

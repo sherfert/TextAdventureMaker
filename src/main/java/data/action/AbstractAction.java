@@ -18,7 +18,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 /**
  * Any action that changes something in the game (if enabled).
  * 
- * TODO other action controllers
+ * TODO other action controllers ( 2 2 go)
  * TODO creating actions
  * 
  * @author Satia
