@@ -15,7 +15,6 @@ import data.ConversationOption;
 import data.InventoryItem;
 import data.Item;
 import data.Location;
-import data.NamedObject;
 import data.Person;
 import data.Way;
 import data.action.AddInventoryItemsAction;
@@ -27,12 +26,14 @@ import data.action.ChangeItemAction;
 import data.action.ChangeNDObjectAction;
 import data.action.ChangePersonAction;
 import data.action.ChangeUsableObjectAction;
+import data.action.ChangeUseWithInformationAction;
 import data.action.ChangeWayAction;
 import data.action.EndGameAction;
 import data.action.MoveAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.HasId;
+import data.interfaces.HasName;
 import gui.itemEditing.ConversationController;
 import gui.itemEditing.ConversationLayerController;
 import gui.itemEditing.ConversationOptionController;
@@ -50,6 +51,7 @@ import gui.itemEditing.action.ChangeInventoryItemActionController;
 import gui.itemEditing.action.ChangeItemActionController;
 import gui.itemEditing.action.ChangeLocationActionController;
 import gui.itemEditing.action.ChangePersonActionController;
+import gui.itemEditing.action.ChangeUseWithInformationActionController;
 import gui.itemEditing.action.ChangeWayActionController;
 import gui.itemEditing.action.EndGameActionController;
 import gui.itemEditing.action.MoveActionController;
@@ -459,7 +461,7 @@ public abstract class GameDataController {
 	 * @param o
 	 *            the object
 	 */
-	protected void objectSelected(NamedObject o) {
+	protected void objectSelected(HasName o) {
 		if (o == null) {
 			return;
 		}
@@ -518,6 +520,9 @@ public abstract class GameDataController {
 		} else if (o.getClass() == ChangeUsableObjectAction.class) {
 			c = new ChangeInventoryItemActionController(currentGameManager, mwController, (ChangeUsableObjectAction) o);
 			fxml = "view/ChangeInventoryItemAction.fxml";
+		} else if (o.getClass() == ChangeUseWithInformationAction.class) {
+			c = new ChangeUseWithInformationActionController(currentGameManager, mwController, (ChangeUseWithInformationAction) o);
+			fxml = "view/ChangeUseWithInformationAction.fxml";
 		} else if (o.getClass() == ChangeWayAction.class) {
 			c = new ChangeWayActionController(currentGameManager, mwController, (ChangeWayAction) o);
 			fxml = "view/ChangeWayAction.fxml";
