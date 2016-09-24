@@ -13,16 +13,22 @@ import javax.persistence.InheritanceType;
 
 import data.Game;
 import data.InspectableObject;
+import data.InventoryItem;
 
 /**
  * An action changing properties of a {@link InspectableObject}.
+ * 
+ * This class is abstract since it has no 1-1 mapping for a data class.
+ * Instantiate {@link ChangeItemAction}, {@link ChangeUsableObjectAction} (for
+ * {@link InventoryItem}s), {@link ChangePersonAction} or
+ * {@link ChangeWayAction} instead.
  * 
  * @author Satia
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Access(AccessType.PROPERTY)
-public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
+public abstract class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 
 	/**
 	 * All identifiers to be added.
@@ -42,7 +48,8 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 	/**
 	 * No-arg constructor for the database.
 	 * 
-	 * @deprecated Use {@link #ChangeInspectableObjectAction(String, InspectableObject)}
+	 * @deprecated Use
+	 *             {@link #ChangeInspectableObjectAction(String, InspectableObject)}
 	 *             instead.
 	 */
 	@Deprecated
@@ -50,7 +57,8 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 		init();
 	}
 
-	/**@param name
+	/**
+	 * @param name
 	 *            the name
 	 * @param object
 	 *            the object to be changed
@@ -186,8 +194,7 @@ public class ChangeInspectableObjectAction extends ChangeNDObjectAction {
 	public String actionDescription() {
 		StringBuilder builder = new StringBuilder(super.actionDescription());
 		if (newInspectionText != null) {
-			builder.append(" Setting inspection text to '")
-					.append(newInspectionText).append("'.");
+			builder.append(" Setting inspection text to '").append(newInspectionText).append("'.");
 		}
 		if (!identifiersToAdd.isEmpty()) {
 			builder.append(" Adding identifiers: ");

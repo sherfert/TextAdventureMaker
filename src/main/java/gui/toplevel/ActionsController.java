@@ -1,8 +1,25 @@
 package gui.toplevel;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import data.action.AbstractAction;
+import data.action.AddInventoryItemsAction;
+import data.action.ChangeActionAction;
+import data.action.ChangeCombineInformationAction;
+import data.action.ChangeConversationAction;
+import data.action.ChangeConversationOptionAction;
+import data.action.ChangeItemAction;
+import data.action.ChangeNDObjectAction;
+import data.action.ChangePersonAction;
+import data.action.ChangeUsableObjectAction;
+import data.action.ChangeUseWithInformationAction;
+import data.action.ChangeWayAction;
+import data.action.EndGameAction;
+import data.action.MoveAction;
+import data.action.MultiAction;
+import data.action.RemoveInventoryItemAction;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsTableController;
@@ -21,7 +38,37 @@ import logic.CurrentGameManager;
  */
 public class ActionsController extends NamedObjectsTableController<AbstractAction> {
 
-	// TODO map for other names.
+	private static Map<Class<? extends AbstractAction>, String> readableActionTypeNames = new HashMap<>();
+
+	static {
+		readableActionTypeNames.put(AddInventoryItemsAction.class, "Add-Inventory-Items Action");
+		readableActionTypeNames.put(ChangeActionAction.class, "Change-Action Action");
+		readableActionTypeNames.put(ChangeCombineInformationAction.class, "Change-Combine-Information Action");
+		readableActionTypeNames.put(ChangeConversationAction.class, "Change-Conversation Action");
+		readableActionTypeNames.put(ChangeConversationOptionAction.class, "Change-Conversation-Option Action");
+		readableActionTypeNames.put(ChangeItemAction.class, "Change-Item Action");
+		readableActionTypeNames.put(ChangeNDObjectAction.class, "Change-Location Action");
+		readableActionTypeNames.put(ChangePersonAction.class, "Change-Person Action");
+		readableActionTypeNames.put(ChangeUsableObjectAction.class, "Change-Inventory-Item Action");
+		readableActionTypeNames.put(ChangeUseWithInformationAction.class, "Change-Use-With-Information Action");
+		readableActionTypeNames.put(ChangeWayAction.class, "Change-Way Action");
+		readableActionTypeNames.put(EndGameAction.class, "End-game Action");
+		readableActionTypeNames.put(MoveAction.class, "Move Action");
+		readableActionTypeNames.put(MultiAction.class, "Multi Action");
+		readableActionTypeNames.put(RemoveInventoryItemAction.class, "Remove-Inventory-Item Action");
+	}
+
+	/**
+	 * Obtains the better readable name describing what an action class does.
+	 * 
+	 * @param clazz
+	 *            the class
+	 * @return the name
+	 */
+	public static String getReadableActionTypeName(Class<? extends AbstractAction> clazz) {
+		return readableActionTypeNames.get(clazz);
+	}
+
 	@FXML
 	private TableColumn<AbstractAction, String> typeCol;
 
@@ -42,7 +89,8 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 	@Override
 	protected void initialize() {
 		super.initialize();
-		typeCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<String>(p.getValue().getClass().getSimpleName()));
+		typeCol.setCellValueFactory(
+				(p) -> new ReadOnlyObjectWrapper<String>(getReadableActionTypeName(p.getValue().getClass())));
 		summaryCol.setCellValueFactory((p) -> new ReadOnlyObjectWrapper<String>(p.getValue().actionDescription()));
 
 		// Allow wrapped text for the summary column

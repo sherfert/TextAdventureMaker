@@ -18,7 +18,6 @@ import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
 import data.action.ChangeConversationAction;
 import data.action.ChangeConversationOptionAction;
-import data.action.ChangeInspectableObjectAction;
 import data.action.ChangeCombineInformationAction;
 import data.action.ChangeUseWithInformationAction;
 import data.action.ChangeItemAction;
@@ -260,7 +259,7 @@ public class Main {
 		/*
 		 * Inspecting the tv will change its inspection text.
 		 */
-		ChangeInspectableObjectAction changeTVAction = new ChangeInspectableObjectAction("changeTVAction", tv);
+		ChangeItemAction changeTVAction = new ChangeItemAction("changeTVAction", tv);
 		changeTVAction.setNewInspectionText("A 32\" television. You should not waste your time admiring it.");
 		tv.addAdditionalInspectAction(changeTVAction);
 
@@ -288,7 +287,7 @@ public class Main {
 		/*
 		 * Inspecting the banana will "convert" it into a bananaphone.
 		 */
-		ChangeInspectableObjectAction changeBananaAction = new ChangeInspectableObjectAction("changeBananaAction",
+		ChangeItemAction changeBananaAction = new ChangeItemAction("changeBananaAction",
 				banana);
 		changeBananaAction.setNewName("Banana phone");
 		changeBananaAction.setNewInspectionText("Ring ring ring ring ring ring ring - banana phone.");
