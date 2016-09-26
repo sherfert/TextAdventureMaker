@@ -22,7 +22,7 @@ public class InventoryItemsController extends NamedDescribedObjectsController<In
 	 *            the main window controller
 	 */
 	public InventoryItemsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
-		super(currentGameManager, mwController, "view/InventoryItem.fxml");
+		super(currentGameManager, mwController);
 	}
 
 	@Override

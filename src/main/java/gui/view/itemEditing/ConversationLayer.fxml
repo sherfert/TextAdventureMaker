@@ -13,7 +13,7 @@
 			<content>
 				<VBox spacing="2.0">
 					<children>
-						<fx:include source="NamedObject.fxml" />
+						<fx:include source="../include/NamedObject.fxml" />
 						<Button fx:id="removeButton" mnemonicParsing="false"
 							text="Delete this layer" />
 					</children>

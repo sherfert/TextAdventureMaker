@@ -111,7 +111,7 @@ public class InventoryItemController extends GameDataController {
 
 		UseWithInformationController controller = new UseWithInformationController(currentGameManager, mwController,
 				invitem, o);
-		mwController.pushCenterContent("when used with " + o.getName(), "view/UseWithInformation.fxml", controller,
+		mwController.pushCenterContent("when used with " + o.getName(), "view/itemEditing/UseWithInformation.fxml", controller,
 				controller::controllerFactory);
 	}
 
@@ -129,7 +129,7 @@ public class InventoryItemController extends GameDataController {
 
 		CombinationInformationController controller = new CombinationInformationController(currentGameManager, mwController,
 				invitem, i);
-		mwController.pushCenterContent("when combined with " + i.getName(), "view/CombinationInformation.fxml", controller,
+		mwController.pushCenterContent("when combined with " + i.getName(), "view/itemEditing/CombinationInformation.fxml", controller,
 				controller::controllerFactory);
 	}
 }

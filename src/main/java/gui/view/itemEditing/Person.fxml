@@ -15,9 +15,9 @@
 			<content>
 				<VBox spacing="2.0">
 					<children>
-						<fx:include source="NamedObject.fxml" />
-                  		<fx:include source="NamedDescribedObject.fxml" />
-						<fx:include source="InspectableObject.fxml" />
+						<fx:include source="../include/NamedObject.fxml" />
+                  		<fx:include source="../include/NamedDescribedObject.fxml" />
+						<fx:include source="../include/InspectableObject.fxml" />
                   		<Label text="Location" />
                   		<LocationChooser fx:id="locationChooser" />
 						<Button fx:id="removeButton" 

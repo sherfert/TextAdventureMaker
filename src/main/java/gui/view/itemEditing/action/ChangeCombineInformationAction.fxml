@@ -8,8 +8,8 @@
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<fx:include source="NamedObject.fxml" />
-		<fx:include source="AbstractAction.fxml" />
+		<fx:include source="../../include/NamedObject.fxml" />
+		<fx:include source="../../include/AbstractAction.fxml" />
 		
 		<Hyperlink fx:id="linkItem1"/>
 		<Hyperlink fx:id="linkItem2"/>

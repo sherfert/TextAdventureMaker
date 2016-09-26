@@ -22,7 +22,7 @@ public class PersonsController extends NamedDescribedObjectsController<Person> {
 	 *            the main window controller
 	 */
 	public PersonsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
-		super(currentGameManager, mwController, "view/Person.fxml");
+		super(currentGameManager, mwController);
 	}
 
 	@Override

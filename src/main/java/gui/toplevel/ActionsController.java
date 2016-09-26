@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.controlsfx.dialog.Wizard;
+import org.controlsfx.dialog.Wizard.Flow;
+import org.controlsfx.dialog.WizardPane;
+
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
@@ -25,9 +29,12 @@ import gui.MainWindowController;
 import gui.NamedObjectsTableController;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import logic.CurrentGameManager;
 
@@ -75,6 +82,9 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 	@FXML
 	private TableColumn<AbstractAction, String> summaryCol;
 
+	@FXML
+	protected Button newButton;
+
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -103,11 +113,40 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 			text.textProperty().bind(cell.itemProperty());
 			return cell;
 		});
+
+		newButton.setOnMouseClicked((e) -> createAction());
 	}
 
 	@Override
 	protected List<AbstractAction> getAllObjects() throws DBClosedException {
 		return currentGameManager.getPersistenceManager().getActionManager().getAllActions();
+	}
+
+	/**
+	 * Opens a dialog to create a new action.
+	 */
+	private void createAction() {
+		// TODO
+		WizardPane page1 = new WizardPane();
+		WizardPane page2 = new WizardPane();
+		WizardPane page3 = new WizardPane();
+		
+		page1.getChildren().add(new javafx.scene.control.Label("tadaa"));
+		page1.getChildren().add(new javafx.scene.control.Label("tüdelü"));
+
+		// create wizard
+		Wizard wizard = new Wizard();
+		wizard.setTitle("New action");
+
+		// create and assign the flow
+		wizard.setFlow(new Wizard.LinearFlow(page1, page2, page3));
+
+		// show wizard and wait for response
+		wizard.showAndWait().ifPresent(result -> {
+			if (result == ButtonType.FINISH) {
+				System.out.println("Wizard finished, settings: " + wizard.getSettings());
+			}
+		});
 	}
 
 }

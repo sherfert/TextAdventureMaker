@@ -471,73 +471,73 @@ public abstract class GameDataController {
 
 		if (o.getClass() == Conversation.class) {
 			c = new ConversationController(currentGameManager, mwController, (Conversation) o);
-			fxml = "view/Conversation.fxml";
+			fxml = "view/itemEditing/Conversation.fxml";
 		} else if (o.getClass() == ConversationLayer.class) {
 			c = new ConversationLayerController(currentGameManager, mwController, (ConversationLayer) o);
-			fxml = "view/ConversationLayer.fxml";
+			fxml = "view/itemEditing/ConversationLayer.fxml";
 		} else if (o.getClass() == ConversationOption.class) {
 			c = new ConversationOptionController(currentGameManager, mwController, (ConversationOption) o);
-			fxml = "view/ConversationOption.fxml";
+			fxml = "view/itemEditing/ConversationOption.fxml";
 		} else if (o.getClass() == InventoryItem.class) {
 			c = new InventoryItemController(currentGameManager, mwController, (InventoryItem) o);
-			fxml = "view/InventoryItem.fxml";
+			fxml = "view/itemEditing/InventoryItem.fxml";
 		} else if (o.getClass() == Item.class) {
 			c = new ItemController(currentGameManager, mwController, (Item) o);
-			fxml = "view/Item.fxml";
+			fxml = "view/itemEditing/Item.fxml";
 		} else if (o.getClass() == Location.class) {
 			c = new LocationController(currentGameManager, mwController, (Location) o);
-			fxml = "view/Location.fxml";
+			fxml = "view/itemEditing/Location.fxml";
 		} else if (o.getClass() == Person.class) {
 			c = new PersonController(currentGameManager, mwController, (Person) o);
-			fxml = "view/Person.fxml";
+			fxml = "view/itemEditing/Person.fxml";
 		} else if (o.getClass() == Way.class) {
 			c = new WayController(currentGameManager, mwController, (Way) o);
-			fxml = "view/Way.fxml";
+			fxml = "view/itemEditing/Way.fxml";
 		} else if (o.getClass() == AddInventoryItemsAction.class) {
 			c = new AIIActionController(currentGameManager, mwController, (AddInventoryItemsAction) o);
-			fxml = "view/AIIAction.fxml";
+			fxml = "view/itemEditing/action/AIIAction.fxml";
 		} else if (o.getClass() == ChangeActionAction.class) {
 			c = new ChangeActionActionController(currentGameManager, mwController, (ChangeActionAction) o);
-			fxml = "view/ChangeActionAction.fxml";
+			fxml = "view/itemEditing/action/ChangeActionAction.fxml";
 		} else if (o.getClass() == ChangeCombineInformationAction.class) {
 			c = new ChangeCombineInformationActionController(currentGameManager, mwController, (ChangeCombineInformationAction) o);
-			fxml = "view/ChangeCombineInformationAction.fxml";
+			fxml = "view/itemEditing/action/ChangeCombineInformationAction.fxml";
 		} else if (o.getClass() == ChangeConversationAction.class) {
 			c = new ChangeConversationActionController(currentGameManager, mwController, (ChangeConversationAction) o);
-			fxml = "view/ChangeConversationAction.fxml";
+			fxml = "view/itemEditing/action/ChangeConversationAction.fxml";
 		} else if (o.getClass() == ChangeConversationOptionAction.class) {
 			c = new ChangeConversationOptionActionController(currentGameManager, mwController, (ChangeConversationOptionAction) o);
-			fxml = "view/ChangeConversationOptionAction.fxml";
+			fxml = "view/itemEditing/action/ChangeConversationOptionAction.fxml";
 		} else if (o.getClass() == ChangeItemAction.class) {
 			c = new ChangeItemActionController(currentGameManager, mwController, (ChangeItemAction) o);
-			fxml = "view/ChangeItemAction.fxml";
+			fxml = "view/itemEditing/action/ChangeItemAction.fxml";
 		} else if (o.getClass() == ChangeNDObjectAction.class) {
 			c = new ChangeLocationActionController(currentGameManager, mwController, (ChangeNDObjectAction) o);
-			fxml = "view/ChangeLocationAction.fxml";
+			fxml = "view/itemEditing/action/ChangeLocationAction.fxml";
 		} else if (o.getClass() == ChangePersonAction.class) {
 			c = new ChangePersonActionController(currentGameManager, mwController, (ChangePersonAction) o);
-			fxml = "view/ChangePersonAction.fxml";
+			fxml = "view/itemEditing/action/ChangePersonAction.fxml";
 		} else if (o.getClass() == ChangeUsableObjectAction.class) {
 			c = new ChangeInventoryItemActionController(currentGameManager, mwController, (ChangeUsableObjectAction) o);
-			fxml = "view/ChangeInventoryItemAction.fxml";
+			fxml = "view/itemEditing/action/ChangeInventoryItemAction.fxml";
 		} else if (o.getClass() == ChangeUseWithInformationAction.class) {
 			c = new ChangeUseWithInformationActionController(currentGameManager, mwController, (ChangeUseWithInformationAction) o);
-			fxml = "view/ChangeUseWithInformationAction.fxml";
+			fxml = "view/itemEditing/action/ChangeUseWithInformationAction.fxml";
 		} else if (o.getClass() == ChangeWayAction.class) {
 			c = new ChangeWayActionController(currentGameManager, mwController, (ChangeWayAction) o);
-			fxml = "view/ChangeWayAction.fxml";
+			fxml = "view/itemEditing/action/ChangeWayAction.fxml";
 		} else if (o.getClass() == EndGameAction.class) {
 			c = new EndGameActionController(currentGameManager, mwController, (EndGameAction) o);
-			fxml = "view/EndGameAction.fxml";
+			fxml = "view/itemEditing/action/EndGameAction.fxml";
 		} else if (o.getClass() == MoveAction.class) {
 			c = new MoveActionController(currentGameManager, mwController, (MoveAction) o);
-			fxml = "view/MoveAction.fxml";
+			fxml = "view/itemEditing/action/MoveAction.fxml";
 		} else if (o.getClass() == MultiAction.class) {
 			c = new MultiActionController(currentGameManager, mwController, (MultiAction) o);
-			fxml = "view/MultiAction.fxml";
+			fxml = "view/itemEditing/action/MultiAction.fxml";
 		} else if (o.getClass() == RemoveInventoryItemAction.class) {
 			c = new RIIActionController(currentGameManager, mwController, (RemoveInventoryItemAction) o);
-			fxml = "view/RIIAction.fxml";
+			fxml = "view/itemEditing/action/RIIAction.fxml";
 		} else {
 			Logger.getLogger(this.getClass().getName()).log(Level.WARNING,
 					"An item was intended to be edited, that has no fitting controller: {0} of type {1}",

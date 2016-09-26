@@ -72,7 +72,7 @@ public abstract class NamedObjectListView<E extends HasName> extends BorderPane 
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource("view/NamedObjectListView.fxml"));
+			loader.setLocation(MainWindowController.class.getResource("view/customui/NamedObjectListView.fxml"));
 
 			loader.setController(this);
 			loader.setRoot(this);

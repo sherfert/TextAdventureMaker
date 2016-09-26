@@ -11,28 +11,17 @@
 		<TableView fx:id="table" fixedCellSize="55">
 			<columns>
 				<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
-				<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
-				<TableColumn fx:id="typeCol" prefWidth="150.0" text="Type" />
-				<TableColumn fx:id="summaryCol" prefWidth="250.0" text="Summary" />
+				<TableColumn fx:id="nameCol" prefWidth="150.0" text="Name" />
+				<TableColumn fx:id="typeCol" prefWidth="250.0" text="Type" />
+				<TableColumn fx:id="summaryCol" prefWidth="320.0" text="Summary" />
 			</columns>
 		</TableView>
 	</center>
-	<right>
-		<VBox prefWidth="200.0" spacing="2.0">
-			<children>
-				<Label text="Name" />
-				<TextField fx:id="newNameTF" />
-				<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
-			</children>
-			<padding>
-				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-			</padding>
-		</VBox>
-	</right>
 	<bottom>
 		<HBox spacing="10.0">
 			<Label text="Filter:" />
 			<TextField fx:id="filterTF" />
+			<Button fx:id="newButton" mnemonicParsing="false" text="New action" />
 			<padding>
 				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
 			</padding>

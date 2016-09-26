@@ -9,10 +9,10 @@
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<fx:include source="NamedObject.fxml" />
-		<fx:include source="AbstractAction.fxml" />
-		<fx:include source="ChangeNDObjectAction.fxml" />
-		<fx:include source="ChangeInspectableObjectAction.fxml" />
+		<fx:include source="../../include/NamedObject.fxml" />
+		<fx:include source="../../include/AbstractAction.fxml" />
+		<fx:include source="../../include/ChangeNDObjectAction.fxml" />
+		<fx:include source="../../include/ChangeInspectableObjectAction.fxml" />
 		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
 			text="Change the location?" />
 		<LocationChooser fx:id="newLocationChooser" />

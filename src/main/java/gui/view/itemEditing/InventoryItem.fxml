@@ -13,9 +13,9 @@
          <content>
             <VBox spacing="2.0">
                <children>
-                  <fx:include source="NamedObject.fxml" />
-                  <fx:include source="NamedDescribedObject.fxml" />
-                  <fx:include source="InspectableObject.fxml" />
+                  <fx:include source="../include/NamedObject.fxml" />
+                  <fx:include source="../include/NamedDescribedObject.fxml" />
+                  <fx:include source="../include/InspectableObject.fxml" />
                   <Button fx:id="removeButton"  mnemonicParsing="false" text="Delete this item" />
                </children>
                <padding>
@@ -26,7 +26,7 @@
       </Tab>
     <Tab text="Using the inventory item">
          <content>
-            <fx:include source="UsableObject.fxml" />
+            <fx:include source="../include/UsableObject.fxml" />
          </content>
       </Tab>
     <Tab text="Using it with something">

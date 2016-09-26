@@ -16,7 +16,7 @@
 					<children>
 						<CheckBox fx:id="editConversationEnabledCB"
 							mnemonicParsing="false" text="Conversation enabled?" />
-						<fx:include source="NamedObject.fxml" />
+						<fx:include source="../include/NamedObject.fxml" />
 						<Label text="Greeting" />
 						<TextArea fx:id="editGreetingTA" prefHeight="100.0"
 							wrapText="true" />

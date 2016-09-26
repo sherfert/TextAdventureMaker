@@ -7,10 +7,10 @@
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<fx:include source="NamedObject.fxml" />
-		<fx:include source="AbstractAction.fxml" />
-		<Button fx:id="removeButton" mnemonicParsing="false"
-			text="Delete this action" />
+		<fx:include source="../../include/NamedObject.fxml" />
+		<fx:include source="../../include/AbstractAction.fxml" />
+		<fx:include source="../../include/ChangeNDObjectAction.fxml" />
+		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this action" />
 	</children>
 	<padding>
 		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

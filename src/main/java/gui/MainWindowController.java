@@ -212,7 +212,7 @@ public class MainWindowController {
 	 * Loads the game details into the center.
 	 */
 	public void loadGameDetails() {
-		String fxml = "view/GameDetails.fxml";
+		String fxml = "view/toplevel/GameDetails.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -223,7 +223,7 @@ public class MainWindowController {
 	 * Loads the locations into the center.
 	 */
 	public void loadLocations() {
-		String fxml = "view/NameDescTableAndFields.fxml";
+		String fxml = "view/toplevel/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -234,7 +234,7 @@ public class MainWindowController {
 	 * Loads the ways into the center.
 	 */
 	public void loadWays() {
-		String fxml = "view/Ways.fxml";
+		String fxml = "view/toplevel/Ways.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -245,7 +245,7 @@ public class MainWindowController {
 	 * Loads the items into the center.
 	 */
 	public void loadItems() {
-		String fxml = "view/NameDescTableAndFields.fxml";
+		String fxml = "view/toplevel/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -256,7 +256,7 @@ public class MainWindowController {
 	 * Loads the items into the center.
 	 */
 	public void loadInventoryItems() {
-		String fxml = "view/NameDescTableAndFields.fxml";
+		String fxml = "view/toplevel/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -268,7 +268,7 @@ public class MainWindowController {
 	 * Loads the persons into the center.
 	 */
 	public void loadPersons() {
-		String fxml = "view/NameDescTableAndFields.fxml";
+		String fxml = "view/toplevel/NameDescTableAndFields.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -279,7 +279,7 @@ public class MainWindowController {
 	 * Loads the conversations into the center.
 	 */
 	public void loadConversations() {
-		String fxml = "view/Conversations.fxml";
+		String fxml = "view/toplevel/Conversations.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -290,7 +290,7 @@ public class MainWindowController {
 	 * Loads the actions into the center.
 	 */
 	public void loadActions() {
-		String fxml = "view/Actions.fxml";
+		String fxml = "view/toplevel/Actions.fxml";
 		// Reset the navbar
 		navbarController.reset();
 		// Load the content
@@ -306,7 +306,7 @@ public class MainWindowController {
 
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource("view/Sidebar.fxml"));
+			loader.setLocation(MainWindowController.class.getResource("view/window/Sidebar.fxml"));
 
 			// Set the controller for the fxml
 			loader.setController(controller);
@@ -330,7 +330,7 @@ public class MainWindowController {
 
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource("view/Navbar.fxml"));
+			loader.setLocation(MainWindowController.class.getResource("view/window/Navbar.fxml"));
 
 			// Set the controller for the fxml
 			loader.setController(navbarController);

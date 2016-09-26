@@ -8,14 +8,12 @@ import javax.persistence.PersistenceException;
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
-import data.InventoryItem;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.InventoryItemListView;
 import gui.customui.LocationChooser;
-import gui.itemEditing.InventoryItemController;
 import gui.utility.StringUtils;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
@@ -196,7 +194,7 @@ public class GameDetailsController extends GameDataController {
 
 		startItemsListView.initialize(game.getStartItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
-				this::startItemSelected, (item) -> game.addStartItem(item), (item) -> game.removeStartItem(item));
+				this::objectSelected, (item) -> game.addStartItem(item), (item) -> game.removeStartItem(item));
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
@@ -307,22 +305,5 @@ public class GameDetailsController extends GameDataController {
 			// Set the value in the game
 			game.setGameTitle(newTitle);
 		}
-	}
-
-	/**
-	 * Opens an item for editing. Invoked when an item from the list is double
-	 * clicked.
-	 * 
-	 * @param i
-	 *            the item
-	 */
-	private void startItemSelected(InventoryItem i) {
-		if (i == null) {
-			return;
-		}
-
-		InventoryItemController itemController = new InventoryItemController(currentGameManager, mwController, i);
-		mwController.pushCenterContent(i.getName(), "view/InventoryItem.fxml", itemController,
-				itemController::controllerFactory);
 	}
 }

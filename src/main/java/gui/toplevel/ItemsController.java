@@ -22,7 +22,7 @@ public class ItemsController extends NamedDescribedObjectsController<Item> {
 	 *            the main window controller
 	 */
 	public ItemsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
-		super(currentGameManager, mwController, "view/Item.fxml");
+		super(currentGameManager, mwController);
 	}
 
 	@Override

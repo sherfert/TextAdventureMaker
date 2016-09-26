@@ -22,7 +22,7 @@ public class LocationsController extends NamedDescribedObjectsController<Locatio
 	 *            the main window controller
 	 */
 	public LocationsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
-		super(currentGameManager, mwController, "view/Location.fxml");
+		super(currentGameManager, mwController);
 	}
 
 	@Override

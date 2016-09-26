@@ -26,11 +26,8 @@ public abstract class NamedDescribedObjectsController<E extends NamedDescribedOb
 	 *            the current game manager
 	 * @param mwController
 	 *            the main window controller
-	 * @param objectControllerFXML
-	 *            the FMXL for controllers to edit single objects of type E
 	 */
-	public NamedDescribedObjectsController(CurrentGameManager currentGameManager, MainWindowController mwController,
-			String objectControllerFXML) {
+	public NamedDescribedObjectsController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController);
 	}
 
