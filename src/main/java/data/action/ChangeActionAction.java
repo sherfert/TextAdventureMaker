@@ -46,6 +46,20 @@ public class ChangeActionAction extends AbstractAction {
 	@Deprecated
 	public ChangeActionAction() {
 	}
+	
+	/**
+	 * An action changing another action.
+	 * 
+	 * @param name
+	 *            the name
+	 * @param action
+	 *            the action to change
+	 */
+	public ChangeActionAction(String name, AbstractAction action) {
+		super(name);
+		this.action = action;
+		this.enabling = Enabling.DO_NOT_CHANGE;
+	}
 
 	/**
 	 * An action changing another action.

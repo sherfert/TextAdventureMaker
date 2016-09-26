@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.dialog.WizardPane?>
+<?import javafx.scene.control.Label?>
+
+<fx:root type="WizardPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<header>
+		<Label />
+	</header>
+	<content>
+		<VBox spacing="2.0">
+			<children>
+				<Label text="What should the new action do?" />
+				<RadioButton text="Change an entity in the game" fx:id="changeRB"
+					selected="true">
+					<toggleGroup>
+						<ToggleGroup fx:id="typeTG" />
+					</toggleGroup>
+				</RadioButton>
+				<RadioButton
+					text="Change the usage of an inventory item with something else"
+					fx:id="changeUseWithRB" toggleGroup="$typeTG" />
+				<RadioButton text="Change the combination of two inventory items"
+					fx:id="changeCombineRB" toggleGroup="$typeTG" />
+				<RadioButton text="Enable or disable another action"
+					fx:id="changeActionRB" toggleGroup="$typeTG" />
+				<RadioButton text="Add inventory items to the inventory"
+					fx:id="addIIRB" toggleGroup="$typeTG" />
+				<RadioButton text="Remove an inventory items from the inventory"
+					fx:id="removeIIRB" toggleGroup="$typeTG" />
+				<RadioButton text="Move the player somewehre" fx:id="moveRB"
+					toggleGroup="$typeTG" />
+				<RadioButton text="Combine multiple actions" fx:id="multiRB"
+					toggleGroup="$typeTG" />
+				<RadioButton text="End the game" fx:id="endGameRB"
+					toggleGroup="$typeTG" />
+			</children>
+		</VBox>
+	</content>
+</fx:root>

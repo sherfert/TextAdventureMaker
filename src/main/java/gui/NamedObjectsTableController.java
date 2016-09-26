@@ -109,4 +109,17 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 	 */
 	protected abstract List<E> getAllObjects() throws DBClosedException;
 
+	/**
+	 * Saves any named object
+	 * 
+	 * @param o
+	 *            the object
+	 * @throws DBClosedException
+	 *             if the DB was closed.
+	 */
+	protected void saveObject(NamedObject o) throws DBClosedException {
+		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
+		currentGameManager.getPersistenceManager().updateChanges();
+	}
+
 }

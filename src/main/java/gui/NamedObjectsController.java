@@ -45,19 +45,6 @@ public abstract class NamedObjectsController<E extends NamedObject> extends Name
 	}
 
 	/**
-	 * Saves any named object
-	 * 
-	 * @param o
-	 *            the object
-	 * @throws DBClosedException
-	 *             if the DB was closed.
-	 */
-	protected void saveObject(NamedObject o) throws DBClosedException {
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
-		currentGameManager.getPersistenceManager().updateChanges();
-	}
-
-	/**
 	 * Saves a new object to both DB and table.
 	 */
 	private void saveNewObject() {

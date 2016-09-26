@@ -1,21 +1,17 @@
 package gui.customui;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import data.interfaces.HasName;
-import gui.MainWindowController;
+import gui.utility.Loader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -69,20 +65,7 @@ public abstract class NamedObjectListView<E extends HasName> extends BorderPane 
 	 *            a concrete value chooser
 	 */
 	protected NamedObjectListView(NamedObjectChooser<E> addValueChooser) {
-		try {
-			// Load layout from fxml file.
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource("view/customui/NamedObjectListView.fxml"));
-
-			loader.setController(this);
-			loader.setRoot(this);
-
-			// Load the view
-			loader.load();
-		} catch (IOException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not set NamedObjectListView content.",
-					e);
-		}
+		Loader.load(this, this, "view/customui/NamedObjectListView.fxml");
 		// Add the chooser
 		addHBox.getChildren().add(addValueChooser);
 		HBox.setHgrow(addValueChooser, Priority.ALWAYS);

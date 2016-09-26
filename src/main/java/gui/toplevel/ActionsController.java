@@ -3,9 +3,11 @@ package gui.toplevel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.controlsfx.dialog.Wizard;
-import org.controlsfx.dialog.Wizard.Flow;
 import org.controlsfx.dialog.WizardPane;
 
 import data.action.AbstractAction;
@@ -27,14 +29,19 @@ import data.action.RemoveInventoryItemAction;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsTableController;
+import gui.customui.ActionChooser;
+import gui.utility.Loader;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Control;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Text;
 import logic.CurrentGameManager;
 
@@ -127,26 +134,176 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 	 */
 	private void createAction() {
 		// TODO
-		WizardPane page1 = new WizardPane();
-		WizardPane page2 = new WizardPane();
-		WizardPane page3 = new WizardPane();
-		
-		page1.getChildren().add(new javafx.scene.control.Label("tadaa"));
-		page1.getChildren().add(new javafx.scene.control.Label("tüdelü"));
+		ChooseTypePane ctp = new ChooseTypePane();
+		ChooseActionToChangePane catcp = new ChooseActionToChangePane();
+		ChooseNamePane cnp = new ChooseNamePane();
+
+		NewActionWizardFlow flow = new NewActionWizardFlow(ctp, catcp, cnp);
 
 		// create wizard
 		Wizard wizard = new Wizard();
 		wizard.setTitle("New action");
 
-		// create and assign the flow
-		wizard.setFlow(new Wizard.LinearFlow(page1, page2, page3));
+		// assign the flow
+		wizard.setFlow(flow);
 
 		// show wizard and wait for response
 		wizard.showAndWait().ifPresent(result -> {
 			if (result == ButtonType.FINISH) {
-				System.out.println("Wizard finished, settings: " + wizard.getSettings());
+				AbstractAction newAction = null;
+
+				// Read settings and create an action accordingly
+				ObservableMap<String, Object> settings = wizard.getSettings();
+				// TODO remove sysout
+				System.out.println("Wizard finished, settings: " + settings);
+				if ((Boolean) settings.get("changeActionRB")) {
+					newAction = new ChangeActionAction((String) settings.get("name"),
+							(AbstractAction) settings.get("actionToChange"));
+				}
+
+				if (newAction != null) {
+					saveNewAction(newAction);
+				}
 			}
 		});
+	}
+
+	/**
+	 * Saves a new action to both DB and table.
+	 * 
+	 * @param a
+	 *            the action
+	 */
+	private void saveNewAction(AbstractAction a) {
+		// Add item to DB
+		try {
+			saveObject(a);
+		} catch (DBClosedException e1) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+			return;
+		}
+		// Add item to our table
+		objectsOL.add(a);
+	}
+
+	/**
+	 * Flow for a wizard to create a new action.
+	 * 
+	 * @author satia
+	 */
+	private class NewActionWizardFlow implements Wizard.Flow {
+		private ChooseTypePane ctp;
+		private ChooseActionToChangePane catcp;
+		private ChooseNamePane cnp;
+
+		// Expects all panes
+		public NewActionWizardFlow(ChooseTypePane ctp, ChooseActionToChangePane catcp, ChooseNamePane cnp) {
+			this.ctp = ctp;
+			this.catcp = catcp;
+			this.cnp = cnp;
+		}
+
+		@Override
+		public Optional<WizardPane> advance(WizardPane currentPage) {
+			if (currentPage == null) {
+				return Optional.of(ctp);
+			} else if (currentPage == ctp) {
+				if (ctp.typeTG.getSelectedToggle() == ctp.changeActionRB) {
+					return Optional.of(catcp);
+				}
+			} else if (currentPage == catcp) {
+				return Optional.of(cnp);
+			}
+			// As default, don't switch
+			return Optional.of(currentPage);
+		}
+
+		@Override
+		public boolean canAdvance(WizardPane currentPage) {
+			// the name is always chosen last
+			return currentPage != cnp;
+		}
+
+	}
+
+	/**
+	 * Pane to choose the type of action to create.
+	 * 
+	 * @author satia
+	 */
+	public class ChooseTypePane extends WizardPane {
+		private @FXML ToggleGroup typeTG;
+		private @FXML RadioButton changeRB;
+		private @FXML RadioButton changeUseWithRB;
+		private @FXML RadioButton changeCombineRB;
+		private @FXML RadioButton changeActionRB;
+		private @FXML RadioButton addIIRB;
+		private @FXML RadioButton removeIIRB;
+		private @FXML RadioButton moveRB;
+		private @FXML RadioButton multiRB;
+		private @FXML RadioButton endGameRB;
+
+		public ChooseTypePane() {
+			Loader.load(this, this, "view/wizards/CreateActionChooseType.fxml");
+		}
+
+		@Override
+		public void onEnteringPage(Wizard wizard) {
+			wizard.setInvalid(false);
+		}
+	}
+
+	/**
+	 * Pane to choose which action to change for a {@link ChangeActionAction}.
+	 * 
+	 * @author satia
+	 */
+	public class ChooseActionToChangePane extends WizardPane {
+		private @FXML ActionChooser actionChooser;
+		private Wizard wizard;
+
+		public ChooseActionToChangePane() {
+			Loader.load(this, this, "view/wizards/CreateActionChooseActionToChange.fxml");
+			actionChooser.initialize(null, false, false,
+					currentGameManager.getPersistenceManager().getActionManager()::getAllActions, (a) -> {
+						wizard.setInvalid(a == null);
+					});
+		}
+
+		@Override
+		public void onEnteringPage(Wizard wizard) {
+			wizard.setInvalid(actionChooser.getObjectValue() == null);
+			this.wizard = wizard;
+		}
+
+		@Override
+		public void onExitingPage(Wizard wizard) {
+			wizard.getSettings().put("actionToChange", actionChooser.getObjectValue());
+		}
+	}
+
+	/**
+	 * Pane to choose the name of the new action.
+	 * 
+	 * @author satia
+	 */
+	public class ChooseNamePane extends WizardPane {
+		private @FXML TextField nameTF;
+		private Wizard wizard;
+
+		public ChooseNamePane() {
+			Loader.load(this, this, "view/wizards/CreateActionChooseName.fxml");
+			nameTF.textProperty().addListener((f, o, n) -> {
+				wizard.setInvalid(n.isEmpty());
+				wizard.getSettings().put("name", n);
+			});
+		}
+
+		@Override
+		public void onEnteringPage(Wizard wizard) {
+			wizard.setInvalid(nameTF.getText().isEmpty());
+			this.wizard = wizard;
+		}
 	}
 
 }

@@ -128,7 +128,7 @@ public class MainWindowController {
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource(fxml));
+			loader.setLocation(getClass().getResource(fxml));
 
 			// Set the controller for the fxml
 			loader.setController(controller);
@@ -306,7 +306,7 @@ public class MainWindowController {
 
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource("view/window/Sidebar.fxml"));
+			loader.setLocation(getClass().getResource("view/window/Sidebar.fxml"));
 
 			// Set the controller for the fxml
 			loader.setController(controller);
@@ -330,7 +330,7 @@ public class MainWindowController {
 
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainWindowController.class.getResource("view/window/Navbar.fxml"));
+			loader.setLocation(getClass().getResource("view/window/Navbar.fxml"));
 
 			// Set the controller for the fxml
 			loader.setController(navbarController);
