@@ -30,7 +30,7 @@
 					fx:id="changeActionRB" toggleGroup="$typeTG" />
 				<RadioButton text="Add inventory items to the inventory"
 					fx:id="addIIRB" toggleGroup="$typeTG" />
-				<RadioButton text="Remove an inventory items from the inventory"
+				<RadioButton text="Remove an inventory item from the inventory"
 					fx:id="removeIIRB" toggleGroup="$typeTG" />
 				<RadioButton text="Move the player somewehre" fx:id="moveRB"
 					toggleGroup="$typeTG" />
