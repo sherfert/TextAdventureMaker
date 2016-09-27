@@ -55,6 +55,7 @@ public class PersistenceManager {
 	private UsableObjectManager usableObjectManager;
 	private WayManager wayManager;
 	private ConversationManager conversationManager;
+	private ConversationOptionManager conversationOptionManager;
 	private ActionManager actionManager;
 
 	/**
@@ -73,6 +74,7 @@ public class PersistenceManager {
 		this.usableObjectManager = new UsableObjectManager(this);
 		this.wayManager = new WayManager(this);
 		this.conversationManager = new ConversationManager(this);
+		this.conversationOptionManager = new ConversationOptionManager(this);
 		this.actionManager = new ActionManager(this);
 	}
 
@@ -247,6 +249,13 @@ public class PersistenceManager {
 	 */
 	public ConversationManager getConversationManager() {
 		return conversationManager;
+	}
+
+	/**
+	 * @return the conversationOptionManager
+	 */
+	public ConversationOptionManager getConversationOptionManager() {
+		return conversationOptionManager;
 	}
 
 	/**

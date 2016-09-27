@@ -13,6 +13,7 @@ import exception.DBClosedException;
  * @param <E>
  *            the type
  */
+@FunctionalInterface
 public interface ValuesSupplier<E extends HasName> {
 	/**
 	 * Get the values.

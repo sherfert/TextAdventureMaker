@@ -57,6 +57,7 @@ import gui.itemEditing.action.EndGameActionController;
 import gui.itemEditing.action.MoveActionController;
 import gui.itemEditing.action.MultiActionController;
 import gui.itemEditing.action.RIIActionController;
+import javafx.scene.image.Image;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -65,8 +66,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 import logic.CurrentGameManager;
 import utility.CommandRegExConverter;
+import utility.WindowUtil;
 
 /**
  * Abstract class for all controllers that need access to the current game
@@ -420,6 +423,11 @@ public abstract class GameDataController {
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(content);
+
+		Image img = new Image(WindowUtil.getWindowIconURL().toString());
+		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+		stage.getIcons().add(img);
+		
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
 				// Update any previous changes first, otherwise the deletion may

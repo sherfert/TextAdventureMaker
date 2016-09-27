@@ -22,12 +22,14 @@ import javafx.util.StringConverter;
  * {@link #initialize(HasName, boolean, boolean, ValuesSupplier, Consumer)}
  * before it behaves properly.
  * 
+ * TODO delete all these subclasses! (also from listview?)
+ * 
  * @author Satia
  *
  * @param <E>
  *            the concrete subtype that should be managed by inheriting choosers
  */
-public abstract class NamedObjectChooser<E extends HasName> extends TextField {
+public class NamedObjectChooser<E extends HasName> extends TextField {
 
 	/** All available values to choose from */
 	private List<E> availableValues;
@@ -43,6 +45,13 @@ public abstract class NamedObjectChooser<E extends HasName> extends TextField {
 
 	/** A method to supply the available values */
 	private ValuesSupplier<E> getAvailableValues;
+	
+	/**
+	 * Chooser with standard string
+	 */
+	public NamedObjectChooser() {
+		this("(no object)");
+	}
 
 	/**
 	 * @param noValueString

@@ -3,24 +3,43 @@ package gui.wizards;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 
+import data.Conversation;
+import data.ConversationOption;
 import data.InventoryItem;
+import data.Item;
 import data.Location;
+import data.NamedObject;
+import data.Person;
+import data.Way;
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
 import data.action.ChangeActionAction;
+import data.action.ChangeCombineInformationAction;
+import data.action.ChangeConversationAction;
+import data.action.ChangeConversationOptionAction;
+import data.action.ChangeItemAction;
+import data.action.ChangeNDObjectAction;
+import data.action.ChangePersonAction;
+import data.action.ChangeUsableObjectAction;
 import data.action.ChangeUseWithInformationAction;
+import data.action.ChangeWayAction;
 import data.action.EndGameAction;
 import data.action.MoveAction;
 import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.PassivelyUsable;
+import exception.DBClosedException;
 import gui.customui.ActionChooser;
 import gui.customui.InventoryItemChooser;
 import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
 import gui.customui.PassivelyUsableChooser;
 import gui.utility.Loader;
 import javafx.collections.ObservableMap;
@@ -29,7 +48,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import logic.CurrentGameManager;
+import utility.WindowUtil;
 
 /**
  * A wizard that guides the user through the creation of an action.
@@ -46,6 +68,9 @@ public class NewActionWizard extends Wizard {
 	private static final String MOVETARGET_KEY = "moveTarget";
 	private static final String USEWITHINVITEM_KEY = "useWithInvItem";
 	private static final String USEWITHOBJECT_KEY = "useWithObject";
+	private static final String COMBINEINVITEM1_KEY = "combineInvItem1";
+	private static final String COMBINEINVITEM2_KEY = "combineInvItem2";
+	private static final String OBJECTTOCHANGE_KEY = "objectToChange";
 
 	private static final String TYPE_REMOVEII = "removeII";
 	private static final String TYPE_ADDII = "addII";
@@ -54,11 +79,11 @@ public class NewActionWizard extends Wizard {
 	private static final String TYPE_MOVE = "move";
 	private static final String TYPE_CHANGEACTION = "changeAction";
 	private static final String TYPE_CHANGEUSEWITH = "changeUseWith";
+	private static final String TYPE_CHANGECOMBINE = "changeCombine";
+	private static final String TYPE_CHANGEOBJECT = "changeObject";
 
 	/** The current game manager. */
 	private CurrentGameManager currentGameManager;
-
-	private NewActionWizardFlow flow;
 
 	/**
 	 * @param currentGameManager
@@ -67,16 +92,13 @@ public class NewActionWizard extends Wizard {
 		this.currentGameManager = currentGameManager;
 
 		setTitle("New action");
-		// TODO wizard and dialog icons
-
-		ChooseTypePane ctp = new ChooseTypePane();
-		ChooseActionToChangePane catcp = new ChooseActionToChangePane();
-		ChooseNamePane cnp = new ChooseNamePane();
-		ChooseRemoveItemPane crip = new ChooseRemoveItemPane();
-		ChooseMoveTargetPane cmtp = new ChooseMoveTargetPane();
-		ChooseUseWithItemsPane cuwip = new ChooseUseWithItemsPane();
-
-		flow = new NewActionWizardFlow(ctp, catcp, cnp, crip, cmtp, cuwip);
+		NewActionWizardFlow flow = new NewActionWizardFlow();
+		setFlow(flow);
+		
+		// Set the icon using the first pane in the flow.
+		Image img = new Image(WindowUtil.getWindowIconURL().toString());
+		Stage stage = (Stage) flow.ctp.getScene().getWindow();
+		stage.getIcons().add(img);
 	}
 
 	/**
@@ -85,16 +107,10 @@ public class NewActionWizard extends Wizard {
 	 * @return the new action.
 	 */
 	public Optional<AbstractAction> showAndGetAction() {
-		// TODO complete wizard
-		// assign the flow
-		setFlow(flow);
-
-		// show wizard and wait for response
 		return showAndWait().map(result -> {
 			AbstractAction newAction = null;
 
 			if (result == ButtonType.FINISH) {
-				// TODO String constants
 				// Read settings and create an action accordingly
 				ObservableMap<String, Object> settings = getSettings();
 
@@ -117,6 +133,30 @@ public class NewActionWizard extends Wizard {
 					newAction = new ChangeUseWithInformationAction((String) settings.get(NAME_KEY),
 							(InventoryItem) settings.get(USEWITHINVITEM_KEY),
 							(PassivelyUsable) settings.get(USEWITHOBJECT_KEY));
+				} else if (settings.get(TYPE_KEY).equals(TYPE_CHANGECOMBINE)) {
+					newAction = new ChangeCombineInformationAction((String) settings.get(NAME_KEY),
+							(InventoryItem) settings.get(COMBINEINVITEM1_KEY),
+							(InventoryItem) settings.get(COMBINEINVITEM2_KEY));
+				} else if (settings.get(TYPE_KEY).equals(TYPE_CHANGEOBJECT)) {
+					NamedObject object = (NamedObject) settings.get(OBJECTTOCHANGE_KEY);
+					if (object instanceof Conversation) {
+						newAction = new ChangeConversationAction((String) settings.get(NAME_KEY),
+								(Conversation) object);
+					} else if (object instanceof ConversationOption) {
+						newAction = new ChangeConversationOptionAction((String) settings.get(NAME_KEY),
+								(ConversationOption) object);
+					} else if (object instanceof Item) {
+						newAction = new ChangeItemAction((String) settings.get(NAME_KEY), (Item) object);
+					} else if (object instanceof Location) {
+						newAction = new ChangeNDObjectAction((String) settings.get(NAME_KEY), (Location) object);
+					} else if (object instanceof Person) {
+						newAction = new ChangePersonAction((String) settings.get(NAME_KEY), (Person) object);
+					} else if (object instanceof InventoryItem) {
+						newAction = new ChangeUsableObjectAction((String) settings.get(NAME_KEY),
+								(InventoryItem) object);
+					} else if (object instanceof Way) {
+						newAction = new ChangeWayAction((String) settings.get(NAME_KEY), (Way) object);
+					}
 				}
 			}
 			return newAction;
@@ -135,16 +175,21 @@ public class NewActionWizard extends Wizard {
 		private ChooseRemoveItemPane crip;
 		private ChooseMoveTargetPane cmtp;
 		private ChooseUseWithItemsPane cuwip;
+		private ChooseCombineItemsPane ccip;
+		private ChooseObjectToChangePane cotcp;
 
-		// Expects all panes
-		public NewActionWizardFlow(ChooseTypePane ctp, ChooseActionToChangePane catcp, ChooseNamePane cnp,
-				ChooseRemoveItemPane crip, ChooseMoveTargetPane cmtp, ChooseUseWithItemsPane cuwip) {
-			this.ctp = ctp;
-			this.catcp = catcp;
-			this.cnp = cnp;
-			this.crip = crip;
-			this.cmtp = cmtp;
-			this.cuwip = cuwip;
+		/**
+		 * Creates all panes and defines the flow between them.
+		 */
+		public NewActionWizardFlow() {
+			this.ctp = new ChooseTypePane();
+			this.catcp = new ChooseActionToChangePane();
+			this.cnp = new ChooseNamePane();
+			this.crip = new ChooseRemoveItemPane();
+			this.cmtp = new ChooseMoveTargetPane();
+			this.cuwip = new ChooseUseWithItemsPane();
+			this.ccip = new ChooseCombineItemsPane();
+			this.cotcp = new ChooseObjectToChangePane();
 		}
 
 		@Override
@@ -160,10 +205,15 @@ public class NewActionWizard extends Wizard {
 					return Optional.of(cmtp);
 				} else if (ctp.changeUseWithRB.isSelected()) {
 					return Optional.of(cuwip);
+				} else if (ctp.changeCombineRB.isSelected()) {
+					return Optional.of(ccip);
+				} else if (ctp.changeRB.isSelected()) {
+					return Optional.of(cotcp);
 				} else if (ctp.endGameRB.isSelected() || ctp.multiRB.isSelected() || ctp.addIIRB.isSelected()) {
 					return Optional.of(cnp);
 				}
-			} else if (currentPage == catcp || currentPage == crip || currentPage == cmtp || currentPage == cuwip) {
+			} else if (currentPage == catcp || currentPage == crip || currentPage == cmtp || currentPage == cuwip
+					|| currentPage == ccip || currentPage == cotcp) {
 				return Optional.of(cnp);
 			}
 			// As default, don't switch
@@ -209,7 +259,7 @@ public class NewActionWizard extends Wizard {
 			if (changeUseWithRB.isSelected()) {
 				wizard.getSettings().put(TYPE_KEY, TYPE_CHANGEUSEWITH);
 			} else if (changeCombineRB.isSelected()) {
-				wizard.getSettings().put(TYPE_KEY, "changeCombine");
+				wizard.getSettings().put(TYPE_KEY, TYPE_CHANGECOMBINE);
 			} else if (changeActionRB.isSelected()) {
 				wizard.getSettings().put(TYPE_KEY, TYPE_CHANGEACTION);
 			} else if (addIIRB.isSelected()) {
@@ -222,6 +272,8 @@ public class NewActionWizard extends Wizard {
 				wizard.getSettings().put(TYPE_KEY, TYPE_MULTI);
 			} else if (endGameRB.isSelected()) {
 				wizard.getSettings().put(TYPE_KEY, TYPE_ENDGAME);
+			} else if (changeRB.isSelected()) {
+				wizard.getSettings().put(TYPE_KEY, TYPE_CHANGEOBJECT);
 			}
 		}
 	}
@@ -252,6 +304,47 @@ public class NewActionWizard extends Wizard {
 		@Override
 		public void onExitingPage(Wizard wizard) {
 			wizard.getSettings().put(ACTIONTOCHANGE_KEY, actionChooser.getObjectValue());
+		}
+	}
+
+	/**
+	 * Pane to choose which object to change for a {@link ChangeNDObjectAction}.
+	 * 
+	 * @author satia
+	 */
+	public class ChooseObjectToChangePane extends WizardPane {
+		private @FXML NamedObjectChooser<NamedObject> objectChooser;
+		private Wizard wizard;
+
+		public ChooseObjectToChangePane() {
+			Loader.load(this, this, "view/wizards/CreateActionChooseObjectToChange.fxml");
+			objectChooser.initialize(null, false, false, () -> {
+				List<NamedObject> allObjects = new ArrayList<>();
+				allObjects.addAll(
+						currentGameManager.getPersistenceManager().getConversationManager().getAllConversations());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getConversationOptionManager()
+						.getAllConversationOptions());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+				allObjects.addAll(
+						currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
+				return allObjects;
+			} , (a) -> {
+				wizard.setInvalid(a == null);
+			});
+		}
+
+		@Override
+		public void onEnteringPage(Wizard wizard) {
+			wizard.setInvalid(objectChooser.getObjectValue() == null);
+			this.wizard = wizard;
+		}
+
+		@Override
+		public void onExitingPage(Wizard wizard) {
+			wizard.getSettings().put(OBJECTTOCHANGE_KEY, objectChooser.getObjectValue());
 		}
 	}
 
@@ -299,7 +392,8 @@ public class NewActionWizard extends Wizard {
 			Loader.load(this, this, "view/wizards/CreateActionChooseUseWithItems.fxml");
 			invItemChooser.initialize(null, false, false,
 					currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, (a) -> {
-						wizard.setInvalid(invItemChooser.getObjectValue() == null || objectChooser.getObjectValue() == null);
+						wizard.setInvalid(
+								invItemChooser.getObjectValue() == null || objectChooser.getObjectValue() == null);
 					});
 			objectChooser.initialize(null, false, false, () -> {
 				List<PassivelyUsable> allObjects = new ArrayList<>();
@@ -322,6 +416,53 @@ public class NewActionWizard extends Wizard {
 		public void onExitingPage(Wizard wizard) {
 			wizard.getSettings().put(USEWITHINVITEM_KEY, invItemChooser.getObjectValue());
 			wizard.getSettings().put(USEWITHOBJECT_KEY, objectChooser.getObjectValue());
+		}
+	}
+
+	/**
+	 * Pane to choose which items for a {@link ChangeCombineInformationAction}.
+	 * 
+	 * @author satia
+	 */
+	public class ChooseCombineItemsPane extends WizardPane {
+		private @FXML InventoryItemChooser invItem1Chooser;
+		private @FXML InventoryItemChooser invItem2Chooser;
+		private Wizard wizard;
+
+		public ChooseCombineItemsPane() {
+			List<InventoryItem> allItems;
+			try {
+				allItems = currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems();
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+				return;
+			}
+
+			Loader.load(this, this, "view/wizards/CreateActionChooseCombineItems.fxml");
+			invItem1Chooser.initialize(null, false, true, () -> {
+				return allItems.stream().filter((i) -> invItem2Chooser.getObjectValue() != i)
+						.collect(Collectors.toList());
+			} , (a) -> {
+				wizard.setInvalid(invItem1Chooser.getObjectValue() == null || invItem2Chooser.getObjectValue() == null);
+			});
+			invItem2Chooser.initialize(null, false, true, () -> {
+				return allItems.stream().filter((i) -> invItem1Chooser.getObjectValue() != i)
+						.collect(Collectors.toList());
+			} , (a) -> {
+				wizard.setInvalid(invItem1Chooser.getObjectValue() == null || invItem2Chooser.getObjectValue() == null);
+			});
+		}
+
+		@Override
+		public void onEnteringPage(Wizard wizard) {
+			wizard.setInvalid(invItem1Chooser.getObjectValue() == null || invItem2Chooser.getObjectValue() == null);
+			this.wizard = wizard;
+		}
+
+		@Override
+		public void onExitingPage(Wizard wizard) {
+			wizard.getSettings().put(COMBINEINVITEM1_KEY, invItem1Chooser.getObjectValue());
+			wizard.getSettings().put(COMBINEINVITEM2_KEY, invItem2Chooser.getObjectValue());
 		}
 	}
 

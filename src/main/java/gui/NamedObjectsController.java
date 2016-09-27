@@ -14,6 +14,8 @@ import logic.CurrentGameManager;
  * Controller for the a view with NamedObjects in a table, and the possibility
  * to add them.
  * 
+ * TODO use a dialog for creating objects!
+ * 
  * @author Satia
  */
 public abstract class NamedObjectsController<E extends NamedObject> extends NamedObjectsTableController<E> {

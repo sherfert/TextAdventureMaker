@@ -123,9 +123,7 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 	 * Opens a dialog to create a new action.
 	 */
 	private void createAction() {
-		NewActionWizard wizard = new NewActionWizard(currentGameManager);
-		
-		wizard.showAndGetAction().ifPresent(this::saveNewAction);
+		new NewActionWizard(currentGameManager).showAndGetAction().ifPresent(this::saveNewAction);
 	}
 
 	/**
@@ -145,5 +143,5 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 		// Add item to our table
 		objectsOL.add(a);
 	}
-	
+
 }

@@ -6,9 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import utility.WindowUtil;
 
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Opens the GUI of TextAdventureMaker.
@@ -43,9 +43,7 @@ public class MainWindow extends Application {
 			primaryStage.setOnCloseRequest(e -> controller.close());
 
 			// Set the icon
-			
-			URL iconURL = getClass().getClassLoader().getResource("icon.png");
-			Image img = new Image(iconURL.toString());
+			Image img = new Image(WindowUtil.getWindowIconURL().toString());
 			primaryStage.getIcons().add(img);
 
 			// Show the scene containing the root layout.

@@ -4,7 +4,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +24,7 @@ import lanterna.LanternaScreenOptionChooser.OptionHandler;
 import lanterna.LanternaScreenTextArea;
 import lanterna.LanternaScreenTextArea.TextHandler;
 import playing.menu.MenuShower;
+import utility.WindowUtil;
 
 /**
  * Providing means to print and read input while playing.
@@ -176,10 +176,7 @@ public class InputOutput implements TextHandler, OptionHandler {
 		// Not resizable
 		frame.setResizable(false);
 
-		ClassLoader classLoader = getClass().getClassLoader();
-		URL iconURL = classLoader.getResource("icon.png");
-
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(iconURL));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WindowUtil.getWindowIconURL()));
 		frame.setTitle("Text-Adventure");
 	}
 
