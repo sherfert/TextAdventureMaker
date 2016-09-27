@@ -36,11 +36,7 @@ import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.PassivelyUsable;
 import exception.DBClosedException;
-import gui.customui.ActionChooser;
-import gui.customui.InventoryItemChooser;
-import gui.customui.LocationChooser;
 import gui.customui.NamedObjectChooser;
-import gui.customui.PassivelyUsableChooser;
 import gui.utility.Loader;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
@@ -284,7 +280,7 @@ public class NewActionWizard extends Wizard {
 	 * @author satia
 	 */
 	public class ChooseActionToChangePane extends WizardPane {
-		private @FXML ActionChooser actionChooser;
+		private @FXML NamedObjectChooser<AbstractAction> actionChooser;
 		private Wizard wizard;
 
 		public ChooseActionToChangePane() {
@@ -355,7 +351,7 @@ public class NewActionWizard extends Wizard {
 	 * @author satia
 	 */
 	public class ChooseRemoveItemPane extends WizardPane {
-		private @FXML InventoryItemChooser removeItemChooser;
+		private @FXML NamedObjectChooser<InventoryItem> removeItemChooser;
 		private Wizard wizard;
 
 		public ChooseRemoveItemPane() {
@@ -384,8 +380,8 @@ public class NewActionWizard extends Wizard {
 	 * @author satia
 	 */
 	public class ChooseUseWithItemsPane extends WizardPane {
-		private @FXML InventoryItemChooser invItemChooser;
-		private @FXML PassivelyUsableChooser objectChooser;
+		private @FXML NamedObjectChooser<InventoryItem> invItemChooser;
+		private @FXML NamedObjectChooser<PassivelyUsable> objectChooser;
 		private Wizard wizard;
 
 		public ChooseUseWithItemsPane() {
@@ -425,8 +421,8 @@ public class NewActionWizard extends Wizard {
 	 * @author satia
 	 */
 	public class ChooseCombineItemsPane extends WizardPane {
-		private @FXML InventoryItemChooser invItem1Chooser;
-		private @FXML InventoryItemChooser invItem2Chooser;
+		private @FXML NamedObjectChooser<InventoryItem> invItem1Chooser;
+		private @FXML NamedObjectChooser<InventoryItem> invItem2Chooser;
 		private Wizard wizard;
 
 		public ChooseCombineItemsPane() {
@@ -472,7 +468,7 @@ public class NewActionWizard extends Wizard {
 	 * @author satia
 	 */
 	public class ChooseMoveTargetPane extends WizardPane {
-		private @FXML LocationChooser moveTargetChooser;
+		private @FXML NamedObjectChooser<Location> moveTargetChooser;
 		private Wizard wizard;
 
 		public ChooseMoveTargetPane() {

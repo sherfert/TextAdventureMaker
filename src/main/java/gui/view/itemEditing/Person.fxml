@@ -5,8 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.StackPane?>
-<?import gui.customui.LocationChooser?>
-<?import gui.customui.ConversationChooser?>
+<?import gui.customui.NamedObjectChooser?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE"
 	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
@@ -19,7 +18,7 @@
                   		<fx:include source="../include/NamedDescribedObject.fxml" />
 						<fx:include source="../include/InspectableObject.fxml" />
                   		<Label text="Location" />
-                  		<LocationChooser fx:id="locationChooser" />
+                  		<NamedObjectChooser noValueString="(no location)" fx:id="locationChooser" />
 						<Button fx:id="removeButton" 
 							mnemonicParsing="false"  text="Delete this person" />
 					</children>
@@ -34,7 +33,7 @@
 				<VBox spacing="2.0">
 					<children>
 						<Label text="Conversation" />
-						<ConversationChooser fx:id="conversationChooser"  />
+						<NamedObjectChooser noValueString="(no conversation)" fx:id="conversationChooser"  />
 						<Label text="Talk Forbidden Text" />
 						<TextField fx:id="editTalkForbiddenTextTF" />
 						<Label fx:id="talkCommandsLabel" />

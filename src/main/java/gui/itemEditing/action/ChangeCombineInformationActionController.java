@@ -1,8 +1,9 @@
 package gui.itemEditing.action;
 
+import data.InventoryItem;
 import data.action.ChangeCombineInformationAction;
 import gui.MainWindowController;
-import gui.customui.InventoryItemListView;
+import gui.customui.NamedObjectListView;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -63,10 +64,10 @@ public class ChangeCombineInformationActionController extends ActionController<C
 	private TextField newCombineWithForbiddenTextTF;
 	
 	@FXML
-	private InventoryItemListView itemsAddListView;
+	private NamedObjectListView<InventoryItem> itemsAddListView;
 	
 	@FXML
-	private InventoryItemListView itemsRemoveListView;
+	private NamedObjectListView<InventoryItem> itemsRemoveListView;
 
 	/**
 	 * @param currentGameManager

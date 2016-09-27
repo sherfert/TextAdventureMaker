@@ -1,8 +1,9 @@
 package gui.itemEditing.action;
 
+import data.InventoryItem;
 import data.action.EndGameAction;
 import gui.MainWindowController;
-import gui.customui.InventoryItemChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -16,7 +17,7 @@ import logic.CurrentGameManager;
 public class EndGameActionController extends ActionController<EndGameAction> {
 
 	@FXML
-	private InventoryItemChooser inventoryItemChooser;
+	private NamedObjectChooser<InventoryItem> inventoryItemChooser;
 
 	/**
 	 * @param currentGameManager

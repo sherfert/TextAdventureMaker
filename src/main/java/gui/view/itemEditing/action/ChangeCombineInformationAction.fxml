@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.InventoryItemListView?>
+<?import gui.customui.NamedObjectListView?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
@@ -50,11 +50,11 @@
 		<HBox spacing="2.0">
 			<VBox spacing="2.0">
 				<Label text="New inventory items added to the inventory when combined" />
-				<InventoryItemListView fx:id="itemsAddListView" />
+				<NamedObjectListView noValueString="(no inventory item)" fx:id="itemsAddListView" />
 			</VBox>
 			<VBox spacing="2.0">
 				<Label text="Inventory items not added to the inventory any more when combined" />
-				<InventoryItemListView fx:id="itemsRemoveListView" />
+				<NamedObjectListView noValueString="(no inventory item)" fx:id="itemsRemoveListView" />
 			</VBox>
 		</HBox>
 		

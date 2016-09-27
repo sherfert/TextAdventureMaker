@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.ActionListView?>
+<?import gui.customui.NamedObjectListView?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="gui.include.InspectableObjectController" VBox.vgrow="ALWAYS">
@@ -16,6 +16,6 @@
 		<TextArea fx:id="editIdentifiersTA" prefHeight="100.0"
 			wrapText="true" />
 		<Label text="Actions triggered when inspected" />
-		<ActionListView fx:id="inspectActionsListView" />
+		<NamedObjectListView noValueString="(no action)" fx:id="inspectActionsListView" />
 	</children>
 </VBox>

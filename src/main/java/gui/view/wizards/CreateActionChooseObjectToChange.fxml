@@ -16,7 +16,7 @@
 		<VBox spacing="2.0">
 			<children>
 				<Label wrapText="true" text="What object should be changed? You chan change conversations, conversation options, items, inventory items, locations, persons ands ways." />
-				<NamedObjectChooser fx:id="objectChooser" />
+				<NamedObjectChooser noValueString="(no object)" fx:id="objectChooser" />
 			</children>
 		</VBox>
 	</content>

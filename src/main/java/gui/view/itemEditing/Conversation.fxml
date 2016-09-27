@@ -4,8 +4,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.ConversationLayerChooser?>
-<?import gui.customui.ActionListView?>
+<?import gui.customui.NamedObjectChooser?>
+<?import gui.customui.NamedObjectListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
@@ -24,9 +24,9 @@
 						<TextArea fx:id="editEventTA" prefHeight="100.0"
 							wrapText="true" />
 						<Label text="Start layer" />
-						<ConversationLayerChooser fx:id="startLayerChooser" />
+						<NamedObjectChooser noValueString="(no layer)" fx:id="startLayerChooser" />
 						<Label text="Actions triggered when started" />
-						<ActionListView fx:id="actionsListView" />
+						<NamedObjectListView noValueString="(no action)" fx:id="actionsListView" />
 						<Button fx:id="removeButton" mnemonicParsing="false"
 							text="Delete this conversation" />
 					</children>

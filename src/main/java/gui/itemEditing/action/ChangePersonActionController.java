@@ -1,9 +1,10 @@
 package gui.itemEditing.action;
 
+import data.Conversation;
+import data.Location;
 import data.action.ChangePersonAction;
 import gui.MainWindowController;
-import gui.customui.ConversationChooser;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.AbstractActionController;
 import gui.include.ChangeInspectableObjectActionController;
 import gui.include.ChangeNDObjectActionController;
@@ -30,13 +31,13 @@ public class ChangePersonActionController extends ActionController<ChangePersonA
 	private CheckBox newConversationCB;
 
 	@FXML
-	private ConversationChooser newConversationChooser;
+	private NamedObjectChooser<Conversation> newConversationChooser;
 
 	@FXML
 	private CheckBox newLocationCB;
 
 	@FXML
-	private LocationChooser newLocationChooser;
+	private NamedObjectChooser<Location> newLocationChooser;
 
 	/**
 	 * @param currentGameManager

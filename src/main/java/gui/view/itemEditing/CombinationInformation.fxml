@@ -4,8 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.InventoryItemListView?>
-<?import gui.customui.ActionListView?>
+<?import gui.customui.NamedObjectListView?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
@@ -30,9 +29,9 @@
 			</VBox>
 		</HBox>
 		<Label text="Inventory items added to the inventory when combined" />
-		<InventoryItemListView fx:id="newItemsListView" />
+		<NamedObjectListView noValueString="(no inventory item)" fx:id="newItemsListView" />
 		<Label text="Actions triggered when combined" />
-		<ActionListView fx:id="combineActionsListView" />
+		<NamedObjectListView noValueString="(no action)" fx:id="combineActionsListView" />
 	</children>
 	<padding>
 		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.dialog.WizardPane?>
-<?import gui.customui.LocationChooser?>
+<?import gui.customui.NamedObjectChooser?>
 
 
 <fx:root type="WizardPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
@@ -16,7 +16,7 @@
 		<VBox spacing="2.0">
 			<children>
 				<Label text="Where should the player be moved?" />
-				<LocationChooser fx:id="moveTargetChooser" />
+				<NamedObjectChooser noValueString="(no location)" fx:id="moveTargetChooser" />
 			</children>
 		</VBox>
 	</content>

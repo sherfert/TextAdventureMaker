@@ -4,8 +4,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.ConversationLayerChooser?>
-<?import gui.customui.ActionListView?>
+<?import gui.customui.NamedObjectChooser?>
+<?import gui.customui.NamedObjectListView?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
@@ -21,9 +21,9 @@
 		<Label text="Event" />
 		<TextArea fx:id="editEventTA" prefHeight="100.0" wrapText="true" />
 		<Label text="Target layer" />
-		<ConversationLayerChooser fx:id="targetChooser" />
+		<NamedObjectChooser noValueString="(no layer)" fx:id="targetChooser" />
 		<Label text="Actions triggered when chosen" />
-		<ActionListView fx:id="actionsListView" />
+		<NamedObjectListView noValueString="(no action)" fx:id="actionsListView" />
 		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this option" />
 	</children>
 	<padding>

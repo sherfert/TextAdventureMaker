@@ -8,8 +8,7 @@ import data.InventoryItem;
 import data.interfaces.PassivelyUsable;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.InventoryItemListView;
-import gui.customui.PassivelyUsableListView;
+import gui.customui.NamedObjectListView;
 import gui.include.InspectableObjectController;
 import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
@@ -36,10 +35,10 @@ public class InventoryItemController extends GameDataController {
 	private Button removeButton;
 
 	@FXML
-	private PassivelyUsableListView usableObjectsListView;
+	private NamedObjectListView<PassivelyUsable> usableObjectsListView;
 
 	@FXML
-	private InventoryItemListView usableInvItemsListView;
+	private NamedObjectListView<InventoryItem> usableInvItemsListView;
 
 	/**
 	 * @param currentGameManager

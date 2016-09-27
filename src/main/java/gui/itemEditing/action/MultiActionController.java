@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import data.action.AbstractAction;
 import data.action.MultiAction;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
+import gui.customui.NamedObjectListView;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ import logic.CurrentGameManager;
 public class MultiActionController extends ActionController<MultiAction> {
 
 	@FXML
-	private ActionListView actionsListView;
+	private NamedObjectListView<AbstractAction> actionsListView;
 
 	/**
 	 * @param currentGameManager

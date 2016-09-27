@@ -8,12 +8,14 @@ import javax.persistence.PersistenceException;
 import com.googlecode.lanterna.terminal.Terminal.Color;
 
 import data.Game;
+import data.InventoryItem;
+import data.Location;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.InventoryItemListView;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
+import gui.customui.NamedObjectListView;
 import gui.utility.StringUtils;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
@@ -54,9 +56,9 @@ public class GameDetailsController extends GameDataController {
 	@FXML
 	private TextArea startingTextField;
 	@FXML
-	private LocationChooser startLocationChooser;
+	private NamedObjectChooser<Location> startLocationChooser;
 	@FXML
-	private InventoryItemListView startItemsListView;
+	private NamedObjectListView<InventoryItem> startItemsListView;
 	@FXML
 	private TextField useWithHelpTextField;
 	@FXML

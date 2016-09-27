@@ -1,9 +1,10 @@
 package gui.include;
 
 import data.InspectableObject;
+import data.action.AbstractAction;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
+import gui.customui.NamedObjectListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import logic.CurrentGameManager;
@@ -25,7 +26,7 @@ public class InspectableObjectController extends GameDataController {
 	private TextArea editIdentifiersTA;
 
 	@FXML
-	private ActionListView inspectActionsListView;
+	private NamedObjectListView<AbstractAction> inspectActionsListView;
 
 	/**
 	 * @param currentGameManager

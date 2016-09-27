@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.ConversationLayerChooser?>
+<?import gui.customui.NamedObjectChooser?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1"  fx:id="tabPane">
@@ -61,7 +61,7 @@
 									<Label text="Event" />
 									<TextArea fx:id="newEventTA" prefHeight="200.0"
 										wrapText="true" />
-									<ConversationLayerChooser fx:id="targetChooser" />
+									<NamedObjectChooser noValueString="(no layer)" fx:id="targetChooser" />
 									<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
 								</children>
 								<padding>

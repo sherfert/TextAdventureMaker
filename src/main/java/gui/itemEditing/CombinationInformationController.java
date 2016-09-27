@@ -1,10 +1,10 @@
 package gui.itemEditing;
 
 import data.InventoryItem;
+import data.action.AbstractAction;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
-import gui.customui.InventoryItemListView;
+import gui.customui.NamedObjectListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -38,7 +38,7 @@ public class CombinationInformationController extends GameDataController {
 	private TextField editCombineForbiddenTextTF;
 
 	@FXML
-	private InventoryItemListView newItemsListView;
+	private NamedObjectListView<InventoryItem> newItemsListView;
 
 	@FXML
 	private Label combine1CommandsLabel;
@@ -53,7 +53,7 @@ public class CombinationInformationController extends GameDataController {
 	private TextArea editCombine2CommandsTA;
 
 	@FXML
-	private ActionListView combineActionsListView;
+	private NamedObjectListView<AbstractAction> combineActionsListView;
 
 	/**
 	 * @param currentGameManager

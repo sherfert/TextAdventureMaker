@@ -4,8 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.StackPane?>
-<?import gui.customui.ActionListView?>
+<?import gui.customui.NamedObjectListView?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="gui.include.UsableObjectController">
@@ -20,7 +19,7 @@
 		<TextArea fx:id="editUseCommandsTA" prefHeight="100.0"
 			wrapText="true" />
 		<Label text="Actions triggered when used" />
-		<ActionListView fx:id="useActionsListView" />
+		<NamedObjectListView noValueString="(no action)" fx:id="useActionsListView" />
 	</children>
 	<padding>
 		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

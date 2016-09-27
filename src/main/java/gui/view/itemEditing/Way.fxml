@@ -4,9 +4,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.StackPane?>
-<?import gui.customui.LocationChooser?>
-<?import gui.customui.ActionListView?>
+<?import gui.customui.NamedObjectChooser?>
+<?import gui.customui.NamedObjectListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
@@ -19,9 +18,9 @@
 						<fx:include source="../include/NamedDescribedObject.fxml" />
 						<fx:include source="../include/InspectableObject.fxml" />
 						<Label text="Origin" />
-						<LocationChooser fx:id="originChooser" />
+						<NamedObjectChooser noValueString="(no location)" fx:id="originChooser" />
 						<Label text="Destination" />
-						<LocationChooser fx:id="destinationChooser" />
+						<NamedObjectChooser noValueString="(no location)" fx:id="destinationChooser" />
 						<Button fx:id="removeButton" mnemonicParsing="false"
 							text="Delete this way" />
 					</children>
@@ -45,7 +44,7 @@
 						<TextArea fx:id="editMoveCommandsTA" prefHeight="100.0"
 							wrapText="true" />
 						<Label text="Actions triggered when used" />
-						<ActionListView fx:id="moveActionsListView" />
+						<NamedObjectListView noValueString="(no action)" fx:id="moveActionsListView" />
 					</children>
 					<padding>
 						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

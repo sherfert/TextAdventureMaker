@@ -4,9 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.LocationChooser?>
-<?import gui.customui.ConversationChooser?>
-<?import javafx.scene.control.RadioButton?>
+<?import gui.customui.NamedObjectChooser?>
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
@@ -29,10 +27,10 @@
 		</HBox>
 		<CheckBox fx:id="newOriginCB" mnemonicParsing="false"
 			text="Change the origin?" />
-		<LocationChooser fx:id="newOriginChooser" />
+		<NamedObjectChooser noValueString="(no location)" fx:id="newOriginChooser" />
 		<CheckBox fx:id="newDestinationCB" mnemonicParsing="false"
 			text="Change the destination?" />
-		<LocationChooser fx:id="newDestinationChooser" />
+		<NamedObjectChooser noValueString="(no location)" fx:id="newDestinationChooser" />
 		<CheckBox fx:id="newMoveSuccessfulTextCB" mnemonicParsing="false"
 			text="Change the Move Successful Text?" />
 		<TextField fx:id="newMoveSuccessfulTextTF" />

@@ -1,9 +1,10 @@
 package gui.include;
 
 import data.UsableObject;
+import data.action.AbstractAction;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
+import gui.customui.NamedObjectListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -37,7 +38,7 @@ public class UsableObjectController extends GameDataController {
 	private Label useCommandsLabel;
 
 	@FXML
-	private ActionListView useActionsListView;
+	private NamedObjectListView<AbstractAction> useActionsListView;
 
 	/**
 	 * @param currentGameManager

@@ -1,10 +1,11 @@
 package gui.itemEditing;
 
 import data.InventoryItem;
+import data.action.AbstractAction;
 import data.interfaces.PassivelyUsable;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
+import gui.customui.NamedObjectListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -41,7 +42,7 @@ public class UseWithInformationController extends GameDataController {
 	private Label useWithCommandsLabel;
 
 	@FXML
-	private ActionListView useWithActionsListView;
+	private NamedObjectListView<AbstractAction> useWithActionsListView;
 
 	/**
 	 * @param currentGameManager

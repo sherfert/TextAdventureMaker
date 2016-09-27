@@ -1,12 +1,13 @@
 package gui.itemEditing;
 
+import data.InventoryItem;
 import data.Item;
 import data.Location;
+import data.action.AbstractAction;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
-import gui.customui.InventoryItemListView;
 import gui.customui.NamedObjectChooser;
+import gui.customui.NamedObjectListView;
 import gui.include.InspectableObjectController;
 import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
@@ -58,10 +59,10 @@ public class ItemController extends GameDataController {
 	private TextArea editTakeCommandsTA;
 
 	@FXML
-	private InventoryItemListView pickUpItemsListView;
+	private NamedObjectListView<InventoryItem> pickUpItemsListView;
 
 	@FXML
-	private ActionListView takeActionsListView;
+	private NamedObjectListView<AbstractAction> takeActionsListView;
 
 	/**
 	 * @param currentGameManager
@@ -79,7 +80,6 @@ public class ItemController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
-		locationChooser.setNoValueString("(no location)");
 		locationChooser.initialize(item.getLocation(), true, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				item::setLocation);

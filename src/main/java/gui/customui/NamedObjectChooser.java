@@ -17,17 +17,15 @@ import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 
 /**
- * Abstract superclass for all Choosers of a single NamedObject from the
+ * Chooser of a single NamedObject from the
  * Database. Each instance must be initialized with
  * {@link #initialize(HasName, boolean, boolean, ValuesSupplier, Consumer)}
  * before it behaves properly.
  * 
- * TODO delete all these subclasses! (also from listview?)
- * 
  * @author Satia
  *
  * @param <E>
- *            the concrete subtype that should be managed by inheriting choosers
+ *            the concrete subtype that should be managed
  */
 public class NamedObjectChooser<E extends HasName> extends TextField {
 
@@ -118,6 +116,7 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 		this.currentSelection = e;
 		this.setText(this.valueConverter.toString(this.currentSelection));
 	}
+	
 
 	/**
 	 * @return the noValueString
@@ -127,8 +126,7 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 	}
 
 	/**
-	 * @param noValueString
-	 *            the noValueString to set
+	 * @param noValueString the noValueString to set
 	 */
 	public void setNoValueString(String noValueString) {
 		this.noValueString = noValueString;

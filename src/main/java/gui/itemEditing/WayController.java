@@ -1,10 +1,12 @@
 package gui.itemEditing;
 
+import data.Location;
 import data.Way;
+import data.action.AbstractAction;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
+import gui.customui.NamedObjectListView;
 import gui.include.InspectableObjectController;
 import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
@@ -31,10 +33,10 @@ public class WayController extends GameDataController {
 	private TabPane tabPane;
 
 	@FXML
-	private LocationChooser originChooser;
+	private NamedObjectChooser<Location> originChooser;
 
 	@FXML
-	private LocationChooser destinationChooser;
+	private NamedObjectChooser<Location> destinationChooser;
 
 	@FXML
 	private Button removeButton;
@@ -55,7 +57,7 @@ public class WayController extends GameDataController {
 	private Label moveCommandsLabel;
 
 	@FXML
-	private ActionListView moveActionsListView;
+	private NamedObjectListView<AbstractAction> moveActionsListView;
 
 	/**
 	 * @param currentGameManager

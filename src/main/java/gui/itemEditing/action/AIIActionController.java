@@ -1,8 +1,9 @@
 package gui.itemEditing.action;
 
+import data.InventoryItem;
 import data.action.AddInventoryItemsAction;
 import gui.MainWindowController;
-import gui.customui.InventoryItemListView;
+import gui.customui.NamedObjectListView;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -16,7 +17,7 @@ import logic.CurrentGameManager;
 public class AIIActionController extends ActionController<AddInventoryItemsAction> {
 	
 	@FXML
-	private InventoryItemListView pickUpItemsListView;
+	private NamedObjectListView<InventoryItem> pickUpItemsListView;
 
 	/**
 	 * @param currentGameManager

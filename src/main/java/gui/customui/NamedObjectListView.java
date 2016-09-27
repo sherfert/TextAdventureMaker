@@ -16,14 +16,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 
 /**
  * A view that combines a list of objects with 4 controls, to add, remove and
- * change the order of the items. It must be extended by a concrete class that
- * provides a concrete implementation of an NamedObjectChooser matching the
- * generic type.
+ * change the order of the items.
  * 
  * Initialize must be called to enable the functionality.
  * 
@@ -31,7 +27,7 @@ import javafx.scene.layout.Priority;
  * 
  * @author Satia
  */
-public abstract class NamedObjectListView<E extends HasName> extends BorderPane {
+public class NamedObjectListView<E extends HasName> extends BorderPane {
 
 	@FXML
 	private ListView<E> listView;
@@ -52,24 +48,28 @@ public abstract class NamedObjectListView<E extends HasName> extends BorderPane 
 	private Button downButton;
 
 	@FXML
-	private HBox addHBox;
+	private NamedObjectChooser<E> addValueChooser;
 
 	/** The items displayed in the list. */
 	private ObservableList<E> listItems;
 
-	/** The chooser for adding values. */
-	private NamedObjectChooser<E> addValueChooser;
+	public NamedObjectListView() {
+		Loader.load(this, this, "view/customui/NamedObjectListView.fxml");
+	}
 
 	/**
-	 * @param addValueChooser
-	 *            a concrete value chooser
+	 * @return the noValueString for the chooser
 	 */
-	protected NamedObjectListView(NamedObjectChooser<E> addValueChooser) {
-		Loader.load(this, this, "view/customui/NamedObjectListView.fxml");
-		// Add the chooser
-		addHBox.getChildren().add(addValueChooser);
-		HBox.setHgrow(addValueChooser, Priority.ALWAYS);
-		this.addValueChooser = addValueChooser;
+	public String getNoValueString() {
+		return addValueChooser.getNoValueString();
+	}
+
+	/**
+	 * @param noValueString
+	 *            the noValueString to set for the chooser
+	 */
+	public void setNoValueString(String noValueString) {
+		addValueChooser.setNoValueString(noValueString);
 	}
 
 	/**

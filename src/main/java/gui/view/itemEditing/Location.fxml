@@ -4,9 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.ItemListView?>
-<?import gui.customui.PersonListView?>
-<?import gui.customui.WayListView?>
+<?import gui.customui.NamedObjectListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
@@ -29,22 +27,22 @@
 		</Tab>
 		<Tab text="Items">
 			<content>
-				<ItemListView fx:id="itemListView"/>	
+				<NamedObjectListView noValueString="(no item)" fx:id="itemListView"/>	
 			</content>
 		</Tab>
 		<Tab text="Persons">
 			<content>
-				<PersonListView fx:id="personListView" />
+				<NamedObjectListView noValueString="(no person)" fx:id="personListView" />
 			</content>
 		</Tab>
 		<Tab text="Ways leading here">
 			<content>
-				<WayListView fx:id="waysInListView" />
+				<NamedObjectListView noValueString="(no way)" fx:id="waysInListView" />
 			</content>
 		</Tab>
 		<Tab text="Ways going from here">
 			<content>
-				<WayListView fx:id="waysOutListView" />
+				<NamedObjectListView noValueString="(no way)" fx:id="waysOutListView" />
 			</content>
 		</Tab>
 	</tabs>

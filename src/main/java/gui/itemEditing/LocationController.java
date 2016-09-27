@@ -3,14 +3,15 @@ package gui.itemEditing;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import data.Item;
 import data.Location;
+import data.Person;
+import data.Way;
 import exception.DBClosedException;
 import exception.DBIncompatibleException;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ItemListView;
-import gui.customui.PersonListView;
-import gui.customui.WayListView;
+import gui.customui.NamedObjectListView;
 import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -37,16 +38,16 @@ public class LocationController extends GameDataController {
 	private Button removeButton;
 
 	@FXML
-	private ItemListView itemListView;
+	private NamedObjectListView<Item> itemListView;
 
 	@FXML
-	private PersonListView personListView;
+	private NamedObjectListView<Person> personListView;
 
 	@FXML
-	private WayListView waysInListView;
+	private NamedObjectListView<Way> waysInListView;
 
 	@FXML
-	private WayListView waysOutListView;
+	private NamedObjectListView<Way> waysOutListView;
 
 	/**
 	 * @param currentGameManager

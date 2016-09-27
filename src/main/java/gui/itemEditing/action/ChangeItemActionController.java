@@ -1,9 +1,11 @@
 package gui.itemEditing.action;
 
+import data.InventoryItem;
+import data.Location;
 import data.action.ChangeItemAction;
 import gui.MainWindowController;
-import gui.customui.InventoryItemListView;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
+import gui.customui.NamedObjectListView;
 import gui.include.AbstractActionController;
 import gui.include.ChangeInspectableObjectActionController;
 import gui.include.ChangeNDObjectActionController;
@@ -27,7 +29,7 @@ public class ChangeItemActionController extends ActionController<ChangeItemActio
 	private CheckBox newLocationCB;
 
 	@FXML
-	private LocationChooser newLocationChooser;
+	private NamedObjectChooser<Location> newLocationChooser;
 	
 	@FXML
 	private ToggleGroup enablingTakeTG;
@@ -66,10 +68,10 @@ public class ChangeItemActionController extends ActionController<ChangeItemActio
 	private TextField newTakeForbiddenTextTF;
 	
 	@FXML
-	private InventoryItemListView pickUpItemsAddListView;
+	private NamedObjectListView<InventoryItem> pickUpItemsAddListView;
 	
 	@FXML
-	private InventoryItemListView pickUpItemsRemoveListView;
+	private NamedObjectListView<InventoryItem> pickUpItemsRemoveListView;
 
 	/**
 	 * @param currentGameManager

@@ -1,8 +1,9 @@
 package gui.itemEditing.action;
 
+import data.Location;
 import data.action.ChangeWayAction;
 import gui.MainWindowController;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.AbstractActionController;
 import gui.include.ChangeInspectableObjectActionController;
 import gui.include.ChangeNDObjectActionController;
@@ -37,13 +38,13 @@ public class ChangeWayActionController extends ActionController<ChangeWayAction>
 	private CheckBox newOriginCB;
 
 	@FXML
-	private LocationChooser newOriginChooser;
+	private NamedObjectChooser<Location> newOriginChooser;
 
 	@FXML
 	private CheckBox newDestinationCB;
 
 	@FXML
-	private LocationChooser newDestinationChooser;
+	private NamedObjectChooser<Location> newDestinationChooser;
 
 	@FXML
 	private CheckBox newMoveSuccessfulTextCB;

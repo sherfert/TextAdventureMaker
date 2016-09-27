@@ -15,8 +15,8 @@ import data.Way;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsController;
-import gui.customui.LocationChooser;
 import gui.customui.LocationRectangle;
+import gui.customui.NamedObjectChooser;
 import gui.customui.WayLine;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -80,10 +80,10 @@ public class WaysController extends NamedObjectsController<Way> {
 	private TextArea newDescriptionTA;
 
 	@FXML
-	private LocationChooser newOriginChooser;
+	private NamedObjectChooser<Location> newOriginChooser;
 
 	@FXML
-	private LocationChooser newDestinationChooser;
+	private NamedObjectChooser<Location> newDestinationChooser;
 
 	@FXML
 	private Pane mapPane;

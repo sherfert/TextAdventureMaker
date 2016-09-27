@@ -9,7 +9,7 @@ import data.ConversationOption;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsController;
-import gui.customui.ConversationLayerChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.NamedObjectController;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -58,7 +58,7 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 	private TextArea newEventTA;
 
 	@FXML
-	private ConversationLayerChooser targetChooser;
+	private NamedObjectChooser<ConversationLayer> targetChooser;
 
 	/**
 	 * @param currentGameManager

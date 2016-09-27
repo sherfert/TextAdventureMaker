@@ -5,8 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import gui.customui.NamedObjectChooser?>
-<?import gui.customui.InventoryItemListView?>
-<?import gui.customui.ActionListView?>
+<?import gui.customui.NamedObjectListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
   <tabs>
@@ -18,7 +17,7 @@
                   <fx:include source="../include/NamedDescribedObject.fxml" />
                   <fx:include source="../include/InspectableObject.fxml"/>
                   <Label text="Location" />
-                  <NamedObjectChooser fx:id="locationChooser" />
+                  <NamedObjectChooser noValueString="(no location)" fx:id="locationChooser" />
                   <Button fx:id="removeButton"  mnemonicParsing="false" text="Delete this item" />
                </children>
                <padding>
@@ -45,9 +44,9 @@
                   <Label fx:id="takeCommandsLabel" />
                   <TextArea fx:id="editTakeCommandsTA" prefHeight="100.0" wrapText="true" />
                   <Label text="Inventory items added to the inventory when picked up" />
-                  <InventoryItemListView fx:id="pickUpItemsListView" />
+                  <NamedObjectListView noValueString="(no inventory item)" fx:id="pickUpItemsListView" />
                   <Label text="Actions triggered when picked up" />
-                  <ActionListView fx:id="takeActionsListView" />
+                  <NamedObjectListView noValueString="(no action)" fx:id="takeActionsListView" />
                </children>
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

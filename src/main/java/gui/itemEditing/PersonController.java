@@ -1,10 +1,11 @@
 package gui.itemEditing;
 
+import data.Conversation;
+import data.Location;
 import data.Person;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ConversationChooser;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.InspectableObjectController;
 import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
@@ -30,10 +31,10 @@ public class PersonController extends GameDataController {
 	private TabPane tabPane;
 
 	@FXML
-	private LocationChooser locationChooser;
+	private NamedObjectChooser<Location> locationChooser;
 
 	@FXML
-	private ConversationChooser conversationChooser;
+	private NamedObjectChooser<Conversation> conversationChooser;
 
 	@FXML
 	private Button removeButton;

@@ -4,11 +4,12 @@ import java.util.List;
 
 import data.Conversation;
 import data.ConversationLayer;
+import data.action.AbstractAction;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedObjectsController;
-import gui.customui.ActionListView;
-import gui.customui.ConversationLayerChooser;
+import gui.customui.NamedObjectChooser;
+import gui.customui.NamedObjectListView;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,10 +44,10 @@ public class ConversationController extends NamedObjectsController<ConversationL
 	private TextArea editEventTA;
 
 	@FXML
-	private ConversationLayerChooser startLayerChooser;
+	private NamedObjectChooser<ConversationLayer> startLayerChooser;
 
 	@FXML
-	private ActionListView actionsListView;
+	private NamedObjectListView<AbstractAction> actionsListView;
 
 	/**
 	 * @param currentGameManager

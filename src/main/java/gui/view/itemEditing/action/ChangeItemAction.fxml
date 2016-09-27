@@ -4,8 +4,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.LocationChooser?>
-<?import gui.customui.InventoryItemListView?>
+<?import gui.customui.NamedObjectChooser?>
+<?import gui.customui.NamedObjectListView?>
 
 
 <VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
@@ -18,7 +18,7 @@
 
 		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
 			text="Change the location?" />
-		<LocationChooser fx:id="newLocationChooser" />
+		<NamedObjectChooser noValueString="(no location)" fx:id="newLocationChooser" />
 
 		<Label text="Enable or disable taking the item?" />
 		<HBox spacing="2.0">
@@ -57,11 +57,11 @@
 		<HBox spacing="2.0">
 			<VBox spacing="2.0">
 				<Label text="New inventory items added to the inventory when picked up" />
-				<InventoryItemListView fx:id="pickUpItemsAddListView" />
+				<NamedObjectListView noValueString="(no inventory item)" fx:id="pickUpItemsAddListView" />
 			</VBox>
 			<VBox spacing="2.0">
 				<Label text="Inventory items not added to the inventory any more when picked up" />
-				<InventoryItemListView fx:id="pickUpItemsRemoveListView" />
+				<NamedObjectListView noValueString="(no inventory item)" fx:id="pickUpItemsRemoveListView" />
 			</VBox>
 		</HBox>
 

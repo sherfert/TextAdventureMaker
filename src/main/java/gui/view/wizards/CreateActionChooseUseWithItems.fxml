@@ -5,8 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.dialog.WizardPane?>
-<?import gui.customui.InventoryItemChooser?>
-<?import gui.customui.PassivelyUsableChooser?>
+<?import gui.customui.NamedObjectChooser?>
 
 <fx:root type="WizardPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<header>
@@ -16,9 +15,9 @@
 		<VBox spacing="2.0">
 			<children>
 				<Label text="Which inventory item?" />
-				<InventoryItemChooser fx:id="invItemChooser" />
-				<Label text="Which other entity?" />
-				<PassivelyUsableChooser fx:id="objectChooser" />
+				<NamedObjectChooser noValueString="(no inventory item)" fx:id="invItemChooser" />
+				<Label text="Which other object?" />
+				<NamedObjectChooser noValueString="(no object)" fx:id="objectChooser" />
 			</children>
 		</VBox>
 	</content>

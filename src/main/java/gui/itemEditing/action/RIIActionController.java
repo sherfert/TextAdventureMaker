@@ -1,8 +1,9 @@
 package gui.itemEditing.action;
 
+import data.InventoryItem;
 import data.action.RemoveInventoryItemAction;
 import gui.MainWindowController;
-import gui.customui.InventoryItemChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -17,7 +18,7 @@ public class RIIActionController extends ActionController<RemoveInventoryItemAct
 
 
 	@FXML
-	private InventoryItemChooser inventoryItemChooser;
+	private NamedObjectChooser<InventoryItem> inventoryItemChooser;
 
 
 	/**

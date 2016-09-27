@@ -4,8 +4,8 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.LocationChooser?>
-<?import gui.customui.InventoryItemListView?>
+<?import gui.customui.NamedObjectChooser?>
+<?import gui.customui.NamedObjectListView?>
 
 <Accordion xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
 	<panes>
@@ -37,7 +37,7 @@
 							<HBox>
 								<children>
 									<Label prefHeight="17.0" prefWidth="250.0" text="Starting location" />
-									<LocationChooser fx:id="startLocationChooser"
+									<NamedObjectChooser noValueString="(no location)" fx:id="startLocationChooser"
 										prefHeight="25.0" prefWidth="250.0" HBox.hgrow="ALWAYS" />
 								</children>
 								<padding>
@@ -54,7 +54,7 @@
 		</TitledPane>
 		<TitledPane animated="false" text="Start inventory items">
 			<content>
-				<InventoryItemListView fx:id="startItemsListView" />
+				<NamedObjectListView noValueString="(no inventory item)" fx:id="startItemsListView" />
 			</content>
 		</TitledPane>
 		<TitledPane animated="false" text="Help Texts">

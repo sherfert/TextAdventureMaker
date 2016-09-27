@@ -4,8 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.PassivelyUsableListView?>
-<?import gui.customui.InventoryItemListView?>
+<?import gui.customui.NamedObjectListView?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
   <tabs>
@@ -31,12 +30,12 @@
       </Tab>
     <Tab text="Using it with something">
          <content>
-            <PassivelyUsableListView fx:id="usableObjectsListView" />
+            <NamedObjectListView noValueString="(no object)" fx:id="usableObjectsListView" />
          </content>
       </Tab>
       <Tab text="Combining it with another inventory item">
          <content>
-            <InventoryItemListView fx:id="usableInvItemsListView" />
+            <NamedObjectListView noValueString="(no inventory item)" fx:id="usableInvItemsListView" />
          </content>
       </Tab>
   </tabs>

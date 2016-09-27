@@ -1,8 +1,9 @@
 package gui.itemEditing.action;
 
+import data.Location;
 import data.action.MoveAction;
 import gui.MainWindowController;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.AbstractActionController;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
@@ -16,7 +17,7 @@ import logic.CurrentGameManager;
 public class MoveActionController extends ActionController<MoveAction> {
 
 	@FXML
-	private LocationChooser targetChooser;
+	private NamedObjectChooser<Location> targetChooser;
 
 	/**
 	 * @param currentGameManager

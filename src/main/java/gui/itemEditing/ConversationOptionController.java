@@ -1,10 +1,12 @@
 package gui.itemEditing;
 
+import data.ConversationLayer;
 import data.ConversationOption;
+import data.action.AbstractAction;
 import gui.GameDataController;
 import gui.MainWindowController;
-import gui.customui.ActionListView;
-import gui.customui.ConversationLayerChooser;
+import gui.customui.NamedObjectChooser;
+import gui.customui.NamedObjectListView;
 import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -24,7 +26,7 @@ public class ConversationOptionController extends GameDataController {
 	private ConversationOption option;
 
 	@FXML
-	private ConversationLayerChooser targetChooser;
+	private NamedObjectChooser<ConversationLayer> targetChooser;
 
 	@FXML
 	private Button removeButton;
@@ -45,7 +47,7 @@ public class ConversationOptionController extends GameDataController {
 	private TextArea editEventTA;
 
 	@FXML
-	private ActionListView actionsListView;
+	private NamedObjectListView<AbstractAction> actionsListView;
 
 	/**
 	 * @param currentGameManager
