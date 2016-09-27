@@ -45,7 +45,7 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 
 	/** A method to supply the available values */
 	private ValuesSupplier<E> getAvailableValues;
-	
+
 	/**
 	 * Chooser with standard string
 	 */
@@ -117,6 +117,21 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 	public void setObjectValue(E e) {
 		this.currentSelection = e;
 		this.setText(this.valueConverter.toString(this.currentSelection));
+	}
+
+	/**
+	 * @return the noValueString
+	 */
+	public String getNoValueString() {
+		return noValueString;
+	}
+
+	/**
+	 * @param noValueString
+	 *            the noValueString to set
+	 */
+	public void setNoValueString(String noValueString) {
+		this.noValueString = noValueString;
 	}
 
 	/**

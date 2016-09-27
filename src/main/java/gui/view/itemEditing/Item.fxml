@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import gui.customui.LocationChooser?>
+<?import gui.customui.NamedObjectChooser?>
 <?import gui.customui.InventoryItemListView?>
 <?import gui.customui.ActionListView?>
 
@@ -18,7 +18,7 @@
                   <fx:include source="../include/NamedDescribedObject.fxml" />
                   <fx:include source="../include/InspectableObject.fxml"/>
                   <Label text="Location" />
-                  <LocationChooser fx:id="locationChooser" />
+                  <NamedObjectChooser fx:id="locationChooser" />
                   <Button fx:id="removeButton"  mnemonicParsing="false" text="Delete this item" />
                </children>
                <padding>

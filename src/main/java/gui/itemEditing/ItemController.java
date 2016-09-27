@@ -1,11 +1,12 @@
 package gui.itemEditing;
 
 import data.Item;
+import data.Location;
 import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.ActionListView;
 import gui.customui.InventoryItemListView;
-import gui.customui.LocationChooser;
+import gui.customui.NamedObjectChooser;
 import gui.include.InspectableObjectController;
 import gui.include.NamedDescribedObjectController;
 import gui.include.NamedObjectController;
@@ -33,7 +34,7 @@ public class ItemController extends GameDataController {
 	private TabPane tabPane;
 
 	@FXML
-	private LocationChooser locationChooser;
+	private NamedObjectChooser<Location> locationChooser;
 
 	@FXML
 	private Button removeButton;
@@ -78,6 +79,7 @@ public class ItemController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
+		locationChooser.setNoValueString("(no location)");
 		locationChooser.initialize(item.getLocation(), true, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				item::setLocation);
