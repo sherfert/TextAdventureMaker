@@ -372,23 +372,20 @@ public class MainWindowController {
 		if (file != null) {
 			try {
 				currentGameManager.open(file, creatingNew);
-			} catch (IOException e) {
+			} catch (IOException | DBIncompatibleException e) {
+				String header = e instanceof IOException ? "Propably the file is already opened by another application."
+						: "Propably the game was created with a newer version of TextAdventureMaker.";
 				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Could not open db file.", e);
 				// Show error message
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Could not open the game");
-				alert.setHeaderText("Propably the file is already opened by another application.");
+				alert.setHeaderText(header);
 				alert.setContentText(e.getMessage());
 				alert.showAndWait();
-				return;
-			} catch (DBIncompatibleException e) {
-				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "DB incompatible.", e);
-				// Show error message
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Could not open the game");
-				alert.setHeaderText("Propably the game was created with a newer version of TextAdventureMaker.");
-				alert.setContentText(e.getMessage());
-				alert.showAndWait();
+
+				// Unload GUI
+				unloadGameRelatedGUI();
+
 				return;
 			}
 

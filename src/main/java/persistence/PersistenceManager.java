@@ -127,7 +127,6 @@ public class PersistenceManager {
 
 		criteriaBuilder = entityManager.getCriteriaBuilder();
 
-		// TODO check version
 		Model model = null;
 		try {
 			model = getModel();
@@ -161,10 +160,12 @@ public class PersistenceManager {
 			this.gameManager.reset();
 
 			// Close everything
-			if (entityManager != null) {
+			if (entityManager != null && entityManager.isOpen()) {
 				entityManager.close();
 			}
-			entityManagerFactory.close();
+			if (entityManagerFactory.isOpen()) {
+				entityManagerFactory.close();
+			}
 		}
 	}
 

@@ -24,8 +24,6 @@ import exception.LoadSaveException;
  * automatically, but upon starting a new game, a name of the savegame has to be
  * entered.
  * 
- * TODO display some error messages if saving or loading fails. (test)
- * 
  * @author Satia
  * 
  */
