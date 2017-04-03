@@ -34,6 +34,7 @@ import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.HasId;
 import data.interfaces.HasName;
+import exception.DBClosedException;
 import gui.itemEditing.ConversationController;
 import gui.itemEditing.ConversationLayerController;
 import gui.itemEditing.ConversationOptionController;
@@ -479,8 +480,8 @@ public abstract class GameDataController {
 				// Remove item from DB
 				try {
 					currentGameManager.getPersistenceManager().getAllObjectsManager().removeObject(object);
-				} catch (Exception e) {
-					Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+				} catch (DBClosedException e) {
+					Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
 					return;
 				}
 				// Update the deletion

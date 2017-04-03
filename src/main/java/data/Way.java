@@ -50,8 +50,7 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	 * The destination.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_DESTINATION", //
-	foreignKeyDefinition = "FOREIGN KEY (DESTINATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_DESTINATION"))
 	@Access(AccessType.FIELD)
 	private Location destination;
 
@@ -88,8 +87,7 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	 * The origin.
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_ORIGIN", //
-	foreignKeyDefinition = "FOREIGN KEY (ORIGIN_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_ORIGIN") )
 	@Access(AccessType.FIELD)
 	private Location origin;
 
@@ -99,6 +97,13 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
 	 */
 	private int originOrder;
+	
+	/**
+	 * These values indicate that either the origin or destination are already deleted.
+	 * In that case, their lists need not be modified as part of {@link Way#removeFromLocation()
+	 */
+	private boolean originDeleted;
+	private boolean destinationDeleted;
 
 	/**
 	 * No-arg constructor for the database. Use
@@ -243,10 +248,10 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	 */
 	@PreRemove
 	private void removeFromLocation() {
-		if (this.origin != null) {
+		if (this.origin != null && !this.originDeleted) {
 			this.origin.removeWayOut(this);
 		}
-		if (this.destination != null) {
+		if (this.destination != null && !this.destinationDeleted) {
 			this.destination.removeWayIn(this);
 		}
 	}
@@ -271,6 +276,20 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 		destination.addWayIn(this);
 		this.destination = destination;
 		this.moveAction.setTarget(destination);
+	}
+	
+	/**
+	 * Marks the destination as deleted.
+	 */
+	void setDestinationDeleted() {
+		this.destinationDeleted = true;
+	}
+	
+	/**
+	 * Marks the origin as deleted.
+	 */
+	void setOriginDeleted() {
+		this.originDeleted = true;
 	}
 
 	/**

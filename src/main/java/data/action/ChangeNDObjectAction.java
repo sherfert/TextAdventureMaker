@@ -19,7 +19,7 @@ import data.NamedDescribedObject;
  * An action changing properties of a {@link NamedDescribedObject} .
  * 
  * FIXME not getting deleted, if the changed object is deleted (case:
- * ChangeWayAction)
+ * Way->ChangeWayAction). Check all of them!
  * 
  * @author Satia
  */
@@ -92,7 +92,7 @@ public class ChangeNDObjectAction extends AbstractAction {
 	public NamedDescribedObject getObject() {
 		return object;
 	}
-	
+
 	/**
 	 * Just for the database.
 	 */

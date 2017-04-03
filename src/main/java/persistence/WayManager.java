@@ -51,7 +51,7 @@ public class WayManager {
 	public Set<String> getAllAdditionalTravelCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
 		List<String> resultList = persistenceManager.getEntityManager()
-				.createNativeQuery("SELECT DISTINCT c.ADDITIONALTRAVELCOMMANDS FROM WAY_ADDITIONALTRAVELCOMMANDS c")
+				.createNativeQuery("SELECT DISTINCT c.ADDITIONALMOVECOMMANDS FROM WAY_ADDITIONALMOVECOMMANDS c")
 				.getResultList();
 
 		return new HashSet<>(resultList);

@@ -167,21 +167,21 @@ public class Location extends NamedDescribedObject {
 		// Persons
 		for (Person person : persons) {
 			String d = person.getDescription();
-			if(d != null && !d.isEmpty()) {
+			if (d != null && !d.isEmpty()) {
 				sb.append(' ').append(d);
 			}
 		}
 		// Items
 		for (Item item : items) {
 			String d = item.getDescription();
-		if(d != null && !d.isEmpty()) {
-			sb.append(' ').append(d);
-		}
+			if (d != null && !d.isEmpty()) {
+				sb.append(' ').append(d);
+			}
 		}
 		// Ways out
 		for (Way way : waysOut) {
 			String d = way.getDescription();
-			if(d != null && !d.isEmpty()) {
+			if (d != null && !d.isEmpty()) {
 				sb.append(' ').append(d);
 			}
 		}
@@ -189,7 +189,8 @@ public class Location extends NamedDescribedObject {
 	}
 
 	/**
-	 * @return a list containing the {@link HasLocation}s: Persons and Items. This does not include the Player.
+	 * @return a list containing the {@link HasLocation}s: Persons and Items.
+	 *         This does not include the Player.
 	 */
 	@Transient
 	public List<HasLocation> getHasLocations() {
@@ -306,7 +307,7 @@ public class Location extends NamedDescribedObject {
 	/**
 	 * @return the waysOut
 	 */
-	@OneToMany(mappedBy = "origin", cascade = { CascadeType.PERSIST })
+	@OneToMany(mappedBy = "origin", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@OrderBy("originOrder ASC, getId ASC")
 	public List<Way> getWaysOut() {
 		return waysOut;
@@ -333,7 +334,7 @@ public class Location extends NamedDescribedObject {
 	/**
 	 * @return the waysIn
 	 */
-	@OneToMany(mappedBy = "destination", cascade = { CascadeType.PERSIST })
+	@OneToMany(mappedBy = "destination", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@OrderBy("destinationOrder ASC, getId ASC")
 	public List<Way> getWaysIn() {
 		return waysIn;
@@ -449,6 +450,7 @@ public class Location extends NamedDescribedObject {
 
 	/**
 	 * Called to set the location of all items/persons to null.
+	 * Marks location as deleted in connected ways.
 	 */
 	@PreRemove
 	private void preRemove() {
@@ -457,6 +459,12 @@ public class Location extends NamedDescribedObject {
 		}
 		for (int i = items.size() - 1; i >= 0; i--) {
 			items.get(i).setLocation(null);
+		}
+		for(Way w : waysIn) {
+			w.setDestinationDeleted();
+		}
+		for(Way w : waysOut) {
+			w.setOriginDeleted();
 		}
 	}
 
