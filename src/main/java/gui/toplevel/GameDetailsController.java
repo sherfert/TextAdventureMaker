@@ -33,11 +33,7 @@ import logic.CurrentGameManager;
 /**
  * Controller for the game details view.
  * 
- * XXX Warnings for empty fields
- * 
  * XXX placeholder checking for success fields
- * 
- * TODO consider tabs instead of accordion
  * 
  * @author Satia
  */
@@ -182,6 +178,7 @@ public class GameDetailsController extends GameDataController {
 		// Set all GUI fields accordingly
 		gameTitleField.setText(game.getGameTitle());
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
+		startingTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, startingTextField));
 
 		startLocationChooser.initialize(
 				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(), false, false,
@@ -199,34 +196,61 @@ public class GameDetailsController extends GameDataController {
 				this::objectSelected, (item) -> game.addStartItem(item), (item) -> game.removeStartItem(item));
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
+		useWithHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useWithHelpTextField));
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
+		moveHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, moveHelpTextField));
 		takeHelpTextField.textProperty().bindBidirectional(game.takeHelpTextProperty());
+		takeHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, takeHelpTextField));
 		useHelpTextField.textProperty().bindBidirectional(game.useHelpTextProperty());
+		useHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useHelpTextField));
 		talkHelpTextField.textProperty().bindBidirectional(game.talkToHelpTextProperty());
+		talkHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, talkHelpTextField));
 		lookAroundHelpTextField.textProperty().bindBidirectional(game.lookAroundHelpTextProperty());
+		lookAroundHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, lookAroundHelpTextField));
 		inspectHelpTextField.textProperty().bindBidirectional(game.inspectHelpTextProperty());
+		inspectHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, inspectHelpTextField));
 		inventoryHelpTextField.textProperty().bindBidirectional(game.inventoryHelpTextProperty());
+		inventoryHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, inventoryHelpTextField));
 		helpHelpTextField.textProperty().bindBidirectional(game.helphelpTextProperty());
+		helpHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, helpHelpTextField));
 		exitHelpTextField.textProperty().bindBidirectional(game.exitCommandHelpTextProperty());
+		exitHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, exitHelpTextField));
 
 		useWithSuccessTextField.textProperty().bindBidirectional(game.usedWithTextProperty());
+		useWithSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useWithSuccessTextField));
 		takeSuccessTextField.textProperty().bindBidirectional(game.takenTextProperty());
+		takeSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, takeSuccessTextField));
 		useSuccessTextField.textProperty().bindBidirectional(game.usedTextProperty());
+		useSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useSuccessTextField));
 		inspectSuccessTextField.textProperty().bindBidirectional(game.inspectionDefaultTextProperty());
+		inspectSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, inspectSuccessTextField));
 		emptyInvSuccessTextField.textProperty().bindBidirectional(game.inventoryEmptyTextProperty());
+		emptyInvSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, emptyInvSuccessTextField));
 		invSuccessTextField.textProperty().bindBidirectional(game.inventoryTextProperty());
+		invSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, invSuccessTextField));
 
 		useWithFailureTextField.textProperty().bindBidirectional(game.notUsableWithTextProperty());
+		useWithFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useWithFailureTextField));
 		moveFailureTextField.textProperty().bindBidirectional(game.notTravelableTextProperty());
+		moveFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, moveFailureTextField));
 		takeFailureTextField.textProperty().bindBidirectional(game.notTakeableTextProperty());
+		takeFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, takeFailureTextField));
 		useFailureTextField.textProperty().bindBidirectional(game.notUsableTextProperty());
+		useFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useFailureTextField));
 		talkFailureTextField.textProperty().bindBidirectional(game.notTalkingToEnabledTextProperty());
+		talkFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, talkFailureTextField));
 		noSuchItemTextField.textProperty().bindBidirectional(game.noSuchItemTextProperty());
+		noSuchItemTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchItemTextField));
 		noSuchInventoryItemTextField.textProperty().bindBidirectional(game.noSuchInventoryItemTextProperty());
+		noSuchInventoryItemTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchInventoryItemTextField));
 		noSuchPersonTextField.textProperty().bindBidirectional(game.noSuchPersonTextProperty());
+		noSuchPersonTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchPersonTextField));
 		noSuchWayTextField.textProperty().bindBidirectional(game.noSuchWayTextProperty());
+		noSuchWayTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchWayTextField));
 		noValidCommandTextField.textProperty().bindBidirectional(game.noCommandTextProperty());
+		noValidCommandTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noValidCommandTextField));
 		notSensibleCommandTextField.textProperty().bindBidirectional(game.invalidCommandTextProperty());
+		notSensibleCommandTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, notSensibleCommandTextField));
 
 		useWithCommandsTextField.setText(getCommandString(game.getUseWithCombineCommands()));
 		moveCommandsTextField.setText(getCommandString(game.getMoveCommands()));
@@ -244,7 +268,7 @@ public class GameDetailsController extends GameDataController {
 		// The value numOptionLinesProp must NOT be stored in a local variable
 		// or passed directly. Only the class field suffices.
 		// Since JavaFX uses weak references for bidirectional bindings, it will
-		// get garbage collected otherwise. Stupid!
+		// get garbage collected otherwise.
 		numOptionLinesProp = game.numberOfOptionLinesProperty().asObject();
 		svf.valueProperty().bindBidirectional(numOptionLinesProp);
 		optionLinesSpinner.setValueFactory(svf);
@@ -268,26 +292,26 @@ public class GameDetailsController extends GameDataController {
 		// binding)
 		gameTitleField.textProperty().addListener((f, o, n) -> updateGameTitle(n));
 
-		useWithCommandsTextField.textProperty().addListener(
-				(f, o, n) -> updateGameCommands(n, 2, false, useWithCommandsTextField, game::setUseWithCombineCommands));
-		moveCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, false, moveCommandsTextField, game::setMoveCommands));
-		takeCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, false, takeCommandsTextField, game::setTakeCommands));
+		useWithCommandsTextField.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, false,
+				useWithCommandsTextField, game::setUseWithCombineCommands));
+		moveCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, false, moveCommandsTextField, game::setMoveCommands));
+		takeCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, false, takeCommandsTextField, game::setTakeCommands));
 		useCommandsTextField.textProperty()
 				.addListener((f, o, n) -> updateGameCommands(n, 1, false, useCommandsTextField, game::setUseCommands));
-		talkCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, false, talkCommandsTextField, game::setTalkToCommands));
+		talkCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, false, talkCommandsTextField, game::setTalkToCommands));
 		lookAroundCommandsTextField.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 0, false, lookAroundCommandsTextField, game::setLookAroundCommands));
-		inspectCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 1, false, inspectCommandsTextField, game::setInspectCommands));
+		inspectCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 1, false, inspectCommandsTextField, game::setInspectCommands));
 		inventoryCommandsTextField.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 0, false, inventoryCommandsTextField, game::setInventoryCommands));
-		helpCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 0, false, helpCommandsTextField, game::setHelpCommands));
-		exitCommandsTextField.textProperty()
-				.addListener((f, o, n) -> updateGameCommands(n, 0, false, exitCommandsTextField, game::setExitCommands));
+		helpCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 0, false, helpCommandsTextField, game::setHelpCommands));
+		exitCommandsTextField.textProperty().addListener(
+				(f, o, n) -> updateGameCommands(n, 0, false, exitCommandsTextField, game::setExitCommands));
 	}
 
 	/**
@@ -299,9 +323,9 @@ public class GameDetailsController extends GameDataController {
 	 */
 	private void updateGameTitle(String newTitle) {
 		if (newTitle.isEmpty()) {
-			showError(gameTitleField, GAME_TITLE_EMPTY_TOOLTIP);
+			showError(gameTitleField, GAME_TITLE_EMPTY_TOOLTIP, TooltipSeverity.ERROR);
 		} else if (StringUtils.isUnsafeFileName(newTitle)) {
-			showError(gameTitleField, GAME_TITLE_CHARS_TOOLTIP);
+			showError(gameTitleField, GAME_TITLE_CHARS_TOOLTIP, TooltipSeverity.ERROR);
 		} else {
 			hideError(gameTitleField);
 			// Set the value in the game

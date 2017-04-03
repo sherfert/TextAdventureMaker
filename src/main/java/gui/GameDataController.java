@@ -97,8 +97,19 @@ public abstract class GameDataController {
 		public void setList(List<String> list);
 	}
 
+	/**
+	 * The severity of a tooltip shown on an input field.
+	 * 
+	 * @author Satia
+	 */
+	public enum TooltipSeverity {
+		WARNING, ERROR
+	}
+
 	private static final String NODE_PROPERTIES_KEY_ERROR_TOOLTIP = "Error-Tooltip";
 	private static final String NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER = "Error-Tooltip-FocusListener";
+
+	private static final String INPUT_EMPTY = "It is not recommended to leave this empty";
 
 	private static final String COMMAND_EMPTY = "At least one command must be defined";
 	private static final String COMMAND_MULTI_WHITESPACE = "A command must not have mutiple white spaces";
@@ -177,11 +188,25 @@ public abstract class GameDataController {
 	 *            the node with the erroneous input
 	 * @param errorMessage
 	 *            the error message to display
+	 * @param severity
+	 *            the severity of the tooltip
 	 */
-	protected void showError(Node node, String errorMessage) {
-		if (!node.getStyleClass().contains("error")) {
-			// Apply some css to the node for light red BG
-			node.getStyleClass().add("error");
+	protected void showError(Node node, String errorMessage, TooltipSeverity severity) {
+		String css;
+		switch (severity) {
+		case WARNING:
+			css = "warning";
+			break;
+		case ERROR:
+			css = "error";
+			break;
+		default:
+			css = "";
+		}
+
+		if (!node.getStyleClass().contains(css)) {
+			// Apply some css to the node for BG
+			node.getStyleClass().add(css);
 		}
 
 		// First check if a previous tooltip is still in place
@@ -219,16 +244,17 @@ public abstract class GameDataController {
 	}
 
 	/**
-	 * Hide any previous error messages and remove the css class "error" from
-	 * the node. It is safe to call this method even though no error was showing
-	 * previously.
+	 * Hide any previous error messages and remove the css class
+	 * "error"/"warning" from the node. It is safe to call this method even
+	 * though no error was showing previously.
 	 * 
 	 * @param node
 	 *            the node
 	 */
 	protected void hideError(Node node) {
-		// Remove error css class
+		// Remove css class
 		node.getStyleClass().remove("error");
+		node.getStyleClass().remove("warning");
 		// Unset any tooltip message
 		if (node.getProperties().containsKey(NODE_PROPERTIES_KEY_ERROR_TOOLTIP)) {
 			Tooltip tooltip = (Tooltip) node.getProperties().get(NODE_PROPERTIES_KEY_ERROR_TOOLTIP);
@@ -292,6 +318,22 @@ public abstract class GameDataController {
 	}
 
 	/**
+	 * Shows or removes css and tooltips to warn if a field is empty.
+	 * 
+	 * @param input
+	 *            the enetred text input
+	 * @param inputNode
+	 *            the node used to enter the input
+	 */
+	protected void warnOnEmpty(String input, Node inputNode) {
+		if (input.isEmpty()) {
+			showError(inputNode, INPUT_EMPTY, TooltipSeverity.WARNING);
+		} else {
+			hideError(inputNode);
+		}
+	}
+
+	/**
 	 * Updates a list of commands in the game, after various error checks. If a
 	 * required property does not hold, an error tooltip will be shown on the
 	 * passed input node. Otherwise the given method is executed to set the
@@ -317,25 +359,25 @@ public abstract class GameDataController {
 		if (commandsText.isEmpty()) {
 			if (!allowEmpty) {
 				errorFound = true;
-				showError(inputNode, COMMAND_EMPTY);
+				showError(inputNode, COMMAND_EMPTY, TooltipSeverity.ERROR);
 			}
 		} else {
 			// At least one command was entered
 			if (Arrays.stream(lines).anyMatch((s) -> MULTIPLE_BLANKS.matcher(s).find())) {
 				errorFound = true;
-				showError(inputNode, COMMAND_MULTI_WHITESPACE);
+				showError(inputNode, COMMAND_MULTI_WHITESPACE, TooltipSeverity.ERROR);
 			} else if (Arrays.stream(lines).anyMatch((s) -> BLANKS_BEGINNING_END.matcher(s).find())) {
 				errorFound = true;
-				showError(inputNode, COMMAND_WHITESPACE_BEGINNING_END);
+				showError(inputNode, COMMAND_WHITESPACE_BEGINNING_END, TooltipSeverity.ERROR);
 			} else if (Arrays.stream(lines).anyMatch((s) -> !VALID_SEQS.matcher(s).matches())) {
 				errorFound = true;
-				showError(inputNode, COMMAND_INVALID_CHAR);
+				showError(inputNode, COMMAND_INVALID_CHAR, TooltipSeverity.ERROR);
 			} else if (Arrays.stream(lines).anyMatch((s) -> !CHAR.matcher(s).find())) {
 				errorFound = true;
-				showError(inputNode, COMMAND_NO_WORD);
+				showError(inputNode, COMMAND_NO_WORD, TooltipSeverity.ERROR);
 			} else if (Arrays.stream(lines).anyMatch((s) -> !hasMatchingBrackets(s))) {
 				errorFound = true;
-				showError(inputNode, COMMAND_UNMATCHING_BRACKETS);
+				showError(inputNode, COMMAND_UNMATCHING_BRACKETS, TooltipSeverity.ERROR);
 			} else {
 				// For each param, check if it has the right number of
 				// occurrences
@@ -346,7 +388,7 @@ public abstract class GameDataController {
 						errorFound = true;
 						String param = i == 0 ? "<A>" : "<B>";
 						String err = expectedCount == 0 ? COMMAND_PARAM_WRONG_NOT_ZERO : COMMAND_PARAM_WRONG_NOT_ONE;
-						showError(inputNode, String.format(err, param));
+						showError(inputNode, String.format(err, param), TooltipSeverity.ERROR);
 						break;
 					}
 				}
@@ -415,7 +457,7 @@ public abstract class GameDataController {
 	/**
 	 * Removes an object from the DB, asking for confirmation first.
 	 * 
-	 * TODO not all text visible
+	 * TODO not all text visible on Linux
 	 */
 	protected void removeObject(HasId object, String title, String header, String content) {
 		// Show a confirmation dialog
@@ -427,7 +469,7 @@ public abstract class GameDataController {
 		Image img = new Image(WindowUtil.getWindowIconURL().toString());
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
 		stage.getIcons().add(img);
-		
+
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
 				// Update any previous changes first, otherwise the deletion may
@@ -508,13 +550,15 @@ public abstract class GameDataController {
 			c = new ChangeActionActionController(currentGameManager, mwController, (ChangeActionAction) o);
 			fxml = "view/itemEditing/action/ChangeActionAction.fxml";
 		} else if (o.getClass() == ChangeCombineInformationAction.class) {
-			c = new ChangeCombineInformationActionController(currentGameManager, mwController, (ChangeCombineInformationAction) o);
+			c = new ChangeCombineInformationActionController(currentGameManager, mwController,
+					(ChangeCombineInformationAction) o);
 			fxml = "view/itemEditing/action/ChangeCombineInformationAction.fxml";
 		} else if (o.getClass() == ChangeConversationAction.class) {
 			c = new ChangeConversationActionController(currentGameManager, mwController, (ChangeConversationAction) o);
 			fxml = "view/itemEditing/action/ChangeConversationAction.fxml";
 		} else if (o.getClass() == ChangeConversationOptionAction.class) {
-			c = new ChangeConversationOptionActionController(currentGameManager, mwController, (ChangeConversationOptionAction) o);
+			c = new ChangeConversationOptionActionController(currentGameManager, mwController,
+					(ChangeConversationOptionAction) o);
 			fxml = "view/itemEditing/action/ChangeConversationOptionAction.fxml";
 		} else if (o.getClass() == ChangeItemAction.class) {
 			c = new ChangeItemActionController(currentGameManager, mwController, (ChangeItemAction) o);
@@ -529,7 +573,8 @@ public abstract class GameDataController {
 			c = new ChangeInventoryItemActionController(currentGameManager, mwController, (ChangeUsableObjectAction) o);
 			fxml = "view/itemEditing/action/ChangeInventoryItemAction.fxml";
 		} else if (o.getClass() == ChangeUseWithInformationAction.class) {
-			c = new ChangeUseWithInformationActionController(currentGameManager, mwController, (ChangeUseWithInformationAction) o);
+			c = new ChangeUseWithInformationActionController(currentGameManager, mwController,
+					(ChangeUseWithInformationAction) o);
 			fxml = "view/itemEditing/action/ChangeUseWithInformationAction.fxml";
 		} else if (o.getClass() == ChangeWayAction.class) {
 			c = new ChangeWayActionController(currentGameManager, mwController, (ChangeWayAction) o);

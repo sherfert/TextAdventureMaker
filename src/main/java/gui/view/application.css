@@ -3,6 +3,11 @@
 	-fx-control-inner-background: #ffb3b3;
 }
 
+.warning {
+	-fx-control-inner-background: #ffef0f;
+}
+
+
 .accordion {
 	-fx-box-border: transparent;
 }

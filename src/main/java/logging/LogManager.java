@@ -11,8 +11,6 @@ import java.util.logging.SimpleFormatter;
 /**
  * This class needs to be initiated only. The static initializer block will
  * configure the logger as needed.
- * 
- * TODO one line logging for better grepability
  *
  * @author Satia Herfert
  */
