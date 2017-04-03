@@ -30,8 +30,6 @@ public class VersioningManager {
 	/**
 	 * Updates a DB from an older version to a newer version.
 	 * 
-	 * TODO some backwards compatibility tests
-	 * 
 	 * @param fromMajor
 	 *            old major
 	 * @param fromMinor

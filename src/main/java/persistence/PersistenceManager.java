@@ -93,7 +93,7 @@ public class PersistenceManager {
 	}
 
 	/**
-	 * Connects to the database. TODO disconnect on DBIncompatible
+	 * Connects to the database.
 	 * 
 	 * @param dropTables
 	 *            if {@code true}, the database contents will be deleted
