@@ -6,69 +6,78 @@
 <?import javafx.scene.layout.*?>
 <?import gui.customui.NamedObjectChooser?>
 <?import gui.customui.NamedObjectListView?>
+<?import javafx.scene.control.ScrollPane?>
 
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<VBox spacing="2.0">
+		<children>
 
-<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-		<fx:include source="../../include/NamedObject.fxml" />
-		<fx:include source="../../include/AbstractAction.fxml" />
-		<fx:include source="../../include/ChangeNDObjectAction.fxml" />
-		<fx:include source="../../include/ChangeInspectableObjectAction.fxml" />
-		<fx:include source="../../include/ChangeUsableObjectAction.fxml" />
+			<fx:include source="../../include/NamedObject.fxml" />
+			<fx:include source="../../include/AbstractAction.fxml" />
+			<fx:include source="../../include/ChangeNDObjectAction.fxml" />
+			<fx:include source="../../include/ChangeInspectableObjectAction.fxml" />
+			<fx:include source="../../include/ChangeUsableObjectAction.fxml" />
 
-		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
-			text="Change the location?" />
-		<NamedObjectChooser noValueString="(no location)" fx:id="newLocationChooser" />
+			<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
+				text="Change the location?" />
+			<NamedObjectChooser noValueString="(no location)"
+				fx:id="newLocationChooser" />
 
-		<Label text="Enable or disable taking the item?" />
-		<HBox spacing="2.0">
-			<RadioButton text="Do not change" fx:id="doNotChangeTakeRB">
-				<toggleGroup>
-					<ToggleGroup fx:id="enablingTakeTG" />
-				</toggleGroup>
-			</RadioButton>
-			<RadioButton text="Enable" fx:id="enableTakeRB"
-				toggleGroup="$enablingTakeTG" />
-			<RadioButton text="Disable" fx:id="disableTakeRB"
-				toggleGroup="$enablingTakeTG" />
-		</HBox>
+			<Label text="Enable or disable taking the item?" />
+			<HBox spacing="2.0">
+				<RadioButton text="Do not change" fx:id="doNotChangeTakeRB">
+					<toggleGroup>
+						<ToggleGroup fx:id="enablingTakeTG" />
+					</toggleGroup>
+				</RadioButton>
+				<RadioButton text="Enable" fx:id="enableTakeRB"
+					toggleGroup="$enablingTakeTG" />
+				<RadioButton text="Disable" fx:id="disableTakeRB"
+					toggleGroup="$enablingTakeTG" />
+			</HBox>
 
-		<Label
-			text="Enable or disable if the item should be removed after taking it?" />
-		<HBox spacing="2.0">
-			<RadioButton text="Do not change" fx:id="doNotChangeRemoveItemRB">
-				<toggleGroup>
-					<ToggleGroup fx:id="enablingRemoveItemTG" />
-				</toggleGroup>
-			</RadioButton>
-			<RadioButton text="Enable" fx:id="enableRemoveItemRB"
-				toggleGroup="$enablingRemoveItemTG" />
-			<RadioButton text="Disable" fx:id="disableRemoveItemRB"
-				toggleGroup="$enablingRemoveItemTG" />
-		</HBox>
+			<Label
+				text="Enable or disable if the item should be removed after taking it?" />
+			<HBox spacing="2.0">
+				<RadioButton text="Do not change" fx:id="doNotChangeRemoveItemRB">
+					<toggleGroup>
+						<ToggleGroup fx:id="enablingRemoveItemTG" />
+					</toggleGroup>
+				</RadioButton>
+				<RadioButton text="Enable" fx:id="enableRemoveItemRB"
+					toggleGroup="$enablingRemoveItemTG" />
+				<RadioButton text="Disable" fx:id="disableRemoveItemRB"
+					toggleGroup="$enablingRemoveItemTG" />
+			</HBox>
 
-		<CheckBox fx:id="newTakeSuccessfulTextCB" mnemonicParsing="false"
-			text="Change the Take Successful Text?" />
-		<TextField fx:id="newTakeSuccessfulTextTF" />
-		<CheckBox fx:id="newTakeForbiddenTextCB" mnemonicParsing="false"
-			text="Change the Take Forbidden Text?" />
-		<TextField fx:id="newTakeForbiddenTextTF" />
+			<CheckBox fx:id="newTakeSuccessfulTextCB" mnemonicParsing="false"
+				text="Change the Take Successful Text?" />
+			<TextField fx:id="newTakeSuccessfulTextTF" />
+			<CheckBox fx:id="newTakeForbiddenTextCB" mnemonicParsing="false"
+				text="Change the Take Forbidden Text?" />
+			<TextField fx:id="newTakeForbiddenTextTF" />
 
-		<HBox spacing="2.0">
-			<VBox spacing="2.0">
-				<Label text="New inventory items added to the inventory when picked up" />
-				<NamedObjectListView noValueString="(no inventory item)" fx:id="pickUpItemsAddListView" />
-			</VBox>
-			<VBox spacing="2.0">
-				<Label text="Inventory items not added to the inventory any more when picked up" />
-				<NamedObjectListView noValueString="(no inventory item)" fx:id="pickUpItemsRemoveListView" />
-			</VBox>
-		</HBox>
+			<HBox spacing="2.0">
+				<VBox spacing="2.0">
+					<Label text="New inventory items added to the inventory when picked up" />
+					<NamedObjectListView noValueString="(no inventory item)"
+						fx:id="pickUpItemsAddListView" />
+				</VBox>
+				<VBox spacing="2.0">
+					<Label
+						text="Inventory items not added to the inventory any more when picked up" />
+					<NamedObjectListView noValueString="(no inventory item)"
+						fx:id="pickUpItemsRemoveListView" />
+				</VBox>
+			</HBox>
 
-		<Button fx:id="removeButton" mnemonicParsing="false"
-			text="Delete this action" />
-	</children>
-	<padding>
-		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-	</padding>
-</VBox>
+			<Button fx:id="removeButton" mnemonicParsing="false"
+				text="Delete this action" />
+
+		</children>
+		<padding>
+			<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+		</padding>
+	</VBox>
+</ScrollPane>

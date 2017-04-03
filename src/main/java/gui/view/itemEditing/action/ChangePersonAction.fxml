@@ -5,26 +5,30 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import gui.customui.NamedObjectChooser?>
-
-<VBox spacing="2.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-		<fx:include source="../../include/NamedObject.fxml" />
-		<fx:include source="../../include/AbstractAction.fxml" />
-		<fx:include source="../../include/ChangeNDObjectAction.fxml" />
-		<fx:include source="../../include/ChangeInspectableObjectAction.fxml" />
-		<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
-			text="Change the location?" />
-		<NamedObjectChooser noValueString="(no location)" fx:id="newLocationChooser" />
-		<CheckBox fx:id="newTalkForbiddenTextCB" mnemonicParsing="false"
-			text="Change the Talk Forbidden Text?" />
-		<TextField fx:id="newTalkForbiddenTextTF" />
-		<CheckBox fx:id="newConversationCB" mnemonicParsing="false"
-			text="Change the conversation?" />
-		<NamedObjectChooser noValueString="(no conversation)" fx:id="newConversationChooser" />
-		<Button fx:id="removeButton" mnemonicParsing="false"
-			text="Delete this action" />
-	</children>
-	<padding>
-		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-	</padding>
-</VBox>
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<VBox spacing="2.0">
+		<children>
+			<fx:include source="../../include/NamedObject.fxml" />
+			<fx:include source="../../include/AbstractAction.fxml" />
+			<fx:include source="../../include/ChangeNDObjectAction.fxml" />
+			<fx:include source="../../include/ChangeInspectableObjectAction.fxml" />
+			<CheckBox fx:id="newLocationCB" mnemonicParsing="false"
+				text="Change the location?" />
+			<NamedObjectChooser noValueString="(no location)"
+				fx:id="newLocationChooser" />
+			<CheckBox fx:id="newTalkForbiddenTextCB" mnemonicParsing="false"
+				text="Change the Talk Forbidden Text?" />
+			<TextField fx:id="newTalkForbiddenTextTF" />
+			<CheckBox fx:id="newConversationCB" mnemonicParsing="false"
+				text="Change the conversation?" />
+			<NamedObjectChooser noValueString="(no conversation)"
+				fx:id="newConversationChooser" />
+			<Button fx:id="removeButton" mnemonicParsing="false"
+				text="Delete this action" />
+		</children>
+		<padding>
+			<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+		</padding>
+	</VBox>
+</ScrollPane>

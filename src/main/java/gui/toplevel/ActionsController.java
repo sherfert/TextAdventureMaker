@@ -38,8 +38,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for the actions view.
  * 
- * TODO ScrollPanel for (some) actionviews!
- * 
  * @author Satia
  */
 public class ActionsController extends NamedObjectsTableController<AbstractAction> {
