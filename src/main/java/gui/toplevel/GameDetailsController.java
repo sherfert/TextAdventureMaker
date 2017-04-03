@@ -1,7 +1,13 @@
 package gui.toplevel;
 
+import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
 
@@ -21,6 +27,7 @@ import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
@@ -33,11 +40,38 @@ import logic.CurrentGameManager;
 /**
  * Controller for the game details view.
  * 
- * XXX placeholder checking for success fields
- * 
  * @author Satia
  */
 public class GameDetailsController extends GameDataController {
+
+	/**
+	 * Different placeholder types.
+	 * 
+	 * @author Satia
+	 */
+	public enum Placeholder {
+		INPUT(Pattern.compile("(<input>|<Input>|<INPUT>)")), //
+		IDENTIFIER(Pattern.compile("(<identifier>|<Identifier>|<IDENTIFIER>)")), //
+		IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)")), //
+		NAME(Pattern.compile("(<name>|<Name>|<NAME>)")), //
+		NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)")), //
+		PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"));
+
+		/**
+		 * the RegEx pattern
+		 */
+		public Pattern pattern;
+
+		/**
+		 * @param pattern
+		 *            the RegEx pattern
+		 */
+		Placeholder(Pattern pattern) {
+			this.pattern = pattern;
+		}
+	}
+
+	private static final Pattern ANY_PLACEHOLDER = Pattern.compile("(<pattern\\|(?<p0>.*?)\\|(?<p1>.*?)\\|>|<.*?>)");
 
 	private static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty";
 	private static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters";
@@ -216,41 +250,66 @@ public class GameDetailsController extends GameDataController {
 		exitHelpTextField.textProperty().bindBidirectional(game.exitCommandHelpTextProperty());
 		exitHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, exitHelpTextField));
 
+		// Different Sets with allowed placeholders
+		Set<Placeholder> input = EnumSet.of(Placeholder.INPUT);
+		Set<Placeholder> inputAndPattern = EnumSet.of(Placeholder.INPUT, Placeholder.PATTERN);
+		Set<Placeholder> inputPatternID = EnumSet.of(Placeholder.INPUT, Placeholder.IDENTIFIER, Placeholder.PATTERN);
+		Set<Placeholder> noSecondPL = EnumSet.of(Placeholder.INPUT, Placeholder.IDENTIFIER, Placeholder.NAME,
+				Placeholder.PATTERN);
+		Set<Placeholder> allPL = EnumSet.allOf(Placeholder.class);
+
 		useWithSuccessTextField.textProperty().bindBidirectional(game.usedWithTextProperty());
-		useWithSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useWithSuccessTextField));
+		useWithSuccessTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithSuccessTextField, allPL));
 		takeSuccessTextField.textProperty().bindBidirectional(game.takenTextProperty());
-		takeSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, takeSuccessTextField));
+		takeSuccessTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeSuccessTextField, noSecondPL));
 		useSuccessTextField.textProperty().bindBidirectional(game.usedTextProperty());
-		useSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useSuccessTextField));
+		useSuccessTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useSuccessTextField, noSecondPL));
 		inspectSuccessTextField.textProperty().bindBidirectional(game.inspectionDefaultTextProperty());
-		inspectSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, inspectSuccessTextField));
+		inspectSuccessTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, inspectSuccessTextField, noSecondPL));
 		emptyInvSuccessTextField.textProperty().bindBidirectional(game.inventoryEmptyTextProperty());
-		emptyInvSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, emptyInvSuccessTextField));
+		emptyInvSuccessTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, emptyInvSuccessTextField, inputAndPattern));
 		invSuccessTextField.textProperty().bindBidirectional(game.inventoryTextProperty());
-		invSuccessTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, invSuccessTextField));
+		invSuccessTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, invSuccessTextField, inputAndPattern));
 
 		useWithFailureTextField.textProperty().bindBidirectional(game.notUsableWithTextProperty());
-		useWithFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useWithFailureTextField));
+		useWithFailureTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithFailureTextField, allPL));
 		moveFailureTextField.textProperty().bindBidirectional(game.notTravelableTextProperty());
-		moveFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, moveFailureTextField));
+		moveFailureTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, moveFailureTextField, noSecondPL));
 		takeFailureTextField.textProperty().bindBidirectional(game.notTakeableTextProperty());
-		takeFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, takeFailureTextField));
+		takeFailureTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeFailureTextField, noSecondPL));
 		useFailureTextField.textProperty().bindBidirectional(game.notUsableTextProperty());
-		useFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useFailureTextField));
+		useFailureTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useFailureTextField, noSecondPL));
 		talkFailureTextField.textProperty().bindBidirectional(game.notTalkingToEnabledTextProperty());
-		talkFailureTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, talkFailureTextField));
+		talkFailureTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, talkFailureTextField, noSecondPL));
 		noSuchItemTextField.textProperty().bindBidirectional(game.noSuchItemTextProperty());
-		noSuchItemTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchItemTextField));
+		noSuchItemTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchItemTextField, inputPatternID));
 		noSuchInventoryItemTextField.textProperty().bindBidirectional(game.noSuchInventoryItemTextProperty());
-		noSuchInventoryItemTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchInventoryItemTextField));
+		noSuchInventoryItemTextField.textProperty().addListener(
+				(f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchInventoryItemTextField, inputPatternID));
 		noSuchPersonTextField.textProperty().bindBidirectional(game.noSuchPersonTextProperty());
-		noSuchPersonTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchPersonTextField));
+		noSuchPersonTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchPersonTextField, inputPatternID));
 		noSuchWayTextField.textProperty().bindBidirectional(game.noSuchWayTextProperty());
-		noSuchWayTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noSuchWayTextField));
+		noSuchWayTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchWayTextField, inputPatternID));
 		noValidCommandTextField.textProperty().bindBidirectional(game.noCommandTextProperty());
-		noValidCommandTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, noValidCommandTextField));
+		noValidCommandTextField.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noValidCommandTextField, input));
 		notSensibleCommandTextField.textProperty().bindBidirectional(game.invalidCommandTextProperty());
-		notSensibleCommandTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, notSensibleCommandTextField));
+		notSensibleCommandTextField.textProperty().addListener(
+				(f, o, n) -> checkPlaceholdersAndEmptiness(n, notSensibleCommandTextField, inputAndPattern));
 
 		useWithCommandsTextField.setText(getCommandString(game.getUseWithCombineCommands()));
 		moveCommandsTextField.setText(getCommandString(game.getMoveCommands()));
@@ -331,5 +390,52 @@ public class GameDetailsController extends GameDataController {
 			// Set the value in the game
 			game.setGameTitle(newTitle);
 		}
+	}
+
+	/**
+	 * Shows or removes css and tooltips to warn if a placeholder is invalid or
+	 * if a field is empty.
+	 * 
+	 * @param input
+	 *            the entered text input
+	 * @param inputNode
+	 *            the node used to enter the input
+	 * @param allowedPlaceholders
+	 *            the placeholders supported by this field.
+	 */
+	private void checkPlaceholdersAndEmptiness(String input, Node inputNode, Set<Placeholder> allowedPlaceholders) {
+		StringBuilder msg = new StringBuilder();
+		Matcher wholeMatcher = ANY_PLACEHOLDER.matcher(input);
+		Queue<Matcher> q = new LinkedList<Matcher>();
+		q.add(wholeMatcher);
+		while (!q.isEmpty()) {
+			Matcher m = q.remove();
+			while (m.find()) {
+				String usedPL = m.group();
+				String p0 = m.group("p0");
+				if (p0 != null && !p0.isEmpty()) {
+					q.add(ANY_PLACEHOLDER.matcher(p0));
+				}
+				String p1 = m.group("p1");
+				if (p1 != null && !p1.isEmpty()) {
+					q.add(ANY_PLACEHOLDER.matcher(p1));
+				}
+
+				if (!allowedPlaceholders.stream().anyMatch((p) -> p.pattern.matcher(usedPL).matches())) {
+					msg.append("Placeholder " + usedPL + "is not recognized.\n");
+				}
+
+			}
+		}
+
+		// Show or hide warning
+		if (msg.length() != 0) {
+			showError(inputNode, msg.toString(), TooltipSeverity.WARNING);
+		} else if (input.isEmpty()) {
+			showError(inputNode, INPUT_EMPTY, TooltipSeverity.WARNING);
+		} else {
+			hideError(inputNode);
+		}
+
 	}
 }

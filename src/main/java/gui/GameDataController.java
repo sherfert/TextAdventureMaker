@@ -109,7 +109,7 @@ public abstract class GameDataController {
 	private static final String NODE_PROPERTIES_KEY_ERROR_TOOLTIP = "Error-Tooltip";
 	private static final String NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER = "Error-Tooltip-FocusListener";
 
-	private static final String INPUT_EMPTY = "It is not recommended to leave this empty";
+	protected static final String INPUT_EMPTY = "It is not recommended to leave this empty";
 
 	private static final String COMMAND_EMPTY = "At least one command must be defined";
 	private static final String COMMAND_MULTI_WHITESPACE = "A command must not have mutiple white spaces";
