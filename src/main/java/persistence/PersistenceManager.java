@@ -138,7 +138,14 @@ public class PersistenceManager {
 			throw new IOException(e);
 		}
 		if (model.getMajorVersion() != MAJOR_VERSION || model.getMinorVersion() != MINOR_VERSION) {
-			versioningManager.updateDB(model.getMajorVersion(), model.getMinorVersion(), MAJOR_VERSION, MINOR_VERSION);
+			try {
+				versioningManager.updateDB(model.getMajorVersion(), model.getMinorVersion(), MAJOR_VERSION,
+						MINOR_VERSION);
+			} catch (DBIncompatibleException e) {
+				// Disconnect if this happens
+				disconnect();
+				throw e;
+			}
 		}
 	}
 
@@ -179,6 +186,7 @@ public class PersistenceManager {
 			model = getEntityManager().createQuery(criteriaQuery).getSingleResult();
 		} catch (NoResultException e) {
 			// Create a new one
+			Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Creating model entry in empty DB");
 			model = new Model();
 			model.setMajorVersion(PersistenceManager.MAJOR_VERSION);
 			model.setMinorVersion(PersistenceManager.MINOR_VERSION);
