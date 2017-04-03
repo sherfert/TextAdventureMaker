@@ -133,6 +133,9 @@ public class GameManager {
 		game.setNotTravelableText("You cannot <pattern|the <name>||>.");
 		game.setNotUsableText("You cannot <pattern|the <name>||>.");
 		game.setNotTalkingToEnabledText("You cannot <pattern|<Name>||>.");
+		//"You cannot <pattern|the <name>|the <name2>|>."
+		// The above pattern is more verbose, but leads to strange output if
+		// used with persons. E.g. "You cannot use the peel with the satia."
 		game.setNotUsableWithText("You cannot do that.");
 
 		game.setInspectionDefaultText("Nothing interesting.");
