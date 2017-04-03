@@ -10,6 +10,7 @@ import playing.menu.LoadSaveManager;
 import utility.WindowUtil;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,13 +21,14 @@ import java.util.logging.Logger;
  * 
  * TODO Font sizes in Linux
  * 
- * TODO Locale to english!
- * 
  * @author Satia
  */
 public class MainWindow extends Application {
 
 	public static void main(String[] args) {
+		// Language is English
+		Locale.setDefault(new Locale("en", "EN"));
+		
 		// Initialize the logging
 		try {
 			Class.forName(logging.LogManager.class.getName());
