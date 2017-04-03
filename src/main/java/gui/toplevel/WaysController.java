@@ -35,7 +35,7 @@ import logic.CurrentGameManager;
  * We extend NamedObjectsController instead of NamedDescribedObjectsController,
  * since we do not have a description column.
  * 
- * TODO split way and map. Include location creation in map. better way/location creation in map.
+ * TODO split way and map. Include location creation in map. Better way/location creation in map.
  * 
  * @author Satia
  */

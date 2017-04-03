@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import configuration.PropertiesReader;
 import exception.DBClosedException;
+import exception.DBIncompatibleException;
 import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
 
@@ -53,8 +54,10 @@ public class CurrentGameManager {
 	 *            data is lost), and a default Game is placed in the DB.
 	 * @throws IOException
 	 *             if the game could not be opened
+	 * @throws DBIncompatibleException
+	 *             if the DB is too new.
 	 */
-	public void open(File file, boolean create) throws IOException {
+	public void open(File file, boolean create) throws IOException, DBIncompatibleException {
 		// Be sure to close the connection if another file was open
 		if (openFile != null) {
 			close();
@@ -127,7 +130,7 @@ public class CurrentGameManager {
 			try {
 				persistenceManager
 						.connect(fileName.substring(0, fileName.length() - LoadSaveManager.H2_ENDING.length()), false);
-			} catch (IOException e) {
+			} catch (IOException | DBIncompatibleException e) {
 				// Should never happen at this point
 				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not open db file.", e);
 			}
@@ -140,8 +143,7 @@ public class CurrentGameManager {
 	public void playGame() throws IOException {
 		disconnectDoReconnect(() -> {
 			Path from = openFile.getAbsoluteFile().toPath();
-			Path to = new File(PropertiesReader.DIRECTORY + gameName + "_temp" + LoadSaveManager.H2_ENDING)
-					.toPath();
+			Path to = new File(PropertiesReader.DIRECTORY + gameName + "_temp" + LoadSaveManager.H2_ENDING).toPath();
 			Files.copy(from, to, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 			LoadSaveManager.main(new String[] { gameName + "_temp" });
 		});

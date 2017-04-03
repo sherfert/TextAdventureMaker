@@ -8,11 +8,16 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
+import data.Model;
 import exception.DBClosedException;
+import exception.DBIncompatibleException;
 
 /**
  * Manages connections to database files.
@@ -26,6 +31,13 @@ public class PersistenceManager {
 	 * src/main/resources/persistence.xml
 	 */
 	public static final String PERSISTENCE_UNIT_NAME = "textAdventureMaker";
+
+	/**
+	 * Version numbers. Adjust in the first commit after a tag with a version
+	 * number. These numbers are used to check DB compatibility.
+	 */
+	public static final int MAJOR_VERSION = 1;
+	public static final int MINOR_VERSION = 0;
 
 	/**
 	 * The criteria builder.
@@ -57,6 +69,7 @@ public class PersistenceManager {
 	private ConversationManager conversationManager;
 	private ConversationOptionManager conversationOptionManager;
 	private ActionManager actionManager;
+	private VersioningManager versioningManager;
 
 	/**
 	 * Creates a persistence manager with all its subordinate managers.
@@ -76,13 +89,11 @@ public class PersistenceManager {
 		this.conversationManager = new ConversationManager(this);
 		this.conversationOptionManager = new ConversationOptionManager(this);
 		this.actionManager = new ActionManager(this);
+		this.versioningManager = new VersioningManager(this);
 	}
 
 	/**
-	 * Connects to the database.
-	 * 
-	 * TODO some backwards compatibility stuff
-	 * TODO verify that the model is the same!
+	 * Connects to the database. TODO disconnect on DBIncompatible
 	 * 
 	 * @param dropTables
 	 *            if {@code true}, the database contents will be deleted
@@ -92,8 +103,10 @@ public class PersistenceManager {
 	 * @throws IOException
 	 *             if connecting does not work. Usually because the file is in
 	 *             use.
+	 * @throws DBIncompatibleException
+	 *             if the loaded DB is too new.
 	 */
-	public void connect(String filename, boolean dropTables) throws IOException {
+	public void connect(String filename, boolean dropTables) throws IOException, DBIncompatibleException {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Connecting to database {0}. Dropping tables: {1}",
 				new Object[] { filename, dropTables });
 
@@ -113,6 +126,20 @@ public class PersistenceManager {
 		}
 
 		criteriaBuilder = entityManager.getCriteriaBuilder();
+
+		// TODO check version
+		Model model = null;
+		try {
+			model = getModel();
+		} catch (DBClosedException e) {
+			// Should never happen
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "DB closed unexpectedly.", e);
+			disconnect();
+			throw new IOException(e);
+		}
+		if (model.getMajorVersion() != MAJOR_VERSION || model.getMinorVersion() != MINOR_VERSION) {
+			versioningManager.updateDB(model.getMajorVersion(), model.getMinorVersion(), MAJOR_VERSION, MINOR_VERSION);
+		}
 	}
 
 	/**
@@ -132,6 +159,35 @@ public class PersistenceManager {
 			}
 			entityManagerFactory.close();
 		}
+	}
+
+	/**
+	 * This method obtains the model of the DB. If there is none, one is
+	 * created.
+	 * 
+	 * @return the model of the database
+	 * @throws DBClosedException
+	 *             if the DB is closed
+	 */
+	private Model getModel() throws DBClosedException {
+		CriteriaQuery<Model> criteriaQuery = getCriteriaBuilder().createQuery(Model.class);
+		Root<Model> root = criteriaQuery.from(Model.class);
+		criteriaQuery.select(root);
+
+		Model model;
+		try {
+			model = getEntityManager().createQuery(criteriaQuery).getSingleResult();
+		} catch (NoResultException e) {
+			// Create a new one
+			model = new Model();
+			model.setMajorVersion(PersistenceManager.MAJOR_VERSION);
+			model.setMinorVersion(PersistenceManager.MINOR_VERSION);
+			// Save
+			getEntityManager().persist(model);
+			updateChanges();
+		}
+
+		return model;
 	}
 
 	/**
@@ -160,8 +216,8 @@ public class PersistenceManager {
 	 *         access.
 	 */
 	EntityManager getEntityManager() throws DBClosedException {
-		if(entityManager.isOpen()) {
-		return entityManager;
+		if (entityManager.isOpen()) {
+			return entityManager;
 		} else {
 			throw new DBClosedException();
 		}

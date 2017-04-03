@@ -21,7 +21,7 @@ import logic.CurrentGameManager;
  * Abstract base class for all controllers editing a single action. They all
  * share the same remove button handler.
  * 
- * TODO style change action views better!
+ * XXX style change action views better!
  * 
  * @author Satia
  *

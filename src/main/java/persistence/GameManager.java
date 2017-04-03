@@ -86,7 +86,7 @@ public class GameManager {
 	 * game.
 	 * 
 	 * @return the game title.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public String getGameTitle() throws DBIncompatibleException, DBClosedException {
 		if (game != null) {
@@ -111,7 +111,8 @@ public class GameManager {
 	/**
 	 * This method places a minimal default game in the Database. It is only
 	 * supposed to be called on an empty database.
-	 * @throws DBClosedException 
+	 * 
+	 * @throws DBClosedException
 	 */
 	public void loadDefaultGame() throws DBClosedException {
 		Player player = new Player();
@@ -133,7 +134,7 @@ public class GameManager {
 		game.setNotTravelableText("You cannot <pattern|the <name>||>.");
 		game.setNotUsableText("You cannot <pattern|the <name>||>.");
 		game.setNotTalkingToEnabledText("You cannot <pattern|<Name>||>.");
-		//"You cannot <pattern|the <name>|the <name2>|>."
+		// "You cannot <pattern|the <name>|the <name2>|>."
 		// The above pattern is more verbose, but leads to strange output if
 		// used with persons. E.g. "You cannot use the peel with the satia."
 		game.setNotUsableWithText("You cannot do that.");
@@ -186,7 +187,7 @@ public class GameManager {
 		// Random game title from 0 to 999999
 		game.setGameTitle("Adventure-" + (int) (Math.random() * 1000000));
 
-		// Save the game
+		// Save
 		persistenceManager.getEntityManager().persist(game);
 		persistenceManager.updateChanges();
 	}

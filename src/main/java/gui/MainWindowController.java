@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import exception.DBIncompatibleException;
 import gui.toplevel.ActionsController;
 import gui.toplevel.ConversationsController;
 import gui.toplevel.GameDetailsController;
@@ -377,6 +378,15 @@ public class MainWindowController {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Could not open the game");
 				alert.setHeaderText("Propably the file is already opened by another application.");
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+				return;
+			} catch (DBIncompatibleException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "DB incompatible.", e);
+				// Show error message
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Could not open the game");
+				alert.setHeaderText("Propably the game was created with a newer version of TextAdventureMaker.");
 				alert.setContentText(e.getMessage());
 				alert.showAndWait();
 				return;

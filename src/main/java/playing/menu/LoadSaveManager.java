@@ -24,6 +24,8 @@ import exception.LoadSaveException;
  * automatically, but upon starting a new game, a name of the savegame has to be
  * entered.
  * 
+ * TODO display some error messages if saving or loading fails. (test)
+ * 
  * @author Satia
  * 
  */
@@ -152,8 +154,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	/**
 	 * The main method to play a game. If there is an argument provided, it must
 	 * point to a valid game database file. If there is no argument provided, it
-	 * is assumed there is a file named "game"+H2_ENDING in this
-	 * JAR file.
+	 * is assumed there is a file named "game"+H2_ENDING in this JAR file.
 	 * 
 	 * @param args
 	 *            either the game database file to load or nothing.
@@ -278,8 +279,10 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	 *            the path to reconnect to
 	 * @throws IOException
 	 *             if reconnecting does not work
+	 * @throws DBIncompatibleException
+	 *             if the DB is too new
 	 */
-	private void disconnectDoReconnect(Runnable doSth, String path) throws IOException {
+	private void disconnectDoReconnect(Runnable doSth, String path) throws IOException, DBIncompatibleException {
 		// Disconnect
 		persistenceManager.disconnect();
 		// Do whatever
@@ -297,7 +300,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 			disconnectDoReconnect(() -> copyFromTempDB(file), path.substring(0, path.length() - H2_ENDING.length()));
 			// We must set the reference to the game again
 			gamePlayer.setGame(persistenceManager.getGameManager().getGame());
-		} catch (DBIncompatibleException|IOException | DBClosedException e) {
+		} catch (DBIncompatibleException | IOException | DBClosedException e) {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error saving", e);
 			// Show some error message
 			gamePlayer.getIo().println(e.getMessage());
