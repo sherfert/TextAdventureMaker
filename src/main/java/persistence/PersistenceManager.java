@@ -177,7 +177,7 @@ public class PersistenceManager {
 	 * @throws DBClosedException
 	 *             if the DB is closed
 	 */
-	private Model getModel() throws DBClosedException {
+	Model getModel() throws DBClosedException {
 		CriteriaQuery<Model> criteriaQuery = getCriteriaBuilder().createQuery(Model.class);
 		Root<Model> root = criteriaQuery.from(Model.class);
 		criteriaQuery.select(root);
