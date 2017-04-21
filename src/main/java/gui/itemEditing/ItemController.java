@@ -132,4 +132,9 @@ public class ItemController extends GameDataController {
 			return super.controllerFactory(type);
 		}
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(item);
+	}
 }

@@ -74,6 +74,10 @@ public class CombinationInformationController extends GameDataController {
 
 	@FXML
 	private void initialize() {
+		// Refresh the displayed object
+		currentGameManager.getPersistenceManager().refreshEntity(item1);
+		currentGameManager.getPersistenceManager().refreshEntity(item2);
+
 		// Create new bindings
 		editCombineSuccessfulTextTF.setText(item1.getCombineWithSuccessfulText(item2));
 		editCombineSuccessfulTextTF.textProperty()
@@ -92,7 +96,7 @@ public class CombinationInformationController extends GameDataController {
 		newItemsListView.initialize(item1.getNewCombinablesWhenCombinedWith(item2),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				(i) -> {
-				} , (ii) -> item1.addNewCombinableWhenCombinedWith(item2, ii),
+				}, (ii) -> item1.addNewCombinableWhenCombinedWith(item2, ii),
 				(ii) -> item1.removeNewCombinableWhenCombinedWith(item2, ii));
 
 		combine1CommandsLabel
@@ -112,5 +116,11 @@ public class CombinationInformationController extends GameDataController {
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
 				this::objectSelected, (a) -> item1.addAdditionalActionToCombineWith(item2, a),
 				(a) -> item1.removeAdditionalActionFromCombineWith(item2, a));
+	}
+
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(item1)
+				|| !currentGameManager.getPersistenceManager().isManaged(item2);
 	}
 }

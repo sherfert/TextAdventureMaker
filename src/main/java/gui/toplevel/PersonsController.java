@@ -34,5 +34,10 @@ public class PersonsController extends NamedDescribedObjectsController<Person> {
 	protected Person createNewObject(String name, String description) {
 		return new Person(name, description);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
+	}
 
 }

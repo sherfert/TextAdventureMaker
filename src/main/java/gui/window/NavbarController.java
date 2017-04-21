@@ -2,12 +2,15 @@ package gui.window;
 
 import java.util.Stack;
 
+import exception.DetachedEntityException;
 import gui.GameDataController;
 import gui.MainWindowController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
@@ -70,30 +73,48 @@ public class NavbarController {
 	 * @param e
 	 *            the link
 	 */
-	private void linkClicked(ActionEvent e) {
-		Object clicked = e.getSource();
+	private void linkClicked(ActionEvent ev) {
+		Object clicked = ev.getSource();
 
-		int popCount = 0;
-		boolean found = false;
-		for (NavbarItem item : items) {
-
-			if (!found) {
-				found = (clicked == item.link);
-				if (found) {
-					// Load the controller
-					mwController.setCenterContent(item.fxml, item.controller, item.controllerFactory);
-				}
-			} else {
-				// Remove everything after the found link
-				box.getChildren().removeAll(item.arrow, item.link);
-				// Increment the pop count
-				popCount++;
-			}
-		}
-		// Pop all unused items from the stack
-		for (int i = 0; i < popCount; i++) {
+		NavbarItem item = items.peek();
+		while(item.link != clicked) {
+			box.getChildren().removeAll(item.arrow, item.link);
 			items.pop();
+			item = items.peek();
 		}
+		// View to load is now atop the stack
+		try {
+			mwController.setCenterContent(item.fxml, item.controller, item.controllerFactory);
+		} catch (DetachedEntityException e) {
+			// Show error message
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Could not show the view");
+			alert.setHeaderText("An unexpected error ocurred:");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+		
+//		int popCount = 0;
+//		boolean found = false;
+//		for (NavbarItem item : items) {
+//
+//			if (!found) {
+//				found = (clicked == item.link);
+//				if (found) {
+//					// Load the controller
+//					mwController.setCenterContent(item.fxml, item.controller, item.controllerFactory);
+//				}
+//			} else {
+//				// Remove everything after the found link
+//				box.getChildren().removeAll(item.arrow, item.link);
+//				// Increment the pop count
+//				popCount++;
+//			}
+//		}
+//		// Pop all unused items from the stack
+//		for (int i = 0; i < popCount; i++) {
+//			items.pop();
+//		}
 	}
 
 	/**
@@ -128,7 +149,13 @@ public class NavbarController {
 
 		// Navigate to the top entry
 		NavbarItem top = items.peek();
-		mwController.setCenterContent(top.fxml, top.controller, top.controllerFactory);
+		
+		try {
+			mwController.setCenterContent(top.fxml, top.controller, top.controllerFactory);
+		} catch (DetachedEntityException e) {
+			// We keep on popping if the current controller is obsolote
+			pop();
+		}
 	}
 
 	/**

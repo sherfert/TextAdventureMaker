@@ -39,4 +39,9 @@ public class NamedDescribedObjectController extends GameDataController {
 		// Create new bindings
 		editDescriptionTA.textProperty().bindBidirectional(object.descriptionProperty());
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(object);
+	}
 }

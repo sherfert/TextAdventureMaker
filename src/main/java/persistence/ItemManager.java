@@ -15,7 +15,7 @@ import exception.DBClosedException;
  * @author Satia
  */
 public class ItemManager {
-	
+
 	/**
 	 * A reference to the overall manager of the persistence.
 	 */
@@ -31,29 +31,29 @@ public class ItemManager {
 	/**
 	 * @return a set of all additional take commands defined anywhere in the
 	 *         game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public Set<String> getAllAdditionaTakeCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
-		List<String> resultList = persistenceManager
-				.getEntityManager()
-				.createNativeQuery(
-						"SELECT DISTINCT c.ADDITIONALTAKECOMMANDS FROM Item_ADDITIONALTAKECOMMANDS c")
+		List<String> resultList = persistenceManager.getEntityManager()
+				.createNativeQuery("SELECT DISTINCT c.ADDITIONALTAKECOMMANDS FROM Item_ADDITIONALTAKECOMMANDS c")
 				.getResultList();
-	
+
 		return new HashSet<>(resultList);
 	}
-	
+
 	/**
 	 * @return all items in the game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public List<Item> getAllItems() throws DBClosedException {
-		CriteriaQuery<Item> query = persistenceManager
-				.getCriteriaBuilder().createQuery(Item.class);
+		CriteriaQuery<Item> query = persistenceManager.getCriteriaBuilder().createQuery(Item.class);
 		query.from(Item.class);
-		List<Item> resultList = persistenceManager.getEntityManager()
-				.createQuery(query).getResultList();
+		List<Item> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();
+		// Lists with cascade definitions are not refreshed automatically
+		for (Item i : resultList) {
+			persistenceManager.getEntityManager().refresh(i);
+		}
 		return resultList;
 	}
 

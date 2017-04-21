@@ -136,5 +136,10 @@ public class LocationController extends GameDataController {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(location);
+	}
 
 }

@@ -1,0 +1,18 @@
+AbstractAction->ChangeActionAction D OK
+InventoryItem->Game.startItems REM OK
+InventoryItem->AddInvItemAction REM OK
+InventoryItem->ChangeCombineInformationAction.inventoryItem1/2 D OK
+Location->Way D OK
+NamedDescribedObject->ChangeNDObjectAction D OK
+Way->Location X OK
+Way->moveAction D OK
+Way->additionalMoveActions X OK
+
+InventoryItem->ChangeCombineInformationAction.combinablesToAdd/Remove REM
+
+
+AbstractAction->additional*Actions REM NOT OK
+AbstractAction->CombineInformation.addition1l REM EXCEPTION
+AbstractAction->UseWithInformation.additional REM NOT OK
+
+Cont: ChangeCombineInformationAction

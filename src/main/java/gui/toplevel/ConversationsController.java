@@ -60,5 +60,10 @@ public class ConversationsController extends NamedObjectsController<Conversation
 	protected Conversation createNewObject(String name) {
 		return new Conversation(name, newGreetingTA.getText(), newEventTA.getText());
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
+	}
 
 }

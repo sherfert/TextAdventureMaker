@@ -131,4 +131,9 @@ public class InventoryItemController extends GameDataController {
 		mwController.pushCenterContent("when combined with " + i.getName(), "view/itemEditing/CombinationInformation.fxml", controller,
 				controller::controllerFactory);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(invitem);
+	}
 }

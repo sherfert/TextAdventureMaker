@@ -46,7 +46,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * ManyToMany since exactly TWO InventoryItems store this CombineInformation
 	 * in their map.
 	 */
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH })
 	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combineInformation_S", //
 	foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_InvItem_combineInformation_D", //

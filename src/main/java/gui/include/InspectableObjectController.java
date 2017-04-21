@@ -54,4 +54,9 @@ public class InspectableObjectController extends GameDataController {
 				this::objectSelected, (a) -> object.addAdditionalInspectAction(a),
 				(a) -> object.removeAdditionalInspectAction(a));
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(object);
+	}
 }

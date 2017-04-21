@@ -76,7 +76,7 @@ public class Game implements HasId {
 	 * 
 	 * No ON CASCADE definitions, since this field is not accessible.
 	 */
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH })
 	@JoinColumn(nullable = false)
 	private AddInventoryItemsAction addInventoryItemsAction;
 	

@@ -35,7 +35,15 @@ public class NamedObjectController extends GameDataController {
 
 	@FXML
 	private void initialize() {
+		// Refresh the displayed object
+		currentGameManager.getPersistenceManager().refreshEntity(object);
+		
 		// Create new bindings
 		editNameTF.textProperty().bindBidirectional(object.nameProperty());
+	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(object);
 	}
 }

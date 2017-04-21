@@ -34,5 +34,10 @@ public class LocationsController extends NamedDescribedObjectsController<Locatio
 	protected Location createNewObject(String name, String description) {
 		return new Location(name, description);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
+	}
 
 }

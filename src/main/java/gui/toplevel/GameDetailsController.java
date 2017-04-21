@@ -209,6 +209,9 @@ public class GameDetailsController extends GameDataController {
 			// Rethrow e so that the GUI loading can take appropriate actions
 			throw e;
 		}
+		// Refresh the displayed object
+		currentGameManager.getPersistenceManager().refreshEntity(game);
+		
 		// Set all GUI fields accordingly
 		gameTitleField.setText(game.getGameTitle());
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
@@ -436,6 +439,10 @@ public class GameDetailsController extends GameDataController {
 		} else {
 			hideError(inputNode);
 		}
-
+	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
 	}
 }

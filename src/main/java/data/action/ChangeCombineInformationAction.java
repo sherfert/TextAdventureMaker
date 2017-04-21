@@ -25,6 +25,8 @@ import javax.persistence.ManyToOne;
  * 
  * @author Satia
  * 
+ * FIXME the itemsToAdd/itemsToRemove are not kept in the GUI
+ * 
  */
 @Entity
 @Access(AccessType.PROPERTY)

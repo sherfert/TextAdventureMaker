@@ -34,5 +34,10 @@ public class InventoryItemsController extends NamedDescribedObjectsController<In
 	protected InventoryItem createNewObject(String name, String description) {
 		return new InventoryItem(name, description);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
+	}
 
 }

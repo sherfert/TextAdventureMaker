@@ -62,4 +62,9 @@ public class ChangeNDObjectActionController extends GameDataController {
 		ActionController.initCheckBoxAndTextFieldSetter(newDescriptionCB, newDescriptionTA,
 				action::getNewDescription, action::setNewDescription);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(action);
+	}
 }

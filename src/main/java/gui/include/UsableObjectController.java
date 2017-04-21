@@ -73,4 +73,9 @@ public class UsableObjectController extends GameDataController {
 				this::objectSelected, (a) -> object.addAdditionalUseAction(a),
 				(a) -> object.removeAdditionalUseAction(a));
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(object);
+	}
 }

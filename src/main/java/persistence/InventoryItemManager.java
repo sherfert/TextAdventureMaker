@@ -15,7 +15,7 @@ import exception.DBClosedException;
  * @author Satia
  */
 public class InventoryItemManager {
-	
+
 	/**
 	 * A reference to the overall manager of the persistence.
 	 */
@@ -31,45 +31,43 @@ public class InventoryItemManager {
 	/**
 	 * @return a set of all additional combine commands defined anywhere in the
 	 *         game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public Set<String> getAllAdditionaCombineCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
-		List<String> resultList = persistenceManager
-				.getEntityManager()
-				.createNativeQuery(
-						"SELECT DISTINCT c.COMMANDS FROM CombineCommands_COMMANDS c")
-				.getResultList();
-	
+		List<String> resultList = persistenceManager.getEntityManager()
+				.createNativeQuery("SELECT DISTINCT c.COMMANDS FROM CombineCommands_COMMANDS c").getResultList();
+
 		return new HashSet<>(resultList);
 	}
-	
+
 	/**
 	 * @return a set of all additional use with commands defined anywhere in the
 	 *         game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public Set<String> getAllAdditionaUseWithCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
-		List<String> resultList = persistenceManager
-				.getEntityManager()
+		List<String> resultList = persistenceManager.getEntityManager()
 				.createNativeQuery(
 						"SELECT DISTINCT c.ADDITIONALUSEWITHCOMMANDS FROM UseWithInformation_ADDITIONALUSEWITHCOMMANDS c")
 				.getResultList();
-	
+
 		return new HashSet<>(resultList);
 	}
-	
+
 	/**
 	 * @return all inventory items in the game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public List<InventoryItem> getAllInventoryItems() throws DBClosedException {
-		CriteriaQuery<InventoryItem> query = persistenceManager
-				.getCriteriaBuilder().createQuery(InventoryItem.class);
+		CriteriaQuery<InventoryItem> query = persistenceManager.getCriteriaBuilder().createQuery(InventoryItem.class);
 		query.from(InventoryItem.class);
-		List<InventoryItem> resultList = persistenceManager.getEntityManager()
-				.createQuery(query).getResultList();
+		List<InventoryItem> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();
+		// Lists with cascade definitions are not refreshed automatically
+		for (InventoryItem i : resultList) {
+			persistenceManager.getEntityManager().refresh(i);
+		}
 		return resultList;
 	}
 }

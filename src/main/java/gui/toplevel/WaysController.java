@@ -351,5 +351,10 @@ public class WaysController extends NamedObjectsController<Way> {
 			mapPane.getChildren().remove(creationLine);
 		}
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
+	}
 
 }

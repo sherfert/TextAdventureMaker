@@ -164,4 +164,9 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 		layer.addOption(result);
 		return result;
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(layer);
+	}
 }

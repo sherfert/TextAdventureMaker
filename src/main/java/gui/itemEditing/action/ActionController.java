@@ -52,7 +52,7 @@ public abstract class ActionController<E extends AbstractAction> extends GameDat
 	@FXML
 	protected void initialize() {
 		removeButton.setOnMouseClicked((e) -> removeObject(action, "Deleting an action",
-				"Do you really want to delete this action?", "No other entities will be deleted."));
+				"Do you really want to delete this action?", "Other action enabling or disabling this action will also be deleted."));
 	}
 
 	/**
@@ -169,6 +169,11 @@ public abstract class ActionController<E extends AbstractAction> extends GameDat
 				setter.accept(null);
 			}
 		});
+	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(action);
 	}
 
 }

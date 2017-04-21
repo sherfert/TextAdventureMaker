@@ -55,4 +55,9 @@ public class ChangeInspectableObjectActionController extends GameDataController 
 		identifiersRemoveTA.setText(getListString(action.getIdentifiersToRemove()));
 		identifiersRemoveTA.textProperty().addListener((f, o, n) -> updateList(n, action::setIdentifiersToRemove));
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(action);
+	}
 }

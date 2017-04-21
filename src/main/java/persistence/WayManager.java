@@ -67,6 +67,10 @@ public class WayManager {
 		query.from(Way.class);
 		List<Way> resultList = persistenceManager.getEntityManager()
 				.createQuery(query).getResultList();
+		// Lists with cascade definitions are not refreshed automatically
+		for(Way w : resultList) {
+			persistenceManager.getEntityManager().refresh(w);
+		}
 		return resultList;
 	}
 }

@@ -15,7 +15,7 @@ import exception.DBClosedException;
  * @author Satia
  */
 public class PersonManager {
-	
+
 	/**
 	 * A reference to the overall manager of the persistence.
 	 */
@@ -31,29 +31,29 @@ public class PersonManager {
 	/**
 	 * @return a set of all additional talk to commands defined anywhere in the
 	 *         game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public Set<String> getAllAdditionalTalkToCommands() throws DBClosedException {
 		@SuppressWarnings("unchecked")
-		List<String> resultList = persistenceManager
-				.getEntityManager()
-				.createNativeQuery(
-						"SELECT DISTINCT c.ADDITIONALTALKTOCOMMANDS FROM Person_ADDITIONALTALKTOCOMMANDS c")
+		List<String> resultList = persistenceManager.getEntityManager()
+				.createNativeQuery("SELECT DISTINCT c.ADDITIONALTALKTOCOMMANDS FROM Person_ADDITIONALTALKTOCOMMANDS c")
 				.getResultList();
-	
+
 		return new HashSet<>(resultList);
 	}
-	
+
 	/**
 	 * @return all persons in the game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public List<Person> getAllPersons() throws DBClosedException {
-		CriteriaQuery<Person> query = persistenceManager
-				.getCriteriaBuilder().createQuery(Person.class);
+		CriteriaQuery<Person> query = persistenceManager.getCriteriaBuilder().createQuery(Person.class);
 		query.from(Person.class);
-		List<Person> resultList = persistenceManager.getEntityManager()
-				.createQuery(query).getResultList();
+		List<Person> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();
+		// Lists with cascade definitions are not refreshed automatically
+		for (Person p : resultList) {
+			persistenceManager.getEntityManager().refresh(p);
+		}
 		return resultList;
 	}
 

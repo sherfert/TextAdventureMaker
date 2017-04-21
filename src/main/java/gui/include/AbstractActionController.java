@@ -38,4 +38,9 @@ public class AbstractActionController extends GameDataController {
 	private void initialize() {
 		editEnabledCB.selectedProperty().bindBidirectional(action.enabledProperty());
 	}
+
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(action);
+	}
 }

@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import exception.DBIncompatibleException;
+import exception.DetachedEntityException;
 import gui.toplevel.ActionsController;
 import gui.toplevel.ConversationsController;
 import gui.toplevel.GameDetailsController;
@@ -123,9 +124,15 @@ public class MainWindowController {
 	 *            the controller
 	 * @param controllerFactory
 	 *            either {@code} null, or a context specific controller factory
+	 * @throws DetachedEntityException
+	 *             if the controller to be loaded is obsolete
 	 */
 	public void setCenterContent(String fxml, GameDataController controller,
-			Callback<Class<?>, Object> controllerFactory) {
+			Callback<Class<?>, Object> controllerFactory) throws DetachedEntityException {
+		if (controller.isObsolete()) {
+			throw new DetachedEntityException("An item seems to be detached from the database.");
+		}
+
 		try {
 			// Load layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
@@ -195,10 +202,21 @@ public class MainWindowController {
 	 */
 	public void pushCenterContent(String linkTitle, String fxml, GameDataController controller,
 			Callback<Class<?>, Object> controllerFactory) {
-		// Push to the navbar
-		navbarController.push(linkTitle, fxml, controller, controllerFactory);
-		// Set the content
-		setCenterContent(fxml, controller, controllerFactory);
+
+		try {
+			// Set the content
+			setCenterContent(fxml, controller, controllerFactory);
+			// Push to the navbar
+			navbarController.push(linkTitle, fxml, controller, controllerFactory);
+		} catch (DetachedEntityException e) {
+			// Show error message
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Could not show the view");
+			alert.setHeaderText("An unexpected error ocurred:");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+
 	}
 
 	/**

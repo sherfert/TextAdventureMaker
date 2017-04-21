@@ -40,6 +40,10 @@ public class ActionManager {
 		Root<AbstractAction> root = query.from(AbstractAction.class);
 		query.where(cb.equal(root.get("hidden"), false));
 		List<AbstractAction> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();
+		// Lists with cascade definitions are not refreshed automatically
+		for (AbstractAction a : resultList) {
+			persistenceManager.getEntityManager().refresh(a);
+		}
 		return resultList;
 	}
 

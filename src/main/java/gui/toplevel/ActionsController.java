@@ -143,5 +143,10 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 		// Add item to our table
 		objectsOL.add(a);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
+	}
 
 }

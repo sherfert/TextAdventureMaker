@@ -69,4 +69,9 @@ public class ChangeUsableObjectActionController extends GameDataController {
 		ActionController.initCheckBoxAndTextFieldSetter(newUseForbiddenTextCB, newUseForbiddenTextTF,
 				action::getNewUseForbiddenText, action::setNewUseForbiddenText);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(action);
+	}
 }

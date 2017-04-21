@@ -25,19 +25,20 @@ public class LocationManager {
 	public LocationManager(PersistenceManager persistenceManager) {
 		this.persistenceManager = persistenceManager;
 	}
-	
+
 	/**
 	 * @return all locations in the game.
-	 * @throws DBClosedException 
+	 * @throws DBClosedException
 	 */
 	public List<Location> getAllLocations() throws DBClosedException {
-		CriteriaQuery<Location> query = persistenceManager
-				.getCriteriaBuilder().createQuery(Location.class);
+		CriteriaQuery<Location> query = persistenceManager.getCriteriaBuilder().createQuery(Location.class);
 		query.from(Location.class);
-		List<Location> resultList = persistenceManager.getEntityManager()
-				.createQuery(query).getResultList();
+		List<Location> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();
+		// Lists with cascade definitions are not refreshed automatically
+		for (Location l : resultList) {
+			persistenceManager.getEntityManager().refresh(l);
+		}
 		return resultList;
 	}
 
-	
 }

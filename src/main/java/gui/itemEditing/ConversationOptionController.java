@@ -99,4 +99,9 @@ public class ConversationOptionController extends GameDataController {
 			return super.controllerFactory(type);
 		}
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(option);
+	}
 }

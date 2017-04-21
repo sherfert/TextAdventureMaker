@@ -34,5 +34,10 @@ public class ItemsController extends NamedDescribedObjectsController<Item> {
 	protected Item createNewObject(String name, String description) {
 		return new Item(name, description);
 	}
+	
+	@Override
+	public boolean isObsolete() {
+		return false;
+	}
 
 }

@@ -36,6 +36,10 @@ public class ConversationOptionManager {
 				.createQuery(ConversationOption.class);
 		query.from(Conversation.class);
 		List<ConversationOption> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();
+		// Lists with cascade definitions are not refreshed automatically
+		for (ConversationOption o : resultList) {
+			persistenceManager.getEntityManager().refresh(o);
+		}
 		return resultList;
 	}
 

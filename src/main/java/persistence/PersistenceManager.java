@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
@@ -166,6 +167,30 @@ public class PersistenceManager {
 			if (entityManagerFactory.isOpen()) {
 				entityManagerFactory.close();
 			}
+		}
+	}
+
+	/**
+	 * Invkoes refresh on the EntityManager with the passes object
+	 * 
+	 * @param o
+	 */
+	public void refreshEntity(Object o) {
+		entityManager.refresh(o);
+	}
+
+	/**
+	 * Checks if an object is managed by the persistence context.
+	 * 
+	 * @param o
+	 * @return
+	 */
+	public boolean isManaged(Object o) {
+		try {
+			entityManager.refresh(o);
+			return true;
+		} catch(EntityNotFoundException e) {
+			return false;
 		}
 	}
 

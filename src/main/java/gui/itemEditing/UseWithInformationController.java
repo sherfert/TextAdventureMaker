@@ -64,6 +64,10 @@ public class UseWithInformationController extends GameDataController {
 
 	@FXML
 	private void initialize() {
+		// Refresh the displayed object
+		currentGameManager.getPersistenceManager().refreshEntity(item);
+		currentGameManager.getPersistenceManager().refreshEntity(object);
+
 		// Create new bindings
 		editUseWithSuccessfulTextTF.setText(item.getUseWithSuccessfulText(object));
 		editUseWithSuccessfulTextTF.textProperty().addListener((f, o, n) -> item.setUseWithSuccessfulText(object, n));
@@ -84,5 +88,11 @@ public class UseWithInformationController extends GameDataController {
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
 				this::objectSelected, (a) -> item.addAdditionalActionToUseWith(object, a),
 				(a) -> item.removeAdditionalActionFromUseWith(object, a));
+	}
+
+	@Override
+	public boolean isObsolete() {
+		return !currentGameManager.getPersistenceManager().isManaged(item)
+				|| !currentGameManager.getPersistenceManager().isManaged(object);
 	}
 }

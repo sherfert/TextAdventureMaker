@@ -180,6 +180,14 @@ public abstract class GameDataController {
 	}
 
 	/**
+	 * Controllers can become obsolte if an item they manage has been deleted
+	 * from the database
+	 * 
+	 * @return if the controller hass become obsolete.
+	 */
+	public abstract boolean isObsolete();
+
+	/**
 	 * Show an error for any (input) node. This applies the css class "error" to
 	 * the node (light red background) and shows a tooltip with the given error
 	 * message right below the node. This tooltip cannot be hidden, until
