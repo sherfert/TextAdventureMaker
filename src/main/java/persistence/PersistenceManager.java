@@ -176,6 +176,7 @@ public class PersistenceManager {
 	 * @param o
 	 */
 	public void refreshEntity(Object o) {
+		updateChanges();		
 		entityManager.refresh(o);
 	}
 
@@ -187,7 +188,7 @@ public class PersistenceManager {
 	 */
 	public boolean isManaged(Object o) {
 		try {
-			entityManager.refresh(o);
+			refreshEntity(o);
 			return true;
 		} catch(EntityNotFoundException e) {
 			return false;

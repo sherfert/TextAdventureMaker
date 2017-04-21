@@ -47,6 +47,8 @@ public class ItemManager {
 	 * @throws DBClosedException
 	 */
 	public List<Item> getAllItems() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaQuery<Item> query = persistenceManager.getCriteriaBuilder().createQuery(Item.class);
 		query.from(Item.class);
 		List<Item> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();

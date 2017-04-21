@@ -47,6 +47,8 @@ public class PersonManager {
 	 * @throws DBClosedException
 	 */
 	public List<Person> getAllPersons() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaQuery<Person> query = persistenceManager.getCriteriaBuilder().createQuery(Person.class);
 		query.from(Person.class);
 		List<Person> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();

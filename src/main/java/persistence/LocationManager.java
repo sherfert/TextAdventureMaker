@@ -31,6 +31,8 @@ public class LocationManager {
 	 * @throws DBClosedException
 	 */
 	public List<Location> getAllLocations() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaQuery<Location> query = persistenceManager.getCriteriaBuilder().createQuery(Location.class);
 		query.from(Location.class);
 		List<Location> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();

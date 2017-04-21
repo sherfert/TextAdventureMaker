@@ -35,6 +35,8 @@ public class ActionManager {
 	 * @throws DBClosedException
 	 */
 	public List<AbstractAction> getAllActions() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaBuilder cb = persistenceManager.getCriteriaBuilder();
 		CriteriaQuery<AbstractAction> query = cb.createQuery(AbstractAction.class);
 		Root<AbstractAction> root = query.from(AbstractAction.class);

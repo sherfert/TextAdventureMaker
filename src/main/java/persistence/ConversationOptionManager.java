@@ -32,6 +32,8 @@ public class ConversationOptionManager {
 	 * @throws DBClosedException
 	 */
 	public List<ConversationOption> getAllConversationOptions() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaQuery<ConversationOption> query = persistenceManager.getCriteriaBuilder()
 				.createQuery(ConversationOption.class);
 		query.from(Conversation.class);

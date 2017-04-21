@@ -61,6 +61,8 @@ public class InventoryItemManager {
 	 * @throws DBClosedException
 	 */
 	public List<InventoryItem> getAllInventoryItems() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaQuery<InventoryItem> query = persistenceManager.getCriteriaBuilder().createQuery(InventoryItem.class);
 		query.from(InventoryItem.class);
 		List<InventoryItem> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();

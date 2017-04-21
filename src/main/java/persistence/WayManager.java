@@ -62,6 +62,8 @@ public class WayManager {
 	 * @throws DBClosedException 
 	 */
 	public List<Way> getAllWays() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaQuery<Way> query = persistenceManager
 				.getCriteriaBuilder().createQuery(Way.class);
 		query.from(Way.class);

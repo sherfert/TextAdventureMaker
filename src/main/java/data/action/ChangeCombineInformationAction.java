@@ -271,7 +271,7 @@ public class ChangeCombineInformationAction extends AbstractAction {
 	 *            the item
 	 */
 	public void addCombinableToRemove(InventoryItem item) {
-		combinablesToAdd.add(item);
+		combinablesToRemove.add(item);
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class ChangeCombineInformationAction extends AbstractAction {
 	 *            the item
 	 */
 	public void removeCombinableToAdd(InventoryItem item) {
-		combinablesToRemove.remove(item);
+		combinablesToAdd.remove(item);
 	}
 
 	/**

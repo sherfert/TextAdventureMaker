@@ -31,6 +31,8 @@ public class ConversationManager {
 	 * @throws DBClosedException
 	 */
 	public List<Conversation> getAllConversations() throws DBClosedException {
+		persistenceManager.updateChanges();
+		
 		CriteriaQuery<Conversation> query = persistenceManager.getCriteriaBuilder().createQuery(Conversation.class);
 		query.from(Conversation.class);
 		List<Conversation> resultList = persistenceManager.getEntityManager().createQuery(query).getResultList();
