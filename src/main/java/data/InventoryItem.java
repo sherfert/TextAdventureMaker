@@ -17,11 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import data.action.AbstractAction;
-import data.action.AddInventoryItemsAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.Combinable;
 import data.interfaces.PassivelyUsable;
@@ -85,17 +83,6 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	foreignKeyDefinition = "FOREIGN KEY (useWithInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@Access(AccessType.FIELD)
 	private Map<NamedDescribedObject, UseWithInformation> useWithInformation;
-
-	/**
-	 * This field is declared here just to ensure deletion from the list. It is
-	 * kept consistent by the mappedBy entity. Without the definition here the
-	 * ON DELETE CASCADE has no effect. Only used in PreRemove.
-	 * 
-	 * FIXME Test removal
-	 */
-	@ManyToMany(cascade = { CascadeType.PERSIST }, mappedBy = "getPickUpItems")
-	@Access(AccessType.FIELD)
-	private List<AddInventoryItemsAction> addIIActions;
 
 	/**
 	 * No-arg constructor for the database.
@@ -478,22 +465,6 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 		return new ArrayList<>(combineInformation.keySet());
 	}
 
-	/**
-	 * Only used by {@link AddInventoryItemsAction}
-	 */
-	@Deprecated
-	@Transient
-	public List<AddInventoryItemsAction> getAddIIActions() {
-		return addIIActions;
-	}
-
-	@PreRemove
-	private void preRemove() {
-		// Remove from all AddInventoryItemsActions
-		for (AddInventoryItemsAction a : new ArrayList<>(addIIActions)) {
-			a.removePickUpItem(this);
-		}
-	}
 
 	/**
 	 * Initializes the fields.
@@ -502,6 +473,5 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 		useWithInformation = new HashMap<>();
 		combineInformation = new HashMap<>();
 		additionalCombineCommands = new HashMap<>();
-		addIIActions = new ArrayList<>();
 	}
 }

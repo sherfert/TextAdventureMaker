@@ -62,10 +62,8 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 * @param item
 	 *            the item
 	 */
-	@SuppressWarnings("deprecation")
 	public void addPickUpItem(InventoryItem item) {
 		this.pickUpItems.add(item);
-		item.getAddIIActions().add(this);
 	}
 
 	/**
@@ -96,10 +94,8 @@ public class AddInventoryItemsAction extends AbstractAction {
 	 * @param item
 	 *            the item
 	 */
-	@SuppressWarnings("deprecation")
 	public void removePickUpItem(InventoryItem item) {
 		this.pickUpItems.remove(item);
-		item.getAddIIActions().remove(this);
 	}
 
 	@Override
