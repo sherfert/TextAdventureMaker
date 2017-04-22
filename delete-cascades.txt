@@ -1,10 +1,22 @@
 AbstractAction->ChangeActionAction D OK
+AbstractAction->MultiAction REM OK
+AbstractAction->CombineInformation.additional REM OK
+Conversation->ChangeConversationAction D OK
+Conversation->ChangePersonaction SETNULL OK
+ConversationOption->ChangeConversationOptionAction D OK
 InventoryItem->Game.startItems REM OK
 InventoryItem->AddInvItemAction REM OK
 InventoryItem->ChangeCombineInformationAction.inventoryItem1/2 D OK
 InventoryItem->ChangeCombineInformationAction.combinablesToAdd/Remove REM OK
+InventoryItem->ChangeItemAction.pickUpItemsToAdd/Remove REM OK
+InventoryItem->ChangeUseWithInformationAction D OK
+InventoryItem->RemoveInventoryItemAction D OK
 Location->Way D OK
+Location->ChangePersonAction SETNULL OK
+Location->ChangeWayAction SETNULL OK
+Location->MoveAction D OK
 NamedDescribedObject->ChangeNDObjectAction D OK
+PassivelyUsable->ChangeUseWithInformationAction D OK
 Way->Location X OK
 Way->moveAction D OK
 Way->additionalMoveActions X OK
@@ -13,7 +25,7 @@ Way->additionalMoveActions X OK
 
 
 AbstractAction->additional*Actions REM NOT OK
-AbstractAction->CombineInformation.additional REM EXCEPTION
+
 AbstractAction->UseWithInformation.additional REM NOT OK
 
-Continue: ChangeConversationAction
+Continue: CombineInformatioon

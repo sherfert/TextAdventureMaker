@@ -30,4 +30,11 @@ class CombineCommands {
 	@ElementCollection
 	List<String> commands = new ArrayList<>();
 
+	@Override
+	public String toString() {
+		return "CombineCommands{id=" + id + ", commands=" + commands + "}";
+	}
+	
+	
+
 }

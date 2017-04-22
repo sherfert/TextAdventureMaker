@@ -64,7 +64,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * OneToMany since each InventoryItem has its own CombineCommands (they are
 	 * not shared).
 	 */
-	@OneToMany(cascade = { CascadeType.PERSIST })
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands", //
 	foreignKeyDefinition = "FOREIGN KEY (ADDITIONALCOMBINECOMMANDS_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands_KEY", //
@@ -78,7 +78,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * method {@link InventoryItem#getUseWithInformation(PassivelyUsable)} adds
 	 * key and value, if it was not stored before.
 	 */
-	@OneToMany(cascade = { CascadeType.PERSIST })
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation", //
 	foreignKeyDefinition = "FOREIGN KEY (useWithInformation_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation_KEY", //
@@ -90,6 +90,8 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * This field is declared here just to ensure deletion from the list. It is
 	 * kept consistent by the mappedBy entity. Without the definition here the
 	 * ON DELETE CASCADE has no effect. Only used in PreRemove.
+	 * 
+	 * FIXME Test removal
 	 */
 	@ManyToMany(cascade = { CascadeType.PERSIST }, mappedBy = "getPickUpItems")
 	@Access(AccessType.FIELD)
@@ -446,6 +448,8 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 */
 	public void ensureHasCombineInformation(InventoryItem item) {
 		getCombineInformation(item);
+		getAdditionalCombineCommands(item);
+		item.getAdditionalCombineCommands(this);
 	}
 
 	/**

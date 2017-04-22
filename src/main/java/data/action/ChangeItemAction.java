@@ -273,7 +273,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 *            the item
 	 */
 	public void addPickUpItemToRemove(InventoryItem item) {
-		pickUpItemsToAdd.add(item);
+		pickUpItemsToRemove.add(item);
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class ChangeItemAction extends ChangeUsableObjectAction {
 	 *            the item
 	 */
 	public void removePickUpItemToAdd(InventoryItem item) {
-		pickUpItemsToRemove.remove(item);
+		pickUpItemsToAdd.remove(item);
 	}
 
 	/**
