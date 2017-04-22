@@ -44,6 +44,7 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	 * more than one person.
 	 */
 	private Conversation conversation;
+	
 	/**
 	 * The current location of the person. May be {@code null}.
 	 */

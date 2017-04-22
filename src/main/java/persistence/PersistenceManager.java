@@ -190,7 +190,7 @@ public class PersistenceManager {
 		try {
 			refreshEntity(o);
 			return true;
-		} catch(EntityNotFoundException e) {
+		} catch(EntityNotFoundException | IllegalArgumentException e) {
 			return false;
 		}
 	}

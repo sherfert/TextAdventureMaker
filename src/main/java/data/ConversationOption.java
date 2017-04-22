@@ -16,7 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import data.action.AbstractAction;
@@ -314,14 +313,6 @@ public class ConversationOption extends NamedObject {
 	 */
 	public void removeAdditionalAction(AbstractAction action) {
 		additionalActions.remove(action);
-	}
-
-	/**
-	 * Called to remove an option from its layer prior to deletion.
-	 */
-	@PreRemove
-	private void removeFromLayer() {
-		layer.removeOption(this);
 	}
 	
 	/**

@@ -37,7 +37,7 @@ import javafx.beans.property.StringProperty;
  * <br>
  * Parameters in commands must be exactly the following: {@literal "(?<o0>.+?)"}
  * for the first parameter and {@literal "(?<o1>.+?)"} for the second parameter,
- * if there are two. In additional, commands may contain optional parts, written
+ * if there are two. In addition, commands may contain optional parts, written
  * as {@literal "(optional text)?"}. <br>
  * <br>
  * The default texts, etc. can have placeholders. Which ones are allowed is
@@ -62,13 +62,6 @@ import javafx.beans.property.StringProperty;
 @Entity
 @Access(AccessType.FIELD)
 public class Game implements HasId {
-	/*
-	 * Thoughts on sets instead of lists: Pro: Use Sets instead of Lists, where
-	 * useful. Therefore, if former Lists of own classes, let these (or better
-	 * all) classes override equals, hashCode, and toString. Then, the
-	 * "if(contains)" check can be removed. Con: No ordering. Therefore, lists
-	 * are kept.
-	 */
 
 	/**
 	 * The {@link AddInventoryItemsAction} that adds item to your inventory when

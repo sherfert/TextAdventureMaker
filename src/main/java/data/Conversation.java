@@ -195,7 +195,7 @@ public class Conversation extends NamedObject {
 	/**
 	 * @return the layers
 	 */
-	@OneToMany(mappedBy = "getConversation", cascade = { CascadeType.PERSIST })
+	@OneToMany(mappedBy = "getConversation", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	public List<ConversationLayer> getLayers() {
 		return layers;
 	}

@@ -78,7 +78,7 @@ public class ConversationLayer extends NamedObject {
 	/**
 	 * @return the options
 	 */
-	@OneToMany(mappedBy = "getLayer", cascade = { CascadeType.PERSIST })
+	@OneToMany(mappedBy = "getLayer", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	@OrderBy("layerOrder ASC, getId ASC")
 	public List<ConversationOption> getOptions() {
 		return options;

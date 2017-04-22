@@ -16,10 +16,7 @@ import data.InspectableObject;
 import data.NamedDescribedObject;
 
 /**
- * An action changing properties of a {@link NamedDescribedObject} .
- * 
- * FIXME not getting deleted, if the changed object is deleted (case:
- * Way->ChangeWayAction). Check all of them!
+ * An action changing properties of a {@link NamedDescribedObject}.
  * 
  * @author Satia
  */

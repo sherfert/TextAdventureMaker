@@ -37,8 +37,6 @@ import data.action.RemoveInventoryItemAction;
  * 
  * TODO Tooltips everywhere!
  * 
- * TODO Test suite for deleting items
- * 
  * TODO no logging to console
  * 
  * XXX sound support (optional)

@@ -62,7 +62,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * OneToMany since each InventoryItem has its own CombineCommands (they are
 	 * not shared).
 	 */
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands", //
 	foreignKeyDefinition = "FOREIGN KEY (ADDITIONALCOMBINECOMMANDS_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands_KEY", //
@@ -76,7 +76,7 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 * method {@link InventoryItem#getUseWithInformation(PassivelyUsable)} adds
 	 * key and value, if it was not stored before.
 	 */
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation", //
 	foreignKeyDefinition = "FOREIGN KEY (useWithInformation_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation_KEY", //

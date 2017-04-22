@@ -2,10 +2,19 @@ AbstractAction->ChangeActionAction D OK
 AbstractAction->MultiAction REM OK
 AbstractAction->CombineInformation.additional REM OK
 AbstractAction->Conversation.additional REM OK
+AbstractAction->ConversationOption.additional REM OK
+AbstractAction->InspectableObject.additional REM OK
+AbstractAction->Item.additional REM OK
+AbstractAction->UsableObject.additional REM OK
+AbstractAction->UseWithInformation.additional REM OK
+AbstractAction->Way.additional REM OK
 Conversation->ChangeConversationAction D OK
 Conversation->ChangePersonaction SETNULL OK
 Conversation->ConversationLayer D OK
+Conversation->Person SETNULL OK
+ConversationLayer->ConversationOption D OK
 ConversationLayer->Conversation.startLayer SETNULL OK
+ConversationLayer->ConversationOption.target SETNULL OK
 ConversationOption->ChangeConversationOptionAction D OK
 InventoryItem->Game.startItems REM OK
 InventoryItem->AddInvItemAction REM OK
@@ -14,20 +23,19 @@ InventoryItem->ChangeCombineInformationAction.combinablesToAdd/Remove REM OK
 InventoryItem->ChangeItemAction.pickUpItemsToAdd/Remove REM OK
 InventoryItem->ChangeUseWithInformationAction D OK
 InventoryItem->RemoveInventoryItemAction D OK
+InventoryItem->UseWithInformation D OK
+InventoryItem->CombineInformation D OK
+InventoryItem->CombineCommands D OK
+Item->Location REM OK
 Location->Way D OK
 Location->ChangePersonAction SETNULL OK
 Location->ChangeWayAction SETNULL OK
 Location->MoveAction D OK
+Location->Item SETNULL OK
+Location->Person SETNULL OK
 NamedDescribedObject->ChangeNDObjectAction D OK
 PassivelyUsable->ChangeUseWithInformationAction D OK
+Person->Way REM OK
 Way->Location X OK
 Way->moveAction D OK
 Way->additionalMoveActions X OK
-
-
-
-
-AbstractAction->additional*Actions REM NOT OK
-AbstractAction->UseWithInformation.additional REM NOT OK
-
-Continue: ConversationOption
