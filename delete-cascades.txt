@@ -1,8 +1,11 @@
 AbstractAction->ChangeActionAction D OK
 AbstractAction->MultiAction REM OK
 AbstractAction->CombineInformation.additional REM OK
+AbstractAction->Conversation.additional REM OK
 Conversation->ChangeConversationAction D OK
 Conversation->ChangePersonaction SETNULL OK
+Conversation->ConversationLayer D OK
+ConversationLayer->Conversation.startLayer SETNULL OK
 ConversationOption->ChangeConversationOptionAction D OK
 InventoryItem->Game.startItems REM OK
 InventoryItem->AddInvItemAction REM OK
@@ -25,7 +28,6 @@ Way->additionalMoveActions X OK
 
 
 AbstractAction->additional*Actions REM NOT OK
-
 AbstractAction->UseWithInformation.additional REM NOT OK
 
-Continue: CombineInformatioon
+Continue: ConversationOption

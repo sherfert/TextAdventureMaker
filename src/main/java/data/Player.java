@@ -112,9 +112,8 @@ public class Player implements HasId {
 	 * @return a string representation of this object
 	 */
 	@Override
-	public String toString() {
-		return "Player{" + "id=" + id + ", inventoryIDs=" + NamedObject.getIDList(inventory) + ", locationID="
-				+ location.getId() + " " + super.toString() + '}';
+	public final String toString() {
+		return "Player - ID: " + getId();
 	}
 
 }

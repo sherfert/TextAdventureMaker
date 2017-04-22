@@ -140,14 +140,6 @@ public class ConversationLayer extends NamedObject {
 	}
 
 	/**
-	 * Called to remove a layer from its conversation prior to deletion.
-	 */
-	@PreRemove
-	private void removeFromConversation() {
-		conversation.removeLayer(this);
-	}
-
-	/**
 	 * @return a list of the texts of all enabled options.
 	 */
 	@Transient
@@ -190,6 +182,14 @@ public class ConversationLayer extends NamedObject {
 			}
 		}
 		return false;
+	}
+	
+	@PreRemove
+	private void preRemove() {
+		if(conversation.getStartLayer() == this) {
+			// Otherwise the CASCADE persist on the *OneToOne* cancels the delete
+			conversation.setStartLayer(null);
+		}
 	}
 
 }
