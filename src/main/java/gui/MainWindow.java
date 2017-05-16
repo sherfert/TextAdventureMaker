@@ -19,8 +19,6 @@ import java.util.logging.Logger;
  * 
  * TODO more headlines, so you know better what you're doing
  * 
- * TODO Font sizes in Linux
- * 
  * @author Satia
  */
 public class MainWindow extends Application {

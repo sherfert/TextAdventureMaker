@@ -17,15 +17,15 @@
 				<HBox fx:id="addHBox" spacing="2.0">
 					<children>
 						<Button fx:id="addButton" mnemonicParsing="false"
-							prefWidth="25.0" text="+" />
+							prefWidth="30.0" text="+" />
 						<NamedObjectChooser fx:id="addValueChooser" HBox.hgrow="ALWAYS" />
 					</children>
 				</HBox>
 				<Button fx:id="removeButton" mnemonicParsing="false"
-					prefWidth="25.0" text="-" />
-				<Button fx:id="upButton" mnemonicParsing="false" prefWidth="25.0"
+					prefWidth="30.0" text="-" />
+				<Button fx:id="upButton" mnemonicParsing="false" prefWidth="30.0"
 					text="⇑" />
-				<Button fx:id="downButton" mnemonicParsing="false" prefWidth="25.0"
+				<Button fx:id="downButton" mnemonicParsing="false" prefWidth="30.0"
 					text="⇓" />
 			</children>
 			<padding>

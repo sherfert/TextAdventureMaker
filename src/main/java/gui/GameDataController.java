@@ -59,6 +59,7 @@ import gui.itemEditing.action.MoveActionController;
 import gui.itemEditing.action.MultiActionController;
 import gui.itemEditing.action.RIIActionController;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -465,8 +466,6 @@ public abstract class GameDataController {
 
 	/**
 	 * Removes an object from the DB, asking for confirmation first.
-	 * 
-	 * TODO not all text visible on Linux
 	 */
 	protected void removeObject(HasId object, String title, String header, String content) {
 		// Show a confirmation dialog
@@ -474,6 +473,7 @@ public abstract class GameDataController {
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(content);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
 
 		Image img = new Image(WindowUtil.getWindowIconURL().toString());
 		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();

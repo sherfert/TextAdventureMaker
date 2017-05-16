@@ -2,7 +2,8 @@
 
 
 .hyperlink {
-	-fx-font-size: 14pt;
+	-fx-font-size: 12pt;
+	-fx-font-family: sans-serif;
 	-fx-text-fill: black;
 	-fx-font-weight: bold;
     -fx-border-style: hidden;

@@ -23,8 +23,6 @@ import javafx.scene.layout.BorderPane;
  * 
  * Initialize must be called to enable the functionality.
  * 
- * TODO button sizes Linux
- * 
  * @author Satia
  */
 public class NamedObjectListView<E extends HasName> extends BorderPane {
