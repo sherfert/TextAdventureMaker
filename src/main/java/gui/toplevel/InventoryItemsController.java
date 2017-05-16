@@ -6,6 +6,8 @@ import data.InventoryItem;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedDescribedObjectsController;
+import gui.wizards.NewNamedObjectWizard;
+import javafx.fxml.FXML;
 import logic.CurrentGameManager;
 
 /**
@@ -25,19 +27,27 @@ public class InventoryItemsController extends NamedDescribedObjectsController<In
 		super(currentGameManager, mwController);
 	}
 
+	@FXML
+	@Override
+	protected void initialize() {
+		super.initialize();
+		newButton.setText("New inventory item");
+	}
+
 	@Override
 	protected List<InventoryItem> getAllObjects() throws DBClosedException {
 		return currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems();
 	}
 
 	@Override
-	protected InventoryItem createNewObject(String name, String description) {
-		return new InventoryItem(name, description);
-	}
-	
-	@Override
 	public boolean isObsolete() {
 		return false;
+	}
+
+	@Override
+	protected void createObject() {
+		new NewNamedObjectWizard("New inventory item").showAndGetName().map(name -> new InventoryItem(name, ""))
+				.ifPresent(this::saveObject);
 	}
 
 }

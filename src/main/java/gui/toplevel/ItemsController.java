@@ -6,6 +6,8 @@ import data.Item;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedDescribedObjectsController;
+import gui.wizards.NewNamedObjectWizard;
+import javafx.fxml.FXML;
 import logic.CurrentGameManager;
 
 /**
@@ -25,19 +27,27 @@ public class ItemsController extends NamedDescribedObjectsController<Item> {
 		super(currentGameManager, mwController);
 	}
 
+	@FXML
+	@Override
+	protected void initialize() {
+		super.initialize();
+		newButton.setText("New item");
+	}
+
 	@Override
 	protected List<Item> getAllObjects() throws DBClosedException {
 		return currentGameManager.getPersistenceManager().getItemManager().getAllItems();
 	}
 
 	@Override
-	protected Item createNewObject(String name, String description) {
-		return new Item(name, description);
-	}
-	
-	@Override
 	public boolean isObsolete() {
 		return false;
+	}
+
+	@Override
+	protected void createObject() {
+		new NewNamedObjectWizard("New item").showAndGetName().map(name -> new Item(name, ""))
+				.ifPresent(this::saveObject);
 	}
 
 }

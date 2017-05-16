@@ -7,10 +7,11 @@ import data.ConversationLayer;
 import data.action.AbstractAction;
 import exception.DBClosedException;
 import gui.MainWindowController;
-import gui.NamedObjectsController;
+import gui.NamedObjectsTableController;
 import gui.customui.NamedObjectChooser;
 import gui.customui.NamedObjectListView;
 import gui.include.NamedObjectController;
+import gui.wizards.NewNamedObjectWizard;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -23,7 +24,7 @@ import logic.CurrentGameManager;
  * 
  * @author Satia
  */
-public class ConversationController extends NamedObjectsController<ConversationLayer> {
+public class ConversationController extends NamedObjectsTableController<ConversationLayer> {
 
 	/** The conversation */
 	private Conversation conversation;
@@ -84,9 +85,6 @@ public class ConversationController extends NamedObjectsController<ConversationL
 		startLayerChooser.initialize(conversation.getStartLayer(), true, true, conversation::getLayers,
 				conversation::setStartLayer);
 
-		// Assure save is only enabled if there is a name
-		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
-		
 		actionsListView.initialize(conversation.getAdditionalActions(),
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
 				this::objectSelected, (a) -> conversation.addAdditionalAction(a),
@@ -113,15 +111,17 @@ public class ConversationController extends NamedObjectsController<ConversationL
 	}
 
 	@Override
-	protected ConversationLayer createNewObject(String name) {
-		ConversationLayer result = new ConversationLayer(name);
-		// Also add the layer to this conversation
-		conversation.addLayer(result);
-		return result;
-	}
-	
-	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(conversation);
+	}
+
+	@Override
+	protected void createObject() {
+		new NewNamedObjectWizard("New conversation layer").showAndGetName().map(name -> new ConversationLayer(name))
+				.ifPresent(cl -> {
+					// Also add the layer to this conversation
+					conversation.addLayer(cl);
+					saveObject(cl);
+				});
 	}
 }

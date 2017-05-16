@@ -6,6 +6,8 @@ import data.Person;
 import exception.DBClosedException;
 import gui.MainWindowController;
 import gui.NamedDescribedObjectsController;
+import gui.wizards.NewNamedObjectWizard;
+import javafx.fxml.FXML;
 import logic.CurrentGameManager;
 
 /**
@@ -25,19 +27,27 @@ public class PersonsController extends NamedDescribedObjectsController<Person> {
 		super(currentGameManager, mwController);
 	}
 
+	@FXML
+	@Override
+	protected void initialize() {
+		super.initialize();
+		newButton.setText("New person");
+	}
+
 	@Override
 	protected List<Person> getAllObjects() throws DBClosedException {
 		return currentGameManager.getPersistenceManager().getPersonManager().getAllPersons();
 	}
 
 	@Override
-	protected Person createNewObject(String name, String description) {
-		return new Person(name, description);
-	}
-	
-	@Override
 	public boolean isObsolete() {
 		return false;
+	}
+
+	@Override
+	protected void createObject() {
+		new NewNamedObjectWizard("New person").showAndGetName().map(name -> new Person(name, ""))
+				.ifPresent(this::saveObject);
 	}
 
 }

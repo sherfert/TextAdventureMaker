@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -14,16 +13,15 @@ import data.Location;
 import data.Way;
 import exception.DBClosedException;
 import gui.MainWindowController;
-import gui.NamedObjectsController;
+import gui.NamedObjectsTableController;
 import gui.customui.LocationRectangle;
-import gui.customui.NamedObjectChooser;
 import gui.customui.WayLine;
+import gui.wizards.NewWayWizard;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
@@ -35,12 +33,13 @@ import logic.CurrentGameManager;
  * We extend NamedObjectsController instead of NamedDescribedObjectsController,
  * since we do not have a description column.
  * 
- * TODO split way and map. Include location creation in map. Better way/location creation in map.
+ * TODO split way and map. Include location creation in map. Better way/location
+ * creation in map.
  * 
  * @author Satia
  */
-public class WaysController extends NamedObjectsController<Way> {
-	
+public class WaysController extends NamedObjectsTableController<Way> {
+
 	/**
 	 * A map with all LocationRectangles.
 	 */
@@ -66,24 +65,15 @@ public class WaysController extends NamedObjectsController<Way> {
 	 * During way creation in the map, the line.
 	 */
 	private Line creationLine;
-	
+
 	@FXML
 	private TabPane tabPane;
-	
+
 	@FXML
 	private TableColumn<Way, String> originCol;
 
 	@FXML
 	private TableColumn<Way, String> destinationCol;
-
-	@FXML
-	private TextArea newDescriptionTA;
-
-	@FXML
-	private NamedObjectChooser<Location> newOriginChooser;
-
-	@FXML
-	private NamedObjectChooser<Location> newDestinationChooser;
 
 	@FXML
 	private Pane mapPane;
@@ -104,14 +94,6 @@ public class WaysController extends NamedObjectsController<Way> {
 		super(currentGameManager, mwController);
 	}
 
-	@Override
-	protected void resetFormValues() {
-		super.resetFormValues();
-		newDescriptionTA.setText("");
-		newOriginChooser.setObjectValue(null);
-		newDestinationChooser.setObjectValue(null);
-	}
-
 	@FXML
 	@Override
 	protected void initialize() {
@@ -119,22 +101,6 @@ public class WaysController extends NamedObjectsController<Way> {
 		originCol.setCellValueFactory((p) -> p.getValue().getOrigin().nameProperty());
 		destinationCol.setCellValueFactory((p) -> p.getValue().getDestination().nameProperty());
 
-		newOriginChooser.initialize(null, false, false,
-				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (l) -> {
-				});
-		newDestinationChooser.initialize(null, false, false,
-				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (l) -> {
-				});
-
-		// Assure save is only enabled if there is a name, origin and
-		// destination
-		Supplier<Boolean> anyRequiredFieldEmpty = () -> newNameTF.textProperty().get().isEmpty()
-				|| newOriginChooser.getObjectValue() == null || newDestinationChooser.getObjectValue() == null;
-		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		newOriginChooser.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		newDestinationChooser.textProperty()
-				.addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		
 		saveTabIndex(tabPane);
 
 		// Initializes everything contained in the Map Tab
@@ -144,14 +110,6 @@ public class WaysController extends NamedObjectsController<Way> {
 	@Override
 	protected List<Way> getAllObjects() throws DBClosedException {
 		return currentGameManager.getPersistenceManager().getWayManager().getAllWays();
-	}
-
-	@Override
-	protected Way createNewObject(String name) {
-		Way w = new Way(name, newDescriptionTA.getText(), newOriginChooser.getObjectValue(),
-				newDestinationChooser.getObjectValue());
-		addWayToMap(w);
-		return w;
 	}
 
 	/**
@@ -316,19 +274,12 @@ public class WaysController extends NamedObjectsController<Way> {
 		Way way = new Way(this.creationOrigin.getName() + "->" + this.creationDestination.getName(), "",
 				this.creationOrigin, this.creationDestination);
 		// Save way
-		try {
-			saveObject(way);
-			// Add item to map
-			addWayToMap(way);
-			// Add item to table
-			objectsOL.add(way);
-			// Open new way for editing
-			objectSelected(way);
-		} catch (DBClosedException e1) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
-		} finally {
-			disableWayCreation();
-		}
+		// FIXME this fails silently!
+		saveObject(way);
+		addWayToMap(way);
+		// Open new way for editing
+		objectSelected(way);
+		disableWayCreation();
 	}
 
 	/**
@@ -351,10 +302,18 @@ public class WaysController extends NamedObjectsController<Way> {
 			mapPane.getChildren().remove(creationLine);
 		}
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return false;
+	}
+
+	@Override
+	protected void createObject() {
+		new NewWayWizard(currentGameManager).showAndGet().ifPresent(way -> {
+			saveObject(way);
+			addWayToMap(way);
+		});
 	}
 
 }

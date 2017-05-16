@@ -3,7 +3,6 @@ package gui;
 import data.NamedDescribedObject;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextArea;
 import logic.CurrentGameManager;
 
 /**
@@ -12,13 +11,10 @@ import logic.CurrentGameManager;
  * 
  * @author Satia
  */
-public abstract class NamedDescribedObjectsController<E extends NamedDescribedObject> extends NamedObjectsController<E> {
+public abstract class NamedDescribedObjectsController<E extends NamedDescribedObject> extends NamedObjectsTableController<E> {
 
 	@FXML
 	protected TableColumn<E, String> descriptionCol;
-
-	@FXML
-	protected TextArea newDescriptionTA;
 
 	/**
 	 * 
@@ -36,30 +32,6 @@ public abstract class NamedDescribedObjectsController<E extends NamedDescribedOb
 	protected void initialize() {
 		super.initialize();
 		descriptionCol.setCellValueFactory((p) -> p.getValue().descriptionProperty());
-		// Assure save is only enabled if there is a name
-		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(n.isEmpty()));
 	}
-	
-	@Override
-	protected void resetFormValues() {
-		super.resetFormValues();
-		newDescriptionTA.setText("");
-	}
-	
-	@Override
-	protected E createNewObject(String name) {
-		return createNewObject(name, newDescriptionTA.getText());
-	}
-
-	/**
-	 * Create a new Object of type E.
-	 * 
-	 * @param name
-	 *            the name for the new object
-	 * @param description
-	 *            the description for the new object
-	 * @return the new object.
-	 */
-	protected abstract E createNewObject(String name, String description);
 
 }

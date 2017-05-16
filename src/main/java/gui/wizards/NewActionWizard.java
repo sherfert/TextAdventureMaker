@@ -42,7 +42,6 @@ import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -57,8 +56,8 @@ import utility.WindowUtil;
 public class NewActionWizard extends Wizard {
 
 	// Constants for the wizard settings
-	private static final String TYPE_KEY = "type";
 	private static final String NAME_KEY = "name";
+	private static final String TYPE_KEY = "type";
 	private static final String ACTIONTOCHANGE_KEY = "actionToChange";
 	private static final String REMOVEITEM_KEY = "removeItem";
 	private static final String MOVETARGET_KEY = "moveTarget";
@@ -81,19 +80,16 @@ public class NewActionWizard extends Wizard {
 	/** The current game manager. */
 	private CurrentGameManager currentGameManager;
 
-	/**
-	 * @param currentGameManager
-	 */
 	public NewActionWizard(CurrentGameManager currentGameManager) {
 		this.currentGameManager = currentGameManager;
 
 		setTitle("New action");
 		NewActionWizardFlow flow = new NewActionWizardFlow();
 		setFlow(flow);
-		
+
 		// Set the icon using the first pane in the flow.
 		Image img = new Image(WindowUtil.getWindowIconURL().toString());
-		Stage stage = (Stage) flow.ctp.getScene().getWindow();
+		Stage stage = (Stage) flow.chooseTypePane.getScene().getWindow();
 		stage.getIcons().add(img);
 	}
 
@@ -102,7 +98,7 @@ public class NewActionWizard extends Wizard {
 	 * 
 	 * @return the new action.
 	 */
-	public Optional<AbstractAction> showAndGetAction() {
+	public Optional<AbstractAction> showAndGet() {
 		return showAndWait().map(result -> {
 			AbstractAction newAction = null;
 
@@ -165,52 +161,89 @@ public class NewActionWizard extends Wizard {
 	 * @author satia
 	 */
 	private class NewActionWizardFlow implements Wizard.Flow {
-		private ChooseTypePane ctp;
-		private ChooseActionToChangePane catcp;
-		private ChooseNamePane cnp;
-		private ChooseRemoveItemPane crip;
-		private ChooseMoveTargetPane cmtp;
-		private ChooseUseWithItemsPane cuwip;
-		private ChooseCombineItemsPane ccip;
-		private ChooseObjectToChangePane cotcp;
+		private ChooseTypePane chooseTypePane;
+		private ChooseNamedObjectPane<AbstractAction> chooseActionToChangePane;
+		private ChooseStringPane chooseNamePane;
+		private ChooseNamedObjectPane<InventoryItem> chooseRemoveItemPane;
+		private ChooseNamedObjectPane<Location> chooseMoveToPane;
+		private ChooseUseWithItemsPane chooseUseWithItemsPane;
+		private ChooseCombineItemsPane chooseCombineItemsPane;
+		private ChooseNamedObjectPane<NamedObject> chooseObjectToChangePane;
 
 		/**
 		 * Creates all panes and defines the flow between them.
 		 */
 		public NewActionWizardFlow() {
-			this.ctp = new ChooseTypePane();
-			this.catcp = new ChooseActionToChangePane();
-			this.cnp = new ChooseNamePane();
-			this.crip = new ChooseRemoveItemPane();
-			this.cmtp = new ChooseMoveTargetPane();
-			this.cuwip = new ChooseUseWithItemsPane();
-			this.ccip = new ChooseCombineItemsPane();
-			this.cotcp = new ChooseObjectToChangePane();
+			this.chooseTypePane = new ChooseTypePane();
+			this.chooseActionToChangePane = new ChooseNamedObjectPane<>("What action should be changed?", ACTIONTOCHANGE_KEY);
+			this.chooseActionToChangePane.getChooser().setNoValueString("(no action)");
+			this.chooseActionToChangePane.getChooser().initialize(null, false, false,
+					currentGameManager.getPersistenceManager().getActionManager()::getAllActions, (l) -> {
+						setInvalid(l == null);
+					});
+
+			this.chooseNamePane = new ChooseStringPane("Type a name for the new action", NAME_KEY, false);
+			this.chooseRemoveItemPane = new ChooseNamedObjectPane<>("What inventory item should be removed?", REMOVEITEM_KEY);
+			this.chooseRemoveItemPane.getChooser().setNoValueString("(no inventory item)");
+			this.chooseRemoveItemPane.getChooser().initialize(null, false, false,
+					currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, (l) -> {
+						setInvalid(l == null);
+					});
+
+			this.chooseMoveToPane = new ChooseNamedObjectPane<>("Where should the player be moved?", MOVETARGET_KEY);
+			this.chooseMoveToPane.getChooser().setNoValueString("(no location)");
+			this.chooseMoveToPane.getChooser().initialize(null, false, false,
+					currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (l) -> {
+						setInvalid(l == null);
+					});
+
+			this.chooseUseWithItemsPane = new ChooseUseWithItemsPane();
+			this.chooseCombineItemsPane = new ChooseCombineItemsPane();
+			this.chooseObjectToChangePane = new ChooseNamedObjectPane<>(
+					"What object should be changed? You can change conversations, conversation options, items, inventory items, locations, persons and ways.",
+					OBJECTTOCHANGE_KEY);
+			this.chooseObjectToChangePane.getChooser().setNoValueString("(no object)");
+			this.chooseObjectToChangePane.getChooser().initialize(null, false, false, () -> {
+				List<NamedObject> allObjects = new ArrayList<>();
+				allObjects.addAll(
+						currentGameManager.getPersistenceManager().getConversationManager().getAllConversations());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getConversationOptionManager()
+						.getAllConversationOptions());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getItemManager().getAllItems());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
+				allObjects.addAll(
+						currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems());
+				allObjects.addAll(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
+				return allObjects;
+			}, (l) -> {
+				setInvalid(l == null);
+			});
 		}
 
 		@Override
 		public Optional<WizardPane> advance(WizardPane currentPage) {
 			if (currentPage == null) {
-				return Optional.of(ctp);
-			} else if (currentPage == ctp) {
-				if (ctp.changeActionRB.isSelected()) {
-					return Optional.of(catcp);
-				} else if (ctp.removeIIRB.isSelected()) {
-					return Optional.of(crip);
-				} else if (ctp.moveRB.isSelected()) {
-					return Optional.of(cmtp);
-				} else if (ctp.changeUseWithRB.isSelected()) {
-					return Optional.of(cuwip);
-				} else if (ctp.changeCombineRB.isSelected()) {
-					return Optional.of(ccip);
-				} else if (ctp.changeRB.isSelected()) {
-					return Optional.of(cotcp);
-				} else if (ctp.endGameRB.isSelected() || ctp.multiRB.isSelected() || ctp.addIIRB.isSelected()) {
-					return Optional.of(cnp);
+				return Optional.of(chooseTypePane);
+			} else if (currentPage == chooseTypePane) {
+				if (chooseTypePane.changeActionRB.isSelected()) {
+					return Optional.of(chooseActionToChangePane);
+				} else if (chooseTypePane.removeIIRB.isSelected()) {
+					return Optional.of(chooseRemoveItemPane);
+				} else if (chooseTypePane.moveRB.isSelected()) {
+					return Optional.of(chooseMoveToPane);
+				} else if (chooseTypePane.changeUseWithRB.isSelected()) {
+					return Optional.of(chooseUseWithItemsPane);
+				} else if (chooseTypePane.changeCombineRB.isSelected()) {
+					return Optional.of(chooseCombineItemsPane);
+				} else if (chooseTypePane.changeRB.isSelected()) {
+					return Optional.of(chooseObjectToChangePane);
+				} else if (chooseTypePane.endGameRB.isSelected() || chooseTypePane.multiRB.isSelected() || chooseTypePane.addIIRB.isSelected()) {
+					return Optional.of(chooseNamePane);
 				}
-			} else if (currentPage == catcp || currentPage == crip || currentPage == cmtp || currentPage == cuwip
-					|| currentPage == ccip || currentPage == cotcp) {
-				return Optional.of(cnp);
+			} else if (currentPage == chooseActionToChangePane || currentPage == chooseRemoveItemPane || currentPage == chooseMoveToPane || currentPage == chooseUseWithItemsPane
+					|| currentPage == chooseCombineItemsPane || currentPage == chooseObjectToChangePane) {
+				return Optional.of(chooseNamePane);
 			}
 			// As default, don't switch
 			return Optional.of(currentPage);
@@ -219,7 +252,7 @@ public class NewActionWizard extends Wizard {
 		@Override
 		public boolean canAdvance(WizardPane currentPage) {
 			// the name is always chosen last
-			return currentPage != cnp;
+			return currentPage != chooseNamePane;
 		}
 
 	}
@@ -275,106 +308,6 @@ public class NewActionWizard extends Wizard {
 	}
 
 	/**
-	 * Pane to choose which action to change for a {@link ChangeActionAction}.
-	 * 
-	 * @author satia
-	 */
-	public class ChooseActionToChangePane extends WizardPane {
-		private @FXML NamedObjectChooser<AbstractAction> actionChooser;
-		private Wizard wizard;
-
-		public ChooseActionToChangePane() {
-			Loader.load(this, this, "view/wizards/CreateActionChooseActionToChange.fxml");
-			actionChooser.initialize(null, false, false,
-					currentGameManager.getPersistenceManager().getActionManager()::getAllActions, (a) -> {
-						wizard.setInvalid(a == null);
-					});
-		}
-
-		@Override
-		public void onEnteringPage(Wizard wizard) {
-			wizard.setInvalid(actionChooser.getObjectValue() == null);
-			this.wizard = wizard;
-		}
-
-		@Override
-		public void onExitingPage(Wizard wizard) {
-			wizard.getSettings().put(ACTIONTOCHANGE_KEY, actionChooser.getObjectValue());
-		}
-	}
-
-	/**
-	 * Pane to choose which object to change for a {@link ChangeNDObjectAction}.
-	 * 
-	 * @author satia
-	 */
-	public class ChooseObjectToChangePane extends WizardPane {
-		private @FXML NamedObjectChooser<NamedObject> objectChooser;
-		private Wizard wizard;
-
-		public ChooseObjectToChangePane() {
-			Loader.load(this, this, "view/wizards/CreateActionChooseObjectToChange.fxml");
-			objectChooser.initialize(null, false, false, () -> {
-				List<NamedObject> allObjects = new ArrayList<>();
-				allObjects.addAll(
-						currentGameManager.getPersistenceManager().getConversationManager().getAllConversations());
-				allObjects.addAll(currentGameManager.getPersistenceManager().getConversationOptionManager()
-						.getAllConversationOptions());
-				allObjects.addAll(currentGameManager.getPersistenceManager().getItemManager().getAllItems());
-				allObjects.addAll(currentGameManager.getPersistenceManager().getLocationManager().getAllLocations());
-				allObjects.addAll(currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
-				allObjects.addAll(
-						currentGameManager.getPersistenceManager().getInventoryItemManager().getAllInventoryItems());
-				allObjects.addAll(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
-				return allObjects;
-			} , (a) -> {
-				wizard.setInvalid(a == null);
-			});
-		}
-
-		@Override
-		public void onEnteringPage(Wizard wizard) {
-			wizard.setInvalid(objectChooser.getObjectValue() == null);
-			this.wizard = wizard;
-		}
-
-		@Override
-		public void onExitingPage(Wizard wizard) {
-			wizard.getSettings().put(OBJECTTOCHANGE_KEY, objectChooser.getObjectValue());
-		}
-	}
-
-	/**
-	 * Pane to choose which item to remove for a
-	 * {@link RemoveInventoryItemAction}.
-	 * 
-	 * @author satia
-	 */
-	public class ChooseRemoveItemPane extends WizardPane {
-		private @FXML NamedObjectChooser<InventoryItem> removeItemChooser;
-		private Wizard wizard;
-
-		public ChooseRemoveItemPane() {
-			Loader.load(this, this, "view/wizards/CreateActionChooseRemoveItem.fxml");
-			removeItemChooser.initialize(null, false, false,
-					currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, (a) -> {
-						wizard.setInvalid(a == null);
-					});
-		}
-
-		@Override
-		public void onEnteringPage(Wizard wizard) {
-			wizard.setInvalid(removeItemChooser.getObjectValue() == null);
-			this.wizard = wizard;
-		}
-
-		@Override
-		public void onExitingPage(Wizard wizard) {
-			wizard.getSettings().put(REMOVEITEM_KEY, removeItemChooser.getObjectValue());
-		}
-	}
-
-	/**
 	 * Pane to choose which items for a {@link ChangeUseWithInformationAction}.
 	 * 
 	 * @author satia
@@ -397,7 +330,7 @@ public class NewActionWizard extends Wizard {
 				allObjects.addAll(currentGameManager.getPersistenceManager().getPersonManager().getAllPersons());
 				allObjects.addAll(currentGameManager.getPersistenceManager().getWayManager().getAllWays());
 				return allObjects;
-			} , (a) -> {
+			}, (a) -> {
 				wizard.setInvalid(invItemChooser.getObjectValue() == null || objectChooser.getObjectValue() == null);
 			});
 		}
@@ -438,13 +371,13 @@ public class NewActionWizard extends Wizard {
 			invItem1Chooser.initialize(null, false, true, () -> {
 				return allItems.stream().filter((i) -> invItem2Chooser.getObjectValue() != i)
 						.collect(Collectors.toList());
-			} , (a) -> {
+			}, (a) -> {
 				wizard.setInvalid(invItem1Chooser.getObjectValue() == null || invItem2Chooser.getObjectValue() == null);
 			});
 			invItem2Chooser.initialize(null, false, true, () -> {
 				return allItems.stream().filter((i) -> invItem1Chooser.getObjectValue() != i)
 						.collect(Collectors.toList());
-			} , (a) -> {
+			}, (a) -> {
 				wizard.setInvalid(invItem1Chooser.getObjectValue() == null || invItem2Chooser.getObjectValue() == null);
 			});
 		}
@@ -461,59 +394,4 @@ public class NewActionWizard extends Wizard {
 			wizard.getSettings().put(COMBINEINVITEM2_KEY, invItem2Chooser.getObjectValue());
 		}
 	}
-
-	/**
-	 * Pane to choose target for a {@link MoveAction}.
-	 * 
-	 * @author satia
-	 */
-	public class ChooseMoveTargetPane extends WizardPane {
-		private @FXML NamedObjectChooser<Location> moveTargetChooser;
-		private Wizard wizard;
-
-		public ChooseMoveTargetPane() {
-			Loader.load(this, this, "view/wizards/CreateActionChooseMoveTarget.fxml");
-			moveTargetChooser.initialize(null, false, false,
-					currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations, (a) -> {
-						wizard.setInvalid(a == null);
-					});
-		}
-
-		@Override
-		public void onEnteringPage(Wizard wizard) {
-			wizard.setInvalid(moveTargetChooser.getObjectValue() == null);
-			this.wizard = wizard;
-		}
-
-		@Override
-		public void onExitingPage(Wizard wizard) {
-			wizard.getSettings().put(MOVETARGET_KEY, moveTargetChooser.getObjectValue());
-		}
-	}
-
-	/**
-	 * Pane to choose the name of the new action.
-	 * 
-	 * @author satia
-	 */
-	public class ChooseNamePane extends WizardPane {
-		private @FXML TextField nameTF;
-		private Wizard wizard;
-
-		public ChooseNamePane() {
-			Loader.load(this, this, "view/wizards/CreateActionChooseName.fxml");
-			nameTF.textProperty().addListener((f, o, n) -> {
-				wizard.setInvalid(n.isEmpty());
-				// XXX cannot do this in onExitingPage: Not called for last page
-				wizard.getSettings().put(NAME_KEY, n);
-			});
-		}
-
-		@Override
-		public void onEnteringPage(Wizard wizard) {
-			wizard.setInvalid(nameTF.getText().isEmpty());
-			this.wizard = wizard;
-		}
-	}
-
 }

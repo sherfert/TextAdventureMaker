@@ -16,25 +16,11 @@
 			</columns>
 		</TableView>
 	</center>
-	<right>
-		<VBox prefWidth="200.0" spacing="2.0">
-			<children>
-				<Label text="Name" />
-				<TextField fx:id="newNameTF" />
-				<Label text="Description" />
-				<TextArea fx:id="newDescriptionTA" prefHeight="200.0"
-					wrapText="true" />
-				<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
-			</children>
-			<padding>
-				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-			</padding>
-		</VBox>
-	</right>
 	<bottom>
 		<HBox spacing="10.0">
 			<Label text="Filter:" />
 			<TextField fx:id="filterTF" />
+			<Button fx:id="newButton" mnemonicParsing="false" />
 			<padding>
 				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
 			</padding>

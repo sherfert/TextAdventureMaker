@@ -7,7 +7,7 @@
 <?import gui.customui.NamedObjectChooser?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1"  fx:id="tabPane">
+	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
 	<tabs>
 		<Tab text="Basic properties">
 			<content>
@@ -31,49 +31,31 @@
 							<columns>
 								<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
 								<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
-								<TableColumn fx:id="targetCol" prefWidth="150.0" text="Target Layer" />
+								<TableColumn fx:id="targetCol" prefWidth="150.0"
+									text="Target Layer" />
 								<TableColumn fx:id="textCol" prefWidth="250.0" text="Text" />
 							</columns>
 						</TableView>
 					</center>
 					<right>
-						<HBox>
-							<VBox spacing="2.0">
-								<children>
-									<Button fx:id="upButton" mnemonicParsing="false"
-										prefWidth="25.0" text="⇑" />
-									<Button fx:id="downButton" mnemonicParsing="false"
-										prefWidth="25.0" text="⇓" />
-								</children>
-								<padding>
-									<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-								</padding>
-							</VBox>
-							<VBox prefWidth="200.0" spacing="2.0">
-								<children>
-									<Label text="Name" />
-									<TextField fx:id="newNameTF" />
-									<Label text="Text" />
-									<TextField fx:id="newTextTF" />
-									<Label text="Answer" />
-									<TextArea fx:id="newAnswerTA" prefHeight="200.0"
-										wrapText="true" />
-									<Label text="Event" />
-									<TextArea fx:id="newEventTA" prefHeight="200.0"
-										wrapText="true" />
-									<NamedObjectChooser noValueString="(no layer)" fx:id="targetChooser" />
-									<Button fx:id="saveButton" mnemonicParsing="false" text="Save" />
-								</children>
-								<padding>
-									<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-								</padding>
-							</VBox>
-						</HBox>
+						<VBox spacing="2.0">
+							<children>
+								<Button fx:id="upButton" mnemonicParsing="false"
+									prefWidth="25.0" text="⇑" />
+								<Button fx:id="downButton" mnemonicParsing="false"
+									prefWidth="25.0" text="⇓" />
+							</children>
+							<padding>
+								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+							</padding>
+						</VBox>
 					</right>
 					<bottom>
 						<HBox spacing="10.0">
 							<Label text="Filter:" />
 							<TextField fx:id="filterTF" />
+							<Button fx:id="newButton" mnemonicParsing="false"
+								text="New conversation option" />
 							<padding>
 								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
 							</padding>

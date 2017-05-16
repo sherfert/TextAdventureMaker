@@ -181,10 +181,10 @@ public abstract class GameDataController {
 	}
 
 	/**
-	 * Controllers can become obsolte if an item they manage has been deleted
-	 * from the database
+	 * Controllers can become obsolete if an item they manage has been deleted
+	 * from the database.
 	 * 
-	 * @return if the controller hass become obsolete.
+	 * @return if the controller has become obsolete.
 	 */
 	public abstract boolean isObsolete();
 

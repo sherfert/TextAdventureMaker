@@ -133,6 +133,13 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 	}
 
 	/**
+	 * @return the allowNull
+	 */
+	public boolean isAllowNull() {
+		return allowNull;
+	}
+
+	/**
 	 * Initializes this chooser.
 	 * 
 	 * @param initialValue

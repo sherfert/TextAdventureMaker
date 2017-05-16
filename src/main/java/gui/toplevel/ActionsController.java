@@ -3,8 +3,6 @@ package gui.toplevel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
@@ -28,7 +26,6 @@ import gui.NamedObjectsTableController;
 import gui.wizards.NewActionWizard;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -79,9 +76,6 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 	@FXML
 	private TableColumn<AbstractAction, String> summaryCol;
 
-	@FXML
-	protected Button newButton;
-
 	/**
 	 * @param currentGameManager
 	 *            the game manager
@@ -110,8 +104,6 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 			text.textProperty().bind(cell.itemProperty());
 			return cell;
 		});
-
-		newButton.setOnMouseClicked((e) -> createAction());
 	}
 
 	@Override
@@ -119,29 +111,9 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 		return currentGameManager.getPersistenceManager().getActionManager().getAllActions();
 	}
 
-	/**
-	 * Opens a dialog to create a new action.
-	 */
-	private void createAction() {
-		new NewActionWizard(currentGameManager).showAndGetAction().ifPresent(this::saveNewAction);
-	}
-
-	/**
-	 * Saves a new action to both DB and table.
-	 * 
-	 * @param a
-	 *            the action
-	 */
-	private void saveNewAction(AbstractAction a) {
-		// Add item to DB
-		try {
-			saveObject(a);
-		} catch (DBClosedException e1) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
-			return;
-		}
-		// Add item to our table
-		objectsOL.add(a);
+	@Override
+	protected void createObject() {
+		new NewActionWizard(currentGameManager).showAndGet().ifPresent(this::saveObject);
 	}
 	
 	@Override

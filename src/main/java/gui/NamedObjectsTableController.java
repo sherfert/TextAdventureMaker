@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -27,23 +28,26 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 
 	/** An observable list with the objects. */
 	protected ObservableList<E> objectsOL;
-	
+
 	@FXML
 	protected TableView<E> table;
-	
+
 	@FXML
 	protected TableColumn<E, Integer> idCol;
-	
+
 	@FXML
 	protected TableColumn<E, String> nameCol;
-	
+
 	@FXML
 	protected TextField filterTF;
+
+	@FXML
+	protected Button newButton;
 
 	public NamedObjectsTableController(CurrentGameManager currentGameManager, MainWindowController mwController) {
 		super(currentGameManager, mwController);
 	}
-	
+
 	@FXML
 	protected void initialize() {
 		// Set cell value factories for the columns
@@ -63,7 +67,6 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 
 		// Get all objects and store in observable list, unless the list is
 		// already propagated
-
 		try {
 			if (objectsOL == null) {
 				objectsOL = FXCollections.observableArrayList(getAllObjects());
@@ -98,6 +101,8 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 
 		// Fill table
 		table.setItems(sortedData);
+
+		newButton.setOnMouseClicked((e) -> createObject());
 	}
 
 	/**
@@ -110,16 +115,32 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 	protected abstract List<E> getAllObjects() throws DBClosedException;
 
 	/**
-	 * Saves any named object
+	 * Create and saves a new Object of type E.
+	 * 
+	 * Implementations of this method SHOULD call {@link #saveObject(NamedObject)}
+	 * to save the created object.
+	 */
+	protected abstract void createObject();
+
+	/**
+	 * Saves any named object.
 	 * 
 	 * @param o
 	 *            the object
 	 * @throws DBClosedException
 	 *             if the DB was closed.
 	 */
-	protected void saveObject(NamedObject o) throws DBClosedException {
-		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
-		currentGameManager.getPersistenceManager().updateChanges();
+	protected void saveObject(E o) {
+		// Add item to DB
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
+			currentGameManager.getPersistenceManager().updateChanges();
+		} catch (DBClosedException e1) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+			return;
+		}
+		// Add item to our table
+		objectsOL.add(o);
 	}
 
 }

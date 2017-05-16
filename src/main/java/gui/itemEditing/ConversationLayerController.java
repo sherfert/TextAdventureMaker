@@ -2,30 +2,29 @@ package gui.itemEditing;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import data.ConversationLayer;
 import data.ConversationOption;
 import exception.DBClosedException;
 import gui.MainWindowController;
-import gui.NamedObjectsController;
-import gui.customui.NamedObjectChooser;
+import gui.NamedObjectsTableController;
 import gui.include.NamedObjectController;
+import gui.wizards.NewConversationOptionWizard;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
 
 /**
  * Controller for one conversation layer.
  * 
+ * TODO "(ends conversation)" instead of "(no layer)"
+ * 
  * @author Satia
  */
-public class ConversationLayerController extends NamedObjectsController<ConversationOption> {
+public class ConversationLayerController extends NamedObjectsTableController<ConversationOption> {
 
 	/** The conversation layer */
 	private ConversationLayer layer;
@@ -47,18 +46,6 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 
 	@FXML
 	private Button downButton;
-
-	@FXML
-	private TextField newTextTF;
-
-	@FXML
-	private TextArea newAnswerTA;
-
-	@FXML
-	private TextArea newEventTA;
-
-	@FXML
-	private NamedObjectChooser<ConversationLayer> targetChooser;
 
 	/**
 	 * @param currentGameManager
@@ -95,16 +82,6 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 				"This will delete the conversation layer and options of the layer, "
 						+ "and actions associated with any of the deleted entities."));
 
-		targetChooser.initialize(layer, true, false, () -> layer.getConversation().getLayers(), (l) -> {
-		});
-
-		// Assure save is only enabled if there is a name, text and answer
-		Supplier<Boolean> anyRequiredFieldEmpty = () -> newNameTF.textProperty().get().isEmpty()
-				|| newTextTF.textProperty().get().isEmpty() || newAnswerTA.textProperty().get().isEmpty();
-		newNameTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		newTextTF.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-		newAnswerTA.textProperty().addListener((f, o, n) -> saveButton.setDisable(anyRequiredFieldEmpty.get()));
-
 		// Disable buttons by default and if no value is chosen
 		upButton.setDisable(true);
 		downButton.setDisable(true);
@@ -130,15 +107,6 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 		saveTabIndex(tabPane);
 	}
 
-	@Override
-	protected void resetFormValues() {
-		super.resetFormValues();
-		newAnswerTA.setText("");
-		newEventTA.setText("");
-		newTextTF.setText("");
-		targetChooser.setObjectValue(null);
-	}
-
 	/**
 	 * Controller factory that initializes controllers correctly.
 	 */
@@ -157,16 +125,16 @@ public class ConversationLayerController extends NamedObjectsController<Conversa
 	}
 
 	@Override
-	protected ConversationOption createNewObject(String name) {
-		ConversationOption result = new ConversationOption(name, newTextTF.getText(), newAnswerTA.getText(),
-				newEventTA.getText(), targetChooser.getObjectValue());
-		// Also add the option to this layer
-		layer.addOption(result);
-		return result;
-	}
-	
-	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(layer);
+	}
+
+	@Override
+	protected void createObject() {
+		new NewConversationOptionWizard(layer).showAndGet().ifPresent(o -> {
+			// Also add the option to this layer
+			layer.addOption(o);
+			saveObject(o);
+		});
 	}
 }
