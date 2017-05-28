@@ -20,8 +20,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for one conversation layer.
  * 
- * TODO "(ends conversation)" instead of "(no layer)"
- * 
  * @author Satia
  */
 public class ConversationLayerController extends NamedObjectsTableController<ConversationOption> {

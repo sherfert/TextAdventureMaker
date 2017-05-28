@@ -66,6 +66,7 @@ public class ConversationOptionController extends GameDataController {
 	@FXML
 	private void initialize() {
 		// Create new bindings
+		targetChooser.setNoValueString("(ends conversation)");
 		targetChooser.initialize(option.getTarget(), true, false, option.getLayer().getConversation()::getLayers,
 				option::setTarget);
 

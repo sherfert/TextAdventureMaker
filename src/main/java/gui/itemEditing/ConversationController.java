@@ -82,6 +82,7 @@ public class ConversationController extends NamedObjectsTableController<Conversa
 
 		// Initialize startLayerChooser, with only the layers of this
 		// conversation to choose from.
+		startLayerChooser.setNoValueString("(conversation ends immediately)");
 		startLayerChooser.initialize(conversation.getStartLayer(), true, true, conversation::getLayers,
 				conversation::setStartLayer);
 
