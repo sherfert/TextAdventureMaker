@@ -58,18 +58,18 @@ import gui.itemEditing.action.EndGameActionController;
 import gui.itemEditing.action.MoveActionController;
 import gui.itemEditing.action.MultiActionController;
 import gui.itemEditing.action.RIIActionController;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import logic.CurrentGameManager;
 import utility.CommandRegExConverter;
@@ -350,7 +350,10 @@ public abstract class GameDataController {
 	 *            the text of the tooltip.
 	 */
 	protected void setNodeTooltip(Node node, String text) {
-		setNodeTooltip(node, new Tooltip(text));
+		Tooltip tooltip = new Tooltip(text);
+		tooltip.setPrefWidth(500);
+		tooltip.setWrapText(true);
+		setNodeTooltip(node, tooltip);
 	}
 
 	/**

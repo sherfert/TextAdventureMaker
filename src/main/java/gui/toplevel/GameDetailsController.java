@@ -50,12 +50,17 @@ public class GameDetailsController extends GameDataController {
 	 * @author Satia
 	 */
 	public enum Placeholder {
-		INPUT(Pattern.compile("(<input>|<Input>|<INPUT>)")), //
-		IDENTIFIER(Pattern.compile("(<identifier>|<Identifier>|<IDENTIFIER>)")), //
-		IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)")), //
-		NAME(Pattern.compile("(<name>|<Name>|<NAME>)")), //
-		NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)")), //
-		PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"));
+		INPUT(Pattern.compile("(<input>|<Input>|<INPUT>)"), "<input>\t\t\tThe input typed by the player.\n"), //
+		IDENTIFIER(Pattern.compile("(<identifier>|<Identifier>|<IDENTIFIER>)"),
+				"<identifier>\t\tThe identifier used for the first thing in the command.\n"), //
+		IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)"),
+				"<identifier2>\t\tThe identifier used for the second thing in the command.\n"), //
+		NAME(Pattern.compile("(<name>|<Name>|<NAME>)"), "<name>\t\t\tThe name of the first thing in the command.\n"), //
+		NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)"),
+				"<name2>\t\tThe name of the second thing in the command.\n"), //
+		PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"),
+				"<pattern|A|B|>\tSimilar to <input>, but allows to replace the identifiers "
+						+ "of the first and second thing in the command with *A* and *B*, respectively.\n");
 
 		/**
 		 * the RegEx pattern
@@ -63,11 +68,13 @@ public class GameDetailsController extends GameDataController {
 		public Pattern pattern;
 
 		/**
-		 * @param pattern
-		 *            the RegEx pattern
+		 * The text displayed in a tooltip for a node allowing this placeholder.
 		 */
-		Placeholder(Pattern pattern) {
+		public String tooltipText;
+
+		Placeholder(Pattern pattern, String tooltipText) {
 			this.pattern = pattern;
+			this.tooltipText = tooltipText;
 		}
 	}
 
@@ -211,13 +218,16 @@ public class GameDetailsController extends GameDataController {
 		}
 		// Refresh the displayed object
 		currentGameManager.getPersistenceManager().refreshEntity(game);
-		
+
 		// Set all GUI fields accordingly
 		gameTitleField.setText(game.getGameTitle());
-		setNodeTooltip(gameTitleField, "The title of the game is shown when the game is started.");
-		
+		setNodeTooltip(gameTitleField, "The title of the game is shown in the title bar of the console window. "
+				+ "It also determines the save location on the hard disk. It should be a unique name.");
+
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
 		startingTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, startingTextField));
+		setNodeTooltip(startingTextField, "This text is displayed at the beginning of the game and should "
+				+ "introduce the setting of the game.");
 
 		startLocationChooser.initialize(
 				currentGameManager.getPersistenceManager().getGameManager().getGame().getStartLocation(), false, false,
@@ -229,31 +239,60 @@ public class GameDetailsController extends GameDataController {
 								e);
 					}
 				});
+		setNodeTooltip(startLocationChooser,
+				"This is where the game will start. After the starting text, "
+						+ "information about this location is displayed. This is the description of the room and "
+						+ "descriptions of all persons, items and ways of this location.");
 
 		startItemsListView.initialize(game.getStartItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::objectSelected, (item) -> game.addStartItem(item), (item) -> game.removeStartItem(item));
+		setNodeTooltip(startItemsListView,
+				"These items are placed in the player's inventory in the beginning of the game.");
+
+		final String helpTextFieldTooltipText = "The text is displayed along with the respective commands "
+				+ "when the player displays the help "
+				+ "and should convey to the player what sort of command this is.";
 
 		useWithHelpTextField.textProperty().bindBidirectional(game.useWithCombineHelpTextProperty());
 		useWithHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useWithHelpTextField));
+		setNodeTooltip(useWithHelpTextField, helpTextFieldTooltipText);
+
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
 		moveHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, moveHelpTextField));
+		setNodeTooltip(useWithHelpTextField, helpTextFieldTooltipText);
+
 		takeHelpTextField.textProperty().bindBidirectional(game.takeHelpTextProperty());
 		takeHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, takeHelpTextField));
+		setNodeTooltip(takeHelpTextField, helpTextFieldTooltipText);
+
 		useHelpTextField.textProperty().bindBidirectional(game.useHelpTextProperty());
 		useHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, useHelpTextField));
+		setNodeTooltip(useHelpTextField, helpTextFieldTooltipText);
+
 		talkHelpTextField.textProperty().bindBidirectional(game.talkToHelpTextProperty());
 		talkHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, talkHelpTextField));
+		setNodeTooltip(talkHelpTextField, helpTextFieldTooltipText);
+
 		lookAroundHelpTextField.textProperty().bindBidirectional(game.lookAroundHelpTextProperty());
 		lookAroundHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, lookAroundHelpTextField));
+		setNodeTooltip(lookAroundHelpTextField, helpTextFieldTooltipText);
+
 		inspectHelpTextField.textProperty().bindBidirectional(game.inspectHelpTextProperty());
 		inspectHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, inspectHelpTextField));
+		setNodeTooltip(inspectHelpTextField, helpTextFieldTooltipText);
+
 		inventoryHelpTextField.textProperty().bindBidirectional(game.inventoryHelpTextProperty());
 		inventoryHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, inventoryHelpTextField));
+		setNodeTooltip(inventoryHelpTextField, helpTextFieldTooltipText);
+
 		helpHelpTextField.textProperty().bindBidirectional(game.helphelpTextProperty());
 		helpHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, helpHelpTextField));
+		setNodeTooltip(helpHelpTextField, helpTextFieldTooltipText);
+
 		exitHelpTextField.textProperty().bindBidirectional(game.exitCommandHelpTextProperty());
 		exitHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, exitHelpTextField));
+		setNodeTooltip(exitHelpTextField, helpTextFieldTooltipText);
 
 		// Different Sets with allowed placeholders
 		Set<Placeholder> input = EnumSet.of(Placeholder.INPUT);
@@ -266,9 +305,15 @@ public class GameDetailsController extends GameDataController {
 		useWithSuccessTextField.textProperty().bindBidirectional(game.usedWithTextProperty());
 		useWithSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithSuccessTextField, allPL));
+		addDefaultTextTooltip(useWithSuccessTextField,
+				"This is the default text when an item is successfully used with another item. ", allPL);
+
 		takeSuccessTextField.textProperty().bindBidirectional(game.takenTextProperty());
 		takeSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeSuccessTextField, noSecondPL));
+		addDefaultTextTooltip(takeSuccessTextField, "This is the default text when an item is took.", noSecondPL);
+		// TODO continue with tooltips here
+		
 		useSuccessTextField.textProperty().bindBidirectional(game.usedTextProperty());
 		useSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useSuccessTextField, noSecondPL));
@@ -358,6 +403,7 @@ public class GameDetailsController extends GameDataController {
 
 		useWithCommandsTextField.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, false,
 				useWithCommandsTextField, game::setUseWithCombineCommands));
+		setNodeTooltip(useWithCommandsTextField, "These commands enable the user to use one object with another.");
 		moveCommandsTextField.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, false, moveCommandsTextField, game::setMoveCommands));
 		takeCommandsTextField.textProperty().addListener(
@@ -376,6 +422,29 @@ public class GameDetailsController extends GameDataController {
 				(f, o, n) -> updateGameCommands(n, 0, false, helpCommandsTextField, game::setHelpCommands));
 		exitCommandsTextField.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 0, false, exitCommandsTextField, game::setExitCommands));
+	}
+
+	/**
+	 * Adds a tooltip the default text TextFields.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param explanation
+	 *            the introduction of the tooltip.
+	 * @param allowedPL
+	 *            the set of allowed placeholders to explain.
+	 */
+	private void addDefaultTextTooltip(Node node, String explanation, Set<Placeholder> allowedPL) {
+		final String placeHolderIntroduction = "You can also include placeholders, "
+				+ "which will be replaced in the game. The following placeholders are allowed:\n";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(explanation);
+		sb.append(placeHolderIntroduction);
+		for (Placeholder p : allowedPL) {
+			sb.append(p.tooltipText);
+		}
+		setNodeTooltip(node, sb.toString());
 	}
 
 	/**
@@ -442,7 +511,7 @@ public class GameDetailsController extends GameDataController {
 			hideError(inputNode);
 		}
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return false;
