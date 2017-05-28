@@ -112,6 +112,9 @@ public abstract class GameDataController {
 
 	private static final String NODE_PROPERTIES_KEY_ERROR_TOOLTIP = "Error-Tooltip";
 	private static final String NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER = "Error-Tooltip-FocusListener";
+	private static final String NODE_PROPERTIES_KEY_TOOLTIP_MOUSEENTER_LISTENER = "Tooltip-MouseEnterListener";
+	private static final String NODE_PROPERTIES_KEY_TOOLTIP_MOUSEEXIT_LISTENER = "Tooltip-MouseExitListener";
+	private static final String NODE_PROPERTIES_KEY_TOOLTIP = "Tooltip";
 
 	protected static final String INPUT_EMPTY = "It is not recommended to leave this empty";
 
@@ -260,6 +263,18 @@ public abstract class GameDataController {
 			node.getProperties().put(NODE_PROPERTIES_KEY_ERROR_TOOLTIP, tooltip);
 			node.getProperties().put(NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER, focusListener);
 		}
+
+		// Do not show regular tooltips while this one is in place
+		if (node.getProperties().containsKey(NODE_PROPERTIES_KEY_TOOLTIP)) {
+			Tooltip tooltip = (Tooltip) node.getProperties().get(NODE_PROPERTIES_KEY_TOOLTIP);
+			tooltip.hide();
+			// Unset tooltip property
+			node.getProperties().remove(NODE_PROPERTIES_KEY_TOOLTIP);
+
+			// Remove listeners
+			node.setOnMouseEntered(null);
+			node.setOnMouseExited(null);
+		}
 	}
 
 	/**
@@ -270,6 +285,7 @@ public abstract class GameDataController {
 	 * @param node
 	 *            the node
 	 */
+	@SuppressWarnings("unchecked")
 	protected void hideError(Node node) {
 		// Remove css class
 		node.getStyleClass().remove("error");
@@ -282,16 +298,24 @@ public abstract class GameDataController {
 			node.getProperties().remove(NODE_PROPERTIES_KEY_ERROR_TOOLTIP);
 
 			// Remove focus listener
-			@SuppressWarnings("unchecked")
 			ChangeListener<? super Boolean> focusListener = (ChangeListener<? super Boolean>) node.getProperties()
 					.get(NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER);
 			node.focusedProperty().removeListener(focusListener);
 		}
+		// Show regular tooltips again
+		if (node.getProperties().containsKey(NODE_PROPERTIES_KEY_TOOLTIP_MOUSEENTER_LISTENER)) {
+			node.setOnMouseEntered((EventHandler<MouseEvent>) node.getProperties()
+					.get(NODE_PROPERTIES_KEY_TOOLTIP_MOUSEENTER_LISTENER));
+		}
+		if (node.getProperties().containsKey(NODE_PROPERTIES_KEY_TOOLTIP_MOUSEEXIT_LISTENER)) {
+			node.setOnMouseExited((EventHandler<MouseEvent>) node.getProperties()
+					.get(NODE_PROPERTIES_KEY_TOOLTIP_MOUSEEXIT_LISTENER));
+		}
 	}
 
 	/**
-	 * Defines a tooltip to be shown for the duration of the mouse being inside the node.
-	 * Hidden immediately when the mouse exits.
+	 * Defines a tooltip to be shown for the duration of the mouse being inside
+	 * the node. Hidden immediately when the mouse exits.
 	 * 
 	 * @param node
 	 *            the node.
@@ -299,24 +323,26 @@ public abstract class GameDataController {
 	 *            the tooltip.
 	 */
 	protected void setNodeTooltip(Node node, Tooltip tooltip) {
-		node.setOnMouseEntered(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				Point2D p = pointBelow(node);
-				tooltip.show(node, p.getX(), p.getY());
-			}
-		});
-		node.setOnMouseExited(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				tooltip.hide();
-			}
-		});
+		EventHandler<MouseEvent> enterHandler = (e) -> {
+			Point2D p = pointBelow(node);
+			tooltip.show(node, p.getX(), p.getY());
+		};
+
+		EventHandler<MouseEvent> exitHandler = (e) -> {
+			tooltip.hide();
+		};
+
+		node.setOnMouseEntered(enterHandler);
+		node.setOnMouseExited(exitHandler);
+
+		node.getProperties().put(NODE_PROPERTIES_KEY_TOOLTIP_MOUSEENTER_LISTENER, enterHandler);
+		node.getProperties().put(NODE_PROPERTIES_KEY_TOOLTIP_MOUSEEXIT_LISTENER, exitHandler);
+		node.getProperties().put(NODE_PROPERTIES_KEY_TOOLTIP, tooltip);
 	}
-	
+
 	/**
-	 * Defines a tooltip to be shown for the duration of the mouse being inside the node.
-	 * Hidden immediately when the mouse exits.
+	 * Defines a tooltip to be shown for the duration of the mouse being inside
+	 * the node. Hidden immediately when the mouse exits.
 	 * 
 	 * @param node
 	 *            the node.
