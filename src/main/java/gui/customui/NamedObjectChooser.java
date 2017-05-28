@@ -1,6 +1,7 @@
 package gui.customui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -10,15 +11,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 
 import data.interfaces.HasName;
 import exception.DBClosedException;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
+import javafx.util.Callback;
 
 /**
- * Chooser of a single NamedObject from the
- * Database. Each instance must be initialized with
+ * Chooser of a single NamedObject from the Database. Each instance must be
+ * initialized with
  * {@link #initialize(HasName, boolean, boolean, ValuesSupplier, Consumer)}
  * before it behaves properly.
  * 
@@ -116,7 +119,6 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 		this.currentSelection = e;
 		this.setText(this.valueConverter.toString(this.currentSelection));
 	}
-	
 
 	/**
 	 * @return the noValueString
@@ -126,7 +128,8 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 	}
 
 	/**
-	 * @param noValueString the noValueString to set
+	 * @param noValueString
+	 *            the noValueString to set
 	 */
 	public void setNoValueString(String noValueString) {
 		this.noValueString = noValueString;
@@ -173,11 +176,14 @@ public class NamedObjectChooser<E extends HasName> extends TextField {
 		}
 
 		// Enable autocompletion with all available values
-		TextFields.bindAutoCompletion(this,
-				(isr) -> this.availableValues.stream()
-						.filter(val -> (val == null && isr.getUserText().isEmpty()) || (val != null
-								&& val.getName().toLowerCase().contains(isr.getUserText().toLowerCase())))
-				.collect(Collectors.toList()), this.valueConverter);
+		Callback<ISuggestionRequest, Collection<E>> suggestionProvider = (isr) -> {
+			String userText = isr.getUserText();
+			return this.availableValues.stream()
+					.filter(val -> (val == null && userText.isEmpty())
+							|| (val != null && val.getName().toLowerCase().contains(userText.toLowerCase())))
+					.collect(Collectors.toList());
+		};
+		TextFields.bindAutoCompletion(this, suggestionProvider, this.valueConverter);
 
 		// Listen for text changes
 		this.textProperty().addListener((f, o, n) -> {
