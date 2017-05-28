@@ -214,6 +214,8 @@ public class GameDetailsController extends GameDataController {
 		
 		// Set all GUI fields accordingly
 		gameTitleField.setText(game.getGameTitle());
+		setNodeTooltip(gameTitleField, "The title of the game is shown when the game is started.");
+		
 		startingTextField.textProperty().bindBidirectional(game.startTextProperty());
 		startingTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, startingTextField));
 

@@ -59,8 +59,10 @@ import gui.itemEditing.action.MoveActionController;
 import gui.itemEditing.action.MultiActionController;
 import gui.itemEditing.action.RIIActionController;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -189,6 +191,13 @@ public abstract class GameDataController {
 	public abstract boolean isObsolete();
 
 	/**
+	 * Point below the node.
+	 */
+	protected Point2D pointBelow(Node node) {
+		return node.localToScreen(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMaxY());
+	}
+
+	/**
 	 * Show an error for any (input) node. This applies the css class "error" to
 	 * the node (light red background) and shows a tooltip with the given error
 	 * message right below the node. This tooltip cannot be hidden, until
@@ -232,12 +241,12 @@ public abstract class GameDataController {
 			tooltip.setHideOnEscape(false);
 
 			// Show tooltip immediately below the input field
-			Point2D p = node.localToScreen(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMaxY());
+			Point2D p = pointBelow(node);
 			tooltip.show(node, p.getX(), p.getY());
 
 			ChangeListener<? super Boolean> focusListener = (f, o, n) -> {
 				if (n) {
-					Point2D p2 = node.localToScreen(node.getLayoutBounds().getMinX(), node.getLayoutBounds().getMaxY());
+					Point2D p2 = pointBelow(node);
 					tooltip.show(node, p2.getX(), p2.getY());
 				} else {
 					tooltip.hide();
@@ -278,6 +287,44 @@ public abstract class GameDataController {
 					.get(NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER);
 			node.focusedProperty().removeListener(focusListener);
 		}
+	}
+
+	/**
+	 * Defines a tooltip to be shown for the duration of the mouse being inside the node.
+	 * Hidden immediately when the mouse exits.
+	 * 
+	 * @param node
+	 *            the node.
+	 * @param tooltip
+	 *            the tooltip.
+	 */
+	protected void setNodeTooltip(Node node, Tooltip tooltip) {
+		node.setOnMouseEntered(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				Point2D p = pointBelow(node);
+				tooltip.show(node, p.getX(), p.getY());
+			}
+		});
+		node.setOnMouseExited(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				tooltip.hide();
+			}
+		});
+	}
+	
+	/**
+	 * Defines a tooltip to be shown for the duration of the mouse being inside the node.
+	 * Hidden immediately when the mouse exits.
+	 * 
+	 * @param node
+	 *            the node.
+	 * @param text
+	 *            the text of the tooltip.
+	 */
+	protected void setNodeTooltip(Node node, String text) {
+		setNodeTooltip(node, new Tooltip(text));
 	}
 
 	/**

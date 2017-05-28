@@ -16,7 +16,7 @@ import javafx.scene.shape.Line;
 /**
  * A special Line for displaying ways connecting LocationRectangles.
  * 
- * XXX WayLine does not account for self-loop edges.
+ * TODO WayLine does not account for self-loop edges.
  * 
  * @author Satia
  */
