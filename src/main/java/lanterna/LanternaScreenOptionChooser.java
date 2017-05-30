@@ -89,10 +89,9 @@ public class LanternaScreenOptionChooser {
 	 * @param optionHandler
 	 *            the option handler
 	 */
-	public LanternaScreenOptionChooser(Screen screen, List<String> options,
-			OptionHandler optionHandler) {
-		this(screen, options, optionHandler, 0, screen.getTerminalSize()
-				.getColumns(), 0, screen.getTerminalSize().getRows());
+	public LanternaScreenOptionChooser(Screen screen, List<String> options, OptionHandler optionHandler) {
+		this(screen, options, optionHandler, 0, screen.getTerminalSize().getColumns(), 0,
+				screen.getTerminalSize().getRows());
 	}
 
 	/**
@@ -113,8 +112,8 @@ public class LanternaScreenOptionChooser {
 	 * @param toY
 	 *            the y ending coordinate, excluded
 	 */
-	public LanternaScreenOptionChooser(Screen screen, List<String> options,
-			OptionHandler optionHandler, int fromX, int toX, int fromY, int toY) {
+	public LanternaScreenOptionChooser(Screen screen, List<String> options, OptionHandler optionHandler, int fromX,
+			int toX, int fromY, int toY) {
 		this.screen = screen;
 		this.fromX = fromX;
 		this.toX = toX;
@@ -170,14 +169,14 @@ public class LanternaScreenOptionChooser {
 			List<String> splitLine = new ArrayList<>();
 			String remainingText = line;
 
+			int columns = columns();
 			while (remainingText.length() > 0) {
-				if (remainingText.length() > columns()) {
+				if (remainingText.length() > columns) {
 					// Split after n chars or the blank before that
-					int splitIndex = remainingText.toString().lastIndexOf(' ',
-							columns()) + 1;
+					int splitIndex = remainingText.lastIndexOf(' ', columns);
 					// Set to the end, if there is no space
 					if (splitIndex == -1) {
-						splitIndex = columns();
+						splitIndex = columns;
 					}
 
 					splitLine.add(remainingText.substring(0, splitIndex));
@@ -186,7 +185,7 @@ public class LanternaScreenOptionChooser {
 					// Indentation
 					remainingText = " " + remainingText;
 				} else {
-					splitLine.add(remainingText.toString());
+					splitLine.add(remainingText);
 					remainingText = "";
 				}
 			}
@@ -215,17 +214,14 @@ public class LanternaScreenOptionChooser {
 					String text = optionsSplit.get(i).get(j);
 
 					// Create blank string to fill the rest
-					String blanks = LanternaScreenTextArea
-							.blankString(columns() - text.length());
+					String blanks = LanternaScreenTextArea.blankString(columns() - text.length());
 
 					if (i == index) {
 						// Use black on white to mark the selected option
-						screen.putString(fromX, fromY + lineIndex, text
-								+ blanks, Color.BLACK, Color.WHITE);
+						screen.putString(fromX, fromY + lineIndex, text + blanks, Color.BLACK, Color.WHITE);
 					} else {
 						// Use default colors for unselected option
-						screen.putString(fromX, fromY + lineIndex, text
-								+ blanks, Color.DEFAULT, Color.DEFAULT);
+						screen.putString(fromX, fromY + lineIndex, text + blanks, Color.DEFAULT, Color.DEFAULT);
 					}
 				}
 			}
@@ -234,8 +230,7 @@ public class LanternaScreenOptionChooser {
 				// Create blank string to fill the rest
 				String blanks = LanternaScreenTextArea.blankString(columns());
 
-				screen.putString(fromX, fromY + i, blanks, Color.DEFAULT,
-						Color.DEFAULT);
+				screen.putString(fromX, fromY + i, blanks, Color.DEFAULT, Color.DEFAULT);
 			}
 
 		} else {
@@ -243,8 +238,7 @@ public class LanternaScreenOptionChooser {
 			List<ColoredText> linesToPrint = new LinkedList<>();
 			// Fill with empty lines
 			for (int i = 0; i < rows(); i++) {
-				linesToPrint.add(new ColoredText("", Color.DEFAULT,
-						Color.DEFAULT));
+				linesToPrint.add(new ColoredText("", Color.DEFAULT, Color.DEFAULT));
 			}
 
 			// Print chosen option in the middle
@@ -261,9 +255,7 @@ public class LanternaScreenOptionChooser {
 				}
 
 				// Black on white
-				linesToPrint.set(lineIndex,
-						new ColoredText(optionsSplit.get(index).get(i),
-								Color.WHITE, Color.BLACK));
+				linesToPrint.set(lineIndex, new ColoredText(optionsSplit.get(index).get(i), Color.WHITE, Color.BLACK));
 			}
 
 			int optionIndex = index;
@@ -271,15 +263,12 @@ public class LanternaScreenOptionChooser {
 			while (++optionIndex < optionsSplit.size()) {
 				// If this is not the last option, we need space to at least
 				// print "..."
-				int additionLines = optionIndex == optionsSplit.size() - 1 ? 0
-						: 1;
-				if (lineIndex + optionsSplit.get(optionIndex).size()
-						+ additionLines <= rows()) {
+				int additionLines = optionIndex == optionsSplit.size() - 1 ? 0 : 1;
+				if (lineIndex + optionsSplit.get(optionIndex).size() + additionLines <= rows()) {
 					// fits
 					for (int i = 0; i < optionsSplit.get(optionIndex).size(); i++, lineIndex++) {
-						linesToPrint.set(lineIndex, new ColoredText(
-								optionsSplit.get(optionIndex).get(i),
-								Color.DEFAULT, Color.DEFAULT));
+						linesToPrint.set(lineIndex,
+								new ColoredText(optionsSplit.get(optionIndex).get(i), Color.DEFAULT, Color.DEFAULT));
 					}
 				} else {
 					// Does not fit, break
@@ -294,8 +283,7 @@ public class LanternaScreenOptionChooser {
 				int additionLines = optionIndex == optionsSplit.size() ? 0 : 1;
 				for (; lineIndex + additionLines < rows(); lineIndex++) {
 					// shift down and increment to upLineIndex
-					linesToPrint.add(0, new ColoredText("", Color.DEFAULT,
-							Color.DEFAULT));
+					linesToPrint.add(0, new ColoredText("", Color.DEFAULT, Color.DEFAULT));
 					linesToPrint.remove(linesToPrint.size() - 1);
 					upLineIndex++;
 				}
@@ -309,13 +297,11 @@ public class LanternaScreenOptionChooser {
 				// If this is not the first option, we need space to at least
 				// print "..."
 				int additionLines = upOptionIndex == 0 ? 0 : 1;
-				if (upLineIndex + 1 - optionsSplit.get(upOptionIndex).size()
-						- additionLines >= 0) {
+				if (upLineIndex + 1 - optionsSplit.get(upOptionIndex).size() - additionLines >= 0) {
 					// fits
 					for (int i = optionsSplit.get(upOptionIndex).size() - 1; i >= 0; i--, upLineIndex--) {
-						linesToPrint.set(upLineIndex, new ColoredText(
-								optionsSplit.get(upOptionIndex).get(i),
-								Color.DEFAULT, Color.DEFAULT));
+						linesToPrint.set(upLineIndex,
+								new ColoredText(optionsSplit.get(upOptionIndex).get(i), Color.DEFAULT, Color.DEFAULT));
 					}
 				} else {
 					// Does not fit, break
@@ -330,8 +316,7 @@ public class LanternaScreenOptionChooser {
 				int additionLines = upOptionIndex == -1 ? 0 : 1;
 				for (; upLineIndex - additionLines >= 0; upLineIndex--) {
 					// shift up and decrement to lineIndex
-					linesToPrint.add(new ColoredText("", Color.DEFAULT,
-							Color.DEFAULT));
+					linesToPrint.add(new ColoredText("", Color.DEFAULT, Color.DEFAULT));
 					linesToPrint.remove(0);
 					lineIndex--;
 				}
@@ -343,15 +328,12 @@ public class LanternaScreenOptionChooser {
 			while (++optionIndex < optionsSplit.size()) {
 				// If this is not the last option, we need space to at least
 				// print "..."
-				int additionLines = optionIndex == optionsSplit.size() - 1 ? 0
-						: 1;
-				if (lineIndex + optionsSplit.get(optionIndex).size()
-						+ additionLines <= rows()) {
+				int additionLines = optionIndex == optionsSplit.size() - 1 ? 0 : 1;
+				if (lineIndex + optionsSplit.get(optionIndex).size() + additionLines <= rows()) {
 					// fits
 					for (int i = 0; i < optionsSplit.get(optionIndex).size(); i++, lineIndex++) {
-						linesToPrint.set(lineIndex, new ColoredText(
-								optionsSplit.get(optionIndex).get(i),
-								Color.DEFAULT, Color.DEFAULT));
+						linesToPrint.set(lineIndex,
+								new ColoredText(optionsSplit.get(optionIndex).get(i), Color.DEFAULT, Color.DEFAULT));
 					}
 				} else {
 					// Does not fit, break
@@ -362,21 +344,20 @@ public class LanternaScreenOptionChooser {
 			// Print "..."s in first and/or last line, if there were options
 			// left
 			if (upOptionIndex >= 0) {
-				linesToPrint.set(0, new ColoredText("...", Color.DEFAULT,
-						Color.DEFAULT));
+				linesToPrint.set(0, new ColoredText("...", Color.DEFAULT, Color.DEFAULT));
 			}
 			if (optionIndex < optionsSplit.size()) {
-				linesToPrint.set(linesToPrint.size() - 1, new ColoredText(
-						"...", Color.DEFAULT, Color.DEFAULT));
+				linesToPrint.set(linesToPrint.size() - 1, new ColoredText("...", Color.DEFAULT, Color.DEFAULT));
 			}
 
 			// Actually print lines
+			int columns = columns();
 			for (int i = 0; i < linesToPrint.size(); i++) {
-				String blanks = LanternaScreenTextArea.blankString(columns()
-						- linesToPrint.get(i).getText().length());
-				screen.putString(fromX, fromY + i, linesToPrint.get(i)
-						.getText() + blanks, linesToPrint.get(i).getFgColor(),
-						linesToPrint.get(i).getBgColor());
+				int lineLength = linesToPrint.get(i).getText().length();
+
+				String blanks = LanternaScreenTextArea.blankString(columns - lineLength);
+				screen.putString(fromX, fromY + i, linesToPrint.get(i).getText() + blanks,
+						linesToPrint.get(i).getFgColor(), linesToPrint.get(i).getBgColor());
 			}
 		}
 	}
