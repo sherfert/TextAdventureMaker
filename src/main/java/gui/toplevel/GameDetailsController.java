@@ -47,20 +47,23 @@ public class GameDetailsController extends GameDataController {
 	/**
 	 * Different placeholder types.
 	 * 
+	 * XXX not properly aligned, depending on OS Font.
+	 * 
 	 * @author Satia
 	 */
 	public enum Placeholder {
 		INPUT(Pattern.compile("(<input>|<Input>|<INPUT>)"), "<input>\t\t\tThe input typed by the player.\n"), //
 		IDENTIFIER(Pattern.compile("(<identifier>|<Identifier>|<IDENTIFIER>)"),
 				"<identifier>\t\tThe identifier used for the first thing in the command.\n"), //
-		IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)"),
-				"<identifier2>\t\tThe identifier used for the second thing in the command.\n"), //
-		NAME(Pattern.compile("(<name>|<Name>|<NAME>)"), "<name>\t\t\tThe name of the first thing in the command.\n"), //
-		NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)"),
-				"<name2>\t\tThe name of the second thing in the command.\n"), //
-		PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"),
-				"<pattern|A|B|>\tSimilar to <input>, but allows to replace the identifiers "
-						+ "of the first and second thing in the command with *A* and *B*, respectively.\n");
+				IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)"),
+						"<identifier2>\t\tThe identifier used for the second thing in the command.\n"), //
+						NAME(Pattern.compile("(<name>|<Name>|<NAME>)"),
+								"<name>\t\t\tThe name of the first thing in the command.\n"), //
+								NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)"),
+										"<name2>\t\tThe name of the second thing in the command.\n"), //
+										PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"),
+												"<pattern|A|B|>\tSimilar to <input>, but allows to replace the identifiers "
+														+ "of the first and second thing in the command with *A* and *B*, respectively.\n");
 
 		/**
 		 * the RegEx pattern
@@ -260,7 +263,7 @@ public class GameDetailsController extends GameDataController {
 
 		moveHelpTextField.textProperty().bindBidirectional(game.moveHelpTextProperty());
 		moveHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, moveHelpTextField));
-		setNodeTooltip(useWithHelpTextField, helpTextFieldTooltipText);
+		setNodeTooltip(moveHelpTextField, helpTextFieldTooltipText);
 
 		takeHelpTextField.textProperty().bindBidirectional(game.takeHelpTextProperty());
 		takeHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, takeHelpTextField));
@@ -306,71 +309,151 @@ public class GameDetailsController extends GameDataController {
 		useWithSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithSuccessTextField, allPL));
 		addDefaultTextTooltip(useWithSuccessTextField,
-				"This is the default text when an item is successfully used with another item. ", allPL);
+				"This is the default text when an item is successfully used with another item.", allPL);
 
 		takeSuccessTextField.textProperty().bindBidirectional(game.takenTextProperty());
 		takeSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeSuccessTextField, noSecondPL));
 		addDefaultTextTooltip(takeSuccessTextField, "This is the default text when an item is took.", noSecondPL);
-		// TODO continue with tooltips here
-		
+
 		useSuccessTextField.textProperty().bindBidirectional(game.usedTextProperty());
 		useSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useSuccessTextField, noSecondPL));
+		addDefaultTextTooltip(useSuccessTextField, "This is the default text when an item is successfully used.",
+				noSecondPL);
+
 		inspectSuccessTextField.textProperty().bindBidirectional(game.inspectionDefaultTextProperty());
 		inspectSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, inspectSuccessTextField, noSecondPL));
+		addDefaultTextTooltip(inspectSuccessTextField, "This is the default text when an item is inspected.",
+				noSecondPL);
+
 		emptyInvSuccessTextField.textProperty().bindBidirectional(game.inventoryEmptyTextProperty());
 		emptyInvSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, emptyInvSuccessTextField, inputAndPattern));
+		addDefaultTextTooltip(emptyInvSuccessTextField, "This is the default text to indicate an empty inventory.",
+				inputAndPattern);
+
 		invSuccessTextField.textProperty().bindBidirectional(game.inventoryTextProperty());
 		invSuccessTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, invSuccessTextField, inputAndPattern));
+		addDefaultTextTooltip(invSuccessTextField,
+				"This is the default text placed before listing all inventory items.", inputAndPattern);
 
 		useWithFailureTextField.textProperty().bindBidirectional(game.notUsableWithTextProperty());
 		useWithFailureTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithFailureTextField, allPL));
+		addDefaultTextTooltip(useWithFailureTextField,
+				"This is the default text when an item is unsuccessfully used with another item.", allPL);
+
 		moveFailureTextField.textProperty().bindBidirectional(game.notTravelableTextProperty());
 		moveFailureTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, moveFailureTextField, noSecondPL));
+		addDefaultTextTooltip(moveFailureTextField,
+				"This is the default text when the player tries to move to a different location, unsuccessfully.",
+				noSecondPL);
+
 		takeFailureTextField.textProperty().bindBidirectional(game.notTakeableTextProperty());
 		takeFailureTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeFailureTextField, noSecondPL));
+		addDefaultTextTooltip(takeFailureTextField,
+				"This is the default text when the player tries to take an item, unsuccessfully.", noSecondPL);
+
 		useFailureTextField.textProperty().bindBidirectional(game.notUsableTextProperty());
 		useFailureTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useFailureTextField, noSecondPL));
+		addDefaultTextTooltip(useFailureTextField, "This is the default text when an item is unsuccessfully used.",
+				noSecondPL);
+
 		talkFailureTextField.textProperty().bindBidirectional(game.notTalkingToEnabledTextProperty());
 		talkFailureTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, talkFailureTextField, noSecondPL));
+		addDefaultTextTooltip(talkFailureTextField,
+				"This is the default text when the player tries to talk to a person, unsuccessfully.", noSecondPL);
+
 		noSuchItemTextField.textProperty().bindBidirectional(game.noSuchItemTextProperty());
 		noSuchItemTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchItemTextField, inputPatternID));
+		addDefaultTextTooltip(noSuchItemTextField,
+				"This is the default text when an item to be used, took, or inspected is not found.", inputPatternID);
+
 		noSuchInventoryItemTextField.textProperty().bindBidirectional(game.noSuchInventoryItemTextProperty());
 		noSuchInventoryItemTextField.textProperty().addListener(
 				(f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchInventoryItemTextField, inputPatternID));
+		addDefaultTextTooltip(noSuchInventoryItemTextField,
+				"This is the default text when an inventory item to be used or inspected is not found.",
+				inputPatternID);
+
 		noSuchPersonTextField.textProperty().bindBidirectional(game.noSuchPersonTextProperty());
 		noSuchPersonTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchPersonTextField, inputPatternID));
+		addDefaultTextTooltip(noSuchPersonTextField,
+				"This is the default text when an person to talk to or inspect is not found.", inputPatternID);
+
 		noSuchWayTextField.textProperty().bindBidirectional(game.noSuchWayTextProperty());
 		noSuchWayTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchWayTextField, inputPatternID));
+		addDefaultTextTooltip(noSuchWayTextField, "This is the default text when a way to move by is not found.",
+				inputPatternID);
+
 		noValidCommandTextField.textProperty().bindBidirectional(game.noCommandTextProperty());
 		noValidCommandTextField.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noValidCommandTextField, input));
+		addDefaultTextTooltip(noValidCommandTextField,
+				"This is the default text when the command typed by the player cannot be understood.", input);
+
 		notSensibleCommandTextField.textProperty().bindBidirectional(game.invalidCommandTextProperty());
 		notSensibleCommandTextField.textProperty().addListener(
 				(f, o, n) -> checkPlaceholdersAndEmptiness(n, notSensibleCommandTextField, inputAndPattern));
+		addDefaultTextTooltip(notSensibleCommandTextField,
+				"This is the default text when the player used an additional command not associated with that item or person. "
+						+ "For example: There is an apple in your game, and you include 'eat <A>' as an additional use command for the apple. "
+						+ "If the player now tries to eat a table, this text will be the response.",
+				inputPatternID);
 
 		useWithCommandsTextField.setText(getCommandString(game.getUseWithCombineCommands()));
+		addCommandTooltip(useWithCommandsTextField,
+				"These commands enable the user to use one object with another. "
+						+ "At least one item must be in the player's inventory. The other can be an item in the inventory, "
+						+ "an item or a person in the current location.");
+
 		moveCommandsTextField.setText(getCommandString(game.getMoveCommands()));
+		addCommandTooltip(moveCommandsTextField,
+				"These commands enable the user to move to a different location, using a way.");
+
 		takeCommandsTextField.setText(getCommandString(game.getTakeCommands()));
+		addCommandTooltip(takeCommandsTextField,
+				"These commands enable the user to take an item. The item must be in the current location.");
+
 		useCommandsTextField.setText(getCommandString(game.getUseCommands()));
+		addCommandTooltip(useCommandsTextField,
+				"These commands enable the user to use an inventory item or an item in the current location.");
+
 		talkCommandsTextField.setText(getCommandString(game.getTalkToCommands()));
+		addCommandTooltip(talkCommandsTextField,
+				"These commands enable the user to talk to a person in the current location.");
+
 		lookAroundCommandsTextField.setText(getCommandString(game.getLookAroundCommands()));
+		addCommandTooltip(lookAroundCommandsTextField,
+				"These commands enable the user to look around. Information about this location is displayed. "
+						+ "This is the description of the room and "
+						+ "descriptions of all persons, items and ways of this location.");
+
 		inspectCommandsTextField.setText(getCommandString(game.getInspectCommands()));
+		addCommandTooltip(inspectCommandsTextField,
+				"These commands enable the user to inspect an inventory item or an item, person or way in the current location.");
+		
 		inventoryCommandsTextField.setText(getCommandString(game.getInventoryCommands()));
+		addCommandTooltip(inventoryCommandsTextField,
+				"These commands enable the user to inspect the inventory contents.");
+		
 		helpCommandsTextField.setText(getCommandString(game.getHelpCommands()));
+		addCommandTooltip(helpCommandsTextField,
+				"These commands show the help to the user.");
+		
 		exitCommandsTextField.setText(getCommandString(game.getExitCommands()));
+		addCommandTooltip(exitCommandsTextField,
+				"These commands exit the game and close the application.");
 
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES,
 				MAX_OPTION_LINES, game.getNumberOfOptionLines());
@@ -381,20 +464,38 @@ public class GameDetailsController extends GameDataController {
 		numOptionLinesProp = game.numberOfOptionLinesProperty().asObject();
 		svf.valueProperty().bindBidirectional(numOptionLinesProp);
 		optionLinesSpinner.setValueFactory(svf);
+		setNodeTooltip(optionLinesSpinner, "In a dialog or in the game menu, this number specified how many lines of options "
+				+ "should be shown simultaneously.");
 
 		ObservableList<Color> colors = FXCollections.observableArrayList(Color.values());
 		successfulFGColorPicker.setItems(colors);
 		successfulFGColorPicker.valueProperty().bindBidirectional(game.successfullFgColorProperty());
+		setNodeTooltip(successfulFGColorPicker, "This is the font color used for successful actions and in a dialog for anything "
+				+ "the other person says.");
+		
 		successfulBGColorPicker.setItems(colors);
 		successfulBGColorPicker.valueProperty().bindBidirectional(game.successfullBgColorProperty());
+		setNodeTooltip(successfulBGColorPicker, "This is the background color used for successful actions and in a dialog for anything "
+				+ "the other person says.");
+		
 		neutralFGColorPicker.setItems(colors);
 		neutralFGColorPicker.valueProperty().bindBidirectional(game.neutralFgColorProperty());
+		setNodeTooltip(neutralFGColorPicker, "This is the font color used for looking around, inspecting things, your inventory, "
+				+ "and additional events during dialogues.");
+		
 		neutralBGColorPicker.setItems(colors);
 		neutralBGColorPicker.valueProperty().bindBidirectional(game.neutralBgColorProperty());
+		setNodeTooltip(neutralBGColorPicker, "This is the background color used for looking around, inspecting things, your inventory, "
+				+ "and additional events during dialogues.");
+		
+		
 		failureFGColorPicker.setItems(colors);
 		failureFGColorPicker.valueProperty().bindBidirectional(game.failedFgColorProperty());
+		setNodeTooltip(failureFGColorPicker, "This is the font color used for failed actions.");
+		
 		failureBGColorPicker.setItems(colors);
 		failureBGColorPicker.valueProperty().bindBidirectional(game.failedBgColorProperty());
+		setNodeTooltip(failureBGColorPicker, "This is the background color used for failed actions.");
 
 		// Register change listeners on the fields that update the game
 		// accordingly, where sanity checks need to be made (no bidirectional
@@ -403,7 +504,6 @@ public class GameDetailsController extends GameDataController {
 
 		useWithCommandsTextField.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, false,
 				useWithCommandsTextField, game::setUseWithCombineCommands));
-		setNodeTooltip(useWithCommandsTextField, "These commands enable the user to use one object with another.");
 		moveCommandsTextField.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, false, moveCommandsTextField, game::setMoveCommands));
 		takeCommandsTextField.textProperty().addListener(
@@ -425,7 +525,7 @@ public class GameDetailsController extends GameDataController {
 	}
 
 	/**
-	 * Adds a tooltip the default text TextFields.
+	 * Adds a tooltip to the default text TextFields.
 	 * 
 	 * @param node
 	 *            the node
@@ -439,12 +539,27 @@ public class GameDetailsController extends GameDataController {
 				+ "which will be replaced in the game. The following placeholders are allowed:\n";
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(explanation);
+		sb.append(explanation).append(' ');
 		sb.append(placeHolderIntroduction);
 		for (Placeholder p : allowedPL) {
 			sb.append(p.tooltipText);
 		}
 		setNodeTooltip(node, sb.toString());
+	}
+
+	/**
+	 * Adds a tooltip to the command TextFields.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param explanation
+	 *            the introduction of the tooltip.
+	 */
+	private void addCommandTooltip(Node node, String explanation) {
+		final String commandIntroduction = "<A> and <B> are the positions where the player must type a name "
+				+ "or identifier of the first/second object. Square brackets indicate optional parts of the command.";
+
+		setNodeTooltip(node, explanation + " " + commandIntroduction);
 	}
 
 	/**
