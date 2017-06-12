@@ -171,7 +171,7 @@ public class PersistenceManager {
 	}
 
 	/**
-	 * Invkoes refresh on the EntityManager with the passes object
+	 * Invokes refresh on the EntityManager with the passed object.
 	 * 
 	 * @param o
 	 */

@@ -1,13 +1,7 @@
 package gui.toplevel;
 
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
 
@@ -27,7 +21,6 @@ import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
@@ -44,46 +37,8 @@ import logic.CurrentGameManager;
  */
 public class GameDetailsController extends GameDataController {
 
-	/**
-	 * Different placeholder types.
-	 * 
-	 * XXX not properly aligned, depending on OS Font.
-	 * 
-	 * @author Satia
-	 */
-	public enum Placeholder {
-		INPUT(Pattern.compile("(<input>|<Input>|<INPUT>)"), "<input>\t\t\tThe input typed by the player.\n"), //
-		IDENTIFIER(Pattern.compile("(<identifier>|<Identifier>|<IDENTIFIER>)"),
-				"<identifier>\t\tThe identifier used for the first thing in the command.\n"), //
-		IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)"),
-				"<identifier2>\t\tThe identifier used for the second thing in the command.\n"), //
-		NAME(Pattern.compile("(<name>|<Name>|<NAME>)"), "<name>\t\t\tThe name of the first thing in the command.\n"), //
-		NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)"),
-				"<name2>\t\tThe name of the second thing in the command.\n"), //
-		PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"),
-				"<pattern|A|B|>\tSimilar to <input>, but allows to replace the identifiers "
-						+ "of the first and second thing in the command with *A* and *B*, respectively.\n");
-
-		/**
-		 * the RegEx pattern
-		 */
-		public Pattern pattern;
-
-		/**
-		 * The text displayed in a tooltip for a node allowing this placeholder.
-		 */
-		public String tooltipText;
-
-		Placeholder(Pattern pattern, String tooltipText) {
-			this.pattern = pattern;
-			this.tooltipText = tooltipText;
-		}
-	}
-
-	private static final Pattern ANY_PLACEHOLDER = Pattern.compile("(<pattern\\|(?<p0>.*?)\\|(?<p1>.*?)\\|>|<.*?>)");
-
-	private static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty";
-	private static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters";
+	private static final String GAME_TITLE_EMPTY_TOOLTIP = "The game title must not be empty.";
+	private static final String GAME_TITLE_CHARS_TOOLTIP = "The game title contains illegal characters.";
 	private static final int MIN_OPTION_LINES = 3;
 	private static final int MAX_OPTION_LINES = 20;
 
@@ -296,115 +251,107 @@ public class GameDetailsController extends GameDataController {
 		exitHelpTextField.textProperty().addListener((f, o, n) -> warnOnEmpty(n, exitHelpTextField));
 		setNodeTooltip(exitHelpTextField, helpTextFieldTooltipText);
 
-		// Different Sets with allowed placeholders
-		Set<Placeholder> input = EnumSet.of(Placeholder.INPUT);
-		Set<Placeholder> inputAndPattern = EnumSet.of(Placeholder.INPUT, Placeholder.PATTERN);
-		Set<Placeholder> inputPatternID = EnumSet.of(Placeholder.INPUT, Placeholder.IDENTIFIER, Placeholder.PATTERN);
-		Set<Placeholder> noSecondPL = EnumSet.of(Placeholder.INPUT, Placeholder.IDENTIFIER, Placeholder.NAME,
-				Placeholder.PATTERN);
-		Set<Placeholder> allPL = EnumSet.allOf(Placeholder.class);
-
 		useWithSuccessTextField.textProperty().bindBidirectional(game.usedWithTextProperty());
 		useWithSuccessTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithSuccessTextField, allPL));
-		addDefaultTextTooltip(useWithSuccessTextField,
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithSuccessTextField, allPL, false));
+		addPlaceholderTextTooltip(useWithSuccessTextField,
 				"This is the default text when an item is successfully used with another item.", allPL);
 
 		takeSuccessTextField.textProperty().bindBidirectional(game.takenTextProperty());
 		takeSuccessTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeSuccessTextField, noSecondPL));
-		addDefaultTextTooltip(takeSuccessTextField, "This is the default text when an item is took.", noSecondPL);
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeSuccessTextField, noSecondPL, false));
+		addPlaceholderTextTooltip(takeSuccessTextField, "This is the default text when an item is took.", noSecondPL);
 
 		useSuccessTextField.textProperty().bindBidirectional(game.usedTextProperty());
 		useSuccessTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useSuccessTextField, noSecondPL));
-		addDefaultTextTooltip(useSuccessTextField, "This is the default text when an item is successfully used.",
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useSuccessTextField, noSecondPL, false));
+		addPlaceholderTextTooltip(useSuccessTextField, "This is the default text when an item is successfully used.",
 				noSecondPL);
 
 		inspectSuccessTextField.textProperty().bindBidirectional(game.inspectionDefaultTextProperty());
 		inspectSuccessTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, inspectSuccessTextField, noSecondPL));
-		addDefaultTextTooltip(inspectSuccessTextField, "This is the default text when an item is inspected.",
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, inspectSuccessTextField, noSecondPL, false));
+		addPlaceholderTextTooltip(inspectSuccessTextField, "This is the default text when an item is inspected.",
 				noSecondPL);
 
 		emptyInvSuccessTextField.textProperty().bindBidirectional(game.inventoryEmptyTextProperty());
-		emptyInvSuccessTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, emptyInvSuccessTextField, inputAndPattern));
-		addDefaultTextTooltip(emptyInvSuccessTextField, "This is the default text to indicate an empty inventory.",
+		emptyInvSuccessTextField.textProperty().addListener(
+				(f, o, n) -> checkPlaceholdersAndEmptiness(n, emptyInvSuccessTextField, inputAndPattern, false));
+		addPlaceholderTextTooltip(emptyInvSuccessTextField, "This is the default text to indicate an empty inventory.",
 				inputAndPattern);
 
 		invSuccessTextField.textProperty().bindBidirectional(game.inventoryTextProperty());
-		invSuccessTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, invSuccessTextField, inputAndPattern));
-		addDefaultTextTooltip(invSuccessTextField,
+		invSuccessTextField.textProperty().addListener(
+				(f, o, n) -> checkPlaceholdersAndEmptiness(n, invSuccessTextField, inputAndPattern, false));
+		addPlaceholderTextTooltip(invSuccessTextField,
 				"This is the default text placed before listing all inventory items.", inputAndPattern);
 
 		useWithFailureTextField.textProperty().bindBidirectional(game.notUsableWithTextProperty());
 		useWithFailureTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithFailureTextField, allPL));
-		addDefaultTextTooltip(useWithFailureTextField,
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useWithFailureTextField, allPL, false));
+		addPlaceholderTextTooltip(useWithFailureTextField,
 				"This is the default text when an item is unsuccessfully used with another item.", allPL);
 
 		moveFailureTextField.textProperty().bindBidirectional(game.notTravelableTextProperty());
 		moveFailureTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, moveFailureTextField, noSecondPL));
-		addDefaultTextTooltip(moveFailureTextField,
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, moveFailureTextField, noSecondPL, false));
+		addPlaceholderTextTooltip(moveFailureTextField,
 				"This is the default text when the player tries to move to a different location, unsuccessfully.",
 				noSecondPL);
 
 		takeFailureTextField.textProperty().bindBidirectional(game.notTakeableTextProperty());
 		takeFailureTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeFailureTextField, noSecondPL));
-		addDefaultTextTooltip(takeFailureTextField,
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, takeFailureTextField, noSecondPL, false));
+		addPlaceholderTextTooltip(takeFailureTextField,
 				"This is the default text when the player tries to take an item, unsuccessfully.", noSecondPL);
 
 		useFailureTextField.textProperty().bindBidirectional(game.notUsableTextProperty());
 		useFailureTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useFailureTextField, noSecondPL));
-		addDefaultTextTooltip(useFailureTextField, "This is the default text when an item is unsuccessfully used.",
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, useFailureTextField, noSecondPL, false));
+		addPlaceholderTextTooltip(useFailureTextField, "This is the default text when an item is unsuccessfully used.",
 				noSecondPL);
 
 		talkFailureTextField.textProperty().bindBidirectional(game.notTalkingToEnabledTextProperty());
 		talkFailureTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, talkFailureTextField, noSecondPL));
-		addDefaultTextTooltip(talkFailureTextField,
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, talkFailureTextField, noSecondPL, false));
+		addPlaceholderTextTooltip(talkFailureTextField,
 				"This is the default text when the player tries to talk to a person, unsuccessfully.", noSecondPL);
 
 		noSuchItemTextField.textProperty().bindBidirectional(game.noSuchItemTextProperty());
 		noSuchItemTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchItemTextField, inputPatternID));
-		addDefaultTextTooltip(noSuchItemTextField,
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchItemTextField, inputPatternID, false));
+		addPlaceholderTextTooltip(noSuchItemTextField,
 				"This is the default text when an item to be used, took, or inspected is not found.", inputPatternID);
 
 		noSuchInventoryItemTextField.textProperty().bindBidirectional(game.noSuchInventoryItemTextProperty());
 		noSuchInventoryItemTextField.textProperty().addListener(
-				(f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchInventoryItemTextField, inputPatternID));
-		addDefaultTextTooltip(noSuchInventoryItemTextField,
+				(f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchInventoryItemTextField, inputPatternID, false));
+		addPlaceholderTextTooltip(noSuchInventoryItemTextField,
 				"This is the default text when an inventory item to be used or inspected is not found.",
 				inputPatternID);
 
 		noSuchPersonTextField.textProperty().bindBidirectional(game.noSuchPersonTextProperty());
-		noSuchPersonTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchPersonTextField, inputPatternID));
-		addDefaultTextTooltip(noSuchPersonTextField,
+		noSuchPersonTextField.textProperty().addListener(
+				(f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchPersonTextField, inputPatternID, false));
+		addPlaceholderTextTooltip(noSuchPersonTextField,
 				"This is the default text when an person to talk to or inspect is not found.", inputPatternID);
 
 		noSuchWayTextField.textProperty().bindBidirectional(game.noSuchWayTextProperty());
 		noSuchWayTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchWayTextField, inputPatternID));
-		addDefaultTextTooltip(noSuchWayTextField, "This is the default text when a way to move by is not found.",
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noSuchWayTextField, inputPatternID, false));
+		addPlaceholderTextTooltip(noSuchWayTextField, "This is the default text when a way to move by is not found.",
 				inputPatternID);
 
 		noValidCommandTextField.textProperty().bindBidirectional(game.noCommandTextProperty());
 		noValidCommandTextField.textProperty()
-				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noValidCommandTextField, input));
-		addDefaultTextTooltip(noValidCommandTextField,
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, noValidCommandTextField, input, false));
+		addPlaceholderTextTooltip(noValidCommandTextField,
 				"This is the default text when the command typed by the player cannot be understood.", input);
 
 		notSensibleCommandTextField.textProperty().bindBidirectional(game.invalidCommandTextProperty());
 		notSensibleCommandTextField.textProperty().addListener(
-				(f, o, n) -> checkPlaceholdersAndEmptiness(n, notSensibleCommandTextField, inputAndPattern));
-		addDefaultTextTooltip(notSensibleCommandTextField,
+				(f, o, n) -> checkPlaceholdersAndEmptiness(n, notSensibleCommandTextField, inputAndPattern, false));
+		addPlaceholderTextTooltip(notSensibleCommandTextField,
 				"This is the default text when the player used an additional command not associated with that item or person. "
 						+ "For example: There is an apple in your game, and you include 'eat <A>' as an additional use command for the apple. "
 						+ "If the player now tries to eat a table, this text will be the response.",
@@ -526,29 +473,6 @@ public class GameDetailsController extends GameDataController {
 	}
 
 	/**
-	 * Adds a tooltip to the default text TextFields.
-	 * 
-	 * @param node
-	 *            the node
-	 * @param explanation
-	 *            the introduction of the tooltip.
-	 * @param allowedPL
-	 *            the set of allowed placeholders to explain.
-	 */
-	private void addDefaultTextTooltip(Node node, String explanation, Set<Placeholder> allowedPL) {
-		final String placeHolderIntroduction = "You can also include placeholders, "
-				+ "which will be replaced in the game. The following placeholders are allowed:\n";
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(explanation).append(' ');
-		sb.append(placeHolderIntroduction);
-		for (Placeholder p : allowedPL) {
-			sb.append(p.tooltipText);
-		}
-		setNodeTooltip(node, sb.toString());
-	}
-
-	/**
 	 * Validates the game title before actually propagating it to the game. Must
 	 * not be empty, must not contain any characters forbidden in filenames.
 	 * 
@@ -564,52 +488,6 @@ public class GameDetailsController extends GameDataController {
 			hideError(gameTitleField);
 			// Set the value in the game
 			game.setGameTitle(newTitle);
-		}
-	}
-
-	/**
-	 * Shows or removes css and tooltips to warn if a placeholder is invalid or
-	 * if a field is empty.
-	 * 
-	 * @param input
-	 *            the entered text input
-	 * @param inputNode
-	 *            the node used to enter the input
-	 * @param allowedPlaceholders
-	 *            the placeholders supported by this field.
-	 */
-	private void checkPlaceholdersAndEmptiness(String input, Node inputNode, Set<Placeholder> allowedPlaceholders) {
-		StringBuilder msg = new StringBuilder();
-		Matcher wholeMatcher = ANY_PLACEHOLDER.matcher(input);
-		Queue<Matcher> q = new LinkedList<Matcher>();
-		q.add(wholeMatcher);
-		while (!q.isEmpty()) {
-			Matcher m = q.remove();
-			while (m.find()) {
-				String usedPL = m.group();
-				String p0 = m.group("p0");
-				if (p0 != null && !p0.isEmpty()) {
-					q.add(ANY_PLACEHOLDER.matcher(p0));
-				}
-				String p1 = m.group("p1");
-				if (p1 != null && !p1.isEmpty()) {
-					q.add(ANY_PLACEHOLDER.matcher(p1));
-				}
-
-				if (!allowedPlaceholders.stream().anyMatch((p) -> p.pattern.matcher(usedPL).matches())) {
-					msg.append("Placeholder " + usedPL + "is not recognized.\n");
-				}
-
-			}
-		}
-
-		// Show or hide warning
-		if (msg.length() != 0) {
-			showError(inputNode, msg.toString(), TooltipSeverity.WARNING);
-		} else if (input.isEmpty()) {
-			showError(inputNode, INPUT_EMPTY, TooltipSeverity.WARNING);
-		} else {
-			hideError(inputNode);
 		}
 	}
 

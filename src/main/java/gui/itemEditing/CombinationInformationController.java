@@ -82,16 +82,28 @@ public class CombinationInformationController extends GameDataController {
 		editCombineSuccessfulTextTF.setText(item1.getCombineWithSuccessfulText(item2));
 		editCombineSuccessfulTextTF.textProperty()
 				.addListener((f, o, n) -> item1.setCombineWithSuccessfulText(item2, n));
+		editCombineSuccessfulTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editCombineSuccessfulTextTF, allPL, true));
+		addPlaceholderTextTooltip(editCombineSuccessfulTextTF,
+				"This is the text when the two items are combined. If empty, the default will be used.", allPL);
 
 		editCombineForbiddenTextTF.setText(item1.getCombineWithForbiddenText(item2));
 		editCombineForbiddenTextTF.textProperty().addListener((f, o, n) -> item1.setCombineWithForbiddenText(item2, n));
+		editCombineForbiddenTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editCombineForbiddenTextTF, allPL, true));
+		addPlaceholderTextTooltip(editCombineForbiddenTextTF,
+				"This is the default text when the two items could not be combined.  If empty, the default will be used.",
+				allPL);
 
 		editCombiningEnabledCB.setSelected(item1.isCombiningEnabledWith(item2));
 		editCombiningEnabledCB.selectedProperty().addListener((f, o, n) -> item1.setCombiningEnabledWith(item2, n));
+		setNodeTooltip(editCombiningEnabledCB, "If ticked, the inventory items can be combined.");
 
 		editRemoveItemsCB.setSelected(item1.getRemoveCombinablesWhenCombinedWith(item2));
 		editRemoveItemsCB.selectedProperty()
 				.addListener((f, o, n) -> item1.setRemoveCombinablesWhenCombinedWith(item2, n));
+		setNodeTooltip(editRemoveItemsCB, "If ticked, the inventory items will disappear "
+				+ "from the inventory after successfully combining them.");
 
 		newItemsListView.initialize(item1.getNewCombinablesWhenCombinedWith(item2),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
@@ -107,10 +119,14 @@ public class CombinationInformationController extends GameDataController {
 		editCombine1CommandsTA.setText(getCommandString(item1.getAdditionalCombineCommands(item2)));
 		editCombine1CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
 				editCombine1CommandsTA, (cs) -> item1.setAdditionalCombineCommands(item2, cs)));
+		addCommandTooltip(editCombine1CommandsTA,
+				"Additional commands to combine the two items. These will only be valid for this exact combination of items.");
 
 		editCombine2CommandsTA.setText(getCommandString(item2.getAdditionalCombineCommands(item1)));
 		editCombine2CommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
 				editCombine2CommandsTA, (cs) -> item2.setAdditionalCombineCommands(item1, cs)));
+		addCommandTooltip(editCombine2CommandsTA,
+				"Additional commands to combine the two items. These will only be valid for this exact combination of items.");
 
 		combineActionsListView.initialize(item1.getAdditionalActionsFromCombineWith(item2),
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,

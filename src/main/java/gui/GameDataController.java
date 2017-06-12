@@ -2,7 +2,11 @@ package gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -110,6 +114,42 @@ public abstract class GameDataController {
 		WARNING, ERROR
 	}
 
+	/**
+	 * Different placeholder types.
+	 * 
+	 * XXX not properly aligned, depending on OS Font.
+	 * 
+	 * @author Satia
+	 */
+	public enum Placeholder {
+		INPUT(Pattern.compile("(<input>|<Input>|<INPUT>)"), "<input>\t\t\tThe input typed by the player.\n"), //
+		IDENTIFIER(Pattern.compile("(<identifier>|<Identifier>|<IDENTIFIER>)"),
+				"<identifier>\t\tThe identifier used for the first thing in the command.\n"), //
+		IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)"),
+				"<identifier2>\t\tThe identifier used for the second thing in the command.\n"), //
+		NAME(Pattern.compile("(<name>|<Name>|<NAME>)"), "<name>\t\t\tThe name of the first thing in the command.\n"), //
+		NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)"),
+				"<name2>\t\tThe name of the second thing in the command.\n"), //
+		PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"),
+				"<pattern|A|B|>\tSimilar to <input>, but allows to replace the identifiers "
+						+ "of the first and second thing in the command with *A* and *B*, respectively.\n");
+
+		/**
+		 * The RegEx pattern
+		 */
+		public Pattern pattern;
+
+		/**
+		 * The text displayed in a tooltip for a node allowing this placeholder.
+		 */
+		public String tooltipText;
+
+		Placeholder(Pattern pattern, String tooltipText) {
+			this.pattern = pattern;
+			this.tooltipText = tooltipText;
+		}
+	}
+
 	private static final String NODE_PROPERTIES_KEY_ERROR_TOOLTIP = "Error-Tooltip";
 	private static final String NODE_PROPERTIES_KEY_ERROR_FOCUSLISTENER = "Error-Tooltip-FocusListener";
 	private static final String NODE_PROPERTIES_KEY_TOOLTIP_MOUSEENTER_LISTENER = "Tooltip-MouseEnterListener";
@@ -137,6 +177,16 @@ public abstract class GameDataController {
 	private static final Pattern BLANKS_BEGINNING_END = Pattern.compile("(^\\p{Blank})|(\\p{Blank}$)");
 	private static final Pattern VALID_SEQS = Pattern.compile("(([a-z])|[\\[\\] ]|(<(A|B)>))*");
 	private static final Pattern CHAR = Pattern.compile("([a-z])");
+
+	// Different Sets with allowed placeholders
+	protected static final Pattern ANY_PLACEHOLDER = Pattern.compile("(<pattern\\|(?<p0>.*?)\\|(?<p1>.*?)\\|>|<.*?>)");
+	protected final Set<Placeholder> input = EnumSet.of(Placeholder.INPUT);
+	protected final Set<Placeholder> inputAndPattern = EnumSet.of(Placeholder.INPUT, Placeholder.PATTERN);
+	protected final Set<Placeholder> inputPatternID = EnumSet.of(Placeholder.INPUT, Placeholder.IDENTIFIER,
+			Placeholder.PATTERN);
+	protected final Set<Placeholder> noSecondPL = EnumSet.of(Placeholder.INPUT, Placeholder.IDENTIFIER,
+			Placeholder.NAME, Placeholder.PATTERN);
+	protected final Set<Placeholder> allPL = EnumSet.allOf(Placeholder.class);
 
 	/** The current game manager. */
 	protected CurrentGameManager currentGameManager;
@@ -369,6 +419,29 @@ public abstract class GameDataController {
 				+ "or identifier of the first/second object. Square brackets indicate optional parts of the command.";
 
 		setNodeTooltip(node, explanation + " " + commandIntroduction);
+	}
+
+	/**
+	 * Adds a tooltip to the placeholder text TextFields.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param explanation
+	 *            the introduction of the tooltip.
+	 * @param allowedPL
+	 *            the set of allowed placeholders to explain.
+	 */
+	protected void addPlaceholderTextTooltip(Node node, String explanation, Set<Placeholder> allowedPL) {
+		final String placeHolderIntroduction = "You can also include placeholders, "
+				+ "which will be replaced in the game. The following placeholders are allowed:\n";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(explanation).append(' ');
+		sb.append(placeHolderIntroduction);
+		for (Placeholder p : allowedPL) {
+			sb.append(p.tooltipText);
+		}
+		setNodeTooltip(node, sb.toString());
 	}
 
 	/**
@@ -719,6 +792,54 @@ public abstract class GameDataController {
 		}
 
 		mwController.pushCenterContent(o.getName(), fxml, c, c::controllerFactory);
+	}
+
+	/**
+	 * Shows or removes css and tooltips to warn if a placeholder is invalid or
+	 * if a field is empty.
+	 * 
+	 * @param input
+	 *            the entered text input
+	 * @param inputNode
+	 *            the node used to enter the input
+	 * @param allowedPlaceholders
+	 *            the placeholders supported by this field.
+	 * @param allowEmpty
+	 *            if true, no warning will be shown if the text field is empty.
+	 */
+	protected void checkPlaceholdersAndEmptiness(String input, Node inputNode, Set<Placeholder> allowedPlaceholders, boolean allowEmpty) {
+		StringBuilder msg = new StringBuilder();
+		Matcher wholeMatcher = ANY_PLACEHOLDER.matcher(input);
+		Queue<Matcher> q = new LinkedList<Matcher>();
+		q.add(wholeMatcher);
+		while (!q.isEmpty()) {
+			Matcher m = q.remove();
+			while (m.find()) {
+				String usedPL = m.group();
+				String p0 = m.group("p0");
+				if (p0 != null && !p0.isEmpty()) {
+					q.add(ANY_PLACEHOLDER.matcher(p0));
+				}
+				String p1 = m.group("p1");
+				if (p1 != null && !p1.isEmpty()) {
+					q.add(ANY_PLACEHOLDER.matcher(p1));
+				}
+	
+				if (!allowedPlaceholders.stream().anyMatch((p) -> p.pattern.matcher(usedPL).matches())) {
+					msg.append("Placeholder " + usedPL + "is not recognized.\n");
+				}
+	
+			}
+		}
+	
+		// Show or hide warning
+		if (msg.length() != 0) {
+			showError(inputNode, msg.toString(), TooltipSeverity.WARNING);
+		} else if (input.isEmpty() && !allowEmpty) {
+			showError(inputNode, INPUT_EMPTY, TooltipSeverity.WARNING);
+		} else {
+			hideError(inputNode);
+		}
 	}
 
 }
