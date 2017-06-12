@@ -91,23 +91,6 @@ import utility.WindowUtil;
 public abstract class GameDataController {
 
 	/**
-	 * A method allowing to set a list of strings. FIXME remove this interface
-	 * and use Consumer
-	 * 
-	 * @author Satia
-	 */
-	@FunctionalInterface
-	public static interface StringListSetter {
-		/**
-		 * Sets the list.
-		 * 
-		 * @param list
-		 *            the list
-		 */
-		public void setList(List<String> list);
-	}
-
-	/**
 	 * The severity of a tooltip shown on an input field.
 	 * 
 	 * @author Satia
@@ -517,7 +500,7 @@ public abstract class GameDataController {
 	 *            the method to call if the commands are valid
 	 */
 	protected void updateGameCommands(String commandsText, int paramNum, boolean allowEmpty, Node inputNode,
-			StringListSetter setter) {
+			Consumer<List<String>> setter) {
 		boolean errorFound = false;
 		String[] lines = commandsText.split("\\n");
 
@@ -565,7 +548,7 @@ public abstract class GameDataController {
 			hideError(inputNode);
 			List<String> newCommands = Arrays.stream(lines).map(CommandRegExConverter::convertStringToRegEx)
 					.collect(Collectors.toList());
-			setter.setList(newCommands);
+			setter.accept(newCommands);
 		}
 	}
 
@@ -582,13 +565,13 @@ public abstract class GameDataController {
 	 * @param setter
 	 *            the method to call if the identifiers are valid
 	 */
-	protected void updateIdentifiers(String input, Node inputNode, StringListSetter setter) {
+	protected void updateIdentifiers(String input, Node inputNode, Consumer<List<String>> setter) {
 		String[] lines = input.split("\\n");
 		if (Arrays.stream(lines).anyMatch((s) -> !VALID_IDENTIFIER_SEQS.matcher(s).matches())) {
 			showError(inputNode, IDENTIFIER_INVALID_CHAR, TooltipSeverity.ERROR);
 		} else {
 			hideError(inputNode);
-			setter.setList(new ArrayList<String>(Arrays.asList(lines)));
+			setter.accept(new ArrayList<String>(Arrays.asList(lines)));
 		}
 
 	}
