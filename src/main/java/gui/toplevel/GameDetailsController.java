@@ -55,15 +55,14 @@ public class GameDetailsController extends GameDataController {
 		INPUT(Pattern.compile("(<input>|<Input>|<INPUT>)"), "<input>\t\t\tThe input typed by the player.\n"), //
 		IDENTIFIER(Pattern.compile("(<identifier>|<Identifier>|<IDENTIFIER>)"),
 				"<identifier>\t\tThe identifier used for the first thing in the command.\n"), //
-				IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)"),
-						"<identifier2>\t\tThe identifier used for the second thing in the command.\n"), //
-						NAME(Pattern.compile("(<name>|<Name>|<NAME>)"),
-								"<name>\t\t\tThe name of the first thing in the command.\n"), //
-								NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)"),
-										"<name2>\t\tThe name of the second thing in the command.\n"), //
-										PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"),
-												"<pattern|A|B|>\tSimilar to <input>, but allows to replace the identifiers "
-														+ "of the first and second thing in the command with *A* and *B*, respectively.\n");
+		IDENTIFIER2(Pattern.compile("(<identifier2>|<Identifier2>|<IDENTIFIER2>)"),
+				"<identifier2>\t\tThe identifier used for the second thing in the command.\n"), //
+		NAME(Pattern.compile("(<name>|<Name>|<NAME>)"), "<name>\t\t\tThe name of the first thing in the command.\n"), //
+		NAME2(Pattern.compile("(<name2>|<Name2>|<NAME2>)"),
+				"<name2>\t\tThe name of the second thing in the command.\n"), //
+		PATTERN(Pattern.compile("(<pattern\\|.*?\\|.*?\\|>)"),
+				"<pattern|A|B|>\tSimilar to <input>, but allows to replace the identifiers "
+						+ "of the first and second thing in the command with *A* and *B*, respectively.\n");
 
 		/**
 		 * the RegEx pattern
@@ -442,18 +441,16 @@ public class GameDetailsController extends GameDataController {
 		inspectCommandsTextField.setText(getCommandString(game.getInspectCommands()));
 		addCommandTooltip(inspectCommandsTextField,
 				"These commands enable the user to inspect an inventory item or an item, person or way in the current location.");
-		
+
 		inventoryCommandsTextField.setText(getCommandString(game.getInventoryCommands()));
 		addCommandTooltip(inventoryCommandsTextField,
 				"These commands enable the user to inspect the inventory contents.");
-		
+
 		helpCommandsTextField.setText(getCommandString(game.getHelpCommands()));
-		addCommandTooltip(helpCommandsTextField,
-				"These commands show the help to the user.");
-		
+		addCommandTooltip(helpCommandsTextField, "These commands show the help to the user.");
+
 		exitCommandsTextField.setText(getCommandString(game.getExitCommands()));
-		addCommandTooltip(exitCommandsTextField,
-				"These commands exit the game and close the application.");
+		addCommandTooltip(exitCommandsTextField, "These commands exit the game and close the application.");
 
 		SpinnerValueFactory<Integer> svf = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_OPTION_LINES,
 				MAX_OPTION_LINES, game.getNumberOfOptionLines());
@@ -464,35 +461,39 @@ public class GameDetailsController extends GameDataController {
 		numOptionLinesProp = game.numberOfOptionLinesProperty().asObject();
 		svf.valueProperty().bindBidirectional(numOptionLinesProp);
 		optionLinesSpinner.setValueFactory(svf);
-		setNodeTooltip(optionLinesSpinner, "In a dialog or in the game menu, this number specified how many lines of options "
-				+ "should be shown simultaneously.");
+		setNodeTooltip(optionLinesSpinner,
+				"In a dialog or in the game menu, this number specified how many lines of options "
+						+ "should be shown simultaneously.");
 
 		ObservableList<Color> colors = FXCollections.observableArrayList(Color.values());
 		successfulFGColorPicker.setItems(colors);
 		successfulFGColorPicker.valueProperty().bindBidirectional(game.successfullFgColorProperty());
-		setNodeTooltip(successfulFGColorPicker, "This is the font color used for successful actions and in a dialog for anything "
-				+ "the other person says.");
-		
+		setNodeTooltip(successfulFGColorPicker,
+				"This is the font color used for successful actions and in a dialog for anything "
+						+ "the other person says.");
+
 		successfulBGColorPicker.setItems(colors);
 		successfulBGColorPicker.valueProperty().bindBidirectional(game.successfullBgColorProperty());
-		setNodeTooltip(successfulBGColorPicker, "This is the background color used for successful actions and in a dialog for anything "
-				+ "the other person says.");
-		
+		setNodeTooltip(successfulBGColorPicker,
+				"This is the background color used for successful actions and in a dialog for anything "
+						+ "the other person says.");
+
 		neutralFGColorPicker.setItems(colors);
 		neutralFGColorPicker.valueProperty().bindBidirectional(game.neutralFgColorProperty());
-		setNodeTooltip(neutralFGColorPicker, "This is the font color used for looking around, inspecting things, your inventory, "
-				+ "and additional events during dialogues.");
-		
+		setNodeTooltip(neutralFGColorPicker,
+				"This is the font color used for looking around, inspecting things, your inventory, "
+						+ "and additional events during dialogues.");
+
 		neutralBGColorPicker.setItems(colors);
 		neutralBGColorPicker.valueProperty().bindBidirectional(game.neutralBgColorProperty());
-		setNodeTooltip(neutralBGColorPicker, "This is the background color used for looking around, inspecting things, your inventory, "
-				+ "and additional events during dialogues.");
-		
-		
+		setNodeTooltip(neutralBGColorPicker,
+				"This is the background color used for looking around, inspecting things, your inventory, "
+						+ "and additional events during dialogues.");
+
 		failureFGColorPicker.setItems(colors);
 		failureFGColorPicker.valueProperty().bindBidirectional(game.failedFgColorProperty());
 		setNodeTooltip(failureFGColorPicker, "This is the font color used for failed actions.");
-		
+
 		failureBGColorPicker.setItems(colors);
 		failureBGColorPicker.valueProperty().bindBidirectional(game.failedBgColorProperty());
 		setNodeTooltip(failureBGColorPicker, "This is the background color used for failed actions.");
@@ -545,21 +546,6 @@ public class GameDetailsController extends GameDataController {
 			sb.append(p.tooltipText);
 		}
 		setNodeTooltip(node, sb.toString());
-	}
-
-	/**
-	 * Adds a tooltip to the command TextFields.
-	 * 
-	 * @param node
-	 *            the node
-	 * @param explanation
-	 *            the introduction of the tooltip.
-	 */
-	private void addCommandTooltip(Node node, String explanation) {
-		final String commandIntroduction = "<A> and <B> are the positions where the player must type a name "
-				+ "or identifier of the first/second object. Square brackets indicate optional parts of the command.";
-
-		setNodeTooltip(node, explanation + " " + commandIntroduction);
 	}
 
 	/**

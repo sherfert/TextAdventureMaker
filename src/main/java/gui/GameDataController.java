@@ -357,6 +357,21 @@ public abstract class GameDataController {
 	}
 
 	/**
+	 * Adds a tooltip to the command TextFields.
+	 * 
+	 * @param node
+	 *            the node
+	 * @param explanation
+	 *            the introduction of the tooltip.
+	 */
+	protected void addCommandTooltip(Node node, String explanation) {
+		final String commandIntroduction = "<A> and <B> are the positions where the player must type a name "
+				+ "or identifier of the first/second object. Square brackets indicate optional parts of the command.";
+	
+		setNodeTooltip(node, explanation + " " + commandIntroduction);
+	}
+
+	/**
 	 * Obtains a single String from the list of Strings in the game. strings are
 	 * joined with the '\n' character
 	 * 
