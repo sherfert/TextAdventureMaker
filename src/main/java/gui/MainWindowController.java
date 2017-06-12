@@ -13,6 +13,7 @@ import gui.toplevel.GameDetailsController;
 import gui.toplevel.InventoryItemsController;
 import gui.toplevel.ItemsController;
 import gui.toplevel.LocationsController;
+import gui.toplevel.OverviewController;
 import gui.toplevel.PersonsController;
 import gui.toplevel.WaysController;
 import gui.window.NavbarController;
@@ -49,6 +50,7 @@ public class MainWindowController {
 
 	// All controllers that can be loaded dynamically
 	private GameDetailsController gameDetailsController;
+	private OverviewController overviewController;
 	private LocationsController locationsController;
 	private WaysController waysController;
 	private ItemsController itemsController;
@@ -176,6 +178,7 @@ public class MainWindowController {
 	private void resetCenterGUI() {
 		// Create all controllers
 		gameDetailsController = new GameDetailsController(currentGameManager, this);
+		overviewController = new OverviewController(currentGameManager, this);
 		locationsController = new LocationsController(currentGameManager, this);
 		waysController = new WaysController(currentGameManager, this);
 		itemsController = new ItemsController(currentGameManager, this);
@@ -236,6 +239,17 @@ public class MainWindowController {
 		navbarController.reset();
 		// Load the content
 		pushCenterContent("Game Configuration", fxml, gameDetailsController, gameDetailsController::controllerFactory);
+	}
+	
+	/**
+	 * Loads the overview into the center.
+	 */
+	public void loadOverview() {
+		String fxml = "view/toplevel/Overview.fxml";
+		// Reset the navbar
+		navbarController.reset();
+		// Load the content
+		pushCenterContent("Overview", fxml, overviewController, overviewController::controllerFactory);
 	}
 
 	/**

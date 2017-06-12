@@ -6,53 +6,28 @@
 <?import javafx.scene.layout.*?>
 <?import gui.customui.NamedObjectChooser?>
 
-<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1" fx:id="tabPane">
-	<tabs>
-		<Tab text="Table">
-			<content>
-				<BorderPane>
-					<center>
-						<TableView fx:id="table">
-							<columns>
-								<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
-								<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
-								<TableColumn fx:id="originCol" prefWidth="100.0"
-									text="Origin" />
-								<TableColumn fx:id="destinationCol" prefWidth="100.0"
-									text="Destination" />
-							</columns>
-						</TableView>
-					</center>
-					<bottom>
-						<HBox spacing="10.0">
-							<Label text="Filter:" />
-							<TextField fx:id="filterTF" />
-							<Button fx:id="newButton" mnemonicParsing="false" text="New way" />
-							<padding>
-								<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-							</padding>
-						</HBox>
-					</bottom>
-				</BorderPane>
-			</content>
-		</Tab>
-		<Tab text="Map">
-			<content>
-				<BorderPane fx:id="mapBorderPane">
-					<center>
-						<ScrollPane id="outerMapPane">
-							<Pane fx:id="mapPane" />
-						</ScrollPane>
-					</center>
-					<bottom>
-						<Button fx:id="mapNewWayButton" mnemonicParsing="false"
-							text="Create a way" />
-					</bottom>
-				</BorderPane>
-			</content>
-		</Tab>
-	</tabs>
-</TabPane>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<TableView fx:id="table">
+			<columns>
+				<TableColumn fx:id="idCol" prefWidth="75.0" text="ID" />
+				<TableColumn fx:id="nameCol" prefWidth="100.0" text="Name" />
+				<TableColumn fx:id="originCol" prefWidth="100.0" text="Origin" />
+				<TableColumn fx:id="destinationCol" prefWidth="100.0"
+					text="Destination" />
+			</columns>
+		</TableView>
+	</center>
+	<bottom>
+		<HBox spacing="10.0">
+			<Label text="Filter:" />
+			<TextField fx:id="filterTF" />
+			<Button fx:id="newButton" mnemonicParsing="false" text="New way" />
+			<padding>
+				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+			</padding>
+		</HBox>
+	</bottom>
+</BorderPane>
 
 

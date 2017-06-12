@@ -604,6 +604,24 @@ public abstract class GameDataController {
 			currentTabIndex = n.intValue();
 		});
 	}
+	
+	/**
+	 * Saves any object to the DB.
+	 * 
+	 * @param o
+	 *            the object
+	 * @throws DBClosedException
+	 *             if the DB was closed.
+	 */
+	protected void saveHasId(HasId o) {
+		try {
+			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
+			currentGameManager.getPersistenceManager().updateChanges();
+		} catch (DBClosedException e1) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
+			return;
+		}
+	}
 
 	/**
 	 * Opens this object for editing in a new center view atop the stack.

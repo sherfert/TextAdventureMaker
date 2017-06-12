@@ -132,13 +132,7 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 	 */
 	protected void saveObject(E o) {
 		// Add item to DB
-		try {
-			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
-			currentGameManager.getPersistenceManager().updateChanges();
-		} catch (DBClosedException e1) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
-			return;
-		}
+		saveHasId(o);
 		// Add item to our table
 		objectsOL.add(o);
 	}

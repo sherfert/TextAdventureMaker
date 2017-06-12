@@ -11,6 +11,7 @@
 <VBox id="sidebar" prefWidth="200.0" styleClass="vbox" stylesheets="@sidebar.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Hyperlink fx:id="gameConfigHL" maxWidth="Infinity" text="Game configuration" VBox.vgrow="ALWAYS" />
+      <Hyperlink fx:id="overviewHL" maxWidth="Infinity" text="Overview" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="locationsHL" maxWidth="Infinity" text="Locations" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="waysHL" maxWidth="Infinity" text="Ways" VBox.vgrow="ALWAYS" />
       <Hyperlink fx:id="itemsHL" maxWidth="Infinity" text="Items" VBox.vgrow="ALWAYS" />
