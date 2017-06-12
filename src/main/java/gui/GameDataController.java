@@ -167,6 +167,7 @@ public abstract class GameDataController {
 	private static final String COMMAND_UNMATCHING_BRACKETS = "Brackets must be matching and only contain a-z or space characters";
 	private static final String COMMAND_PARAM_WRONG_NOT_ONE = "The parameter %s is expected to occur exactly once";
 	private static final String COMMAND_PARAM_WRONG_NOT_ZERO = "The parameter %s is not supported for this command";
+	private static final String IDENTIFIER_INVALID_CHAR = "Only letters a-z, A-Z and the space character are allowed.";
 
 	private static final Pattern MATCHED_BRACKETS = Pattern.compile("(\\[[a-z &&[^\\]]]*\\])");
 	private static final Pattern OPENING_BRACKETS = Pattern.compile("(\\[)");
@@ -175,7 +176,8 @@ public abstract class GameDataController {
 	private static final Pattern PARAM_B = Pattern.compile("(<B>)");
 	private static final Pattern MULTIPLE_BLANKS = Pattern.compile("\\p{Blank}{2,}");
 	private static final Pattern BLANKS_BEGINNING_END = Pattern.compile("(^\\p{Blank})|(\\p{Blank}$)");
-	private static final Pattern VALID_SEQS = Pattern.compile("(([a-z])|[\\[\\] ]|(<(A|B)>))*");
+	private static final Pattern VALID_COMMAND_SEQS = Pattern.compile("(([a-z])|[\\[\\] ]|(<(A|B)>))*");
+	private static final Pattern VALID_IDENTIFIER_SEQS = Pattern.compile("[a-zA-Z ]*");
 	private static final Pattern CHAR = Pattern.compile("([a-z])");
 
 	// Different Sets with allowed placeholders
@@ -459,20 +461,6 @@ public abstract class GameDataController {
 	}
 
 	/**
-	 * Splits the string by the '\n' char and then invokes the setter with the
-	 * obtained list.
-	 * 
-	 * @param joinedString
-	 *            a string joined with '\n'chars.
-	 * @param setter
-	 *            a method to call that accepts a list of strings.
-	 */
-	protected void updateList(String joinedString, StringListSetter setter) {
-		ArrayList<String> lines = new ArrayList<String>(Arrays.asList(joinedString.split("\\n")));
-		setter.setList(lines);
-	}
-
-	/**
 	 * Obtains a single command String from the list of commands in the game.
 	 * Each command is converted into a better human readable form and the
 	 * strings are joined with the '\n' character
@@ -543,7 +531,7 @@ public abstract class GameDataController {
 			} else if (Arrays.stream(lines).anyMatch((s) -> BLANKS_BEGINNING_END.matcher(s).find())) {
 				errorFound = true;
 				showError(inputNode, COMMAND_WHITESPACE_BEGINNING_END, TooltipSeverity.ERROR);
-			} else if (Arrays.stream(lines).anyMatch((s) -> !VALID_SEQS.matcher(s).matches())) {
+			} else if (Arrays.stream(lines).anyMatch((s) -> !VALID_COMMAND_SEQS.matcher(s).matches())) {
 				errorFound = true;
 				showError(inputNode, COMMAND_INVALID_CHAR, TooltipSeverity.ERROR);
 			} else if (Arrays.stream(lines).anyMatch((s) -> !CHAR.matcher(s).find())) {
@@ -576,6 +564,30 @@ public abstract class GameDataController {
 					.collect(Collectors.toList());
 			setter.setList(newCommands);
 		}
+	}
+	
+	/**
+	 * Updates a list of identifiers in the game, after error checks. If a
+	 * required property does not hold, an error tooltip will be shown on the
+	 * passed input node. Otherwise the given method is executed to set the
+	 * identifiers.
+	 * 
+	 * @param input
+	 *            the input
+	 * @param inputNode
+	 *            the input node
+	 * @param setter
+	 *            the method to call if the identifiers are valid
+	 */
+	protected void updateIdentifiers(String input, Node inputNode, StringListSetter setter) {
+		String[] lines = input.split("\\n");
+		if (Arrays.stream(lines).anyMatch((s) -> !VALID_IDENTIFIER_SEQS.matcher(s).matches())) {
+			showError(inputNode, IDENTIFIER_INVALID_CHAR, TooltipSeverity.ERROR);
+		} else {
+			hideError(inputNode);
+			setter.setList(new ArrayList<String>(Arrays.asList(lines)));
+		}
+
 	}
 
 	/**
@@ -807,7 +819,8 @@ public abstract class GameDataController {
 	 * @param allowEmpty
 	 *            if true, no warning will be shown if the text field is empty.
 	 */
-	protected void checkPlaceholdersAndEmptiness(String input, Node inputNode, Set<Placeholder> allowedPlaceholders, boolean allowEmpty) {
+	protected void checkPlaceholdersAndEmptiness(String input, Node inputNode, Set<Placeholder> allowedPlaceholders,
+			boolean allowEmpty) {
 		StringBuilder msg = new StringBuilder();
 		Matcher wholeMatcher = ANY_PLACEHOLDER.matcher(input);
 		Queue<Matcher> q = new LinkedList<Matcher>();
@@ -824,14 +837,14 @@ public abstract class GameDataController {
 				if (p1 != null && !p1.isEmpty()) {
 					q.add(ANY_PLACEHOLDER.matcher(p1));
 				}
-	
+
 				if (!allowedPlaceholders.stream().anyMatch((p) -> p.pattern.matcher(usedPL).matches())) {
 					msg.append("Placeholder " + usedPL + "is not recognized.\n");
 				}
-	
+
 			}
 		}
-	
+
 		// Show or hide warning
 		if (msg.length() != 0) {
 			showError(inputNode, msg.toString(), TooltipSeverity.WARNING);

@@ -72,15 +72,15 @@ public class Main {
 
 		Way wayToBalcony = new Way("Balcony door", "There is a door that leads outside.", flat, balcony);
 		wayToBalcony.removeIdentifier(wayToBalcony.getName());
-		wayToBalcony.addIdentifier("out(side)?");
-		wayToBalcony.addIdentifier("(on |to )?(the )?balcony");
-		wayToBalcony.addIdentifier("through (the )?balcony door");
+		wayToBalcony.addIdentifier("out");
+		wayToBalcony.addIdentifier("on balcony");
+		wayToBalcony.addIdentifier("through balcony door");
 		wayToBalcony.setMoveSuccessfulText("You go outside on the balcony.");
 		Way wayToFlat = new Way("Balcony door", "There is a door that leads inside.", balcony, flat);
 		wayToFlat.removeIdentifier(wayToFlat.getName());
-		wayToFlat.addIdentifier("in(side)?");
-		wayToFlat.addIdentifier("into (the )?flat");
-		wayToFlat.addIdentifier("through (the )?balcony door");
+		wayToFlat.addIdentifier("in");
+		wayToFlat.addIdentifier("into flat");
+		wayToFlat.addIdentifier("through balcony door");
 		wayToFlat.setMoveSuccessfulText("You go back inside");
 		wayToFlat.setMoveForbiddenText("I feel like you need something from here before going back in.");
 		wayToFlat.setMovingEnabled(false);

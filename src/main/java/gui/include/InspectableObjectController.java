@@ -12,8 +12,6 @@ import logic.CurrentGameManager;
 /**
  * Controller for one inspectable object.
  * 
- * TODO here and in ChangeInspectableObjectActionC : control that no special characters are added to identifiers.
- * 
  * @author Satia
  */
 public class InspectableObjectController extends GameDataController {
@@ -48,19 +46,22 @@ public class InspectableObjectController extends GameDataController {
 	private void initialize() {
 		// Create new bindings
 		editInspectionTextTA.textProperty().bindBidirectional(object.inspectionTextProperty());
-		setNodeTooltip(editInspectionTextTA, "The inspection text is displayed when the player inspects the item or person.");
-		
-		editIdentifiersTA.setText(getListString(object.getIdentifiers()));		
-		editIdentifiersTA.textProperty().addListener((f, o, n) -> updateList(n, object::setIdentifiers));
-		setNodeTooltip(editIdentifiersTA, "Here you can list additional identifiers that can be used to refer to the object, "
-				+ "apart from its name.");		
+		setNodeTooltip(editInspectionTextTA,
+				"The inspection text is displayed when the player inspects the item or person.");
+
+		editIdentifiersTA.setText(getListString(object.getIdentifiers()));
+		editIdentifiersTA.textProperty()
+				.addListener((f, o, n) -> updateIdentifiers(n, editIdentifiersTA, object::setIdentifiers));
+		setNodeTooltip(editIdentifiersTA,
+				"Here you can list additional identifiers that can be used to refer to the object, "
+						+ "apart from its name.");
 
 		inspectActionsListView.initialize(object.getAdditionalInspectActions(),
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
 				this::objectSelected, (a) -> object.addAdditionalInspectAction(a),
 				(a) -> object.removeAdditionalInspectAction(a));
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(object);
