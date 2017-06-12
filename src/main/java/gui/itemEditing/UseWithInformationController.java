@@ -71,16 +71,29 @@ public class UseWithInformationController extends GameDataController {
 		// Create new bindings
 		editUseWithSuccessfulTextTF.setText(item.getUseWithSuccessfulText(object));
 		editUseWithSuccessfulTextTF.textProperty().addListener((f, o, n) -> item.setUseWithSuccessfulText(object, n));
+		editUseWithSuccessfulTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editUseWithSuccessfulTextTF, allPL, true));
+		addPlaceholderTextTooltip(editUseWithSuccessfulTextTF,
+				"This is the text when the two items are used together. If empty, the default will be used.", allPL);
 
 		editUseWithForbiddenTextTF.setText(item.getUseWithForbiddenText(object));
 		editUseWithForbiddenTextTF.textProperty().addListener((f, o, n) -> item.setUseWithForbiddenText(object, n));
+		editUseWithForbiddenTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editUseWithForbiddenTextTF, allPL, true));
+		addPlaceholderTextTooltip(editUseWithForbiddenTextTF,
+				"This is the text when the two items could not be used together. If empty, the default will be used.",
+				allPL);
 
 		editUsingEnabledCB.setSelected(item.isUsingEnabledWith(object));
 		editUsingEnabledCB.selectedProperty().addListener((f, o, n) -> item.setUsingEnabledWith(object, n));
+		setNodeTooltip(editUsingEnabledCB,
+				"If ticked, the inventory item can be used with the other item, person, or way.");
 
 		editUseWithCommandsTA.setText(getCommandString(item.getAdditionalUseWithCommands(object)));
 		editUseWithCommandsTA.textProperty().addListener((f, o, n) -> updateGameCommands(n, 2, true,
 				editUseWithCommandsTA, (cs) -> item.setAdditionalUseWithCommands(object, cs)));
+		addCommandTooltip(editUseWithCommandsTA,
+				"Additional commands to use the two items together. These will only be valid for this exact combination of items.");
 
 		useWithCommandsLabel.setText("Additional commands for using " + item.getName() + " with " + object.getName());
 

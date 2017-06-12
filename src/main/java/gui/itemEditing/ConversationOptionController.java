@@ -69,24 +69,31 @@ public class ConversationOptionController extends GameDataController {
 		targetChooser.setNoValueString("(ends conversation)");
 		targetChooser.initialize(option.getTarget(), true, false, option.getLayer().getConversation()::getLayers,
 				option::setTarget);
+		setNodeTooltip(targetChooser,
+				"After choosing the option, the conversation will switch to this layer. If you choose none, the conversation "
+						+ "will end after choosing this option.");
 
 		removeButton.setOnMouseClicked((e) -> removeObject(option, "Deleting a conversation option",
 				"Do you really want to delete this conversation option?", "This will delete the conversation option "
 						+ "and actions associated with any of the deleted entities."));
 
 		editEnabledCB.selectedProperty().bindBidirectional(option.enabledProperty());
+		setNodeTooltip(editEnabledCB, "If ticked, the option will appear.");
 
 		editRemoveOptionEnabledCB.setSelected(option.isDisablingOptionAfterChosen());
 		editRemoveOptionEnabledCB.selectedProperty().addListener((f, o, n) -> option.setDisablingOptionAfterChosen(n));
+		setNodeTooltip(editRemoveOptionEnabledCB, "If ticked, the option will disappear after choosing it.");
 
 		editTextTF.textProperty().bindBidirectional(option.textProperty());
+		setNodeTooltip(editTextTF, "This is what the player is saying.");
 		editAnswerTA.textProperty().bindBidirectional(option.answerProperty());
+		setNodeTooltip(editAnswerTA, "This is what the person is responding.");
 		editEventTA.textProperty().bindBidirectional(option.eventProperty());
-		
+		setNodeTooltip(editEventTA, "Here you can describe anything that happens when the option is chosen.");
+
 		actionsListView.initialize(option.getAdditionalActions(),
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> option.addAdditionalAction(a),
-				(a) -> option.removeAdditionalAction(a));
+				this::objectSelected, (a) -> option.addAdditionalAction(a), (a) -> option.removeAdditionalAction(a));
 	}
 
 	/**
@@ -100,7 +107,7 @@ public class ConversationOptionController extends GameDataController {
 			return super.controllerFactory(type);
 		}
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(option);

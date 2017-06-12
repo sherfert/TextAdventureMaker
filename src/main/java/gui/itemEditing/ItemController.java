@@ -83,23 +83,41 @@ public class ItemController extends GameDataController {
 		locationChooser.initialize(item.getLocation(), true, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				item::setLocation);
+		setNodeTooltip(locationChooser, "The location of the item. Choosing none is valid, if you want to introduce "
+				+ "the item to the game later on using an action.");
 
 		removeButton.setOnMouseClicked(
 				(e) -> removeObject(item, "Deleting an item", "Do you really want to delete this item?",
 						"This will delete the item, usage information of inventory items with this item, "
 								+ "and actions associated with any of the deleted entities."));
+
 		editTakeSuccessfulTextTF.textProperty().bindBidirectional(item.takeSuccessfulTextProperty());
+		editTakeSuccessfulTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editTakeSuccessfulTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(editTakeSuccessfulTextTF,
+				"This is the text when the item is successfully taken. If empty, the default will be used.",
+				noSecondPL);
+
 		editTakeForbiddenTextTF.textProperty().bindBidirectional(item.takeForbiddenTextProperty());
+		editTakeForbiddenTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editTakeForbiddenTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(editTakeForbiddenTextTF,
+				"This text is displayed when the player tries to take this item, unsuccessfully. If empty, the default will be used.",
+				noSecondPL);
 
 		editTakingEnabledCB.setSelected(item.isTakingEnabled());
 		editTakingEnabledCB.selectedProperty().addListener((f, o, n) -> item.setTakingEnabled(n));
+		setNodeTooltip(editTakingEnabledCB, "If ticked, the item can be taken.");
 
 		editRemoveItemEnabledCB.setSelected(item.isRemoveItem());
 		editRemoveItemEnabledCB.selectedProperty().addListener((f, o, n) -> item.setRemoveItem(n));
+		setNodeTooltip(editTakingEnabledCB, "If ticked, the item will disappear from the room after taking it.");
 
 		editTakeCommandsTA.setText(getCommandString(item.getAdditionalTakeCommands()));
 		editTakeCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, true, editTakeCommandsTA, item::setAdditionalTakeCommands));
+		addCommandTooltip(editTakeCommandsTA,
+				"Additional commands to take the item. These will only be valid for this item.");
 
 		pickUpItemsListView.initialize(item.getPickUpItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
@@ -132,7 +150,7 @@ public class ItemController extends GameDataController {
 			return super.controllerFactory(type);
 		}
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(item);

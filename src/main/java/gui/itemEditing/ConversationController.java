@@ -82,7 +82,7 @@ public class ConversationController extends NamedObjectsTableController<Conversa
 		setNodeTooltip(editGreetingTA, "The person will greet the player like this.");
 		
 		editEventTA.textProperty().bindBidirectional(conversation.eventProperty());
-		setNodeTooltip(editEventTA, "Here you can to describe anything that happens when the conversation starts.");
+		setNodeTooltip(editEventTA, "Here you can describe anything that happens when the conversation starts.");
 
 		// Initialize startLayerChooser, with only the layers of this
 		// conversation to choose from.
