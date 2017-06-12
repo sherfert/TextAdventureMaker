@@ -245,12 +245,10 @@ public class OverviewController extends GameDataController {
 		Way way = new Way(this.creationOrigin.getName() + "->" + this.creationDestination.getName(), "",
 				this.creationOrigin, this.creationDestination);
 		// Save way
-		// FIXME this fails silently!
 		saveHasId(way);
 		addWayToMap(way);
 		// Open new way for editing
 		objectSelected(way);
-		disableWayCreation();
 	}
 
 	/**

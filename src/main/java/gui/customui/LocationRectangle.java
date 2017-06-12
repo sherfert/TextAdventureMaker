@@ -32,6 +32,9 @@ public class LocationRectangle extends StackPane {
 	private double orgSceneY;
 	private double orgX;
 	private double orgY;
+	
+	// If the rectangle is currently being dragged
+	private boolean dragging = false;
 
 	/**
 	 * Executed when a location is chosen for editing
@@ -66,40 +69,36 @@ public class LocationRectangle extends StackPane {
 	private DoubleBinding centerY = layoutYProperty().add(rectDim / 2);
 
 	/**
-	 * Handler for pressing (start drag) on a LocationRectangle.
-	 */
-	private EventHandler<MouseEvent> pressHandler = (t) -> {
-		orgSceneX = t.getSceneX();
-		orgSceneY = t.getSceneY();
-		orgX = getLayoutX();
-		orgY = getLayoutY();
-	};
-
-	/**
-	 * Handler for dragging a LocationRectangle.
-	 */
-	private EventHandler<MouseEvent> dragHandler = (t) -> {
-		double offsetX = t.getSceneX() - orgSceneX;
-		double newX = orgX + offsetX;
-		if (newX >= 0) {
-			setLayoutX(newX);
-			location.setxCoordinate(newX);
-		}
-
-		double offsetY = t.getSceneY() - orgSceneY;
-		double newY = orgY + offsetY;
-		if (newY >= 0) {
-			setLayoutY(newY);
-			location.setyCoordinate(newY);
-		}
-	};
-
-	/**
-	 * Handler for clicking a LocationRectangle.
+	 * Handler for clicking or dragging a LocationRectangle.
 	 */
 	private EventHandler<MouseEvent> clickHandler = (t) -> {
-		if (t.getClickCount() == 2) {
-			locationChosen.accept(location);
+		if (t.getEventType() == MouseEvent.MOUSE_PRESSED) {
+			dragging = false;
+			
+			orgSceneX = t.getSceneX();
+			orgSceneY = t.getSceneY();
+			orgX = getLayoutX();
+			orgY = getLayoutY();
+		} else if (t.getEventType() == MouseEvent.DRAG_DETECTED) {
+			dragging = true;
+		} else if (t.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+			double offsetX = t.getSceneX() - orgSceneX;
+			double newX = orgX + offsetX;
+			if (newX >= 0) {
+				setLayoutX(newX);
+				location.setxCoordinate(newX);
+			}
+
+			double offsetY = t.getSceneY() - orgSceneY;
+			double newY = orgY + offsetY;
+			if (newY >= 0) {
+				setLayoutY(newY);
+				location.setyCoordinate(newY);
+			}
+		} else if (t.getEventType() == MouseEvent.MOUSE_CLICKED) {
+			if (!dragging) {
+				locationChosen.accept(location);
+			}
 		}
 	};
 
@@ -174,8 +173,7 @@ public class LocationRectangle extends StackPane {
 	 * new Way can be created. For choosing the origin.
 	 */
 	public void enterOriginChooseMode() {
-		setOnMousePressed(null);
-		setOnMouseDragged(null);
+		removeEventHandler(MouseEvent.ANY, clickHandler);
 		setOnMouseClicked(chooseOriginClickHandler);
 	}
 
@@ -184,8 +182,7 @@ public class LocationRectangle extends StackPane {
 	 * new Way can be created. For choosing the destination.
 	 */
 	public void enterDestinationChooseMode() {
-		setOnMousePressed(null);
-		setOnMouseDragged(null);
+		removeEventHandler(MouseEvent.ANY, clickHandler);
 		setOnMouseClicked(chooseDestinationClickHandler);
 	}
 
@@ -193,9 +190,7 @@ public class LocationRectangle extends StackPane {
 	 * This is the default mode.
 	 */
 	public void enterRearrangeMode() {
-		setOnMousePressed(pressHandler);
-		setOnMouseDragged(dragHandler);
-		setOnMouseClicked(clickHandler);
+		addEventHandler(MouseEvent.ANY, clickHandler);
 		removeShadowStyle();
 	}
 

@@ -367,7 +367,7 @@ public abstract class GameDataController {
 	protected void addCommandTooltip(Node node, String explanation) {
 		final String commandIntroduction = "<A> and <B> are the positions where the player must type a name "
 				+ "or identifier of the first/second object. Square brackets indicate optional parts of the command.";
-	
+
 		setNodeTooltip(node, explanation + " " + commandIntroduction);
 	}
 
@@ -604,9 +604,11 @@ public abstract class GameDataController {
 			currentTabIndex = n.intValue();
 		});
 	}
-	
+
 	/**
 	 * Saves any object to the DB.
+	 * 
+	 * // FIXME this fails silently!
 	 * 
 	 * @param o
 	 *            the object

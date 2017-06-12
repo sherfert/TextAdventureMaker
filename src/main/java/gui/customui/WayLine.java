@@ -43,31 +43,27 @@ public class WayLine extends Line {
 	private EventHandler<MouseEvent> clickHandler = (t) -> {
 		WayLine l = ((WayLine) (t.getSource()));
 
-		if (t.getClickCount() == 2) {
-			if (l.ways.size() == 1) {
-				wayChosen.accept(l.ways.get(0));
-			} else {
-				// Create a listView
-				ListView<Way> listView = new ListView<>();
-				listView.setItems(FXCollections.observableArrayList(ways));
-				listView.setPrefHeight(ways.size() * ROW_HEIGHT + 2);
+		if (l.ways.size() == 1) {
+			wayChosen.accept(l.ways.get(0));
+		} else {
+			// Create a listView
+			ListView<Way> listView = new ListView<>();
+			listView.setItems(FXCollections.observableArrayList(ways));
+			listView.setPrefHeight(ways.size() * ROW_HEIGHT + 2);
 
-				// Create the popup
-				PopOver popOver = new PopOver(listView);
+			// Create the popup
+			PopOver popOver = new PopOver(listView);
 
-				// On click of listview items
-				listView.setOnMouseClicked((e) -> {
-					if (e.getClickCount() == 2) {
-						wayChosen.accept(listView.getSelectionModel().getSelectedItem());
-						// Hide popup
-						popOver.hide();
-					}
-				});
+			// On click of listview items
+			listView.setOnMouseClicked((e) -> {
+				wayChosen.accept(listView.getSelectionModel().getSelectedItem());
+				// Hide popup
+				popOver.hide();
+			});
 
-				// Show the popup
-				popOver.setDetachable(false);
-				popOver.show(l);
-			}
+			// Show the popup
+			popOver.setDetachable(false);
+			popOver.show(l);
 		}
 	};
 
@@ -102,14 +98,14 @@ public class WayLine extends Line {
 		// Styling
 		addHoverStyle();
 	}
-	
+
 	/**
 	 * Adds the hover shadow effect.
 	 */
 	public void addHoverStyle() {
 		getStyleClass().add("mapelement");
 	}
-	
+
 	/**
 	 * Removes the hover shadow effect.
 	 */
