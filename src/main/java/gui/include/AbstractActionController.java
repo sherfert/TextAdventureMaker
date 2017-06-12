@@ -37,6 +37,7 @@ public class AbstractActionController extends GameDataController {
 	@FXML
 	private void initialize() {
 		editEnabledCB.selectedProperty().bindBidirectional(action.enabledProperty());
+		setNodeTooltip(editEnabledCB, "If ticked, the action can be triggered and will have an effect.");
 	}
 
 	@Override

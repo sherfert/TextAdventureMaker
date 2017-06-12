@@ -38,6 +38,8 @@ import playing.menu.LoadSaveManager;
 /**
  * Controller for the main window.
  * 
+ * TODO Extend menu
+ * 
  * @author Satia
  */
 public class MainWindowController {

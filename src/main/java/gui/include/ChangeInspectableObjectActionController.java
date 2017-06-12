@@ -52,8 +52,14 @@ public class ChangeInspectableObjectActionController extends GameDataController 
 
 		identifiersAddTA.setText(getListString(action.getIdentifiersToAdd()));
 		identifiersAddTA.textProperty().addListener((f, o, n) -> updateList(n, action::setIdentifiersToAdd));
+		setNodeTooltip(identifiersAddTA, "Identifiers listed here will be added to the entity.");
+
 		identifiersRemoveTA.setText(getListString(action.getIdentifiersToRemove()));
 		identifiersRemoveTA.textProperty().addListener((f, o, n) -> updateList(n, action::setIdentifiersToRemove));
+		setNodeTooltip(identifiersRemoveTA, "Identifiers listed here will be removed from the entity.");
+		
+		setNodeTooltip(newInspectionTextTA, "This will be the new inspection text.");
+		setNodeTooltip(newInspectionTextCB, "If ticked, the inspection text will be changed.");
 	}
 	
 	@Override

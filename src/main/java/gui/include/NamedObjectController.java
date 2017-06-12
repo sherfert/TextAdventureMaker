@@ -40,6 +40,8 @@ public class NamedObjectController extends GameDataController {
 		
 		// Create new bindings
 		editNameTF.textProperty().bindBidirectional(object.nameProperty());
+		setNodeTooltip(editNameTF, "The name can ne used to refer to the object. For inventory items, it is also "
+				+ "displayed when the player looks into the inventory.");
 	}
 	
 	@Override

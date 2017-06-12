@@ -12,6 +12,8 @@ import logic.CurrentGameManager;
 /**
  * Controller for one inspectable object.
  * 
+ * TODO here and in ChangeInspectableObjectActionC : control that no special characters are added to identifiers.
+ * 
  * @author Satia
  */
 public class InspectableObjectController extends GameDataController {
@@ -46,8 +48,12 @@ public class InspectableObjectController extends GameDataController {
 	private void initialize() {
 		// Create new bindings
 		editInspectionTextTA.textProperty().bindBidirectional(object.inspectionTextProperty());
-		editIdentifiersTA.setText(getListString(object.getIdentifiers()));
+		setNodeTooltip(editInspectionTextTA, "The inspection text is displayed when the player inspects the item or person.");
+		
+		editIdentifiersTA.setText(getListString(object.getIdentifiers()));		
 		editIdentifiersTA.textProperty().addListener((f, o, n) -> updateList(n, object::setIdentifiers));
+		setNodeTooltip(editIdentifiersTA, "Here you can list additional identifiers that can be used to refer to the object, "
+				+ "apart from its name.");		
 
 		inspectActionsListView.initialize(object.getAdditionalInspectActions(),
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,

@@ -61,6 +61,11 @@ public class ChangeNDObjectActionController extends GameDataController {
 				action::getNewName, action::setNewName);
 		ActionController.initCheckBoxAndTextFieldSetter(newDescriptionCB, newDescriptionTA,
 				action::getNewDescription, action::setNewDescription);
+		
+		setNodeTooltip(newNameTF, "This will be the new name.");
+		setNodeTooltip(newNameCB, "If ticked, the name will be changed.");
+		setNodeTooltip(newDescriptionTA, "This will be the new description.");
+		setNodeTooltip(newDescriptionCB, "If ticked, the description will be changed.");
 	}
 	
 	@Override

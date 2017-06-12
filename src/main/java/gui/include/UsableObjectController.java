@@ -58,13 +58,26 @@ public class UsableObjectController extends GameDataController {
 	private void initialize() {
 		// Create new bindings
 		editUseSuccessfulTextTF.textProperty().bindBidirectional(object.useSuccessfulTextProperty());
+		editUseSuccessfulTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editUseSuccessfulTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(editUseSuccessfulTextTF,
+				"This is the text when the item is successfully used. If empty, the default will be used.", noSecondPL);
+
 		editUseForbiddenTextTF.textProperty().bindBidirectional(object.useForbiddenTextProperty());
+		editUseForbiddenTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editUseForbiddenTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(editUseForbiddenTextTF,
+				"This text is displayed when the player tries to use this item, unsuccessfully. If empty, the default will be used.",
+				noSecondPL);
+
 		editUsingEnabledCB.selectedProperty().bindBidirectional(object.usingEnabledProperty());
+		setNodeTooltip(editUsingEnabledCB, "If ticked, the item can be used (by itself).");
 
 		editUseCommandsTA.setText(getCommandString(object.getAdditionalUseCommands()));
-
 		editUseCommandsTA.textProperty().addListener(
 				(f, o, n) -> updateGameCommands(n, 1, true, editUseCommandsTA, object::setAdditionalUseCommands));
+		addCommandTooltip(editUseCommandsTA,
+				"Additional commands to use the item. These will only be valid for this item.");
 
 		useCommandsLabel.setText("Additional commands for using " + object.getName());
 
@@ -73,7 +86,7 @@ public class UsableObjectController extends GameDataController {
 				this::objectSelected, (a) -> object.addAdditionalUseAction(a),
 				(a) -> object.removeAdditionalUseAction(a));
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(object);

@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import playing.menu.LoadSaveManager;
 import utility.WindowUtil;
 
 import java.io.IOException;
@@ -31,7 +30,7 @@ public class MainWindow extends Application {
 		try {
 			Class.forName(logging.LogManager.class.getName());
 		} catch (ClassNotFoundException e) {
-			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not initialize logging:", e);
+			Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, "Could not initialize logging:", e);
 		}
 
 		Application.launch(args);
@@ -66,7 +65,7 @@ public class MainWindow extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Could not load MainWindow.", e);
 		}
 	}
 

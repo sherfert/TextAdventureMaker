@@ -36,10 +36,12 @@ public class NamedDescribedObjectController extends GameDataController {
 
 	@FXML
 	private void initialize() {
-		// Create new bindings
 		editDescriptionTA.textProperty().bindBidirectional(object.descriptionProperty());
+		setNodeTooltip(editDescriptionTA, "When the player looks around, the descriptions of all items, persons, and "
+				+ "ways leading out are displayed. (You can change the order by rearranging it in the location). "
+				+ "When the player looks into the inventory, the descriptions of all inventory items are displayed.");
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(object);

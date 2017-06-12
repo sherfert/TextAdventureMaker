@@ -20,8 +20,7 @@ public class ChangeUsableObjectActionController extends GameDataController {
 
 	/** The action */
 	private ChangeUsableObjectAction action;
-	
-	
+
 	@FXML
 	private RadioButton doNotChangeUseRB;
 
@@ -54,8 +53,8 @@ public class ChangeUsableObjectActionController extends GameDataController {
 	 * @param action
 	 *            the action to edit
 	 */
-	public ChangeUsableObjectActionController(CurrentGameManager currentGameManager,
-			MainWindowController mwController, ChangeUsableObjectAction action) {
+	public ChangeUsableObjectActionController(CurrentGameManager currentGameManager, MainWindowController mwController,
+			ChangeUsableObjectAction action) {
 		super(currentGameManager, mwController);
 		this.action = action;
 	}
@@ -68,8 +67,22 @@ public class ChangeUsableObjectActionController extends GameDataController {
 				action::getNewUseSuccessfulText, action::setNewUseSuccessfulText);
 		ActionController.initCheckBoxAndTextFieldSetter(newUseForbiddenTextCB, newUseForbiddenTextTF,
 				action::getNewUseForbiddenText, action::setNewUseForbiddenText);
+
+		newUseForbiddenTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, newUseForbiddenTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(newUseForbiddenTextTF,
+				"This will be the new text when the player tries to use an item, unsuccessfully.", noSecondPL);
+		setNodeTooltip(newUseForbiddenTextCB,
+				"If ticked, the text displayed when the item could not be used will change.");
+
+		newUseSuccessfulTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, newUseSuccessfulTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(newUseSuccessfulTextTF,
+				"This is the new text when the item is successfully used.", noSecondPL);
+		setNodeTooltip(newUseSuccessfulTextCB,
+				"If ticked, the text displayed when the item was used will change.");
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(action);

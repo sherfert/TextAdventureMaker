@@ -92,7 +92,7 @@ public class CombinationInformationController extends GameDataController {
 		editCombineForbiddenTextTF.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, editCombineForbiddenTextTF, allPL, true));
 		addPlaceholderTextTooltip(editCombineForbiddenTextTF,
-				"This is the default text when the two items could not be combined.  If empty, the default will be used.",
+				"This is the text when the two items could not be combined.  If empty, the default will be used.",
 				allPL);
 
 		editCombiningEnabledCB.setSelected(item1.isCombiningEnabledWith(item2));
