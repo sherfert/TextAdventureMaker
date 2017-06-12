@@ -76,15 +76,21 @@ public class ConversationController extends NamedObjectsTableController<Conversa
 
 		editConversationEnabledCB.setSelected(conversation.getEnabled());
 		editConversationEnabledCB.selectedProperty().addListener((f, o, n) -> conversation.setEnabled(n));
+		setNodeTooltip(editConversationEnabledCB, "If ticked, the person with this conversation can be talked to.");
 
 		editGreetingTA.textProperty().bindBidirectional(conversation.greetingProperty());
+		setNodeTooltip(editGreetingTA, "The person will greet the player like this.");
+		
 		editEventTA.textProperty().bindBidirectional(conversation.eventProperty());
+		setNodeTooltip(editEventTA, "Here you can to describe anything that happens when the conversation starts.");
 
 		// Initialize startLayerChooser, with only the layers of this
 		// conversation to choose from.
 		startLayerChooser.setNoValueString("(conversation ends immediately)");
 		startLayerChooser.initialize(conversation.getStartLayer(), true, true, conversation::getLayers,
 				conversation::setStartLayer);
+		setNodeTooltip(startLayerChooser, "The first layer of the conversation. If you choose none, the conversation "
+				+ "will end imediately after the greeting.");
 
 		actionsListView.initialize(conversation.getAdditionalActions(),
 				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
