@@ -58,7 +58,7 @@ public class ChangeNDObjectActionController extends GameDataController {
 		});
 
 		ActionController.initCheckBoxAndTextFieldSetter(newNameCB, newNameTF,
-				action::getNewName, action::setNewName);
+				action::getNewName, (name) -> updateName(name, newNameTF, true, action::setNewName));
 		ActionController.initCheckBoxAndTextFieldSetter(newDescriptionCB, newDescriptionTA,
 				action::getNewDescription, action::setNewDescription);
 		

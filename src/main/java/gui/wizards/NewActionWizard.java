@@ -36,6 +36,7 @@ import data.action.MultiAction;
 import data.action.RemoveInventoryItemAction;
 import data.interfaces.PassivelyUsable;
 import exception.DBClosedException;
+import gui.GameDataController;
 import gui.customui.NamedObjectChooser;
 import gui.utility.Loader;
 import javafx.collections.ObservableMap;
@@ -175,15 +176,18 @@ public class NewActionWizard extends Wizard {
 		 */
 		public NewActionWizardFlow() {
 			this.chooseTypePane = new ChooseTypePane();
-			this.chooseActionToChangePane = new ChooseNamedObjectPane<>("What action should be changed?", ACTIONTOCHANGE_KEY);
+			this.chooseActionToChangePane = new ChooseNamedObjectPane<>("What action should be changed?",
+					ACTIONTOCHANGE_KEY);
 			this.chooseActionToChangePane.getChooser().setNoValueString("(no action)");
 			this.chooseActionToChangePane.getChooser().initialize(null, false, false,
 					currentGameManager.getPersistenceManager().getActionManager()::getAllActions, (l) -> {
 						setInvalid(l == null);
 					});
 
-			this.chooseNamePane = new ChooseStringPane("Type a name for the new action", NAME_KEY, false);
-			this.chooseRemoveItemPane = new ChooseNamedObjectPane<>("What inventory item should be removed?", REMOVEITEM_KEY);
+			this.chooseNamePane = new ChooseStringPane("Type a name for the new action", NAME_KEY, false,
+					GameDataController::checkName);
+			this.chooseRemoveItemPane = new ChooseNamedObjectPane<>("What inventory item should be removed?",
+					REMOVEITEM_KEY);
 			this.chooseRemoveItemPane.getChooser().setNoValueString("(no inventory item)");
 			this.chooseRemoveItemPane.getChooser().initialize(null, false, false,
 					currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, (l) -> {
@@ -238,10 +242,12 @@ public class NewActionWizard extends Wizard {
 					return Optional.of(chooseCombineItemsPane);
 				} else if (chooseTypePane.changeRB.isSelected()) {
 					return Optional.of(chooseObjectToChangePane);
-				} else if (chooseTypePane.endGameRB.isSelected() || chooseTypePane.multiRB.isSelected() || chooseTypePane.addIIRB.isSelected()) {
+				} else if (chooseTypePane.endGameRB.isSelected() || chooseTypePane.multiRB.isSelected()
+						|| chooseTypePane.addIIRB.isSelected()) {
 					return Optional.of(chooseNamePane);
 				}
-			} else if (currentPage == chooseActionToChangePane || currentPage == chooseRemoveItemPane || currentPage == chooseMoveToPane || currentPage == chooseUseWithItemsPane
+			} else if (currentPage == chooseActionToChangePane || currentPage == chooseRemoveItemPane
+					|| currentPage == chooseMoveToPane || currentPage == chooseUseWithItemsPane
 					|| currentPage == chooseCombineItemsPane || currentPage == chooseObjectToChangePane) {
 				return Optional.of(chooseNamePane);
 			}

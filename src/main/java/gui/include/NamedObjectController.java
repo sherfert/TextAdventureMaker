@@ -28,7 +28,8 @@ public class NamedObjectController extends GameDataController {
 	 * @param object
 	 *            the object to edit
 	 */
-	public NamedObjectController(CurrentGameManager currentGameManager, MainWindowController mwController, NamedObject object) {
+	public NamedObjectController(CurrentGameManager currentGameManager, MainWindowController mwController,
+			NamedObject object) {
 		super(currentGameManager, mwController);
 		this.object = object;
 	}
@@ -37,13 +38,14 @@ public class NamedObjectController extends GameDataController {
 	private void initialize() {
 		// Refresh the displayed object
 		currentGameManager.getPersistenceManager().refreshEntity(object);
-		
+
 		// Create new bindings
-		editNameTF.textProperty().bindBidirectional(object.nameProperty());
+		editNameTF.setText(object.getName());
+		editNameTF.textProperty().addListener((f, o, n) -> updateName(n, editNameTF, false, object::setName));
 		setNodeTooltip(editNameTF, "The name can ne used to refer to the object. For inventory items, it is also "
 				+ "displayed when the player looks into the inventory.");
 	}
-	
+
 	@Override
 	public boolean isObsolete() {
 		return !currentGameManager.getPersistenceManager().isManaged(object);

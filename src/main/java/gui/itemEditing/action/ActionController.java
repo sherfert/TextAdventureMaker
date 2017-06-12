@@ -120,6 +120,7 @@ public abstract class ActionController<E extends AbstractAction> extends GameDat
 		checkBox.selectedProperty().addListener((f, o, n) -> {
 			if (!n) {
 				setter.accept(null);
+				textField.setText("");
 			}
 		});
 	}

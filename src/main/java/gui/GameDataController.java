@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -90,7 +91,8 @@ import utility.WindowUtil;
 public abstract class GameDataController {
 
 	/**
-	 * A method allowing to set a list of strings.
+	 * A method allowing to set a list of strings. FIXME remove this interface
+	 * and use Consumer
 	 * 
 	 * @author Satia
 	 */
@@ -168,6 +170,7 @@ public abstract class GameDataController {
 	private static final String COMMAND_PARAM_WRONG_NOT_ONE = "The parameter %s is expected to occur exactly once";
 	private static final String COMMAND_PARAM_WRONG_NOT_ZERO = "The parameter %s is not supported for this command";
 	private static final String IDENTIFIER_INVALID_CHAR = "Only letters a-z, A-Z and the space character are allowed.";
+	private static final String NAME_EMPTY = "A name must not be empty";
 
 	private static final Pattern MATCHED_BRACKETS = Pattern.compile("(\\[[a-z &&[^\\]]]*\\])");
 	private static final Pattern OPENING_BRACKETS = Pattern.compile("(\\[)");
@@ -565,7 +568,7 @@ public abstract class GameDataController {
 			setter.setList(newCommands);
 		}
 	}
-	
+
 	/**
 	 * Updates a list of identifiers in the game, after error checks. If a
 	 * required property does not hold, an error tooltip will be shown on the
@@ -588,6 +591,45 @@ public abstract class GameDataController {
 			setter.setList(new ArrayList<String>(Arrays.asList(lines)));
 		}
 
+	}
+
+	/**
+	 * Updates a name in the game, after error checks. If a required property
+	 * does not hold, an error tooltip will be shown on the passed input node.
+	 * Otherwise the given method is executed to set the name.
+	 * 
+	 * @param input
+	 *            the input
+	 * @param inputNode
+	 *            the input node
+	 * @param setter
+	 *            the method to call if the name is valid
+	 * @param allowEmpty
+	 *            if an empty name is accepted
+	 */
+	protected void updateName(String input, Node inputNode, boolean allowEmpty, Consumer<String> setter) {
+		// Null is allowed, since it is valid on the ChangeNDObjectActions to
+		// indicate no change in the name
+
+		if (input != null && input.isEmpty() && !allowEmpty) {
+			showError(inputNode, NAME_EMPTY, TooltipSeverity.ERROR);
+		} else if (input != null && !VALID_IDENTIFIER_SEQS.matcher(input).matches()) {
+			showError(inputNode, IDENTIFIER_INVALID_CHAR, TooltipSeverity.ERROR);
+		} else {
+			hideError(inputNode);
+			setter.accept(input);
+		}
+	}
+
+	/**
+	 * Convenience method to check a name for conformance. Used by the wizards.
+	 * 
+	 * @param name
+	 *            the name
+	 * @return if it is valid.
+	 */
+	public static boolean checkName(String name) {
+		return VALID_IDENTIFIER_SEQS.matcher(name).matches();
 	}
 
 	/**

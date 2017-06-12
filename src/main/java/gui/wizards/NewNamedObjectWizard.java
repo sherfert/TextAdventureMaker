@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 
+import gui.GameDataController;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -16,7 +17,6 @@ import utility.WindowUtil;
  * @author satia
  */
 public class NewNamedObjectWizard extends Wizard {
-	
 
 	private static final String NAME_KEY = "name";
 
@@ -63,7 +63,7 @@ public class NewNamedObjectWizard extends Wizard {
 		 * Creates all panes and defines the flow between them.
 		 */
 		public NewNamedObjectFlow() {
-			this.chooseNamePane = new ChooseStringPane("Type a name", NAME_KEY, false);
+			this.chooseNamePane = new ChooseStringPane("Type a name", NAME_KEY, false, GameDataController::checkName);
 		}
 
 		@Override

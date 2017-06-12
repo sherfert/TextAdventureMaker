@@ -7,6 +7,7 @@ import org.controlsfx.dialog.WizardPane;
 
 import data.ConversationLayer;
 import data.ConversationOption;
+import gui.GameDataController;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -76,12 +77,15 @@ public class NewConversationOptionWizard extends Wizard {
 		 * Creates all panes and defines the flow between them.
 		 */
 		public NewConversationOptionFlow() {
-			this.chooseNamePane = new ChooseStringPane("Type a name for the new conversation option", NAME_KEY, false);
-			this.chooseTextPane = new ChooseStringPane("What does the player say?", TEXT_KEY, false);
-			this.chooseAnswerPane = new ChooseStringPane("What is the answer the player gets?", ANSWER_KEY, false);
-			this.chooseEventPane = new ChooseStringPane("Describe any additional events (optional)", EVENT_KEY, true);
-			this.chooseTargetPane = new ChooseNamedObjectPane<>("To which layer should the conversation switch afterwards?\n"
-					, TARGET_KEY);
+			this.chooseNamePane = new ChooseStringPane("Type a name for the new conversation option", NAME_KEY, false,
+					GameDataController::checkName);
+			this.chooseTextPane = new ChooseStringPane("What does the player say?", TEXT_KEY, false, null);
+			this.chooseAnswerPane = new ChooseStringPane("What is the answer the player gets?", ANSWER_KEY, false,
+					null);
+			this.chooseEventPane = new ChooseStringPane("Describe any additional events (optional)", EVENT_KEY, true,
+					null);
+			this.chooseTargetPane = new ChooseNamedObjectPane<>(
+					"To which layer should the conversation switch afterwards?\n", TARGET_KEY);
 			this.chooseTargetPane.getChooser().setNoValueString("(ends conversation)");
 			this.chooseTargetPane.getChooser().initialize(layer, true, false, () -> layer.getConversation().getLayers(),
 					(l) -> {

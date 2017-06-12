@@ -6,6 +6,7 @@ import org.controlsfx.dialog.Wizard;
 import org.controlsfx.dialog.WizardPane;
 
 import data.Conversation;
+import gui.GameDataController;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -46,8 +47,7 @@ public class NewConversationWizard extends Wizard {
 			if (result == ButtonType.FINISH) {
 				ObservableMap<String, Object> settings = getSettings();
 
-				co = new Conversation((String) settings.get(NAME_KEY),
-						(String) settings.get(GREETING_KEY),
+				co = new Conversation((String) settings.get(NAME_KEY), (String) settings.get(GREETING_KEY),
 						(String) settings.get(EVENT_KEY));
 			}
 			return co;
@@ -68,9 +68,12 @@ public class NewConversationWizard extends Wizard {
 		 * Creates all panes and defines the flow between them.
 		 */
 		public NewConversationFlow() {
-			this.chooseNamePane = new ChooseStringPane("Type a name for the new conversation option", NAME_KEY, false);
-			this.chooseGreetingPane = new ChooseStringPane("How does the person greet the player?", GREETING_KEY, false);
-			this.chooseEventPane = new ChooseStringPane("Describe any additional events (optional)", EVENT_KEY, true);
+			this.chooseNamePane = new ChooseStringPane("Type a name for the new conversation option", NAME_KEY, false,
+					GameDataController::checkName);
+			this.chooseGreetingPane = new ChooseStringPane("How does the person greet the player?", GREETING_KEY, false,
+					null);
+			this.chooseEventPane = new ChooseStringPane("Describe any additional events (optional)", EVENT_KEY, true,
+					null);
 		}
 
 		@Override

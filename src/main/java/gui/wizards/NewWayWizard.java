@@ -7,6 +7,7 @@ import org.controlsfx.dialog.WizardPane;
 
 import data.Location;
 import data.Way;
+import gui.GameDataController;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -74,7 +75,8 @@ public class NewWayWizard extends Wizard {
 		 * Creates all panes and defines the flow between them.
 		 */
 		public NewWayFlow() {
-			this.chooseNamePane = new ChooseStringPane("Type a name for the new way", NAME_KEY, false);
+			this.chooseNamePane = new ChooseStringPane("Type a name for the new way", NAME_KEY, false,
+					GameDataController::checkName);
 			this.chooseOriginPane = new ChooseNamedObjectPane<>("Where should the way start?", ORIGIN_KEY);
 			this.chooseOriginPane.getChooser().setNoValueString("(no location)");
 			this.chooseOriginPane.getChooser().initialize(null, false, false,
