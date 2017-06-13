@@ -87,13 +87,33 @@ public class ChangeConversationOptionActionController extends ActionController<C
 			objectSelected(action.getOption());
 		});
 
-		initRadioButtonEnablingGroup(enablingOptionTG, doNotChangeOptionRB, enableOptionRB,
-				disableOptionRB, action::getEnabling, action::setEnabling);
+		initRadioButtonEnablingGroup(enablingOptionTG, doNotChangeOptionRB, enableOptionRB, disableOptionRB,
+				action::getEnabling, action::setEnabling);
+		setNodeTooltip(enableOptionRB, "Triggering this action will enable the conversation option.");
+		setNodeTooltip(disableOptionRB, "Triggering this action will disable the conversation option.");
+		setNodeTooltip(doNotChangeOptionRB,
+				"Triggering this action will not change if the conversation option is enabled.");
+
 		initRadioButtonEnablingGroup(enablingRemoveOptionTG, doNotChangeRemoveOptionRB, enableRemoveOptionRB,
 				disableOptionRB, action::getEnablingDisableOption, action::setEnablingDisableOption);
+		setNodeTooltip(enableRemoveOptionRB,
+				"Triggering this action will enable removing the conversation option after it has been chosen.");
+		setNodeTooltip(disableOptionRB,
+				"Triggering this action will disable removing the conversation option after it has been chosen.");
+		setNodeTooltip(doNotChangeRemoveOptionRB,
+				"Triggering this action will not change if the conversation option is removed after it has been chosen.");
+
 		initCheckBoxAndTextFieldSetter(newTextCB, newTextTF, action::getNewText, action::setNewText);
+		setNodeTooltip(newTextTF, "This will be the new text the player is saying.");
+		setNodeTooltip(newTextCB, "If ticked, the text the player is saying will change.");
+		
 		initCheckBoxAndTextFieldSetter(newAnswerCB, newAnswerTA, action::getNewAnswer, action::setNewAnswer);
+		setNodeTooltip(newAnswerTA, "This will be the new response from the person.");
+		setNodeTooltip(newAnswerCB, "If ticked, the response from the person will change.");
+		
 		initCheckBoxAndTextFieldSetter(newEventCB, newEventTA, action::getNewEvent, action::setNewEvent);
+		setNodeTooltip(newEventTA, "This will be the new description of events.");
+		setNodeTooltip(newEventCB, "If ticked, the events description will change.");
 	}
 
 	/**

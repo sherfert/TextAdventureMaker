@@ -35,8 +35,6 @@ import data.action.RemoveInventoryItemAction;
  * 
  * General TODOs:
  * 
- * TODO Tooltips everywhere! (itemEditing.action package missing)
- * 
  * TODO no logging to console
  * 
  * XXX sound support (optional)

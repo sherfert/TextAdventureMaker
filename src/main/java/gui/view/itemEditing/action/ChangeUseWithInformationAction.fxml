@@ -27,10 +27,10 @@
 		</HBox>
 		
 		<CheckBox fx:id="newUseWithSuccessfulTextCB" mnemonicParsing="false"
-			text="Change the Combine With Successful Text?" />
+			text="Change the Use-with Successful Text?" />
 		<TextField fx:id="newUseWithSuccessfulTextTF" />
 		<CheckBox fx:id="newUseWithForbiddenTextCB" mnemonicParsing="false"
-			text="Change the Combine With Forbidden Text?" />
+			text="Change the Use-with Forbidden Text?" />
 		<TextField fx:id="newUseWithForbiddenTextTF" />
 		
 		<Button fx:id="removeButton" mnemonicParsing="false" text="Delete this action" />

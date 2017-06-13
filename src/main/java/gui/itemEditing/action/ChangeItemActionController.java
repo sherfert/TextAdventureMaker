@@ -30,46 +30,46 @@ public class ChangeItemActionController extends ActionController<ChangeItemActio
 
 	@FXML
 	private NamedObjectChooser<Location> newLocationChooser;
-	
+
 	@FXML
 	private ToggleGroup enablingTakeTG;
-	
+
 	@FXML
 	private RadioButton doNotChangeTakeRB;
-	
+
 	@FXML
 	private RadioButton enableTakeRB;
-	
+
 	@FXML
 	private RadioButton disableTakeRB;
-	
+
 	@FXML
 	private ToggleGroup enablingRemoveItemTG;
-	
+
 	@FXML
 	private RadioButton doNotChangeRemoveItemRB;
-	
+
 	@FXML
 	private RadioButton enableRemoveItemRB;
-	
+
 	@FXML
 	private RadioButton disableRemoveItemRB;
-	
+
 	@FXML
 	private CheckBox newTakeSuccessfulTextCB;
-	
+
 	@FXML
 	private TextField newTakeSuccessfulTextTF;
-	
+
 	@FXML
 	private CheckBox newTakeForbiddenTextCB;
-	
+
 	@FXML
 	private TextField newTakeForbiddenTextTF;
-	
+
 	@FXML
 	private NamedObjectListView<InventoryItem> pickUpItemsAddListView;
-	
+
 	@FXML
 	private NamedObjectListView<InventoryItem> pickUpItemsRemoveListView;
 
@@ -85,7 +85,7 @@ public class ChangeItemActionController extends ActionController<ChangeItemActio
 			ChangeItemAction action) {
 		super(currentGameManager, mwController, action);
 	}
-	
+
 	@FXML
 	@Override
 	protected void initialize() {
@@ -95,24 +95,49 @@ public class ChangeItemActionController extends ActionController<ChangeItemActio
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				action::setNewLocation);
 		initCheckBoxAndChooser(newLocationCB, newLocationChooser, action::getChangeLocation, action::setChangeLocation);
-		
+		setNodeTooltip(newLocationChooser, "This will be the new location of the item.");
+		setNodeTooltip(newLocationCB, "If ticked, the location of the item will change.");
+
 		initRadioButtonEnablingGroup(enablingTakeTG, doNotChangeTakeRB, enableTakeRB, disableTakeRB,
 				action::getEnablingTakeable, action::setEnablingTakeable);
-		initRadioButtonEnablingGroup(enablingRemoveItemTG, doNotChangeRemoveItemRB, enableRemoveItemRB, disableRemoveItemRB,
-				action::getEnablingRemoveItem, action::setEnablingRemoveItem);
-		
+		setNodeTooltip(enableTakeRB, "Triggering this action will enable taking the item.");
+		setNodeTooltip(disableTakeRB, "Triggering this action will disable taking the item.");
+		setNodeTooltip(doNotChangeTakeRB, "Triggering this action will not change if the item can be taken.");
+
+		initRadioButtonEnablingGroup(enablingRemoveItemTG, doNotChangeRemoveItemRB, enableRemoveItemRB,
+				disableRemoveItemRB, action::getEnablingRemoveItem, action::setEnablingRemoveItem);
+		setNodeTooltip(enableRemoveItemRB,
+				"Triggering this action will enable removing the item after it has been taken.");
+		setNodeTooltip(disableRemoveItemRB,
+				"Triggering this action will disable removing the item after it has been taken.");
+		setNodeTooltip(doNotChangeRemoveItemRB,
+				"Triggering this action will not change if the item is removed after it has been taken.");
+
 		initCheckBoxAndTextFieldSetter(newTakeSuccessfulTextCB, newTakeSuccessfulTextTF,
 				action::getNewTakeSuccessfulText, action::setNewTakeSuccessfulText);
-		initCheckBoxAndTextFieldSetter(newTakeForbiddenTextCB, newTakeForbiddenTextTF,
-				action::getNewTakeForbiddenText, action::setNewTakeForbiddenText);
+		newTakeSuccessfulTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, newTakeSuccessfulTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(newTakeSuccessfulTextTF, "This will be the new text when the player takes the item.",
+				noSecondPL);
+		setNodeTooltip(newTakeSuccessfulTextCB, "If ticked, the text displayed when the item was taken will change.");
+
+		initCheckBoxAndTextFieldSetter(newTakeForbiddenTextCB, newTakeForbiddenTextTF, action::getNewTakeForbiddenText,
+				action::setNewTakeForbiddenText);
+		newTakeForbiddenTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, newTakeForbiddenTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(newTakeForbiddenTextTF,
+				"This will be the new text when the player tries to take the item, unsuccessfully.", noSecondPL);
+		setNodeTooltip(newTakeForbiddenTextCB,
+				"If ticked, the text displayed when the item could not be taken will change.");
 
 		pickUpItemsAddListView.initialize(action.getPickUpItemsToAdd(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::objectSelected, (ii) -> action.addPickUpItemToAdd(ii), (ii) -> action.removePickUpItemToAdd(ii));
-		
+
 		pickUpItemsRemoveListView.initialize(action.getPickUpItemsToRemove(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
-				this::objectSelected, (ii) -> action.addPickUpItemToRemove(ii), (ii) -> action.removePickUpItemToRemove(ii));
+				this::objectSelected, (ii) -> action.addPickUpItemToRemove(ii),
+				(ii) -> action.removePickUpItemToRemove(ii));
 	}
 
 	/**

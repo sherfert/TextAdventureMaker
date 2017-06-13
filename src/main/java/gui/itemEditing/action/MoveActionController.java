@@ -39,6 +39,7 @@ public class MoveActionController extends ActionController<MoveAction> {
 		targetChooser.initialize(action.getTarget(), false, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				action::setTarget);
+		setNodeTooltip(targetChooser, "The player will be moved to this location.");
 	}
 
 	/**

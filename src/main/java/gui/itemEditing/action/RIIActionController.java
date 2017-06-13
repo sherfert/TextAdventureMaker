@@ -40,6 +40,7 @@ public class RIIActionController extends ActionController<RemoveInventoryItemAct
 		inventoryItemChooser.initialize(action.getItem(), false, false,
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems,
 				action::setItem);
+		setNodeTooltip(inventoryItemChooser, "This inventory item will be removed from the player's inventory.");
 	}
 
 	/**

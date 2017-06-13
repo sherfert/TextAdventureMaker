@@ -56,6 +56,9 @@ public class ChangeActionActionController extends ActionController<ChangeActionA
 		
 		initRadioButtonEnablingGroup(enablingActionTG, doNotChangeActionRB, enableActionRB, disableActionRB,
 				action::getEnabling, action::setEnabling);
+		setNodeTooltip(enableActionRB, "Triggering this action will enable the other action.");
+		setNodeTooltip(disableActionRB, "Triggering this action will disable the other action.");
+		setNodeTooltip(doNotChangeActionRB, "Triggering this action will not change if the other action is enabled.");
 	}
 
 	/**

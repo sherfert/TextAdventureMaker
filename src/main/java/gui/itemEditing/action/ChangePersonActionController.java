@@ -56,20 +56,30 @@ public class ChangePersonActionController extends ActionController<ChangePersonA
 	@Override
 	protected void initialize() {
 		super.initialize();
-		
+
 		initCheckBoxAndTextFieldSetter(newTalkForbiddenTextCB, newTalkForbiddenTextTF,
 				action::getNewTalkingToForbiddenText, action::setNewTalkingToForbiddenText);
+		newTalkForbiddenTextTF.textProperty()
+				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, newTalkForbiddenTextTF, noSecondPL, true));
+		addPlaceholderTextTooltip(newTalkForbiddenTextTF,
+				"This will be the new text when the player tries to talk to the person, unsuccessfully.", noSecondPL);
+		setNodeTooltip(newTalkForbiddenTextCB,
+				"If ticked, the text displayed when the person could not be talked to will change.");
 
 		newConversationChooser.initialize(action.getNewConversation(), true, false,
 				this.currentGameManager.getPersistenceManager().getConversationManager()::getAllConversations,
 				action::setNewConversation);
 		initCheckBoxAndChooser(newConversationCB, newConversationChooser, action::getChangeConversation,
 				action::setChangeConversation);
+		setNodeTooltip(newConversationChooser, "This will be the new conversation of the person.");
+		setNodeTooltip(newConversationCB, "If ticked, the conversation of the person will change.");
 
 		newLocationChooser.initialize(action.getNewLocation(), true, false,
 				this.currentGameManager.getPersistenceManager().getLocationManager()::getAllLocations,
 				action::setNewLocation);
 		initCheckBoxAndChooser(newLocationCB, newLocationChooser, action::getChangeLocation, action::setChangeLocation);
+		setNodeTooltip(newLocationChooser, "This will be the new location of the person.");
+		setNodeTooltip(newLocationCB, "If ticked, the location of the person will change.");
 	}
 
 	/**

@@ -70,8 +70,18 @@ public class ChangeConversationActionController extends ActionController<ChangeC
 
 		initRadioButtonEnablingGroup(enablingConversationTG, doNotChangeConversationRB, enableConversationRB,
 				disableConversationRB, action::getEnabling, action::setEnabling);
+		setNodeTooltip(enableConversationRB, "Triggering this action will enable the conversation.");
+		setNodeTooltip(disableConversationRB, "Triggering this action will disable the conversation.");
+		setNodeTooltip(doNotChangeConversationRB,
+				"Triggering this action will not change if the conversation is enabled.");
+
 		initCheckBoxAndTextFieldSetter(newGreetingCB, newGreetingTF, action::getNewGreeting, action::setNewGreeting);
+		setNodeTooltip(newGreetingTF, "This will be the new greeting from the person.");
+		setNodeTooltip(newGreetingCB, "If ticked, the greeting will change.");
+
 		initCheckBoxAndTextFieldSetter(newEventCB, newEventTF, action::getNewEvent, action::setNewEvent);
+		setNodeTooltip(newEventTF, "This will be the new description of events.");
+		setNodeTooltip(newEventCB, "If ticked, the events description will change.");
 	}
 
 	/**

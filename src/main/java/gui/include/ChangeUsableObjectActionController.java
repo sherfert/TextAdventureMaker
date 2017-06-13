@@ -67,11 +67,15 @@ public class ChangeUsableObjectActionController extends GameDataController {
 				action::getNewUseSuccessfulText, action::setNewUseSuccessfulText);
 		ActionController.initCheckBoxAndTextFieldSetter(newUseForbiddenTextCB, newUseForbiddenTextTF,
 				action::getNewUseForbiddenText, action::setNewUseForbiddenText);
+		
+		setNodeTooltip(enableUseRB, "Triggering this action will enable using the object.");
+		setNodeTooltip(disableUseRB, "Triggering this action will disable using the object.");
+		setNodeTooltip(doNotChangeUseRB, "Triggering this action will not change if the object is usable.");
 
 		newUseForbiddenTextTF.textProperty()
 				.addListener((f, o, n) -> checkPlaceholdersAndEmptiness(n, newUseForbiddenTextTF, noSecondPL, true));
 		addPlaceholderTextTooltip(newUseForbiddenTextTF,
-				"This will be the new text when the player tries to use an item, unsuccessfully.", noSecondPL);
+				"This will be the new text when the player tries to use the item, unsuccessfully.", noSecondPL);
 		setNodeTooltip(newUseForbiddenTextCB,
 				"If ticked, the text displayed when the item could not be used will change.");
 
