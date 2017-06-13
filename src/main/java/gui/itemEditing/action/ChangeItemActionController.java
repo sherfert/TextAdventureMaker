@@ -14,6 +14,7 @@ import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import logic.CurrentGameManager;
@@ -24,6 +25,9 @@ import logic.CurrentGameManager;
  * @author Satia
  */
 public class ChangeItemActionController extends ActionController<ChangeItemAction> {
+	
+	@FXML
+	private TabPane tabPane;
 
 	@FXML
 	private CheckBox newLocationCB;
@@ -138,6 +142,8 @@ public class ChangeItemActionController extends ActionController<ChangeItemActio
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::objectSelected, (ii) -> action.addPickUpItemToRemove(ii),
 				(ii) -> action.removePickUpItemToRemove(ii));
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**

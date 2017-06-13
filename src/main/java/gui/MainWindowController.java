@@ -33,12 +33,13 @@ import javafx.stage.Window;
 import javafx.util.Callback;
 import logic.CurrentGameManager;
 import logic.JARCreator;
+import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
 
 /**
  * Controller for the main window.
  * 
- * TODO Extend menu
+ * TODO Manual
  * 
  * @author Satia
  */
@@ -77,6 +78,9 @@ public class MainWindowController {
 	private MenuItem exportMenuItem;
 
 	@FXML
+	private MenuItem aboutMenuItem;
+
+	@FXML
 	private Menu gameMenu;
 
 	@FXML
@@ -105,6 +109,8 @@ public class MainWindowController {
 
 		gameMenu.setDisable(true);
 		playMenuItem.setOnAction((e) -> this.play());
+
+		aboutMenuItem.setOnAction((e) -> about());
 	}
 
 	/**
@@ -242,7 +248,7 @@ public class MainWindowController {
 		// Load the content
 		pushCenterContent("Game Configuration", fxml, gameDetailsController, gameDetailsController::controllerFactory);
 	}
-	
+
 	/**
 	 * Loads the overview into the center.
 	 */
@@ -500,6 +506,18 @@ public class MainWindowController {
 		// in a detached state.
 		// Therefore, we reset the GUI state.
 		resetCenterGUI();
+	}
+
+	/**
+	 * Shows information about TAM.
+	 */
+	private void about() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("TextAdventureMaker");
+		alert.setHeaderText("About TextAdventureMaker");
+		alert.setContentText("Version " + PersistenceManager.MAJOR_VERSION + "." + PersistenceManager.MINOR_VERSION
+				+ "\n" + "Created by Satia Herfert\n" + "github.com/sherfert/TextAdventureMaker");
+		alert.showAndWait();
 	}
 
 	/**

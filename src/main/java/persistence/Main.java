@@ -213,13 +213,13 @@ public class Main {
 		hotChick.setConversation(hotChickConversation);
 		hotChick.addAdditionalTalkToCommand("flirt with (?<o0>.+?)");
 		
-		// Using the dildo with the hotchick
-		ChangeUsableObjectAction changeDildoUseFBText = new ChangeUsableObjectAction("changeDildoUseFBText", knife);
-		changeDildoUseFBText.setNewUseForbiddenText("You have some bad memories associated with this dildo...");
+		// Using the knife with the hotchick
+		ChangeUsableObjectAction changeKnifeUseFBText = new ChangeUsableObjectAction("changeKnifeUseFBText", knife);
+		changeKnifeUseFBText.setNewUseForbiddenText("You have some bad memories associated with this knife...");
 		
 		knife.setUsingEnabledWith(hotChick, true);
-		knife.setUseWithSuccessfulText(hotChick, "Better not.");
-		knife.addAdditionalActionToUseWith(hotChick, changeDildoUseFBText);
+		knife.setUseWithSuccessfulText(hotChick, "That went bad... she broke your arm.");
+		knife.addAdditionalActionToUseWith(hotChick, changeKnifeUseFBText);
 
 		// A gremlin
 		Person gremlin = new Person(flat, "Gremlin", "A gremlin is sitting around and staring at the black tv screen.");

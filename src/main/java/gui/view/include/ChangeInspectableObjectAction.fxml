@@ -13,12 +13,12 @@
 		<TextArea fx:id="newInspectionTextTA" prefHeight="100.0"
 			wrapText="true" />
 		<HBox spacing="2.0">
-			<VBox spacing="2.0">
+			<VBox spacing="2.0" HBox.hgrow="ALWAYS">
 				<Label text="Identifiers to add" />
 				<TextArea fx:id="identifiersAddTA" prefHeight="100.0"
 					wrapText="true" />
 			</VBox>
-			<VBox spacing="2.0">
+			<VBox spacing="2.0" HBox.hgrow="ALWAYS">
 				<Label text="Identifiers to remove" />
 				<TextArea fx:id="identifiersRemoveTA" prefHeight="100.0"
 					wrapText="true" />

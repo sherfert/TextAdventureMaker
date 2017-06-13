@@ -27,6 +27,9 @@
 		<CheckBox fx:id="newUseForbiddenTextCB" mnemonicParsing="false"
 			text="Change the Use Forbidden Text?" />
 		<TextField fx:id="newUseForbiddenTextTF" />
-		
+
 	</children>
+	<padding>
+		<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+	</padding>
 </VBox>
