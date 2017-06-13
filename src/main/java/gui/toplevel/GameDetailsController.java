@@ -204,8 +204,6 @@ public class GameDetailsController extends GameDataController {
 		startItemsListView.initialize(game.getStartItems(),
 				this.currentGameManager.getPersistenceManager().getInventoryItemManager()::getAllInventoryItems, null,
 				this::objectSelected, (item) -> game.addStartItem(item), (item) -> game.removeStartItem(item));
-		setNodeTooltip(startItemsListView,
-				"These items are placed in the player's inventory in the beginning of the game.");
 
 		final String helpTextFieldTooltipText = "The text is displayed along with the respective commands "
 				+ "when the player displays the help "
