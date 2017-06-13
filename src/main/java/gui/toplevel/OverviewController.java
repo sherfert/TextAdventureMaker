@@ -104,12 +104,7 @@ public class OverviewController extends GameDataController {
 
 		// Create lines
 		for (Way w : ways) {
-			Line line = createWayNode(w);
-			if (line != null) {
-				mapPane.getChildren().add(line);
-				// Place lines behind rectangles
-				line.toBack();
-			}
+			addWayToMap(w);
 		}
 
 		// The add way button
@@ -138,6 +133,21 @@ public class OverviewController extends GameDataController {
 
 		return sp;
 	}
+	
+	/**
+	 * Adds a new way to the Map
+	 * 
+	 * @param way
+	 *            the way
+	 */
+	private void addWayToMap(Way way) {
+		WayLine line = createWayNode(way);
+		if (line != null) {
+			mapPane.getChildren().add(line);
+			// Place lines behind rectangles
+			line.toBack();
+		}
+	}
 
 	/**
 	 * Creates a line to represent a Way or returns {@code null}, if a
@@ -161,21 +171,6 @@ public class OverviewController extends GameDataController {
 			// Save the new way in the lines list
 			line.addWay(w);
 			return null;
-		}
-	}
-
-	/**
-	 * Adds a new way to the Map
-	 * 
-	 * @param way
-	 *            the way
-	 */
-	private void addWayToMap(Way way) {
-		Line line = createWayNode(way);
-		if (line != null) {
-			mapPane.getChildren().add(line);
-			// Place lines behind rectangles
-			line.toBack();
 		}
 	}
 

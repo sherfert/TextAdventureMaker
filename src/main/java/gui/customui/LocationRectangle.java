@@ -24,7 +24,7 @@ public class LocationRectangle extends StackPane {
 	/**
 	 * The height and width of LocationRectangles.
 	 */
-	private static final double rectDim = 120;
+	private static final double RECT_DIM = 120;
 
 	// These values are used by the dragHandlers to position rectangles
 	// correctly
@@ -61,12 +61,12 @@ public class LocationRectangle extends StackPane {
 	/**
 	 * The center on the X axis.
 	 */
-	private DoubleBinding centerX = layoutXProperty().add(rectDim / 2);
+	private DoubleBinding centerX = layoutXProperty().add(RECT_DIM / 2);
 
 	/**
 	 * The center on the Y axis.
 	 */
-	private DoubleBinding centerY = layoutYProperty().add(rectDim / 2);
+	private DoubleBinding centerY = layoutYProperty().add(RECT_DIM / 2);
 
 	/**
 	 * Handler for clicking or dragging a LocationRectangle.
@@ -150,7 +150,7 @@ public class LocationRectangle extends StackPane {
 		enterRearrangeMode();
 
 		// The rectangle
-		Rectangle rectangle = new Rectangle(rectDim, rectDim);
+		Rectangle rectangle = new Rectangle(RECT_DIM, RECT_DIM);
 		rectangle.setFill(Color.LIGHTGRAY);
 		rectangle.setStroke(Color.BLACK);
 
@@ -160,7 +160,7 @@ public class LocationRectangle extends StackPane {
 		// Placing the node
 		setLayoutX(location.getxCoordinate());
 		setLayoutY(location.getyCoordinate());
-		setMaxSize(rectDim, rectDim);
+		setMaxSize(RECT_DIM, RECT_DIM);
 
 		getChildren().addAll(rectangle, label);
 

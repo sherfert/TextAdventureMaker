@@ -11,21 +11,26 @@ import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 
 /**
  * A special Line for displaying ways connecting LocationRectangles.
  * 
- * TODO WayLine does not account for self-loop edges.
- * 
  * @author Satia
  */
-public class WayLine extends Line {
+public class WayLine extends Path {
 
 	/**
 	 * Default row height of cells in a ListView
 	 */
 	private final int ROW_HEIGHT = 24;
+	
+	/*
+	 * The distance for self-loop-edges
+	 */
+	private static final double SELFLOOP_EDGE_DIST = 100;
 
 	/**
 	 * The ways represented by this line
@@ -41,10 +46,8 @@ public class WayLine extends Line {
 	 * Handler for clicking a WayLine.
 	 */
 	private EventHandler<MouseEvent> clickHandler = (t) -> {
-		WayLine l = ((WayLine) (t.getSource()));
-
-		if (l.ways.size() == 1) {
-			wayChosen.accept(l.ways.get(0));
+		if (ways.size() == 1) {
+			wayChosen.accept(ways.get(0));
 		} else {
 			// Create a listView
 			ListView<Way> listView = new ListView<>();
@@ -63,7 +66,7 @@ public class WayLine extends Line {
 
 			// Show the popup
 			popOver.setDetachable(false);
-			popOver.show(l);
+			popOver.show(this);
 		}
 	};
 
@@ -83,11 +86,45 @@ public class WayLine extends Line {
 		this.wayChosen = wayChosen;
 		ways = new ArrayList<>();
 		ways.add(w);
-
-		startXProperty().bind(originRect.getCenterX());
-		startYProperty().bind(originRect.getCenterY());
-		endXProperty().bind(destinationRect.getCenterX());
-		endYProperty().bind(destinationRect.getCenterY());
+		
+		if(originRect == destinationRect) {
+			// Seld-loop edge
+			MoveTo startPoint = new MoveTo();
+			startPoint.xProperty().bind(originRect.getCenterX());
+			startPoint.yProperty().bind(originRect.getCenterY());
+			
+			LineTo up = new LineTo();
+			up.xProperty().bind(originRect.getCenterX());
+			up.yProperty().bind(originRect.getCenterY().subtract(SELFLOOP_EDGE_DIST));
+			
+			LineTo right = new LineTo();
+			right.xProperty().bind(originRect.getCenterX().add(SELFLOOP_EDGE_DIST));
+			right.yProperty().bind(originRect.getCenterY().subtract(SELFLOOP_EDGE_DIST));
+			
+			LineTo down = new LineTo();
+			down.xProperty().bind(originRect.getCenterX().add(SELFLOOP_EDGE_DIST));
+			down.yProperty().bind(originRect.getCenterY());
+			
+			LineTo end = new LineTo();
+			end.xProperty().bind(originRect.getCenterX());
+			end.yProperty().bind(originRect.getCenterY());
+			
+			getElements().add(startPoint);
+			getElements().add(up);
+			getElements().add(right);
+			getElements().add(down);
+			getElements().add(end);
+		} else {
+			MoveTo startPoint = new MoveTo();
+			startPoint.xProperty().bind(originRect.getCenterX());
+			startPoint.yProperty().bind(originRect.getCenterY());
+			LineTo endPoint = new LineTo();
+			endPoint.xProperty().bind(destinationRect.getCenterX());
+			endPoint.yProperty().bind(destinationRect.getCenterY());
+			
+			getElements().add(startPoint);
+			getElements().add(endPoint);
+		}
 
 		// Thicker lines
 		setStrokeWidth(5);
