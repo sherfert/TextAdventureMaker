@@ -47,7 +47,7 @@ public class PersonsController extends NamedDescribedObjectsController<Person> {
 	@Override
 	protected void createObject() {
 		new NewNamedObjectWizard("New person").showAndGetName().map(name -> new Person(name, ""))
-				.ifPresent(this::saveObject);
+				.ifPresent(this::trySaveObject);
 	}
 
 }

@@ -129,17 +129,6 @@ public class ConversationLayer extends NamedObject {
 	}
 
 	/**
-	 * Removes an option. Can only be called by the layer when the layer is
-	 * deleted.
-	 * 
-	 * @param option
-	 *            the option to remove
-	 */
-	void removeOption(ConversationOption option) {
-		options.remove(option);
-	}
-
-	/**
 	 * @return a list of the texts of all enabled options.
 	 */
 	@Transient

@@ -2,6 +2,8 @@ package gui.itemEditing;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import data.ConversationLayer;
 import data.ConversationOption;
@@ -132,7 +134,12 @@ public class ConversationLayerController extends NamedObjectsTableController<Con
 		new NewConversationOptionWizard(layer).showAndGet().ifPresent(o -> {
 			// Also add the option to this layer
 			layer.addOption(o);
-			saveObject(o);
+			try {
+				saveObject(o);
+			} catch (Exception e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
+				layer.getOptions().remove(o);
+			}
 		});
 	}
 }

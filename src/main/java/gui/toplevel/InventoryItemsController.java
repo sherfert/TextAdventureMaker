@@ -47,7 +47,7 @@ public class InventoryItemsController extends NamedDescribedObjectsController<In
 	@Override
 	protected void createObject() {
 		new NewNamedObjectWizard("New inventory item").showAndGetName().map(name -> new InventoryItem(name, ""))
-				.ifPresent(this::saveObject);
+				.ifPresent(this::trySaveObject);
 	}
 
 }

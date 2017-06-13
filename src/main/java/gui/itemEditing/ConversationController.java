@@ -1,6 +1,8 @@
 package gui.itemEditing;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import data.Conversation;
 import data.ConversationLayer;
@@ -128,7 +130,12 @@ public class ConversationController extends NamedObjectsTableController<Conversa
 				.ifPresent(cl -> {
 					// Also add the layer to this conversation
 					conversation.addLayer(cl);
-					saveObject(cl);
+					try {
+						saveObject(cl);
+					} catch (Exception e) {
+						Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
+						conversation.getLayers().remove(cl);
+					}
 				});
 	}
 }

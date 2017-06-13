@@ -113,7 +113,7 @@ public class ActionsController extends NamedObjectsTableController<AbstractActio
 
 	@Override
 	protected void createObject() {
-		new NewActionWizard(currentGameManager).showAndGet().ifPresent(this::saveObject);
+		new NewActionWizard(currentGameManager).showAndGet().ifPresent(this::trySaveObject);
 	}
 	
 	@Override

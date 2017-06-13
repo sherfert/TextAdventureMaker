@@ -48,7 +48,7 @@ public class LocationsController extends NamedDescribedObjectsController<Locatio
 	@Override
 	protected void createObject() {
 		new NewNamedObjectWizard("New location").showAndGetName().map(name -> new Location(name, ""))
-		.ifPresent(this::saveObject);
+		.ifPresent(this::trySaveObject);
 	}
 
 }

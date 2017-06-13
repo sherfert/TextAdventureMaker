@@ -245,10 +245,15 @@ public class OverviewController extends GameDataController {
 		Way way = new Way(this.creationOrigin.getName() + "->" + this.creationDestination.getName(), "",
 				this.creationOrigin, this.creationDestination);
 		// Save way
-		saveHasId(way);
-		addWayToMap(way);
-		// Open new way for editing
-		objectSelected(way);
+		try {
+			saveHasId(way);
+			addWayToMap(way);
+			// Open new way for editing
+			objectSelected(way);
+		} catch (DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
+		}
+		
 	}
 
 	/**

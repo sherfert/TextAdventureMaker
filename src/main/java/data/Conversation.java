@@ -260,16 +260,6 @@ public class Conversation extends NamedObject {
 	}
 
 	/**
-	 * Removes a layer. Can only be called by the layer when the layer is deleted.
-	 * 
-	 * @param layer
-	 *            the layer to remove
-	 */
-	void removeLayer(ConversationLayer layer) {
-		layers.remove(layer);
-	}
-
-	/**
 	 * Adds an additional action.
 	 * 
 	 * @param action

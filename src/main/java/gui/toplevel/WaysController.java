@@ -61,9 +61,7 @@ public class WaysController extends NamedObjectsTableController<Way> {
 
 	@Override
 	protected void createObject() {
-		new NewWayWizard(currentGameManager).showAndGet().ifPresent(way -> {
-			saveObject(way);
-		});
+		new NewWayWizard(currentGameManager).showAndGet().ifPresent(this::trySaveObject);
 	}
 
 }

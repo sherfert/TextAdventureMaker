@@ -718,21 +718,14 @@ public abstract class GameDataController {
 	/**
 	 * Saves any object to the DB.
 	 * 
-	 * // FIXME this fails silently!
-	 * 
 	 * @param o
 	 *            the object
 	 * @throws DBClosedException
 	 *             if the DB was closed.
 	 */
-	protected void saveHasId(HasId o) {
-		try {
-			currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
-			currentGameManager.getPersistenceManager().updateChanges();
-		} catch (DBClosedException e1) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed");
-			return;
-		}
+	protected void saveHasId(HasId o) throws DBClosedException {
+		currentGameManager.getPersistenceManager().getAllObjectsManager().addObject(o);
+		currentGameManager.getPersistenceManager().updateChanges();
 	}
 
 	/**

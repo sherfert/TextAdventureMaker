@@ -47,7 +47,7 @@ public class ItemsController extends NamedDescribedObjectsController<Item> {
 	@Override
 	protected void createObject() {
 		new NewNamedObjectWizard("New item").showAndGetName().map(name -> new Item(name, ""))
-				.ifPresent(this::saveObject);
+				.ifPresent(this::trySaveObject);
 	}
 
 }

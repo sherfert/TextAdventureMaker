@@ -38,7 +38,7 @@ public class ConversationsController extends NamedObjectsTableController<Convers
 
 	@Override
 	protected void createObject() {
-		new NewConversationWizard().showAndGet().ifPresent(this::saveObject);
+		new NewConversationWizard().showAndGet().ifPresent(this::trySaveObject);
 	}
 
 }

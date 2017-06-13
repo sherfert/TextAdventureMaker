@@ -130,11 +130,25 @@ public abstract class NamedObjectsTableController<E extends NamedObject> extends
 	 * @throws DBClosedException
 	 *             if the DB was closed.
 	 */
-	protected void saveObject(E o) {
+	protected void saveObject(E o) throws DBClosedException {
 		// Add item to DB
 		saveHasId(o);
 		// Add item to our table
 		objectsOL.add(o);
+	}
+	
+	/**
+	 * Saves any named object, but does not propagate exceptions.
+	 * 
+	 * @param o
+	 *            the object
+	 */
+	protected void trySaveObject(E o) {
+		try {
+			saveObject(o);
+		} catch(DBClosedException e) {
+			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
+		}
 	}
 
 }
