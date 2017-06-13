@@ -44,7 +44,7 @@ public class MultiActionController extends ActionController<MultiAction> {
 			List<AbstractAction> allActions = this.currentGameManager.getPersistenceManager().getActionManager().getAllActions();
 			// Filter out Multiactions to avoid recursion
 			return allActions.stream().filter((a)-> !(a instanceof MultiAction)).collect(Collectors.toList());
-		} , null, this::objectSelected, (a) -> action.addAction(a), (a) -> action.removeAction(a));
+		} , action::setActions, this::objectSelected, action::addAction, action::removeAction);
 	}
 
 	/**
