@@ -116,8 +116,9 @@ public class WayController extends GameDataController {
 		moveCommandsLabel.setText("Additional commands for using " + way.getName());
 
 		moveActionsListView.initialize(way.getAdditionalMoveActions(),
-				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> way.addAdditionalMoveAction(a), (a) -> way.removeAdditionalMoveAction(a));
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions,
+				way::setAdditionalMoveActions, this::objectSelected, way::addAdditionalMoveAction,
+				way::removeAdditionalMoveAction);
 
 		saveTabIndex(tabPane);
 	}

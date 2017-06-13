@@ -98,8 +98,9 @@ public class UseWithInformationController extends GameDataController {
 		useWithCommandsLabel.setText("Additional commands for using " + item.getName() + " with " + object.getName());
 
 		useWithActionsListView.initialize(item.getAdditionalActionsFromUseWith(object),
-				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> item.addAdditionalActionToUseWith(object, a),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions,
+				(as) -> item.setAdditionalActionsFromUseWith(object, as), this::objectSelected,
+				(a) -> item.addAdditionalActionToUseWith(object, a),
 				(a) -> item.removeAdditionalActionFromUseWith(object, a));
 	}
 

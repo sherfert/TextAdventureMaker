@@ -46,11 +46,11 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 */
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH })
 	@JoinTable(name = "INVITEM_CII", foreignKey = @ForeignKey(name = "FK_InvItem_combineInformation_S", //
-	foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
-	inverseForeignKey = @ForeignKey(name = "FK_InvItem_combineInformation_D", //
-	foreignKeyDefinition = "FOREIGN KEY (combineInformation_ID) REFERENCES CombineInformation (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (InventoryItem_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE"), //
+			inverseForeignKey = @ForeignKey(name = "FK_InvItem_combineInformation_D", //
+					foreignKeyDefinition = "FOREIGN KEY (combineInformation_ID) REFERENCES CombineInformation (ID) ON DELETE CASCADE"))
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_combineInformation_KEY", //
-	foreignKeyDefinition = "FOREIGN KEY (combineInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (combineInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE"))
 	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombineInformation> combineInformation;
 
@@ -64,9 +64,9 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 */
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands", //
-	foreignKeyDefinition = "FOREIGN KEY (ADDITIONALCOMBINECOMMANDS_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (ADDITIONALCOMBINECOMMANDS_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE"))
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_additionalCombineCommands_KEY", //
-	foreignKeyDefinition = "FOREIGN KEY (additionalCombineCommands_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (additionalCombineCommands_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE"))
 	@Access(AccessType.FIELD)
 	private Map<InventoryItem, CombineCommands> additionalCombineCommands;
 
@@ -78,9 +78,9 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	 */
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH })
 	@JoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation", //
-	foreignKeyDefinition = "FOREIGN KEY (useWithInformation_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (useWithInformation_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE"))
 	@MapKeyJoinColumn(foreignKey = @ForeignKey(name = "FK_InvItem_useWithInformation_KEY", //
-	foreignKeyDefinition = "FOREIGN KEY (useWithInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") )
+			foreignKeyDefinition = "FOREIGN KEY (useWithInformation_KEY) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE"))
 	@Access(AccessType.FIELD)
 	private Map<NamedDescribedObject, UseWithInformation> useWithInformation;
 
@@ -193,8 +193,20 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 
 	@Override
 	@Transient
+	public void setAdditionalActionsFromCombineWith(Combinable<InventoryItem> partner, List<AbstractAction> actions) {
+		getCombineInformation(partner).additionalCombineWithActions = actions;
+	}
+
+	@Override
+	@Transient
 	public List<AbstractAction> getAdditionalActionsFromUseWith(PassivelyUsable object) {
 		return getUseWithInformation(object).additionalUseWithActions;
+	}
+	
+	@Override
+	@Transient
+	public void setAdditionalActionsFromUseWith(PassivelyUsable object, List<AbstractAction> actions) {
+		getUseWithInformation(object).additionalUseWithActions = actions;
 	}
 
 	@Override
@@ -464,7 +476,6 @@ public class InventoryItem extends UsableObject implements UsableWithSomething, 
 	public List<InventoryItem> getInventoryItemsCombinableWith() {
 		return new ArrayList<>(combineInformation.keySet());
 	}
-
 
 	/**
 	 * Initializes the fields.

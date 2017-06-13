@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
@@ -139,6 +140,7 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	foreignKeyDefinition = "FOREIGN KEY (Way_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_WAY_ADDITIONALMOVEACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalMoveActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
+	@OrderColumn
 	public List<AbstractAction> getAdditionalMoveActions() {
 		return additionalMoveActions;
 	}

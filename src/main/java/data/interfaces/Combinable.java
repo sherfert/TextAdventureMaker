@@ -73,6 +73,14 @@ public interface Combinable<E> extends Identifiable {
 	/**
 	 * @param partner
 	 *            the partner
+	 * @param actions
+	 *            the additional actions for that item.
+	 */
+	public void setAdditionalActionsFromCombineWith(Combinable<E> partner, List<AbstractAction> actions);
+
+	/**
+	 * @param partner
+	 *            the partner
 	 * 
 	 * @return the additional combine commands.
 	 */

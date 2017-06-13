@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 
 import data.action.AbstractAction;
 import data.interfaces.HasId;
@@ -36,7 +37,8 @@ class UseWithInformation implements HasId {
 	foreignKeyDefinition = "FOREIGN KEY (UseWithInformation_ID) REFERENCES UseWithInformation (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_UHL_additionalUseWithActions_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalUseWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
-	final List<AbstractAction> additionalUseWithActions;
+	@OrderColumn
+	List<AbstractAction> additionalUseWithActions;
 
 	/**
 	 * All additional useWith commands.

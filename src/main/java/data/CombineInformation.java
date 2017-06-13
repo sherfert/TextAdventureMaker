@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 
 import data.action.AbstractAction;
 import data.action.AddInventoryItemsAction;
@@ -45,7 +46,8 @@ class CombineInformation implements HasId {
 	foreignKeyDefinition = "FOREIGN KEY (CombineInformation_ID) REFERENCES CombineInformation (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CII_additionalCombineWithActions_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalCombineWithActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
-	final List<AbstractAction> additionalCombineWithActions;
+	@OrderColumn
+	List<AbstractAction> additionalCombineWithActions;
 
 	/**
 	 * The text displayed when combining is disabled but the user tries to

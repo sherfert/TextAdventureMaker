@@ -129,8 +129,9 @@ public class CombinationInformationController extends GameDataController {
 				"Additional commands to combine the two items. These will only be valid for this exact combination of items.");
 
 		combineActionsListView.initialize(item1.getAdditionalActionsFromCombineWith(item2),
-				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> item1.addAdditionalActionToCombineWith(item2, a),
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions,
+				(as) -> item1.setAdditionalActionsFromCombineWith(item2, as), this::objectSelected,
+				(a) -> item1.addAdditionalActionToCombineWith(item2, a),
 				(a) -> item1.removeAdditionalActionFromCombineWith(item2, a));
 	}
 

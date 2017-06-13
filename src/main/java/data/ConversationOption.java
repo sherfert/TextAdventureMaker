@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Transient;
 
 import data.action.AbstractAction;
@@ -214,6 +215,7 @@ public class ConversationOption extends NamedObject {
 	foreignKeyDefinition = "FOREIGN KEY (ConversationOption_ID) REFERENCES CONVERSATIONOPTION (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_CONVERSATIONOPTION_ADDITIONALACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
+	@OrderColumn
 	public List<AbstractAction> getAdditionalActions() {
 		return additionalActions;
 	}

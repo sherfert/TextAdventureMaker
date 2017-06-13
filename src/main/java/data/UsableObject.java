@@ -14,6 +14,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 
 import data.action.AbstractAction;
 import data.interfaces.Usable;
@@ -107,6 +108,7 @@ public abstract class UsableObject extends InspectableObject implements Usable {
 	foreignKeyDefinition = "FOREIGN KEY (UsableObject_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_USABLEOBJECT_ADDITIONALUSEACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalUseActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
+	@OrderColumn
 	public List<AbstractAction> getAdditionalUseActions() {
 		return additionalUseActions;
 	}

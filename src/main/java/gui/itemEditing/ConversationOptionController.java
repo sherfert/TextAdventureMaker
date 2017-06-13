@@ -92,8 +92,9 @@ public class ConversationOptionController extends GameDataController {
 		setNodeTooltip(editEventTA, "Here you can describe anything that happens when the option is chosen.");
 
 		actionsListView.initialize(option.getAdditionalActions(),
-				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> option.addAdditionalAction(a), (a) -> option.removeAdditionalAction(a));
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions,
+				option::setAdditionalActions, this::objectSelected, option::addAdditionalAction,
+				option::removeAdditionalAction);
 	}
 
 	/**

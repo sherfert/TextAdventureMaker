@@ -82,9 +82,9 @@ public class UsableObjectController extends GameDataController {
 		useCommandsLabel.setText("Additional commands for using " + object.getName());
 
 		useActionsListView.initialize(object.getAdditionalUseActions(),
-				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> object.addAdditionalUseAction(a),
-				(a) -> object.removeAdditionalUseAction(a));
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions,
+				object::setAdditionalUseActions, this::objectSelected, object::addAdditionalUseAction,
+				object::removeAdditionalUseAction);
 	}
 
 	@Override

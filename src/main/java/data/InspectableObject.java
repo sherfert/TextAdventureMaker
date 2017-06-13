@@ -14,6 +14,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OrderColumn;
 
 import data.action.AbstractAction;
 import data.interfaces.Inspectable;
@@ -94,6 +95,7 @@ public abstract class InspectableObject extends NamedDescribedObject implements 
 	foreignKeyDefinition = "FOREIGN KEY (InspectableObject_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_INSPECTABLEOBJECT_ADDITIONAINSPECTACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalInspectActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
+	@OrderColumn
 	public List<AbstractAction> getAdditionalInspectActions() {
 		return additionalInspectActions;
 	}

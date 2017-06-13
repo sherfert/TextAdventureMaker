@@ -52,13 +52,12 @@ public class InspectableObjectController extends GameDataController {
 		editIdentifiersTA.setText(getListString(object.getIdentifiers()));
 		editIdentifiersTA.textProperty()
 				.addListener((f, o, n) -> updateIdentifiers(n, editIdentifiersTA, object::setIdentifiers));
-		setNodeTooltip(editIdentifiersTA,
-				"Here you can list identifiers that can be used to refer to the object.");
+		setNodeTooltip(editIdentifiersTA, "Here you can list identifiers that can be used to refer to the object.");
 
 		inspectActionsListView.initialize(object.getAdditionalInspectActions(),
-				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> object.addAdditionalInspectAction(a),
-				(a) -> object.removeAdditionalInspectAction(a));
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions,
+				object::setAdditionalInspectActions, this::objectSelected, object::addAdditionalInspectAction,
+				object::removeAdditionalInspectAction);
 	}
 
 	@Override

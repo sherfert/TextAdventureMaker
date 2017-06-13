@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
@@ -176,6 +177,7 @@ public class Item extends UsableObject implements Takeable, HasLocation, Passive
 	foreignKeyDefinition = "FOREIGN KEY (Item_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE CASCADE") , //
 	inverseForeignKey = @ForeignKey(name = "FK_ITEM_ADDITIONALTAKEACTIONS_D", //
 	foreignKeyDefinition = "FOREIGN KEY (additionalTakeActions_ID) REFERENCES ABSTRACTACTION (ID) ON DELETE CASCADE") )
+	@OrderColumn
 	public List<AbstractAction> getAdditionalTakeActions() {
 		return additionalTakeActions;
 	}

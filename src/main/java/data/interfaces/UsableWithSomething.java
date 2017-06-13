@@ -39,6 +39,13 @@ public interface UsableWithSomething extends Identifiable {
 	 * @return the additional actions for that object.
 	 */
 	public List<AbstractAction> getAdditionalActionsFromUseWith(PassivelyUsable object);
+	
+	/**
+	 * @param object
+	 *            the object
+	 * @param actions the additional actions for that object.
+	 */
+	public void setAdditionalActionsFromUseWith(PassivelyUsable object, List<AbstractAction> actions);
 
 	/**
 	 * @param object

@@ -124,9 +124,9 @@ public class ItemController extends GameDataController {
 				this::objectSelected, (ii) -> item.addPickUpItem(ii), (ii) -> item.removePickUpItem(ii));
 
 		takeActionsListView.initialize(item.getAdditionalTakeActions(),
-				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions, null,
-				this::objectSelected, (a) -> item.addAdditionalTakeAction(a),
-				(a) -> item.removeAdditionalTakeAction(a));
+				this.currentGameManager.getPersistenceManager().getActionManager()::getAllActions,
+				item::setAdditionalTakeActions, this::objectSelected, item::addAdditionalTakeAction,
+				item::removeAdditionalTakeAction);
 
 		takeCommandsLabel.setText("Additional commands for taking " + item.getName());
 
