@@ -7,6 +7,8 @@ import gui.include.ChangeInspectableObjectActionController;
 import gui.include.ChangeNDObjectActionController;
 import gui.include.ChangeUsableObjectActionController;
 import gui.include.NamedObjectController;
+import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import logic.CurrentGameManager;
 
 /**
@@ -16,6 +18,9 @@ import logic.CurrentGameManager;
  * @author Satia
  */
 public class ChangeInventoryItemActionController extends ActionController<ChangeUsableObjectAction> {
+	
+	@FXML
+	private TabPane tabPane;
 
 	/**
 	 * @param currentGameManager
@@ -28,6 +33,13 @@ public class ChangeInventoryItemActionController extends ActionController<Change
 	public ChangeInventoryItemActionController(CurrentGameManager currentGameManager, MainWindowController mwController,
 			ChangeUsableObjectAction action) {
 		super(currentGameManager, mwController, action);
+	}
+	
+	@FXML
+	@Override
+	protected void initialize() {
+		super.initialize();
+		saveTabIndex(tabPane);
 	}
 
 	/**

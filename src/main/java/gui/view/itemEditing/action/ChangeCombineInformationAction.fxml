@@ -47,12 +47,12 @@
 			text="Change the Combine With Forbidden Text?" />
 		<TextField fx:id="newCombineWithForbiddenTextTF" />
 		
-		<HBox spacing="2.0">
-			<VBox spacing="2.0">
+		<HBox spacing="2.0" VBox.vgrow="ALWAYS">
+			<VBox spacing="2.0" HBox.hgrow="ALWAYS">
 				<Label text="New inventory items added to the inventory when combined" />
 				<NamedObjectListView noValueString="(no inventory item)" fx:id="itemsAddListView" />
 			</VBox>
-			<VBox spacing="2.0">
+			<VBox spacing="2.0" HBox.hgrow="ALWAYS">
 				<Label text="Inventory items not added to the inventory any more when combined" />
 				<NamedObjectListView noValueString="(no inventory item)" fx:id="itemsRemoveListView" />
 			</VBox>
