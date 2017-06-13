@@ -53,13 +53,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 	"FOREIGN KEY (LOCATION_ID) REFERENCES NAMEDDESCRIBEDOBJECT (ID) ON DELETE SET NULL") )
 	@Access(AccessType.FIELD)
 	private Location location;
-	
-	/**
-	 * This defines the order in which persons appear in a location. It is managed
-	 * by the methods of the location automatically and should not be set
-	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
-	 */
-	private int locationOrder;
 
 	/**
 	 * The text displayed when trying to talk to, but this is disabled. There is
@@ -132,14 +125,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 		return location;
 	}
 
-	/**
-	 * @return the locationOrder
-	 */
-	@Column(nullable = false)
-	int getLocationOrder() {
-		return locationOrder;
-	}
-
 	@Override
 	@Column(nullable = true)
 	public String getTalkingToForbiddenText() {
@@ -195,14 +180,6 @@ public class Person extends InspectableObject implements HasLocation, HasConvers
 			location.addPerson(this);
 		}
 		this.location = location;
-	}
-
-	/**
-	 * @param locationOrder
-	 *            the locationOrder to set
-	 */
-	void setLocationOrder(int locationOrder) {
-		this.locationOrder = locationOrder;
 	}
 	
 	@Override

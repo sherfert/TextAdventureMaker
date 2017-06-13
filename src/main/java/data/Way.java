@@ -53,13 +53,6 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_DESTINATION"))
 	@Access(AccessType.FIELD)
 	private Location destination;
-
-	/**
-	 * This defines the order in which waysIn appear in a location. It is managed
-	 * by the methods of the location automatically and should not be set
-	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
-	 */
-	private int destinationOrder;
 	
 	/**
 	 * The move action.
@@ -90,13 +83,6 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	@JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "FK_WAY_ORIGIN") )
 	@Access(AccessType.FIELD)
 	private Location origin;
-
-	/**
-	 * This defines the order in which waysOut appear in a location. It is managed
-	 * by the methods of the location automatically and should not be set
-	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
-	 */
-	private int originOrder;
 	
 	/**
 	 * These values indicate that either the origin or destination are already deleted.
@@ -169,14 +155,6 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 		return destination;
 	}
 
-	/**
-	 * @return the destinationOrder
-	 */
-	@Column(nullable = false)
-	int getDestinationOrder() {
-		return destinationOrder;
-	}
-
 	@Override
 	@Column(nullable = true)
 	public String getMoveForbiddenText() {
@@ -195,14 +173,6 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 	@Transient
 	public Location getOrigin() {
 		return origin;
-	}
-
-	/**
-	 * @return the originOrder
-	 */
-	@Column(nullable = false)
-	int getOriginOrder() {
-		return originOrder;
 	}
 
 	/**
@@ -292,13 +262,6 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 		this.originDeleted = true;
 	}
 
-	/**
-	 * @param destinationOrder the destinationOrder to set
-	 */
-	void setDestinationOrder(int destinationOrder) {
-		this.destinationOrder = destinationOrder;
-	}
-
 	@Override
 	public void setMoveForbiddenText(String forbiddenText) {
 		moveForbiddenText.set(forbiddenText);
@@ -327,13 +290,6 @@ public class Way extends InspectableObject implements Travelable, PassivelyUsabl
 		}
 		origin.addWayOut(this);
 		this.origin = origin;
-	}
-
-	/**
-	 * @param originOrder the originOrder to set
-	 */
-	void setOriginOrder(int originOrder) {
-		this.originOrder = originOrder;
 	}
 
 	@Override

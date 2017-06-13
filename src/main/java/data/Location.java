@@ -1,7 +1,6 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.Access;
@@ -10,7 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
@@ -93,11 +92,6 @@ public class Location extends NamedDescribedObject {
 	void addItem(Item item) {
 		if (!this.items.contains(item)) {
 			this.items.add(item);
-			// Give the item the highest locationOrder, so it appears last in
-			// the list
-			int newOrder = this.items.stream().map(Item::getLocationOrder).max(Comparator.<Integer> naturalOrder())
-					.orElse(-1) + 1;
-			item.setLocationOrder(newOrder);
 		}
 	}
 
@@ -111,11 +105,6 @@ public class Location extends NamedDescribedObject {
 	void addPerson(Person person) {
 		if (!this.persons.contains(person)) {
 			this.persons.add(person);
-			// Give the item the highest locationOrder, so it appears last in
-			// the list
-			int newOrder = this.persons.stream().map(Person::getLocationOrder).max(Comparator.<Integer> naturalOrder())
-					.orElse(-1) + 1;
-			person.setLocationOrder(newOrder);
 		}
 	}
 
@@ -129,11 +118,6 @@ public class Location extends NamedDescribedObject {
 	void addWayIn(Way wayIn) {
 		if (!this.waysIn.contains(wayIn)) {
 			this.waysIn.add(wayIn);
-			// Give the item the highest destinationOrder, so it appears last in
-			// the list
-			int newOrder = this.waysIn.stream().map(Way::getDestinationOrder).max(Comparator.<Integer> naturalOrder())
-					.orElse(-1) + 1;
-			wayIn.setDestinationOrder(newOrder);
 		}
 	}
 
@@ -147,11 +131,6 @@ public class Location extends NamedDescribedObject {
 	void addWayOut(Way wayOut) {
 		if (!this.waysOut.contains(wayOut)) {
 			this.waysOut.add(wayOut);
-			// Give the item the highest originOrder, so it appears last in
-			// the list
-			int newOrder = this.waysOut.stream().map(Way::getOriginOrder).max(Comparator.<Integer> naturalOrder())
-					.orElse(-1) + 1;
-			wayOut.setOriginOrder(newOrder);
 		}
 	}
 
@@ -222,7 +201,7 @@ public class Location extends NamedDescribedObject {
 	 * @return the items
 	 */
 	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
-	@OrderBy("locationOrder ASC, getId ASC")
+	@OrderColumn
 	public List<Item> getItems() {
 		return items;
 	}
@@ -268,20 +247,15 @@ public class Location extends NamedDescribedObject {
 	 *            the permutated list of items
 	 */
 	public void updateItems(List<Item> newItems) {
-		// Set items list, so that the order of the passed list is preserved
 		items.clear();
 		items.addAll(newItems);
-		// Update the location order on all items
-		for (int i = 0; i < items.size(); i++) {
-			items.get(i).setLocationOrder(i);
-		}
 	}
 
 	/**
 	 * @return the persons
 	 */
 	@OneToMany(mappedBy = "location", cascade = CascadeType.PERSIST)
-	@OrderBy("locationOrder ASC, getId ASC")
+	@OrderColumn
 	public List<Person> getPersons() {
 		return persons;
 	}
@@ -295,20 +269,15 @@ public class Location extends NamedDescribedObject {
 	 *            the permutated list of persons
 	 */
 	public void updatePersons(List<Person> newPersons) {
-		// Set persons list, so that the order of the passed list is preserved
 		persons.clear();
 		persons.addAll(newPersons);
-		// Update the location order on all persons
-		for (int i = 0; i < persons.size(); i++) {
-			persons.get(i).setLocationOrder(i);
-		}
 	}
 
 	/**
 	 * @return the waysOut
 	 */
 	@OneToMany(mappedBy = "origin", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	@OrderBy("originOrder ASC, getId ASC")
+	@OrderColumn
 	public List<Way> getWaysOut() {
 		return waysOut;
 	}
@@ -322,20 +291,15 @@ public class Location extends NamedDescribedObject {
 	 *            the permutated list of ways
 	 */
 	public void updateWaysOut(List<Way> newWays) {
-		// Set ways list, so that the order of the passed list is preserved
 		waysOut.clear();
 		waysOut.addAll(newWays);
-		// Update the origin order on all ways
-		for (int i = 0; i < waysOut.size(); i++) {
-			waysOut.get(i).setOriginOrder(i);
-		}
 	}
 
 	/**
 	 * @return the waysIn
 	 */
 	@OneToMany(mappedBy = "destination", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
-	@OrderBy("destinationOrder ASC, getId ASC")
+	@OrderColumn
 	public List<Way> getWaysIn() {
 		return waysIn;
 	}
@@ -349,13 +313,8 @@ public class Location extends NamedDescribedObject {
 	 *            the permutated list of ways
 	 */
 	public void updateWaysIn(List<Way> newWays) {
-		// Set ways list, so that the order of the passed list is preserved
 		waysIn.clear();
 		waysIn.addAll(newWays);
-		// Update the destination order on all items
-		for (int i = 0; i < waysIn.size(); i++) {
-			waysIn.get(i).setDestinationOrder(i);
-		}
 	}
 
 	/**

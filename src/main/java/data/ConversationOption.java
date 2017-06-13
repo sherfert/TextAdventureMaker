@@ -80,13 +80,6 @@ public class ConversationOption extends NamedObject {
 	private ConversationLayer layer;
 
 	/**
-	 * This defines the order in which options appear in a layer. It is managed
-	 * by the methods of the layer automatically and should not be set
-	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
-	 */
-	private int layerOrder;
-
-	/**
 	 * The target layer, which the player gets to after choosing that option. If
 	 * this is {@code null}, the option will end the conversation. By default,
 	 * this should be the owning layer.
@@ -260,14 +253,6 @@ public class ConversationOption extends NamedObject {
 	}
 
 	/**
-	 * @return the layerOrder
-	 */
-	@Column(nullable = false)
-	int getLayerOrder() {
-		return layerOrder;
-	}
-
-	/**
 	 * @return the target
 	 */
 	@ManyToOne(cascade = CascadeType.PERSIST)
@@ -362,13 +347,6 @@ public class ConversationOption extends NamedObject {
 	 */
 	void setLayer(ConversationLayer layer) {
 		this.layer = layer;
-	}
-
-	/**
-	 * @param layerOrder the layerOrder to set
-	 */
-	void setLayerOrder(int layerOrder) {
-		this.layerOrder = layerOrder;
 	}
 
 	/**

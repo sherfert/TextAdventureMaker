@@ -71,13 +71,6 @@ public class Item extends UsableObject implements Takeable, HasLocation, Passive
 	private Location location;
 
 	/**
-	 * This defines the order in which items appear in a location. It is managed
-	 * by the methods of the location automatically and should not be set
-	 * anywhere else. The getters and setters have package visibility, so that it cannot be accessed from the outside.
-	 */
-	private int locationOrder;
-
-	/**
 	 * The {@link ChangeItemAction} which would set the location to {@code null}
 	 * .
 	 * 
@@ -199,14 +192,6 @@ public class Item extends UsableObject implements Takeable, HasLocation, Passive
 		return location;
 	}
 
-	/**
-	 * @return the locationOrder
-	 */
-	@Column(nullable = false)
-	int getLocationOrder() {
-		return locationOrder;
-	}
-
 	@Override
 	@Column(nullable = true)
 	public String getTakeForbiddenText() {
@@ -295,14 +280,6 @@ public class Item extends UsableObject implements Takeable, HasLocation, Passive
 			location.addItem(this);
 		}
 		this.location = location;
-	}
-
-	/**
-	 * @param locationOrder
-	 *            the locationOrder to set
-	 */
-	void setLocationOrder(int locationOrder) {
-		this.locationOrder = locationOrder;
 	}
 
 	@Override
