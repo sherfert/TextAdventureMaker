@@ -94,13 +94,11 @@ public class ConversationLayerController extends NamedObjectsTableController<Con
 		upButton.setOnMouseClicked((e) -> {
 			int index = table.getSelectionModel().getSelectedIndex();
 			Collections.swap(objectsOL, index, index - 1);
-			table.getSelectionModel().selectPrevious();
 			layer.updateOptions(objectsOL);
 		});
 		downButton.setOnMouseClicked((e) -> {
 			int index = table.getSelectionModel().getSelectedIndex();
 			Collections.swap(objectsOL, index, index + 1);
-			table.getSelectionModel().selectNext();
 			layer.updateOptions(objectsOL);
 		});
 
