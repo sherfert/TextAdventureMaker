@@ -11,6 +11,7 @@ import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import logic.CurrentGameManager;
@@ -22,6 +23,9 @@ import logic.CurrentGameManager;
  */
 public class ChangeWayActionController extends ActionController<ChangeWayAction> {
 
+	@FXML
+	private TabPane tabPane;
+	
 	@FXML
 	private RadioButton doNotChangeWayRB;
 
@@ -114,6 +118,8 @@ public class ChangeWayActionController extends ActionController<ChangeWayAction>
 				"This will be the new text when the player tries to use the way, unsuccessfully.", noSecondPL);
 		setNodeTooltip(newMoveForbiddenTextCB,
 				"If ticked, the text displayed when the way could not be used will change.");
+		
+		saveTabIndex(tabPane);
 	}
 
 	/**
