@@ -398,8 +398,7 @@ public class MainWindowController {
 		fileChooser.setTitle(creatingNew ? "Choose where to save the new file" : "Choose a game file");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		fileChooser.getExtensionFilters().addAll(
-				new FileChooser.ExtensionFilter("Game databases", "*" + LoadSaveManager.H2_ENDING),
-				new FileChooser.ExtensionFilter("All Files", "*.*"));
+				new FileChooser.ExtensionFilter("Game databases", "*" + LoadSaveManager.H2_ENDING));
 
 		File file;
 		if (creatingNew) {
@@ -408,8 +407,12 @@ public class MainWindowController {
 			file = fileChooser.showOpenDialog(window);
 		}
 
-		// Open the file, if one was chosen
 		if (file != null) {
+			// Append ending, if it is missing
+			if(!file.getPath().endsWith(LoadSaveManager.H2_ENDING)) {
+				file = new File (file.getPath() + LoadSaveManager.H2_ENDING);
+			}
+			
 			try {
 				currentGameManager.open(file, creatingNew);
 			} catch (IOException | DBIncompatibleException e) {
