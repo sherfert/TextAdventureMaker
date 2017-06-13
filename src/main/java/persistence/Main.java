@@ -44,10 +44,7 @@ import data.action.RemoveInventoryItemAction;
 public class Main {
 
 	/**
-	 * Test-main. Creates a test game db.
-	 * 
-	 * @param args
-	 * @throws java.lang.Exception
+	 * Creates a game database features every data class that exists.
 	 */
 	public static void main(String[] args) throws Exception {
 		Player player = new Player();
@@ -150,8 +147,6 @@ public class Main {
 		ConversationLayer startLayer = new ConversationLayer("sL");
 		ConversationLayer csLayer = new ConversationLayer("csL");
 
-		startLayer.addOption(new ConversationOption("Why so hostile?",
-				"Just TextAdventureMaker is harder to code than I though!", "He looks really annoyed!", startLayer));
 		startLayer.addOption(
 				new ConversationOption("cs", "Let's talk about computer science.", "Ask me anything.", csLayer));
 		startLayer.addOption(new ConversationOption("bye", "I'm gonne leave you now.", "Finally.", null));
@@ -168,23 +163,12 @@ public class Main {
 		option42.addAdditionalAction(changeFlatDescriptionAction);
 		csLayer.addOption(option42);
 		csLayer.addOption(new ConversationOption("JI", "Is Java also an island?", "That's just a rumor.", csLayer));
-		csLayer.addOption(new ConversationOption("J", "Do you like Java?", "Plenty", csLayer));
-		csLayer.addOption(new ConversationOption("CCC", "Do you like C#?", "It's OK", csLayer));
-		csLayer.addOption(new ConversationOption("CC", "Do you like C++?", "I can accomodate", csLayer));
-		csLayer.addOption(new ConversationOption("C", "Do you like C?", "Not really", csLayer));
-		csLayer.addOption(
-				new ConversationOption("A", "Do you like Assembler?", "It's cool, but I'm not crazy.", csLayer));
-		csLayer.addOption(new ConversationOption("P", "Do you like Python?", "I recommend you a gif a made", csLayer));
 		csLayer.addOption(new ConversationOption("3L",
 				"Do you like this threeliner that had to come somewhere "
 						+ "in order to test the conversation option chosing mechasnism for a hell of a lot of options properly "
 						+ "and also with options that are way too long and nobody will ever read them? Assholes! "
 						+ "Still not long enough - need to add some more bullshit. That should do it!",
 				"What!?!", csLayer));
-		csLayer.addOption(new ConversationOption("WS", "Do you like Whitespace?", "I never find the code", csLayer));
-		csLayer.addOption(
-				new ConversationOption("BF", "Do you like Brainfuck?", "I prefer to fuck other things", csLayer));
-		csLayer.addOption(new ConversationOption("PL", "Do you like Perl?", "Hell no", csLayer));
 		ConversationOption disappearingOption = new ConversationOption("NV", "I am never gonna say this again.",
 				"What!?", csLayer);
 		disappearingOption.setDisablingOptionAfterChosen(true);
@@ -217,9 +201,9 @@ public class Main {
 		satiaShortConversation.addAdditionalAction(disableChangeFlatDescriptionAction);
 
 		// Start item in the inventory
-		InventoryItem dildo = new InventoryItem("Dildo", "Made out of Kruppstahl.");
-		dildo.setInspectionText("Why are you carrying that around with you!?");
-		game.addStartItem(dildo);
+		InventoryItem knife = new InventoryItem("Knife", "Made out of Kruppstahl.");
+		knife.setInspectionText("Why are you carrying that around with you!?");
+		game.addStartItem(knife);
 
 		// A hot chick
 		Person hotChick = new Person(flat, "Hot chick", "A hot chick is standing in the corner.");
@@ -230,13 +214,12 @@ public class Main {
 		hotChick.addAdditionalTalkToCommand("flirt with (?<o0>.+?)");
 		
 		// Using the dildo with the hotchick
-		ChangeUsableObjectAction changeDildoUseFBText = new ChangeUsableObjectAction("changeDildoUseFBText", dildo);
+		ChangeUsableObjectAction changeDildoUseFBText = new ChangeUsableObjectAction("changeDildoUseFBText", knife);
 		changeDildoUseFBText.setNewUseForbiddenText("You have some bad memories associated with this dildo...");
 		
-		dildo.setUsingEnabledWith(hotChick, true);
-		dildo.setUseWithSuccessfulText(hotChick, "You ask the girl to test the dildo on her. Sooner than you can react you get some "
-				+ "pepper spray in your face.");
-		dildo.addAdditionalActionToUseWith(hotChick, changeDildoUseFBText);
+		knife.setUsingEnabledWith(hotChick, true);
+		knife.setUseWithSuccessfulText(hotChick, "Better not.");
+		knife.addAdditionalActionToUseWith(hotChick, changeDildoUseFBText);
 
 		// A gremlin
 		Person gremlin = new Person(flat, "Gremlin", "A gremlin is sitting around and staring at the black tv screen.");
