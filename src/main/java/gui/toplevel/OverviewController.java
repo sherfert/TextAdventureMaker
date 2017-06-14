@@ -17,10 +17,12 @@ import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.LocationRectangle;
 import gui.customui.WayLine;
+import gui.wizards.NewNamedObjectWizard;
 import gui.wizards.NewWayWizard;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
@@ -29,7 +31,7 @@ import logic.CurrentGameManager;
 /**
  * A graphical overview of the entities in the game in form of a map.
  * 
- * TODO Include location creation in map.
+ * TODO Include person, item, etc. creation.
  * 
  * @author satia
  *
@@ -69,7 +71,10 @@ public class OverviewController extends GameDataController {
 	private BorderPane mapBorderPane;
 
 	@FXML
-	private Button mapNewWayButton;
+	private Button newWayButton;
+
+	@FXML
+	private Button newLocationButton;
 
 	/**
 	 * @param currentGameManager
@@ -109,31 +114,18 @@ public class OverviewController extends GameDataController {
 			addWayToMap(w);
 		}
 
-		// The add way button
-		mapNewWayButton.setOnMouseClicked((e) -> {
+		// The add buttons
+		newWayButton.setOnMouseClicked((e) -> {
 			enableWayCreation();
+		});
+		newLocationButton.setOnMouseClicked((e) -> {
+			enableLocationCreation();
 		});
 	}
 
 	@Override
 	public boolean isObsolete() {
 		return false;
-	}
-
-	/**
-	 * Creates a new LocationRectangle, and saves it in the rectangles Map.
-	 * 
-	 * @param location
-	 *            the location
-	 * @return the LocationRectangle
-	 */
-	private LocationRectangle createLocationNode(Location location) {
-		LocationRectangle sp = new LocationRectangle(location, this::objectSelected, this::originChosen,
-				this::destinationChosen);
-		// Save in map
-		rectangles.put(location, sp);
-
-		return sp;
 	}
 
 	/**
@@ -181,23 +173,43 @@ public class OverviewController extends GameDataController {
 	 * of the rectangles.
 	 */
 	private void enableWayCreation() {
-		// Disable the button.
-		mapNewWayButton.setDisable(true);
+		// Disable the buttons
+		newWayButton.setDisable(true);
+		newLocationButton.setDisable(true);
 		// Change the cursors
 		mapBorderPane.setCursor(Cursor.HAND);
 		for (LocationRectangle lr : rectangles.values()) {
-			lr.setCursor(Cursor.CROSSHAIR);
-			// the rectangles enter origin choose mode
 			lr.enterOriginChooseMode();
 		}
-		// Disable the hover styles
+		// Disable the WayLines
 		for (WayLine wl : lines.values()) {
-			wl.removeHoverStyle();
+			wl.enterInactiveMode();
 		}
 		// If clicked outside a rectangle, disable the creation
 		mapBorderPane.setOnMouseClicked((e) -> {
-			disableWayCreation();
+			disableObjectCreation();
 		});
+	}
+
+	/**
+	 * Disables the creation of a way in the MapView again and returns to normal
+	 * behavior.
+	 */
+	private void disableObjectCreation() {
+		// Undo everything
+		newWayButton.setDisable(false);
+		newLocationButton.setDisable(false);
+		mapBorderPane.setCursor(Cursor.DEFAULT);
+		for (LocationRectangle lr : rectangles.values()) {
+			lr.enterRearrangeMode();
+		}
+		for (WayLine wl : lines.values()) {
+			wl.enterStandardMode();
+		}
+		mapBorderPane.setOnMouseClicked(null);
+		if (creationLine != null) {
+			mapPane.getChildren().remove(creationLine);
+		}
 	}
 
 	/**
@@ -252,29 +264,84 @@ public class OverviewController extends GameDataController {
 				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
 			}
 		} else {
-			disableWayCreation();
+			disableObjectCreation();
 		}
 	}
 
 	/**
-	 * Disables the creation of a way in the MapView again and returns to normal
-	 * behavior.
+	 * Creates a new LocationRectangle, and saves it in the rectangles Map.
+	 * 
+	 * @param location
+	 *            the location
+	 * @return the LocationRectangle
 	 */
-	private void disableWayCreation() {
-		// Undo everything
-		mapNewWayButton.setDisable(false);
-		mapBorderPane.setCursor(Cursor.DEFAULT);
+	private LocationRectangle createLocationNode(Location location) {
+		LocationRectangle sp = new LocationRectangle(location, this::objectSelected, this::originChosen,
+				this::destinationChosen);
+		// Save in map
+		rectangles.put(location, sp);
+
+		return sp;
+	}
+
+	/**
+	 * Enables the creation of a location in the MapView. This changes the
+	 * behavior of the rectangles.
+	 */
+	private void enableLocationCreation() {
+		// Disable the buttons
+		newWayButton.setDisable(true);
+		newLocationButton.setDisable(true);
+		// Change the cursors
+		mapBorderPane.setCursor(Cursor.CROSSHAIR);
 		for (LocationRectangle lr : rectangles.values()) {
-			lr.setCursor(Cursor.DEFAULT);
-			lr.enterRearrangeMode();
+			lr.enterInactiveMode();
 		}
+		// Disable the WayLines
 		for (WayLine wl : lines.values()) {
-			wl.addHoverStyle();
+			wl.enterInactiveMode();
 		}
-		mapBorderPane.setOnMouseClicked(null);
-		if (creationLine != null) {
-			mapPane.getChildren().remove(creationLine);
+		// If clicked somewhere, create the location
+		mapBorderPane.setOnMouseClicked(this::createLocation);
+	}
+
+	/**
+	 * Shows a wizard to create a new location at the clicked position.
+	 * 
+	 * @param e
+	 */
+	private void createLocation(MouseEvent me) {
+		Optional<Location> wizardResult = new NewNamedObjectWizard("New location").showAndGetName()
+				.map(name -> new Location(name, ""));
+
+		if (wizardResult.isPresent()) {
+			Location location = wizardResult.get();
+			// Set map coordinates
+			location.setxCoordinate(me.getX());
+			location.setyCoordinate(me.getY());
+			
+			try {
+				saveHasId(location);
+				addLocationToMap(location);
+				// Open new location for editing
+				objectSelected(location);
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
+			}
+		} else {
+			disableObjectCreation();
 		}
+	}
+
+	/**
+	 * Adds a new location to the Map
+	 * 
+	 * @param location
+	 *            the location
+	 */
+	private void addLocationToMap(Location location) {
+		LocationRectangle lr = createLocationNode(location);
+		mapPane.getChildren().add(lr);
 	}
 
 }

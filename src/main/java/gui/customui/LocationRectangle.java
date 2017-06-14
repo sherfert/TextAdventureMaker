@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import data.Location;
 import javafx.beans.binding.DoubleBinding;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -151,8 +152,6 @@ public class LocationRectangle extends StackPane {
 		this.rectangleAsOrigin = rectangleAsOrigin;
 		this.rectangleAsDestination = rectangleAsDestination;
 
-		enterRearrangeMode();
-
 		// The rectangle
 		Rectangle rectangle = new Rectangle(RECT_DIM, RECT_DIM);
 		rectangle.setFill(Color.LIGHTGRAY);
@@ -168,8 +167,7 @@ public class LocationRectangle extends StackPane {
 
 		getChildren().addAll(rectangle, label);
 
-		// Styling
-		addHoverStyle();
+		enterRearrangeMode();
 	}
 
 	/**
@@ -178,6 +176,7 @@ public class LocationRectangle extends StackPane {
 	 */
 	public void enterOriginChooseMode() {
 		setEventHandler(MouseEvent.ANY, chooseOriginClickHandler);
+		setCursor(Cursor.CROSSHAIR);
 	}
 
 	/**
@@ -193,27 +192,39 @@ public class LocationRectangle extends StackPane {
 	 */
 	public void enterRearrangeMode() {
 		setEventHandler(MouseEvent.ANY, clickHandler);
+		setCursor(Cursor.DEFAULT);
 		removeShadowStyle();
+		addHoverStyle();
+	}
+
+	/**
+	 * This is the mode when clicks do not have an effect on LocationRectangles.
+	 */
+	public void enterInactiveMode() {
+		setEventHandler(MouseEvent.ANY, null);
+		removeHoverStyle();
 	}
 
 	/**
 	 * Adds the hover shadow effect.
 	 */
-	public void addHoverStyle() {
-		getStyleClass().add("mapelement");
+	private void addHoverStyle() {
+		if (!getStyleClass().contains("mapelement")) {
+			getStyleClass().add("mapelement");
+		}
 	}
 
 	/**
 	 * Removes the hover shadow effect.
 	 */
-	public void removeHoverStyle() {
+	private void removeHoverStyle() {
 		getStyleClass().remove("mapelement");
 	}
 
 	/**
 	 * Adds the permanent shadow effect.
 	 */
-	public void addShadowStyle() {
+	private void addShadowStyle() {
 		if (!getStyleClass().contains("selectedmapelement")) {
 			getStyleClass().add("selectedmapelement");
 		}
@@ -222,7 +233,7 @@ public class LocationRectangle extends StackPane {
 	/**
 	 * Removes the permanent shadow effect.
 	 */
-	public void removeShadowStyle() {
+	private void removeShadowStyle() {
 		getStyleClass().remove("selectedmapelement");
 	}
 

@@ -26,7 +26,7 @@ public class WayLine extends Path {
 	 * Default row height of cells in a ListView
 	 */
 	private final int ROW_HEIGHT = 24;
-	
+
 	/*
 	 * The distance for self-loop-edges
 	 */
@@ -46,27 +46,29 @@ public class WayLine extends Path {
 	 * Handler for clicking a WayLine.
 	 */
 	private EventHandler<MouseEvent> clickHandler = (t) -> {
-		if (ways.size() == 1) {
-			wayChosen.accept(ways.get(0));
-		} else {
-			// Create a listView
-			ListView<Way> listView = new ListView<>();
-			listView.setItems(FXCollections.observableArrayList(ways));
-			listView.setPrefHeight(ways.size() * ROW_HEIGHT + 2);
+		if (t.getEventType() == MouseEvent.MOUSE_CLICKED) {
+			if (ways.size() == 1) {
+				wayChosen.accept(ways.get(0));
+			} else {
+				// Create a listView
+				ListView<Way> listView = new ListView<>();
+				listView.setItems(FXCollections.observableArrayList(ways));
+				listView.setPrefHeight(ways.size() * ROW_HEIGHT + 2);
 
-			// Create the popup
-			PopOver popOver = new PopOver(listView);
+				// Create the popup
+				PopOver popOver = new PopOver(listView);
 
-			// On click of listview items
-			listView.setOnMouseClicked((e) -> {
-				wayChosen.accept(listView.getSelectionModel().getSelectedItem());
-				// Hide popup
-				popOver.hide();
-			});
+				// On click of listview items
+				listView.setOnMouseClicked((e) -> {
+					wayChosen.accept(listView.getSelectionModel().getSelectedItem());
+					// Hide popup
+					popOver.hide();
+				});
 
-			// Show the popup
-			popOver.setDetachable(false);
-			popOver.show(this);
+				// Show the popup
+				popOver.setDetachable(false);
+				popOver.show(this);
+			}
 		}
 	};
 
@@ -86,29 +88,29 @@ public class WayLine extends Path {
 		this.wayChosen = wayChosen;
 		ways = new ArrayList<>();
 		ways.add(w);
-		
-		if(originRect == destinationRect) {
-			// Seld-loop edge
+
+		if (originRect == destinationRect) {
+			// Self-loop edge
 			MoveTo startPoint = new MoveTo();
 			startPoint.xProperty().bind(originRect.getCenterX());
 			startPoint.yProperty().bind(originRect.getCenterY());
-			
+
 			LineTo up = new LineTo();
 			up.xProperty().bind(originRect.getCenterX());
 			up.yProperty().bind(originRect.getCenterY().subtract(SELFLOOP_EDGE_DIST));
-			
+
 			LineTo right = new LineTo();
 			right.xProperty().bind(originRect.getCenterX().add(SELFLOOP_EDGE_DIST));
 			right.yProperty().bind(originRect.getCenterY().subtract(SELFLOOP_EDGE_DIST));
-			
+
 			LineTo down = new LineTo();
 			down.xProperty().bind(originRect.getCenterX().add(SELFLOOP_EDGE_DIST));
 			down.yProperty().bind(originRect.getCenterY());
-			
+
 			LineTo end = new LineTo();
 			end.xProperty().bind(originRect.getCenterX());
 			end.yProperty().bind(originRect.getCenterY());
-			
+
 			getElements().add(startPoint);
 			getElements().add(up);
 			getElements().add(right);
@@ -121,7 +123,7 @@ public class WayLine extends Path {
 			LineTo endPoint = new LineTo();
 			endPoint.xProperty().bind(destinationRect.getCenterX());
 			endPoint.yProperty().bind(destinationRect.getCenterY());
-			
+
 			getElements().add(startPoint);
 			getElements().add(endPoint);
 		}
@@ -129,24 +131,38 @@ public class WayLine extends Path {
 		// Thicker lines
 		setStrokeWidth(5);
 
-		// Handling clicking
-		setOnMouseClicked(clickHandler);
-
-		// Styling
+		enterStandardMode();
+	}
+	
+	/**
+	 * The standard mode where clicking opens the way details.
+	 */
+	public void enterStandardMode() {
+		setEventHandler(MouseEvent.ANY, clickHandler);
 		addHoverStyle();
+	}
+
+	/**
+	 * This is the mode when clicks do not have an effect.
+	 */
+	public void enterInactiveMode() {
+		setEventHandler(MouseEvent.ANY, null);
+		removeHoverStyle();
 	}
 
 	/**
 	 * Adds the hover shadow effect.
 	 */
-	public void addHoverStyle() {
-		getStyleClass().add("mapelement");
+	private void addHoverStyle() {
+		if (!getStyleClass().contains("mapelement")) {
+			getStyleClass().add("mapelement");
+		}
 	}
 
 	/**
 	 * Removes the hover shadow effect.
 	 */
-	public void removeHoverStyle() {
+	private void removeHoverStyle() {
 		getStyleClass().remove("mapelement");
 	}
 

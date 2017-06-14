@@ -15,7 +15,15 @@
 		</ScrollPane>
 	</center>
 	<bottom>
-		<Button fx:id="mapNewWayButton" mnemonicParsing="false" text="Create a way" />
+		<HBox spacing="10.0">
+			<Button fx:id="newWayButton" mnemonicParsing="false" text="Create a way" />
+			<Button fx:id="newLocationButton" mnemonicParsing="false"
+				text="Create a location" />
+			<padding>
+				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+			</padding>
+		</HBox>
+
 	</bottom>
 </BorderPane>
 
