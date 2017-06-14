@@ -7,7 +7,6 @@ import org.controlsfx.dialog.WizardPane;
 
 import gui.GameDataController;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import utility.WindowUtil;
 
@@ -30,9 +29,7 @@ public class NewNamedObjectWizard extends Wizard {
 		setFlow(flow);
 
 		// Set the icon using the first pane in the flow.
-		Image img = new Image(WindowUtil.getWindowIconURL().toString());
-		Stage stage = (Stage) flow.chooseNamePane.getScene().getWindow();
-		stage.getIcons().add(img);
+		WindowUtil.attachIcon((Stage) flow.chooseNamePane.getScene().getWindow());
 	}
 
 	/**

@@ -29,12 +29,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Callback;
 import logic.CurrentGameManager;
 import logic.JARCreator;
 import persistence.PersistenceManager;
 import playing.menu.LoadSaveManager;
+import utility.WindowUtil;
 
 /**
  * Controller for the main window.
@@ -225,6 +227,7 @@ public class MainWindowController {
 			alert.setTitle("Could not show the view");
 			alert.setHeaderText("An unexpected error ocurred:");
 			alert.setContentText(e.getMessage());
+			WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 			alert.showAndWait();
 		}
 
@@ -424,6 +427,7 @@ public class MainWindowController {
 				alert.setTitle("Could not open the game");
 				alert.setHeaderText(header);
 				alert.setContentText(e.getMessage());
+				WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 				alert.showAndWait();
 
 				// Unload GUI
@@ -472,6 +476,7 @@ public class MainWindowController {
 				alert.setHeaderText("The game file was exported!");
 				alert.setContentText(
 						"To execute the game, double click it or run 'java -jar <name-of-the-file>' in a command line.");
+				WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 				alert.showAndWait();
 			} catch (IOException e) {
 				// This very probably means that the "Game_missing_db.jar" was
@@ -481,6 +486,7 @@ public class MainWindowController {
 				alert.setHeaderText("The game file could not be exported!");
 				alert.setContentText(
 						"Make sure that the file \"Game_missing_db.jar\" is present in the same folder as the executable of TextAdventureMaker.");
+				WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 				alert.showAndWait();
 			}
 			// After that, the DB has been reconnected and the GUI is
@@ -503,6 +509,7 @@ public class MainWindowController {
 			alert.setTitle("Could not start the game");
 			alert.setHeaderText("While copying the game file to a temporary Location, an error ocurred:");
 			alert.setContentText(e.getMessage());
+			WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 			alert.showAndWait();
 		}
 		// After that, the DB has been reconnected and the GUI is
@@ -520,6 +527,7 @@ public class MainWindowController {
 		alert.setHeaderText("About TextAdventureMaker");
 		alert.setContentText("Version " + PersistenceManager.MAJOR_VERSION + "." + PersistenceManager.MINOR_VERSION
 				+ "\n" + "Created by Satia Herfert\n" + "github.com/sherfert/TextAdventureMaker");
+		WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 		alert.showAndWait();
 	}
 

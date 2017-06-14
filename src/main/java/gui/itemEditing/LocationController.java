@@ -17,9 +17,11 @@ import gui.include.NamedObjectController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import logic.CurrentGameManager;
+import utility.WindowUtil;
 
 /**
  * Controller for one location.
@@ -111,6 +113,7 @@ public class LocationController extends GameDataController {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("This is the start location");
 			alert.setHeaderText("The start location of a game cannot be removed.");
+			WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 			alert.showAndWait();
 			return;
 		}

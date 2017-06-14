@@ -44,7 +44,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import logic.CurrentGameManager;
 import utility.WindowUtil;
@@ -89,9 +88,7 @@ public class NewActionWizard extends Wizard {
 		setFlow(flow);
 
 		// Set the icon using the first pane in the flow.
-		Image img = new Image(WindowUtil.getWindowIconURL().toString());
-		Stage stage = (Stage) flow.chooseTypePane.getScene().getWindow();
-		stage.getIcons().add(img);
+		WindowUtil.attachIcon((Stage) flow.chooseTypePane.getScene().getWindow());
 	}
 
 	/**

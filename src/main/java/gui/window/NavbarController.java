@@ -12,7 +12,9 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import utility.WindowUtil;
 
 /**
  * The navbar controller.
@@ -91,6 +93,7 @@ public class NavbarController {
 			alert.setTitle("Could not show the view");
 			alert.setHeaderText("An unexpected error ocurred:");
 			alert.setContentText(e.getMessage());
+			WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 			alert.showAndWait();
 		}
 		

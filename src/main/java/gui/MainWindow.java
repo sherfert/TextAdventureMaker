@@ -3,7 +3,6 @@ package gui;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import utility.WindowUtil;
@@ -15,8 +14,6 @@ import java.util.logging.Logger;
 
 /**
  * Opens the GUI of TextAdventureMaker.
- * 
- * TODO Icon for dialogues
  * 
  * @author Satia
  */
@@ -54,8 +51,7 @@ public class MainWindow extends Application {
 			primaryStage.setOnCloseRequest(e -> controller.close());
 
 			// Set the icon
-			Image img = new Image(WindowUtil.getWindowIconURL().toString());
-			primaryStage.getIcons().add(img);
+			WindowUtil.attachIcon(primaryStage);
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);

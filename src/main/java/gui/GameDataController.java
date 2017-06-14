@@ -72,7 +72,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -675,10 +674,7 @@ public abstract class GameDataController {
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-
-		Image img = new Image(WindowUtil.getWindowIconURL().toString());
-		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-		stage.getIcons().add(img);
+		WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {
