@@ -25,7 +25,7 @@ public class MainWindow extends Application {
 		
 		// Initialize the logging
 		try {
-			Class.forName(logging.LogManager.class.getName());
+			Class.forName(logging.LoggingManager.class.getName());
 		} catch (ClassNotFoundException e) {
 			Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, "Could not initialize logging:", e);
 		}

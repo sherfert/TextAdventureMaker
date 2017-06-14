@@ -35,8 +35,6 @@ import data.action.RemoveInventoryItemAction;
  * 
  * General TODOs:
  * 
- * TODO no logging to console
- * 
  * XXX sound support (optional)
  * 
  * @author Satia

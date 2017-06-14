@@ -79,7 +79,7 @@
 				/ -->
 
 			<!-- Configure simple SQL logging for demonstration. -->
-			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.level" value="OFF" />
 			<property name="eclipselink.logging.thread" value="false" />
 			<property name="eclipselink.logging.session" value="false" />
 			<property name="eclipselink.logging.exceptions" value="false" />

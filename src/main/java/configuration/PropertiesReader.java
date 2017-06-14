@@ -28,6 +28,9 @@ public class PropertiesReader {
 	
 	public static final String SWING_TERMINAL_COLS_PROPERTY = "SwingTerminalCols";
 	public static final String SWING_TERMINAL_COLS_DEFAULT = "150";
+	
+	public static final String LOG_CONSOLE_PROPERTY = "LogToConsole";
+	public static final String LOG_CONSOLE_DEFAULT = "false";
 	//***********************************
 
 	/**
@@ -70,8 +73,7 @@ public class PropertiesReader {
 					param);
 
 			// A default value for the param exists, but is still not in the
-			// file
-			// Add this to the file
+			// file. Add this to the file.
 			if (defaultPropertyValue != null) {
 				properties.setProperty(param, defaultPropertyValue);
 
@@ -160,6 +162,7 @@ public class PropertiesReader {
 		props.setProperty(LOG_LEVEL_PROPERTY, LOG_LEVEL_DEFAULT);
 		props.setProperty(SWING_TERMINAL_ROWS_PROPERTY, SWING_TERMINAL_ROWS_DEFAULT);
 		props.setProperty(SWING_TERMINAL_COLS_PROPERTY, SWING_TERMINAL_COLS_DEFAULT);
+		props.setProperty(LOG_CONSOLE_PROPERTY, LOG_CONSOLE_DEFAULT);
 		return props;
 	}
 

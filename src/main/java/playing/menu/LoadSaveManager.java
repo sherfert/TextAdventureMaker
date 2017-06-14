@@ -160,7 +160,7 @@ public class LoadSaveManager implements MenuShower, LoaderSaver {
 	public static void main(String[] args) {
 		// Initialize the logging
 		try {
-			Class.forName(logging.LogManager.class.getName());
+			Class.forName(logging.LoggingManager.class.getName());
 		} catch (ClassNotFoundException e) {
 			Logger.getLogger(LoadSaveManager.class.getName()).log(Level.SEVERE, "Could not initialize logging:", e);
 		}
