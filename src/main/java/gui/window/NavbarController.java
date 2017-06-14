@@ -5,16 +5,15 @@ import java.util.Stack;
 import exception.DetachedEntityException;
 import gui.GameDataController;
 import gui.MainWindowController;
+import gui.customui.TAMAlert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import javafx.util.Callback;
-import utility.WindowUtil;
 
 /**
  * The navbar controller.
@@ -89,35 +88,12 @@ public class NavbarController {
 			mwController.setCenterContent(item.fxml, item.controller, item.controllerFactory);
 		} catch (DetachedEntityException e) {
 			// Show error message
-			Alert alert = new Alert(AlertType.ERROR);
+			Alert alert = new TAMAlert(AlertType.ERROR);
 			alert.setTitle("Could not show the view");
 			alert.setHeaderText("An unexpected error ocurred:");
 			alert.setContentText(e.getMessage());
-			WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 			alert.showAndWait();
 		}
-		
-//		int popCount = 0;
-//		boolean found = false;
-//		for (NavbarItem item : items) {
-//
-//			if (!found) {
-//				found = (clicked == item.link);
-//				if (found) {
-//					// Load the controller
-//					mwController.setCenterContent(item.fxml, item.controller, item.controllerFactory);
-//				}
-//			} else {
-//				// Remove everything after the found link
-//				box.getChildren().removeAll(item.arrow, item.link);
-//				// Increment the pop count
-//				popCount++;
-//			}
-//		}
-//		// Pop all unused items from the stack
-//		for (int i = 0; i < popCount; i++) {
-//			items.pop();
-//		}
 	}
 
 	/**

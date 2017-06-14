@@ -40,6 +40,7 @@ import data.action.RemoveInventoryItemAction;
 import data.interfaces.HasId;
 import data.interfaces.HasName;
 import exception.DBClosedException;
+import gui.customui.TAMAlert;
 import gui.itemEditing.ConversationController;
 import gui.itemEditing.ConversationLayerController;
 import gui.itemEditing.ConversationOptionController;
@@ -73,11 +74,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
-import javafx.stage.Stage;
 import logic.CurrentGameManager;
 import utility.CommandRegExConverter;
-import utility.WindowUtil;
 
 /**
  * Abstract class for all controllers that need access to the current game
@@ -669,12 +667,10 @@ public abstract class GameDataController {
 	 */
 	protected void removeObject(HasId object, String title, String header, String content) {
 		// Show a confirmation dialog
-		Alert alert = new Alert(AlertType.CONFIRMATION);
+		Alert alert = new TAMAlert(AlertType.CONFIRMATION);
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(content);
-		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-		WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 
 		alert.showAndWait().ifPresent(response -> {
 			if (response == ButtonType.OK) {

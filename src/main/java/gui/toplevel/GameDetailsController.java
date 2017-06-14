@@ -16,6 +16,7 @@ import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.NamedObjectChooser;
 import gui.customui.NamedObjectListView;
+import gui.customui.TAMAlert;
 import gui.utility.StringUtils;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
@@ -23,14 +24,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import logic.CurrentGameManager;
-import utility.WindowUtil;
 
 /**
  * Controller for the game details view.
@@ -166,11 +165,10 @@ public class GameDetailsController extends GameDataController {
 			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,
 					"Could not get the game. Database incompatible.", e);
 
-			Alert alert = new Alert(AlertType.ERROR);
+			Alert alert = new TAMAlert(AlertType.ERROR);
 			alert.setTitle("Could not load the game");
 			alert.setHeaderText("The loaded file seems to be incompatible");
 			alert.setContentText(e.getMessage());
-			WindowUtil.attachIcon((Stage) alert.getDialogPane().getScene().getWindow());
 			alert.showAndWait();
 
 			// Rethrow e so that the GUI loading can take appropriate actions
