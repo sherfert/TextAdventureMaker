@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import gui.GameDataController;
 import gui.MainWindowController;
 import gui.customui.LocationRectangle;
 import gui.customui.WayLine;
+import gui.wizards.NewWayWizard;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -27,7 +29,7 @@ import logic.CurrentGameManager;
 /**
  * A graphical overview of the entities in the game in form of a map.
  * 
- * TODO Include location creation in map. Better way/location creation in map.
+ * TODO Include location creation in map.
  * 
  * @author satia
  *
@@ -133,7 +135,7 @@ public class OverviewController extends GameDataController {
 
 		return sp;
 	}
-	
+
 	/**
 	 * Adds a new way to the Map
 	 * 
@@ -236,19 +238,22 @@ public class OverviewController extends GameDataController {
 	 */
 	private void destinationChosen(Location destination) {
 		this.creationDestination = destination;
-		// Create the way with a default name
-		Way way = new Way(this.creationOrigin.getName() + "->" + this.creationDestination.getName(), "",
-				this.creationOrigin, this.creationDestination);
-		// Save way
-		try {
-			saveHasId(way);
-			addWayToMap(way);
-			// Open new way for editing
-			objectSelected(way);
-		} catch (DBClosedException e) {
-			Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
+		// Create the way with a wizard
+		Optional<Way> wizardResult = new NewWayWizard(currentGameManager, this.creationOrigin, this.creationDestination)
+				.showAndGet();
+		if (wizardResult.isPresent()) {
+			Way way = wizardResult.get();
+			try {
+				saveHasId(way);
+				addWayToMap(way);
+				// Open new way for editing
+				objectSelected(way);
+			} catch (DBClosedException e) {
+				Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "Abort: DB closed", e);
+			}
+		} else {
+			disableWayCreation();
 		}
-		
 	}
 
 	/**

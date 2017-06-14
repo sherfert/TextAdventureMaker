@@ -42,6 +42,21 @@ public class NewWayWizard extends Wizard {
 		stage.getIcons().add(img);
 	}
 
+	public NewWayWizard(CurrentGameManager currentGameManager, Location origin, Location destination) {
+		this.currentGameManager = currentGameManager;
+		getSettings().put(ORIGIN_KEY, origin);
+		getSettings().put(DESTINATION_KEY, destination);
+		
+		setTitle("New way");
+		NewWayFlow flow = new NewWayFlow();
+		setFlow(flow);
+
+		// Set the icon using the first pane in the flow.
+		Image img = new Image(WindowUtil.getWindowIconURL().toString());
+		Stage stage = (Stage) flow.chooseNamePane.getScene().getWindow();
+		stage.getIcons().add(img);
+	}
+
 	/**
 	 * Show the wizard and obtain the new Way, if any.
 	 * 
@@ -94,12 +109,13 @@ public class NewWayWizard extends Wizard {
 
 		@Override
 		public Optional<WizardPane> advance(WizardPane currentPage) {
-			if (currentPage == null) {
-				return Optional.of(chooseOriginPane);
+			if (currentPage == chooseDestinationPane
+					|| (getSettings().containsKey(ORIGIN_KEY) && getSettings().containsKey(DESTINATION_KEY))) {
+				return Optional.of(chooseNamePane);
 			} else if (currentPage == chooseOriginPane) {
 				return Optional.of(chooseDestinationPane);
-			} else if (currentPage == chooseDestinationPane) {
-				return Optional.of(chooseNamePane);
+			} else if (currentPage == null) {
+				return Optional.of(chooseOriginPane);
 			}
 
 			// As default, don't switch

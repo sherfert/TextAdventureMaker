@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 /**
  * Opens the GUI of TextAdventureMaker.
  * 
+ * TODO Icon for dialogues
+ * 
  * @author Satia
  */
 public class MainWindow extends Application {

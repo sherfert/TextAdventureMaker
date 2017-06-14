@@ -23,8 +23,6 @@ import data.Game;
  * 
  * Triggering this action will trigger all embedded actions.
  * 
- * FIXME all Action collections must allow reordering.
- * 
  * @author Satia
  */
 @Entity

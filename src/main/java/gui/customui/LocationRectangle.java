@@ -32,7 +32,7 @@ public class LocationRectangle extends StackPane {
 	private double orgSceneY;
 	private double orgX;
 	private double orgY;
-	
+
 	// If the rectangle is currently being dragged
 	private boolean dragging = false;
 
@@ -74,7 +74,7 @@ public class LocationRectangle extends StackPane {
 	private EventHandler<MouseEvent> clickHandler = (t) -> {
 		if (t.getEventType() == MouseEvent.MOUSE_PRESSED) {
 			dragging = false;
-			
+
 			orgSceneX = t.getSceneX();
 			orgSceneY = t.getSceneY();
 			orgX = getLayoutX();
@@ -106,24 +106,28 @@ public class LocationRectangle extends StackPane {
 	 * Handler for clicking a LocationRectangle when creating a way.
 	 */
 	private EventHandler<MouseEvent> chooseOriginClickHandler = (t) -> {
-		addShadowStyle();
-		Line line = new Line();
-		line.setStartX(centerX.get());
-		line.setStartY(centerY.get());
-		line.setEndX(centerX.get());
-		line.setEndY(centerY.get());
-		line.setStrokeWidth(5);
-		rectangleAsOrigin.accept(location, line);
-		t.consume();
+		if (t.getEventType() == MouseEvent.MOUSE_CLICKED) {
+			addShadowStyle();
+			Line line = new Line();
+			line.setStartX(centerX.get());
+			line.setStartY(centerY.get());
+			line.setEndX(centerX.get());
+			line.setEndY(centerY.get());
+			line.setStrokeWidth(5);
+			rectangleAsOrigin.accept(location, line);
+			t.consume();
+		}
 	};
 
 	/**
 	 * Handler for clicking a LocationRectangle when creating a way.
 	 */
 	private EventHandler<MouseEvent> chooseDestinationClickHandler = (t) -> {
-		addShadowStyle();
-		rectangleAsDestination.accept(location);
-		t.consume();
+		if (t.getEventType() == MouseEvent.MOUSE_CLICKED) {
+			addShadowStyle();
+			rectangleAsDestination.accept(location);
+			t.consume();
+		}
 	};
 
 	/**
@@ -173,8 +177,7 @@ public class LocationRectangle extends StackPane {
 	 * new Way can be created. For choosing the origin.
 	 */
 	public void enterOriginChooseMode() {
-		removeEventHandler(MouseEvent.ANY, clickHandler);
-		setOnMouseClicked(chooseOriginClickHandler);
+		setEventHandler(MouseEvent.ANY, chooseOriginClickHandler);
 	}
 
 	/**
@@ -182,15 +185,14 @@ public class LocationRectangle extends StackPane {
 	 * new Way can be created. For choosing the destination.
 	 */
 	public void enterDestinationChooseMode() {
-		removeEventHandler(MouseEvent.ANY, clickHandler);
-		setOnMouseClicked(chooseDestinationClickHandler);
+		setEventHandler(MouseEvent.ANY, chooseDestinationClickHandler);
 	}
 
 	/**
 	 * This is the default mode.
 	 */
 	public void enterRearrangeMode() {
-		addEventHandler(MouseEvent.ANY, clickHandler);
+		setEventHandler(MouseEvent.ANY, clickHandler);
 		removeShadowStyle();
 	}
 
