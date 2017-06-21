@@ -25,8 +25,6 @@ import javafx.scene.layout.BorderPane;
  * 
  * TODO On some computers, the + is replaced with ...
  * 
- * TODO Accept Enter to add something
- * 
  * @author Satia
  */
 public class NamedObjectListView<E extends HasName> extends BorderPane {
@@ -152,31 +150,36 @@ public class NamedObjectListView<E extends HasName> extends BorderPane {
 			removeButton.setDisable(!removeEnabled.get());
 		});
 
-		addButton.setOnMouseClicked((e) -> {
+		addButton.setOnAction((e) -> {
 			E selectedItem = addValueChooser.getObjectValue();
 			addValueChooser.setObjectValue(null);
 			addButton.setDisable(!addEnabled.get());
 			listItems.add(selectedItem);
 			valueAdded.accept(selectedItem);
 		});
-		removeButton.setOnMouseClicked((e) -> {
+		removeButton.setOnAction((e) -> {
 			E selectedItem = listView.getSelectionModel().getSelectedItem();
 			listItems.remove(selectedItem);
 			valueRemoved.accept(selectedItem);
 		});
-		upButton.setOnMouseClicked((e) -> {
+		upButton.setOnAction((e) -> {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			Collections.swap(listItems, index, index - 1);
 			listView.getSelectionModel().selectPrevious();
 			orderChanged.accept(listItems);
 		});
-		downButton.setOnMouseClicked((e) -> {
+		downButton.setOnAction((e) -> {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			Collections.swap(listItems, index, index + 1);
 			listView.getSelectionModel().selectNext();
 			orderChanged.accept(listItems);
 		});
+		addValueChooser.setOnAction((e) -> {
+			addButton.fire();
+		});
 
 	}
+	
+
 
 }

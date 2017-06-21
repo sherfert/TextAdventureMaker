@@ -17,6 +17,8 @@ import java.util.logging.Logger;
  * 
  * TODO TextAreas instead of TextFields, e.g. in conversations and for success/failure fields.
  * 
+ * TODO Multiple tabs to work on multiple things simultaneously
+ * 
  * @author Satia
  */
 public class MainWindow extends Application {

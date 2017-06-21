@@ -52,12 +52,21 @@ public class VersioningManager {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO,
 				String.format("Updating the database model %d.%d -> %d.%d", fromMajor, fromMinor, toMajor, toMinor));
 
-		// try {
-		// Add updating logic here.
-		// } catch (DBClosedException e) {
-		// Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "DB
-		// closed unexpectedly.", e);
-		// }
+		 try {
+			 if(fromMajor == 1 && fromMinor == 0 && toMajor == 1 && toMinor == 1) {
+				 from1_0to1_1();
+			 }
+		 } catch (DBClosedException e) {
+		 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "DB closed unexpectedly.", e);
+		 }
+	}
+	
+
+	private void from1_0to1_1() throws DBClosedException {
+		// Update version number
+		Model model = persistenceManager.getModel();
+		model.setMinorVersion(1);
+		persistenceManager.updateChanges();
 	}
 
 	/**
@@ -66,7 +75,8 @@ public class VersioningManager {
 	 * @throws DBClosedException
 	 *             should not happen
 	 */
-	public void from1_0to1_1Example() throws DBClosedException {
+	@SuppressWarnings("unused")
+	private void from1_0to1_1Example() throws DBClosedException {
 		// Change a column name in the Game table
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, String.format(
 				"Renaming column in table %s from %s to %s", "Game", "inspectionDefaultText", "inspectDefaultText"));
