@@ -38,7 +38,7 @@ public class PersistenceManager {
 	 * number. These numbers are used to check DB compatibility.
 	 */
 	public static final int MAJOR_VERSION = 1;
-	public static final int MINOR_VERSION = 0;
+	public static final int MINOR_VERSION = 1;
 
 	/**
 	 * The criteria builder.

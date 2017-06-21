@@ -65,7 +65,7 @@ public class NewConversationWizard extends Wizard {
 		 * Creates all panes and defines the flow between them.
 		 */
 		public NewConversationFlow() {
-			this.chooseNamePane = new ChooseStringPane("Type a name for the new conversation option", NAME_KEY, false,
+			this.chooseNamePane = new ChooseStringPane("Type a name for the new conversation", NAME_KEY, false,
 					GameDataController::checkName);
 			this.chooseGreetingPane = new ChooseStringPane("How does the person greet the player?", GREETING_KEY, false,
 					null);

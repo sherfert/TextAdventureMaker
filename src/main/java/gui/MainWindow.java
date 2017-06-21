@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 /**
  * Opens the GUI of TextAdventureMaker.
  * 
+ * TODO TextAreas instead of TextFields, e.g. in conversations and for success/failure fields.
+ * 
  * @author Satia
  */
 public class MainWindow extends Application {

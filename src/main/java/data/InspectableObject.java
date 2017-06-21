@@ -28,6 +28,8 @@ import java.util.logging.Logger;
  * Anything having a name, identifiers, a description and being
  * {@link Inspectable}.
  * 
+ * TODO additionalInspectCommands (e.g. read a book)
+ * 
  * @author Satia
  */
 @Entity

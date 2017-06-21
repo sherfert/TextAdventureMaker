@@ -23,6 +23,10 @@ import javafx.scene.layout.BorderPane;
  * 
  * Initialize must be called to enable the functionality.
  * 
+ * TODO On some computers, the + is replaced with ...
+ * 
+ * TODO Accept Enter to add something
+ * 
  * @author Satia
  */
 public class NamedObjectListView<E extends HasName> extends BorderPane {

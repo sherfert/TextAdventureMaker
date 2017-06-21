@@ -22,6 +22,9 @@ import javafx.beans.property.StringProperty;
  * Anything having a name.
  * 
  * XXX This is probably not the best overall inheritance strategy.
+ * 
+ * TODO All objects should have notes (for the developer), and a "in progess" flag.
+ * The UI should then feature a view for all objects in progress.
  *
  * @author Satia
  */
